@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ponto — Feitoria</title>
+<style>
+  :root{
+    --verde:#1f4d3a; --verde-claro:#2f6b51; --ambar:#c8871f;
+    --fundo:#f4f2ed; --carta:#fff; --texto:#23261f; --suave:#6b7169;
+    --erro:#a3341f; --ok:#1f6b3f; --borda:#e2ded4;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
+       background:var(--fundo);color:var(--texto);
+       min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:16px}
+  .app{width:100%;max-width:440px}
+  .carta{background:var(--carta);border:1px solid var(--borda);border-radius:18px;
+         padding:22px;box-shadow:0 2px 14px rgba(0,0,0,.05)}
+  h1{font-size:19px;margin:0 0 2px}
+  .sub{color:var(--suave);font-size:14px;margin:0 0 18px}
+  .relogio{font-size:40px;font-weight:700;letter-spacing:-1px;text-align:center;margin:4px 0}
+  .dia{text-align:center;color:var(--suave);font-size:13px;margin-bottom:18px}
+
+  .visor{font-size:30px;letter-spacing:12px;text-align:center;height:46px;
+         border-bottom:2px solid var(--borda);margin:10px 0 18px;padding-left:12px}
+  .teclas{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  button{font:inherit;cursor:pointer;border:none;border-radius:12px;padding:16px;
+         background:#eceae4;color:var(--texto);font-size:21px;font-weight:600}
+  button:active{transform:translateY(1px)}
+  .acao{background:var(--verde);color:#fff;width:100%;font-size:17px;padding:18px;margin-top:10px}
+  .acao.secundaria{background:#fff;color:var(--verde);border:2px solid var(--verde)}
+  .acao[disabled]{opacity:.5;cursor:default}
+  .discreto{background:none;color:var(--suave);font-size:14px;font-weight:500;padding:12px}
+
+  .lista{list-style:none;padding:0;margin:0 0 18px}
+  .lista li{display:flex;justify-content:space-between;padding:11px 0;
+            border-bottom:1px solid var(--borda);font-size:15px}
+  .lista li:last-child{border:none}
+  .lista b{font-variant-numeric:tabular-nums}
+  .vazio{color:var(--suave);font-size:14px;margin:0 0 18px}
+
+  .aviso{background:#fdf3f1;color:var(--erro);border-radius:10px;padding:12px;
+         font-size:14px;margin:12px 0}
+  .sucesso{text-align:center;padding:14px 0}
+  .sucesso .marca{font-size:52px;line-height:1}
+  .sucesso h2{margin:10px 0 4px;font-size:22px}
+  .comprovante{font-family:ui-monospace,monospace;background:#eceae4;border-radius:8px;
+               padding:8px 12px;display:inline-block;margin-top:10px;letter-spacing:2px}
+
+  video,canvas{width:100%;border-radius:14px;background:#000;aspect-ratio:3/4;object-fit:cover}
+  .rodape{text-align:center;color:var(--suave);font-size:12px;margin-top:14px;line-height:1.5}
+  .oculto{display:none}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="carta" id="tela"></div>
+  <p class="rodape" id="rodape"></p>
+</div>
+
+<script>
+// Tela de registro de jornada. Conversa SOMENTE com a Edge Function `ponto`.
+// O horario que vale e o do servidor: o relogio abaixo e so conforto visual.
+const FUNCAO = "https://kujelbcbrcmkitzyswbh.supabase.co/functions/v1/ponto";
+const TOKEN_UNIDADE = new URLSearchParams(location.search).get("u") || "";
+const APARELHO = new URLSearchParams(location.search).get("d") || "Tablet";
+const OCIOSO_MS = 60000;   // tablet compartilhado: volta pro PIN sozinho
+
+const tela = document.getElementById("tela");
+const rodape = document.getElementById("rodape");
+let pin = "", sessao = null, ocioso = null;
+
+const hora = (iso) => new Date(iso).toLocaleTimeString("pt-BR",
+  { hour:"2-digit", minute:"2-digit", timeZone:"America/Sao_Paulo" });
+
+async function chamar(payload){
+  const r = await fetch(FUNCAO, {
+    method:"POST", headers:{"Content-Type":"application/json"},
+    body: JSON.stringify({ unit_token: TOKEN_UNIDADE, pin, device_label: APARELHO, ...payload })
+  });
+  const dados = await r.json().catch(() => ({ error:"Resposta invalida do servidor." }));
+  if(!r.ok) throw new Error(dados.error || "Nao foi possivel completar.");
+  return dados;
+}
+
+function adiarSaida(){
+  clearTimeout(ocioso);
+  ocioso = setTimeout(() => { sessao = null; pin = ""; telaPin(); }, OCIOSO_MS);
+}
+
+/* ---------- PIN ---------- */
+function telaPin(msg){
+  clearTimeout(ocioso);
+  tela.innerHTML = `
+    <h1>Registro de ponto</h1>
+    <p class="sub">Digite seu PIN para começar</p>
+    <div class="relogio" id="relogio"></div>
+    <div class="visor" id="visor"></div>
+    ${msg ? `<div class="aviso">${msg}</div>` : ""}
+    <div class="teclas">
+      ${[1,2,3,4,5,6,7,8,9].map(n=>`<button data-n="${n}">${n}</button>`).join("")}
+      <button data-acao="limpar">←</button>
+      <button data-n="0">0</button>
+      <button data-acao="entrar" style="background:var(--verde);color:#fff">OK</button>
+    </div>`;
+  tick();
+  tela.querySelectorAll("[data-n]").forEach(b =>
+    b.onclick = () => { if(pin.length < 6){ pin += b.dataset.n; visor(); } });
+  tela.querySelector('[data-acao="limpar"]').onclick = () => { pin = pin.slice(0,-1); visor(); };
+  tela.querySelector('[data-acao="entrar"]').onclick = entrar;
+  rodape.textContent = TOKEN_UNIDADE ? "" : "Link sem identificação da unidade.";
+}
+const visor = () => document.getElementById("visor").textContent = "•".repeat(pin.length);
+
+function tick(){
+  const el = document.getElementById("relogio");
+  if(!el) return;
+  const agora = () => el.textContent = new Date().toLocaleTimeString("pt-BR",
+    { hour:"2-digit", minute:"2-digit", timeZone:"America/Sao_Paulo" });
+  agora(); clearInterval(tick._t); tick._t = setInterval(agora, 10000);
+}
+
+async function entrar(){
+  if(pin.length < 4) return telaPin("O PIN tem pelo menos 4 números.");
+  try {
+    sessao = await chamar({ action:"session" });
+    telaInicio();
+  } catch(e){ pin = ""; telaPin(e.message); }
+}
+
+/* ---------- Início ---------- */
+function telaInicio(aviso){
+  adiarSaida();
+  const m = sessao.marcacoes;
+  tela.innerHTML = `
+    <h1>Olá, ${sessao.colaborador.nome.split(" ")[0]}</h1>
+    <p class="sub">${sessao.unidade.nome} · dia ${sessao.dia_operacional.split("-").reverse().join("/")}</p>
+    ${aviso ? `<div class="aviso">${aviso}</div>` : ""}
+    ${m.length ? `<ul class="lista">${m.map(x =>
+        `<li><span>${x.rotulo}</span><b>${hora(x.occurred_at)}</b></li>`).join("")}</ul>`
+      : `<p class="vazio">Nenhuma marcação hoje.</p>`}
+    ${sessao.proximas.map(p =>
+        `<button class="acao" data-kind="${p.kind}" data-foto="${p.exige_foto}">${p.rotulo}</button>`).join("")}
+    <button class="acao secundaria" data-acao="espelho">Ver meus registros</button>
+    <button class="discreto" data-acao="sair" style="width:100%">Sair</button>`;
+
+  tela.querySelectorAll("[data-kind]").forEach(b =>
+    b.onclick = () => b.dataset.foto === "true"
+      ? telaFoto(b.dataset.kind, b.textContent)
+      : registrar(b.dataset.kind, null));
+  tela.querySelector('[data-acao="espelho"]').onclick = telaEspelho;
+  tela.querySelector('[data-acao="sair"]').onclick = () => { sessao=null; pin=""; telaPin(); };
+  rodape.textContent = "O horário registrado é o do servidor, não o deste aparelho.";
+}
+
+/* ---------- Foto ---------- */
+async function telaFoto(kind, rotulo){
+  adiarSaida();
+  tela.innerHTML = `
+    <h1>${rotulo}</h1>
+    <p class="sub">Olhe para a câmera e toque em registrar</p>
+    <video id="cam" autoplay playsinline muted></video>
+    <canvas id="tela-foto" class="oculto"></canvas>
+    <button class="acao" id="bater">Registrar ${rotulo.toLowerCase()}</button>
+    <button class="discreto" id="voltar" style="width:100%">Cancelar</button>`;
+
+  const video = document.getElementById("cam");
+  let fluxo = null;
+  const parar = () => fluxo && fluxo.getTracks().forEach(t => t.stop());
+
+  try {
+    fluxo = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode:"user", width:{ ideal:640 } }, audio:false });
+    video.srcObject = fluxo;
+  } catch {
+    parar();
+    return telaInicio("Não consegui abrir a câmera. Libere o acesso no navegador para registrar.");
+  }
+
+  document.getElementById("voltar").onclick = () => { parar(); telaInicio(); };
+  document.getElementById("bater").onclick = async (ev) => {
+    ev.target.disabled = true; ev.target.textContent = "Registrando…";
+    const c = document.getElementById("tela-foto");
+    const lado = 320;
+    c.width = lado; c.height = Math.round(lado * video.videoHeight / video.videoWidth) || lado;
+    c.getContext("2d").drawImage(video, 0, 0, c.width, c.height);
+    const foto = c.toDataURL("image/jpeg", 0.7);
+    parar();
+    registrar(kind, foto);
+  };
+}
+
+/* ---------- Registro ---------- */
+async function registrar(kind, foto){
+  try {
+    const r = await chamar({ action:"marcar", kind, foto });
+    telaSucesso(r.marcacao);
+  } catch(e){
+    try { sessao = await chamar({ action:"session" }); } catch { /* mantém a sessão atual */ }
+    telaInicio(e.message);
+  }
+}
+
+function telaSucesso(m){
+  adiarSaida();
+  tela.innerHTML = `
+    <div class="sucesso">
+      <div class="marca" style="color:var(--ok)">✓</div>
+      <h2>${m.rotulo} registrada</h2>
+      <p class="sub" style="margin:0">${hora(m.occurred_at)} · ${sessao.colaborador.nome}</p>
+      <div class="comprovante">${m.comprovante}</div>
+    </div>
+    <button class="acao" id="ok">Pronto</button>`;
+  document.getElementById("ok").onclick = async () => {
+    try { sessao = await chamar({ action:"session" }); telaInicio(); }
+    catch { sessao=null; pin=""; telaPin(); }
+  };
+  rodape.textContent = "Guarde o código se quiser conferir este registro depois.";
+  setTimeout(() => { sessao=null; pin=""; telaPin(); }, 12000);
+}
+
+/* ---------- Espelho ---------- */
+async function telaEspelho(){
+  adiarSaida();
+  tela.innerHTML = `<h1>Meus registros</h1><p class="sub">Carregando…</p>`;
+  try {
+    const r = await chamar({ action:"espelho", dias:30 });
+    tela.innerHTML = `
+      <h1>Meus registros</h1>
+      <p class="sub">Últimos 30 dias · ${r.colaborador.nome}</p>
+      ${r.dias.length ? r.dias.map(d => `
+        <p style="margin:16px 0 4px;font-weight:600">
+          ${d.data_operacional.split("-").reverse().join("/")}</p>
+        <ul class="lista">${d.marcacoes.map(m =>
+          `<li><span>${m.rotulo}${m.correcao ? " (correção)" : ""}</span>
+               <b>${hora(m.occurred_at)}</b></li>`).join("")}</ul>`).join("")
+        : `<p class="vazio">Nenhum registro no período.</p>`}
+      <button class="acao secundaria" id="voltar">Voltar</button>`;
+    document.getElementById("voltar").onclick = telaInicio;
+  } catch(e){ telaInicio(e.message); }
+}
+
+["click","touchstart","keydown"].forEach(ev =>
+  document.addEventListener(ev, () => { if(sessao) adiarSaida(); }, { passive:true }));
+
+telaPin();
+</script>
+</body>
+</html>
