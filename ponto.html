@@ -29,6 +29,8 @@
          background:#eceae4;color:var(--texto);font-size:21px;font-weight:600}
   button:active{transform:translateY(1px)}
   .acao{background:var(--verde);color:#fff;width:100%;font-size:17px;padding:18px;margin-top:10px}
+  .encerrado{background:#eef3ef;color:var(--ok);border-radius:10px;padding:14px;
+             text-align:center;font-size:15px;font-weight:600;margin:10px 0}
   .acao.secundaria{background:#fff;color:var(--verde);border:2px solid var(--verde)}
   .acao[disabled]{opacity:.5;cursor:default}
   .discreto{background:none;color:var(--suave);font-size:14px;font-weight:500;padding:12px}
@@ -38,6 +40,7 @@
             border-bottom:1px solid var(--borda);font-size:15px}
   .lista li:last-child{border:none}
   .lista b{font-variant-numeric:tabular-nums}
+  .lista em{display:block;font-style:normal;font-size:12px;color:var(--suave)}
   .vazio{color:var(--suave);font-size:14px;margin:0 0 18px}
 
   .aviso{background:#fdf3f1;color:var(--erro);border-radius:10px;padding:12px;
@@ -63,8 +66,12 @@
 // Tela de registro de jornada. Conversa SOMENTE com a Edge Function `ponto`.
 // O horario que vale e o do servidor: o relogio abaixo e so conforto visual.
 const FUNCAO = "https://kujelbcbrcmkitzyswbh.supabase.co/functions/v1/ponto";
-const TOKEN_UNIDADE = new URLSearchParams(location.search).get("u") || "";
-const APARELHO = new URLSearchParams(location.search).get("d") || "Tablet";
+const PARAMS = new URLSearchParams(location.search);
+const TOKEN_UNIDADE = PARAMS.get("u") || "";
+// O token do totem só existe na URL salva no tablet do salão. Sem ele, a
+// marcação é tratada como celular e passa pela cerca da unidade.
+const TOKEN_TOTEM = PARAMS.get("t") || "";
+const APARELHO = PARAMS.get("d") || (TOKEN_TOTEM ? "Tablet" : "Celular");
 const OCIOSO_MS = 60000;   // tablet compartilhado: volta pro PIN sozinho
 
 const tela = document.getElementById("tela");
@@ -77,11 +84,33 @@ const hora = (iso) => new Date(iso).toLocaleTimeString("pt-BR",
 async function chamar(payload){
   const r = await fetch(FUNCAO, {
     method:"POST", headers:{"Content-Type":"application/json"},
-    body: JSON.stringify({ unit_token: TOKEN_UNIDADE, pin, device_label: APARELHO, ...payload })
+    body: JSON.stringify({ unit_token: TOKEN_UNIDADE, totem_token: TOKEN_TOTEM,
+                           pin, device_label: APARELHO, ...payload })
   });
   const dados = await r.json().catch(() => ({ error:"Resposta invalida do servidor." }));
-  if(!r.ok) throw new Error(dados.error || "Nao foi possivel completar.");
+  if(!r.ok){
+    const erro = new Error(dados.error || "Nao foi possivel completar.");
+    erro.dados = dados;   // fora_da_cerca, distancia_m e afins viajam aqui
+    throw erro;
+  }
   return dados;
+}
+
+/* ---------- Localização (só no celular) ---------- */
+// O aparelho do salão não precisa: não sai do lugar. No celular, a distância é
+// o que sustenta o registro depois — vai gravada mesmo quando está tudo certo.
+function pegarLocal(){
+  return new Promise((resolve) => {
+    if(!navigator.geolocation) return resolve(null);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => resolve({
+        latitude: +pos.coords.latitude.toFixed(6),
+        longitude: +pos.coords.longitude.toFixed(6),
+        precisao_m: Math.round(pos.coords.accuracy),
+      }),
+      () => resolve(null),
+      { enableHighAccuracy:true, timeout:12000, maximumAge:30000 });
+  });
 }
 
 function adiarSaida(){
@@ -137,17 +166,23 @@ function telaInicio(aviso){
     <h1>Olá, ${sessao.colaborador.nome.split(" ")[0]}</h1>
     <p class="sub">${sessao.unidade.nome} · dia ${sessao.dia_operacional.split("-").reverse().join("/")}</p>
     ${aviso ? `<div class="aviso">${aviso}</div>` : ""}
+    ${(sessao.avisos || []).map(a => `<div class="aviso" style="background:#fdf3e6;color:#8a5a12">
+        <b>${a.dia.split("-").reverse().slice(0,2).join("/")}:</b> ${a.detalhe}
+        <div style="font-size:12px;margin-top:4px">A gestão já foi avisada. Se precisar acertar, procure o gestor.</div>
+      </div>`).join("")}
     ${m.length ? `<ul class="lista">${m.map(x =>
-        `<li><span>${x.rotulo}</span><b>${hora(x.occurred_at)}</b></li>`).join("")}</ul>`
+        `<li><span>${x.rotulo}<em>${x.coluna || ""}</em></span><b>${hora(x.occurred_at)}</b></li>`).join("")}</ul>`
       : `<p class="vazio">Nenhuma marcação hoje.</p>`}
-    ${sessao.proximas.map(p =>
-        `<button class="acao" data-kind="${p.kind}" data-foto="${p.exige_foto}">${p.rotulo}</button>`).join("")}
+    ${sessao.dia_encerrado
+        ? `<p class="encerrado">Jornada de hoje encerrada.</p>`
+        : sessao.proximas.map(p =>
+            `<button class="acao" data-kind="${p.kind}" data-foto="${p.exige_foto}">${p.rotulo}</button>`).join("")}
     <button class="acao secundaria" data-acao="espelho">Ver meus registros</button>
     <button class="discreto" data-acao="sair" style="width:100%">Sair</button>`;
 
   tela.querySelectorAll("[data-kind]").forEach(b =>
     b.onclick = () => b.dataset.foto === "true"
-      ? telaFoto(b.dataset.kind, b.textContent)
+      ? telaFoto(b.dataset.kind, b.textContent.trim())
       : registrar(b.dataset.kind, null));
   tela.querySelector('[data-acao="espelho"]').onclick = telaEspelho;
   tela.querySelector('[data-acao="sair"]').onclick = () => { sessao=null; pin=""; telaPin(); };
@@ -180,7 +215,8 @@ async function telaFoto(kind, rotulo){
 
   document.getElementById("voltar").onclick = () => { parar(); telaInicio(); };
   document.getElementById("bater").onclick = async (ev) => {
-    ev.target.disabled = true; ev.target.textContent = "Registrando…";
+    const bt = ev.currentTarget;
+    bt.disabled = true; bt.textContent = "Registrando…";
     const c = document.getElementById("tela-foto");
     const lado = 320;
     c.width = lado; c.height = Math.round(lado * video.videoHeight / video.videoWidth) || lado;
@@ -192,14 +228,38 @@ async function telaFoto(kind, rotulo){
 }
 
 /* ---------- Registro ---------- */
-async function registrar(kind, foto){
+async function registrar(kind, foto, insistir){
   try {
-    const r = await chamar({ action:"marcar", kind, foto });
+    let local = null;
+    if(sessao.exige_local){
+      tela.innerHTML = `<h2>Conferindo onde você está…</h2>
+        <p class="sub">Se o navegador pedir permissão de localização, aceite.</p>`;
+      local = await pegarLocal();
+    }
+    const r = await chamar({ action:"marcar", kind, foto, insistir: insistir === true, ...(local || {}) });
     telaSucesso(r.marcacao);
   } catch(e){
+    if(e.dados?.fora_da_cerca && !insistir) return telaForaDaCerca(kind, foto, e);
+    if(e.dados?.precisa_local && !insistir) return telaInicio(
+      "Não conseguimos ler sua localização. Ligue o GPS e tente de novo — ou bata no tablet do salão.");
     try { sessao = await chamar({ action:"session" }); } catch { /* mantém a sessão atual */ }
     telaInicio(e.message);
   }
+}
+
+// Ninguém fica sem bater ponto por causa de GPS ruim. A marcação entra com a
+// distância registrada e a gestão vê a pendência no dia seguinte.
+function telaForaDaCerca(kind, foto, e){
+  adiarSaida();
+  tela.innerHTML = `
+    <h2>Você está longe do pub?</h2>
+    <div class="aviso" style="background:#fdf3e6;color:#8a5a12">${e.message}</div>
+    <p class="sub">Se você está no pub e o sinal está ruim, pode registrar assim. A distância
+      medida fica gravada na marcação e a gestão confere depois.</p>
+    <button class="acao" id="fc-insistir">Estou no pub, registrar assim</button>
+    <button class="acao secundaria" id="fc-voltar">Voltar</button>`;
+  document.getElementById("fc-insistir").onclick = () => registrar(kind, foto, true);
+  document.getElementById("fc-voltar").onclick = () => telaInicio();
 }
 
 function telaSucesso(m){

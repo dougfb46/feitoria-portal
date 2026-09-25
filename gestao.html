@@ -1,0 +1,1374 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gestão — Feitoria</title>
+<style>
+  :root{--verde:#1f4d3a;--ambar:#c8871f;--fundo:#f4f2ed;--carta:#fff;--texto:#23261f;
+        --suave:#6b7169;--erro:#a3341f;--ok:#1f6b3f;--borda:#e2ded4}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--fundo);
+       color:var(--texto);padding:16px}
+  .app{max-width:860px;margin:0 auto}
+  .carta{background:var(--carta);border:1px solid var(--borda);border-radius:16px;padding:20px;margin-bottom:16px}
+  h1{font-size:20px;margin:0 0 4px}
+  h2{font-size:16px;margin:0 0 12px}
+  .sub{color:var(--suave);font-size:14px;margin:0 0 16px}
+  label{display:block;font-size:13px;color:var(--suave);margin:10px 0 4px}
+  input,select{width:100%;padding:11px;border:1px solid var(--borda);border-radius:9px;
+               font:inherit;background:#fff;color:var(--texto)}
+  button{font:inherit;cursor:pointer;border:none;border-radius:9px;padding:11px 16px;
+         background:var(--verde);color:#fff;font-weight:600}
+  button.secundaria{background:#fff;color:var(--verde);border:1.5px solid var(--verde)}
+  button.discreto{background:none;color:var(--suave);font-weight:500;padding:8px 10px}
+  button[disabled]{opacity:.5;cursor:default}
+  .linha{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end}
+  .linha>*{flex:1;min-width:140px}
+  .linha button{flex:0 0 auto}
+  .abas{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+  .abas button{background:#eceae4;color:var(--texto)}
+  .abas button.ativa{background:var(--verde);color:#fff}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th,td{text-align:left;padding:9px 6px;border-bottom:1px solid var(--borda);vertical-align:middle}
+  th{font-size:12px;color:var(--suave);text-transform:uppercase;letter-spacing:.04em}
+  td.hora{font-variant-numeric:tabular-nums;font-weight:600}
+  .etiqueta{display:inline-block;font-size:11px;padding:2px 7px;border-radius:99px;
+            background:#eceae4;color:var(--suave)}
+  .etiqueta.ponto{background:#e6efe9;color:var(--ok)}
+  .etiqueta.grave{background:#fdf3f1;color:var(--erro)}
+  .etiqueta.atencao{background:#fdf3e6;color:var(--ambar)}
+  .etiqueta.aviso{background:#eceae4;color:var(--suave)}
+  .selo{display:inline-block;min-width:18px;margin-left:6px;padding:1px 6px;border-radius:99px;
+        background:var(--erro);color:#fff;font-size:11px;font-weight:700}
+  .abas button.ativa .selo{background:#fff;color:var(--erro)}
+  .etiqueta.correcao{background:#fdf3e6;color:var(--ambar)}
+  .etiqueta.substituida{background:#f3eceb;color:var(--erro);text-decoration:line-through}
+  .aviso{background:#fdf3f1;color:var(--erro);border-radius:9px;padding:11px;font-size:14px;margin:10px 0}
+  .ok{background:#eef3ef;color:var(--ok);border-radius:9px;padding:11px;font-size:14px;margin:10px 0}
+  .vazio{color:var(--suave);font-size:14px}
+  dialog{border:none;border-radius:16px;padding:22px;max-width:420px;width:92%;
+         box-shadow:0 10px 40px rgba(0,0,0,.25)}
+  dialog::backdrop{background:rgba(0,0,0,.45)}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+
+<script type="module">
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
+// Chave publica (anon). Nao e segredo: o que protege sao as policies e o papel
+// exigido pela Edge Function. A chave da Takeat nunca chega aqui.
+const URL_SB = "https://kujelbcbrcmkitzyswbh.supabase.co";
+const ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt1amVsYmNicmNta2l0enlzd2JoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg2NDg0MzAsImV4cCI6MjEwNDIyNDQzMH0.uDwckXtywDBZGU_i4J8S9BdO2fUtRwXCOaLJbSiWzdQ";
+const sb = createClient(URL_SB, ANON);
+
+const app = document.getElementById("app");
+let unidades = [], unidade = null, aba = "equipe";
+let pendenciasAbertas = 0;   // aparece como selo na aba Pendências
+
+const hora = (iso) => new Date(iso).toLocaleTimeString("pt-BR",
+  { hour:"2-digit", minute:"2-digit", timeZone:"America/Sao_Paulo" });
+const hojeLocal = () => {
+  const d = new Date(Date.now() - 3600e3); // dia operacional fecha 01:00
+  return new Date(d.toLocaleString("en-US", { timeZone:"America/Sao_Paulo" }))
+    .toISOString().slice(0,10);
+};
+
+async function chamar(payload){
+  const { data:{ session } } = await sb.auth.getSession();
+  if(!session) { telaLogin("Sua sessão expirou. Entre de novo."); throw new Error("sem sessão"); }
+  const r = await fetch(`${URL_SB}/functions/v1/gestao-equipe`, {
+    method:"POST",
+    headers:{ "Content-Type":"application/json", Authorization:`Bearer ${session.access_token}` },
+    body: JSON.stringify({ restaurant_id: unidade?.id, ...payload })
+  });
+  const d = await r.json().catch(()=>({error:"Resposta inválida."}));
+  if(!r.ok) throw new Error(d.error || "Não foi possível completar.");
+  return d;
+}
+
+/* ---------- login ---------- */
+function telaLogin(msg){
+  app.innerHTML = `
+    <div class="carta" style="max-width:380px;margin:60px auto">
+      <h1>Gestão da Feitoria</h1>
+      <p class="sub">Entre com seu e-mail e senha</p>
+      ${msg ? `<div class="aviso">${msg}</div>` : ""}
+      <label>E-mail</label><input type="email" id="email" autocomplete="username">
+      <label>Senha</label><input type="password" id="senha" autocomplete="current-password">
+      <button id="entrar" style="width:100%;margin-top:16px">Entrar</button>
+    </div>`;
+  const entrar = async () => {
+    const bt = document.getElementById("entrar");
+    bt.disabled = true; bt.textContent = "Entrando…";
+    const { error } = await sb.auth.signInWithPassword({
+      email: document.getElementById("email").value.trim(),
+      password: document.getElementById("senha").value
+    });
+    if(error) return telaLogin("E-mail ou senha incorretos.");
+    iniciar();
+  };
+  document.getElementById("entrar").onclick = entrar;
+  document.getElementById("senha").onkeydown = (e) => e.key === "Enter" && entrar();
+}
+
+/* ---------- moldura ---------- */
+async function iniciar(){
+  try {
+    const r = await chamar({ action:"unidades" });
+    unidades = r.unidades;
+    if(!unidades.length) return telaLogin("Seu usuário não administra nenhuma unidade.");
+    unidade = unidades.find(u => u.id === unidade?.id) || unidades[0];
+    moldura(r.usuario);
+    atualizarSelo();
+  } catch(e){ telaLogin(e.message); }
+}
+
+function moldura(usuario){
+  app.innerHTML = `
+    <div class="carta">
+      <div class="linha">
+        <div>
+          <h1>Gestão da Feitoria</h1>
+          <p class="sub" style="margin:0">${usuario}</p>
+        </div>
+        <div style="flex:0 0 200px">
+          <label>Unidade</label>
+          <select id="unidade">${unidades.map(u =>
+            `<option value="${u.id}" ${u.id===unidade.id?"selected":""}>${u.name}</option>`).join("")}</select>
+        </div>
+        <button class="discreto" id="sair">Sair</button>
+      </div>
+    </div>
+    <div class="abas">
+      <button data-aba="equipe" class="${aba==="equipe"?"ativa":""}">Equipe</button>
+      <button data-aba="ponto"  class="${aba==="ponto" ?"ativa":""}">Ponto do dia</button>
+      <button data-aba="pend"   class="${aba==="pend"  ?"ativa":""}">Pendências${
+        pendenciasAbertas ? `<span class="selo">${pendenciasAbertas}</span>` : ""}</button>
+      <button data-aba="escala" class="${aba==="escala"?"ativa":""}">Escala</button>
+      <button data-aba="docs"   class="${aba==="docs"  ?"ativa":""}">Documentos</button>
+      <button data-aba="folha"  class="${aba==="folha" ?"ativa":""}">Folha de ponto</button>
+    </div>
+    <div id="conteudo"></div>`;
+
+  document.getElementById("unidade").onchange = (e) => {
+    unidade = unidades.find(u => u.id === e.target.value); render();
+  };
+  document.getElementById("sair").onclick = async () => { await sb.auth.signOut(); telaLogin(); };
+  app.querySelectorAll("[data-aba]").forEach(b =>
+    b.onclick = () => { aba = b.dataset.aba; moldura(usuario); });
+  render();
+}
+const render = () => aba === "equipe" ? abaEquipe()
+  : aba === "ponto" ? abaPonto()
+  : aba === "pend" ? abaPendencias()
+  : aba === "escala" ? abaEscala()
+  : aba === "folha" ? abaFolha()
+  : abaDocs();
+const conteudo = () => document.getElementById("conteudo");
+
+async function chamarDocs(payload){
+  const { data:{ session } } = await sb.auth.getSession();
+  if(!session) { telaLogin("Sua sessão expirou. Entre de novo."); throw new Error("sem sessão"); }
+  const r = await fetch(`${URL_SB}/functions/v1/gestao-documentos`, {
+    method:"POST",
+    headers:{ "Content-Type":"application/json", Authorization:`Bearer ${session.access_token}` },
+    body: JSON.stringify({ restaurant_id: unidade?.id, ...payload })
+  });
+  const d = await r.json().catch(()=>({error:"Resposta inválida."}));
+  if(!r.ok) { const e = new Error(d.error || "Não foi possível completar."); e.dados = d; throw e; }
+  return d;
+}
+
+/* ---------- equipe ---------- */
+async function abaEquipe(){
+  conteudo().innerHTML = `<div class="carta"><p class="vazio">Carregando…</p></div>`;
+  try {
+    const r = await chamar({ action:"equipe" });
+    conteudo().innerHTML = `
+      <div class="carta">
+        <div class="linha" style="margin-bottom:14px">
+          <h2 style="margin:0">Equipe · ${unidade.name}</h2>
+          <button id="novo">Novo colaborador</button>
+        </div>
+        ${r.equipe.length ? `<table>
+          <tr><th>Nome</th><th>Função</th><th>Vínculo</th><th>Ponto</th><th>Portal</th><th>PIN</th><th></th></tr>
+          ${r.equipe.map(p => `<tr style="${p.ativo?"":"opacity:.5"}">
+            <td><b>${p.nome}</b>${p.ativo?"":" <span class='etiqueta'>inativo</span>"}</td>
+            <td>${p.funcao || "—"}</td>
+            <td>${rotuloTipo(p.tipo)}</td>
+            <td>${p.registra_ponto ? `<span class="etiqueta ponto">marca</span>` : "—"}</td>
+            <td>${p.perfil_portal === "completo" ? `<span class="etiqueta ponto">completo</span>`
+                 : p.perfil_portal === "treinamentos" ? `<span class="etiqueta atencao">treinamentos</span>`
+                 : "—"}</td>
+            <td>${p.tem_pin ? "definido" : `<span class="etiqueta">sem PIN</span>`}</td>
+            <td style="text-align:right;white-space:nowrap">
+              <button class="discreto" data-editar='${JSON.stringify(p)}'>editar</button>
+              <button class="discreto" data-pin="${p.id}" data-nome="${p.nome}">PIN</button>
+              <button class="discreto" data-ficha='${JSON.stringify({id:p.id,nome:p.nome})}'>ficha</button>
+            </td></tr>`).join("")}
+        </table>` : `<p class="vazio">Nenhum colaborador cadastrado ainda.</p>`}
+      </div>`;
+    document.getElementById("novo").onclick = () => formulario(null);
+    conteudo().querySelectorAll("[data-editar]").forEach(b =>
+      b.onclick = () => formulario(JSON.parse(b.dataset.editar)));
+    conteudo().querySelectorAll("[data-pin]").forEach(b =>
+      b.onclick = () => definirPin(b.dataset.pin, b.dataset.nome));
+    conteudo().querySelectorAll("[data-ficha]").forEach(b =>
+      b.onclick = () => abrirFicha(JSON.parse(b.dataset.ficha)));
+  } catch(e){ conteudo().innerHTML = `<div class="carta"><div class="aviso">${e.message}</div></div>`; }
+}
+
+const rotuloTipo = (t) => ({clt:"CLT", freela_fixo:"Freela fixo",
+  freela_variavel:"Freela variável", socio:"Sócio", pj:"PJ"})[t] || t;
+const rotuloPerfil = (v) => ({sem_acesso:"Sem acesso",
+  treinamentos:"Só treinamentos", completo:"Completo"})[v] || v;
+
+function formulario(p){
+  const d = document.createElement("dialog");
+  d.innerHTML = `
+    <h2>${p ? "Editar colaborador" : "Novo colaborador"}</h2>
+    <label>Nome completo</label><input id="f-nome" value="${p?.nome || ""}">
+    <label>Função</label><input id="f-funcao" value="${p?.funcao || ""}" placeholder="Atendente, cozinha…">
+    <label>Vínculo</label>
+    <select id="f-tipo">${["clt","freela_fixo","freela_variavel","socio","pj"].map(t =>
+      `<option value="${t}" ${p?.tipo===t?"selected":""}>${rotuloTipo(t)}</option>`).join("")}</select>
+    <label>Data de nascimento</label>
+    <input type="date" id="f-nascimento" value="${p?.nascimento || ""}">
+    <p class="sub" style="margin:4px 0 0;font-size:12px">
+      Segundo fator do portal no celular. Sem ela a pessoa não acessa o portal —
+      o tablet do ponto continua só com PIN.</p>
+    <label>Admissão</label><input type="date" id="f-admitido" value="${p?.admitido_em || ""}">
+    <label>Desligamento (deixe vazio se está ativo)</label>
+    <input type="date" id="f-desligado" value="${p?.desligado_em || ""}">
+    <label style="display:flex;gap:8px;align-items:center;margin-top:14px;color:var(--texto)">
+      <input type="checkbox" id="f-ponto" style="width:auto" ${p?.registra_ponto?"checked":""}>
+      Registra ponto
+    </label>
+    <p class="sub" style="margin:4px 0 0;font-size:12px">
+      Só CLT e sócio marcam ponto. Freela é escalado e pago por turno, na planilha.</p>
+    <label style="margin-top:14px">Acesso ao portal</label>
+    <select id="f-perfil">${["sem_acesso","treinamentos","completo"].map(v =>
+      `<option value="${v}" ${(p?.perfil_portal || "sem_acesso")===v?"selected":""}>${rotuloPerfil(v)}</option>`).join("")}</select>
+    <p class="sub" style="margin:4px 0 0;font-size:12px">
+      <b>Sem acesso</b> não entra no portal. <b>Só treinamentos</b> entra para fazer
+      treinamento, vê o certificado dele e o mural — não vê holerite, contrato nem
+      folha de ponto; é o caso do freela. <b>Completo</b> vê tudo o que é dele.</p>
+    <div id="f-erro"></div>
+    <div class="linha" style="margin-top:18px">
+      <button id="f-salvar">Salvar</button>
+      <button class="secundaria" id="f-cancelar">Cancelar</button>
+    </div>`;
+  document.body.appendChild(d); d.showModal();
+  d.querySelector("#f-cancelar").onclick = () => d.close();
+  d.addEventListener("close", () => d.remove());
+  d.querySelector("#f-salvar").onclick = async (ev) => {
+    ev.target.disabled = true;
+    try {
+      await chamar({ action:"salvar", id:p?.id,
+        nome: d.querySelector("#f-nome").value,
+        funcao: d.querySelector("#f-funcao").value,
+        tipo: d.querySelector("#f-tipo").value,
+        perfil_portal: d.querySelector("#f-perfil").value,
+        nascimento: d.querySelector("#f-nascimento").value || null,
+        admitido_em: d.querySelector("#f-admitido").value || null,
+        desligado_em: d.querySelector("#f-desligado").value || null,
+        registra_ponto: d.querySelector("#f-ponto").checked,
+        ativo: !d.querySelector("#f-desligado").value });
+      d.close(); abaEquipe();
+    } catch(e){
+      ev.target.disabled = false;
+      d.querySelector("#f-erro").innerHTML = `<div class="aviso">${e.message}</div>`;
+    }
+  };
+}
+
+function definirPin(id, nome){
+  const d = document.createElement("dialog");
+  d.innerHTML = `
+    <h2>PIN de ${nome}</h2>
+    <p class="sub">De 4 a 6 números. É com ele que a pessoa marca o ponto e etiqueta na cozinha.</p>
+    <input id="p-pin" inputmode="numeric" maxlength="6" placeholder="••••"
+           style="font-size:26px;text-align:center;letter-spacing:10px">
+    <div id="p-erro"></div>
+    <div class="linha" style="margin-top:18px">
+      <button id="p-salvar">Definir</button>
+      <button class="secundaria" id="p-cancelar">Cancelar</button>
+    </div>`;
+  document.body.appendChild(d); d.showModal();
+  d.querySelector("#p-cancelar").onclick = () => d.close();
+  d.addEventListener("close", () => d.remove());
+  d.querySelector("#p-salvar").onclick = async (ev) => {
+    ev.target.disabled = true;
+    try {
+      await chamar({ action:"pin", employee_id:id, pin: d.querySelector("#p-pin").value.trim() });
+      d.close(); abaEquipe();
+    } catch(e){
+      ev.target.disabled = false;
+      d.querySelector("#p-erro").innerHTML = `<div class="aviso">${e.message}</div>`;
+    }
+  };
+}
+
+async function chamarGerar(payload){
+  const { data:{ session } } = await sb.auth.getSession();
+  if(!session) { telaLogin("Sua sessão expirou. Entre de novo."); throw new Error("sem sessão"); }
+  const r = await fetch(`${URL_SB}/functions/v1/gestao-gerar`, {
+    method:"POST",
+    headers:{ "Content-Type":"application/json", Authorization:`Bearer ${session.access_token}` },
+    body: JSON.stringify({ restaurant_id: unidade?.id, ...payload })
+  });
+  const d = await r.json().catch(()=>({error:"Resposta inválida."}));
+  if(!r.ok) { const e = new Error(d.error || "Não foi possível completar."); e.dados = d; throw e; }
+  return d;
+}
+
+async function chamarFn(fn, payload){
+  const { data:{ session } } = await sb.auth.getSession();
+  if(!session) { telaLogin("Sua sessão expirou. Entre de novo."); throw new Error("sem sessão"); }
+  const r = await fetch(`${URL_SB}/functions/v1/${fn}`, {
+    method:"POST",
+    headers:{ "Content-Type":"application/json", Authorization:`Bearer ${session.access_token}` },
+    body: JSON.stringify({ restaurant_id: unidade?.id, ...payload })
+  });
+  const d = await r.json().catch(()=>({error:"Resposta inválida."}));
+  if(!r.ok) { const e = new Error(d.error || "Não foi possível completar."); e.dados = d; throw e; }
+  return d;
+}
+const chamarFolha   = (p) => chamarFn("gestao-folha", p);
+const chamarPend    = (p) => chamarFn("gestao-pendencias", p);
+const chamarModelos = (p) => chamarFn("gestao-modelos", p);
+
+/* ---------- ficha de registro ---------- */
+const CAMPOS_FICHA = [
+  ["Identificação", [
+    ["nome_completo","Nome completo","text"], ["nascimento_txt","Data de nascimento","aviso"],
+    ["sexo","Sexo","select:Masculino,Feminino,Outro"],
+    ["estado_civil","Estado civil","select:solteiro(a),casado(a),divorciado(a),viúvo(a),união estável"],
+    ["nacionalidade","Nacionalidade","text"],
+    ["nome_mae","Nome da mãe","text"], ["nome_pai","Nome do pai","text"],
+  ]],
+  ["Endereço e contato", [
+    ["endereco","Logradouro e número","text"], ["bairro","Bairro","text"],
+    ["cep","CEP","text"], ["cidade","Cidade","text"], ["estado","UF","text"],
+    ["telefone","Telefone","text"], ["email","E-mail","text"],
+  ]],
+  ["Documentos", [
+    ["cpf","CPF","text"], ["rg","RG","text"], ["rg_orgao","Órgão expedidor/UF","text"],
+    ["titulo_eleitor","Título de eleitor","text"], ["titulo_zona_secao","Zona/Seção","text"],
+    ["ctps","CTPS digital","text"], ["pis","PIS/PASEP","text"],
+    ["cnh","CNH","text"], ["cnh_categoria","Categoria","text"],
+    ["reservista","Certificado de reservista","text"],
+  ]],
+  ["Contrato", [
+    ["cargo","Cargo/função","text"], ["cbo","CBO","text"],
+    ["salario","Salário (R$)","number"],
+    ["tipo_contrato","Tipo de contrato","select:Prazo indeterminado,Prazo determinado,Experiência"],
+    ["data_termino","Data de término","date"],
+    ["jornada","Jornada de trabalho","text"],
+    ["local_prestacao","Local de prestação","text"],
+    ["exame_admissional","Data do exame admissional","date"],
+  ]],
+];
+
+async function abrirFicha(pessoa){
+  const { ficha, empresa } = await chamarGerar({ action:"ficha", employee_id: pessoa.id });
+  const v = (c) => (ficha?.[c] ?? "");
+  const d = document.createElement("dialog");
+  d.style.maxWidth = "560px";
+  d.innerHTML = `
+    <h2>Ficha de ${pessoa.nome}</h2>
+    <p class="sub">É daqui que saem os documentos. Campo vazio impede gerar o que depende dele.</p>
+    ${empresa ? "" : `<div class="aviso">Cadastre os dados da empresa antes.</div>`}
+    ${CAMPOS_FICHA.map(([grupo, campos]) => `
+      <h2 style="margin:18px 0 2px;font-size:14px">${grupo}</h2>
+      ${campos.map(([c, rotulo, tipo]) => {
+        if(tipo === "aviso") return `<p class="sub" style="margin:8px 0 0;font-size:12px">
+          A data de nascimento fica no cadastro do colaborador, na aba Equipe.</p>`;
+        if(tipo.startsWith("select:")) return `<label>${rotulo}</label>
+          <select id="fi-${c}">${["", ...tipo.slice(7).split(",")].map(o =>
+            `<option value="${o}" ${v(c)===o?"selected":""}>${o || "—"}</option>`).join("")}</select>`;
+        return `<label>${rotulo}</label>
+          <input type="${tipo}" id="fi-${c}" value="${String(v(c)).replace(/"/g,"&quot;")}">`;
+      }).join("")}`).join("")}
+    <div id="fi-erro"></div>
+    <div class="linha" style="margin-top:20px">
+      <button id="fi-salvar">Salvar ficha</button>
+      <button class="secundaria" id="fi-cancelar">Fechar</button>
+    </div>`;
+  document.body.appendChild(d); d.showModal();
+  d.querySelector("#fi-cancelar").onclick = () => d.close();
+  d.addEventListener("close", () => d.remove());
+  d.querySelector("#fi-salvar").onclick = async (ev) => {
+    ev.target.disabled = true;
+    const dados = { action:"salvar_ficha", employee_id: pessoa.id, company_id: empresa?.id };
+    for(const [, campos] of CAMPOS_FICHA)
+      for(const [c,, tipo] of campos){
+        if(tipo === "aviso") continue;
+        const el = d.querySelector(`#fi-${c}`);
+        if(el) dados[c] = el.value;
+      }
+    try { await chamarGerar(dados); d.close(); abaEquipe(); }
+    catch(e){ ev.target.disabled = false;
+      d.querySelector("#fi-erro").innerHTML = `<div class="aviso">${e.message}</div>`; }
+  };
+}
+
+/* ---------- gerar documento de modelo ---------- */
+async function formGerar(equipe){
+  const { modelos } = await chamarGerar({ action:"modelos" });
+  if(!modelos.length) return alert("Nenhum modelo ativo cadastrado ainda.");
+  const d = document.createElement("dialog");
+  d.innerHTML = `
+    <h2>Gerar documento</h2>
+    <p class="sub">O PDF é montado com os dados da ficha e entra na fila de assinatura.</p>
+    <label>Colaborador</label>
+    <select id="g-pessoa">${equipe.filter(p=>p.ativo).map(p =>
+      `<option value="${p.id}">${p.nome}</option>`).join("")}</select>
+    <label>Modelo</label>
+    <select id="g-modelo">${modelos.map(m =>
+      `<option value="${m.id}">${m.codigo} — ${m.titulo}</option>`).join("")}</select>
+    <label>Data do documento</label>
+    <input type="date" id="g-data" value="${hojeLocal()}">
+    <p class="sub" style="margin:4px 0 0;font-size:12px">
+      Pode ser retroativa, para regularizar quem já está admitido. A data da
+      <b>assinatura</b> é sempre a real — essa não se antedata.</p>
+    <label>Prazo para assinar (opcional)</label><input type="date" id="g-prazo">
+    <div id="g-erro"></div>
+    <div class="linha" style="margin-top:18px">
+      <button class="secundaria" id="g-previa">Conferir antes</button>
+      <button id="g-gerar">Gerar</button>
+      <button class="discreto" id="g-cancelar">Cancelar</button>
+    </div>`;
+  document.body.appendChild(d); d.showModal();
+  d.querySelector("#g-cancelar").onclick = () => d.close();
+  d.addEventListener("close", () => d.remove());
+
+  const payload = () => ({
+    employee_id: d.querySelector("#g-pessoa").value,
+    template_id: d.querySelector("#g-modelo").value,
+    data_documento: d.querySelector("#g-data").value,
+    prazo: d.querySelector("#g-prazo").value || null,
+  });
+  const erro = d.querySelector("#g-erro");
+
+  d.querySelector("#g-previa").onclick = async () => {
+    erro.innerHTML = `<p class="vazio">Conferindo…</p>`;
+    try {
+      const r = await chamarGerar({ action:"previa", ...payload() });
+      erro.innerHTML = r.pronto
+        ? `<div class="ok">Tudo preenchido. ${r.blocos.length} blocos.</div>`
+        : `<div class="aviso">Falta na ficha: ${(r.faltando||[]).join(", ") || "—"}
+           ${r.pendentes?.length ? "<br>Marcadores sem decisão: " + r.pendentes.join(", ") : ""}</div>`;
+    } catch(e){ erro.innerHTML = `<div class="aviso">${e.message}</div>`; }
+  };
+
+  d.querySelector("#g-gerar").onclick = async (ev) => {
+    ev.target.disabled = true; ev.target.textContent = "Gerando…";
+    try {
+      const r = await chamarGerar({ action:"gerar", ...payload() });
+      d.close();
+      alert(`"${r.titulo}" gerado.\nImpressão digital: ${r.sha256_curto}`);
+      abaDocs();
+    } catch(e){
+      ev.target.disabled = false; ev.target.textContent = "Gerar";
+      const f = e.dados?.faltando?.length ? "<br>Falta na ficha: " + e.dados.faltando.join(", ") : "";
+      erro.innerHTML = `<div class="aviso">${e.message}${f}</div>`;
+    }
+  };
+}
+
+/* ---------- documentos ---------- */
+let filtroPessoa = "";
+async function abaDocs(){
+  conteudo().innerHTML = `<div class="carta"><p class="vazio">Carregando…</p></div>`;
+  try {
+    const [{ equipe }, { tipos }, { documentos }, { pendentes }] = await Promise.all([
+      chamar({ action:"equipe" }),
+      chamarDocs({ action:"tipos" }),
+      chamarDocs({ action:"listar", employee_id: filtroPessoa || undefined }),
+      chamarDocs({ action:"pendencias" }),
+    ]);
+
+    conteudo().innerHTML = `
+      ${pendentes.length ? `<div class="carta">
+        <h2>Esperando assinatura</h2>
+        <table>
+          <tr><th>Colaborador</th><th>Documento</th><th>Prazo</th></tr>
+          ${pendentes.map(p => `<tr>
+            <td><b>${p.colaborador}</b></td>
+            <td>${p.titulo}</td>
+            <td>${p.prazo ? (p.atrasado
+                  ? `<span class="etiqueta substituida">${p.prazo.split("-").reverse().join("/")}</span>`
+                  : p.prazo.split("-").reverse().join("/")) : "—"}</td>
+          </tr>`).join("")}
+        </table>
+      </div>` : ""}
+
+      <div class="carta">
+        <div class="linha" style="margin-bottom:14px">
+          <div style="flex:1">
+            <label>Filtrar por colaborador</label>
+            <select id="filtro">
+              <option value="">Todos</option>
+              ${equipe.map(p => `<option value="${p.id}" ${filtroPessoa===p.id?"selected":""}>${p.nome}</option>`).join("")}
+            </select>
+          </div>
+          <button class="secundaria" id="gerar">Gerar de modelo</button>
+          <button class="discreto" id="importar">Importar modelos</button>
+          <button id="enviar">Enviar documento</button>
+        </div>
+        ${documentos.length ? `<table>
+          <tr><th>Documento</th><th>De quem</th><th>Assinatura</th><th>Arquivo</th><th></th></tr>
+          ${documentos.map(d => `<tr>
+            <td><b>${d.titulo}</b>
+                <div class="sub">${d.tipo}${d.competencia ? " · "+d.competencia : ""}</div></td>
+            <td>${d.colaborador}</td>
+            <td>${d.exige_assinatura
+                  ? (d.assinaturas.length
+                      ? `<span class="etiqueta ponto">assinado</span>
+                         <div class="sub">${new Date(d.assinaturas[0].quando)
+                            .toLocaleString("pt-BR",{dateStyle:"short",timeStyle:"short",timeZone:"America/Sao_Paulo"})}</div>`
+                      : `<span class="etiqueta correcao">pendente</span>`)
+                  : "—"}</td>
+            <td><span class="sub" title="impressão digital do arquivo">${d.sha256_curto}</span></td>
+            <td style="text-align:right;white-space:nowrap">
+              <button class="discreto" data-abrir="${d.id}">abrir</button>
+              <button class="discreto" data-arquivar="${d.id}">arquivar</button>
+            </td></tr>`).join("")}
+        </table>` : `<p class="vazio">Nenhum documento ainda.</p>`}
+      </div>`;
+
+    document.getElementById("filtro").onchange = (e) => { filtroPessoa = e.target.value; abaDocs(); };
+    document.getElementById("importar").onclick = () => formModelos();
+    document.getElementById("enviar").onclick = () => formEnvio(equipe, tipos);
+    document.getElementById("gerar").onclick = () => formGerar(equipe);
+    conteudo().querySelectorAll("[data-abrir]").forEach(b => b.onclick = async () => {
+      try { const { url } = await chamarDocs({ action:"abrir", id:b.dataset.abrir });
+            window.open(url, "_blank", "noopener"); }
+      catch(e){ alert(e.message); }
+    });
+    conteudo().querySelectorAll("[data-arquivar]").forEach(b => b.onclick = async () => {
+      const motivo = prompt("Por que arquivar este documento?\nO registro e as assinaturas continuam guardados.");
+      if(!motivo) return;
+      try { await chamarDocs({ action:"arquivar", id:b.dataset.arquivar, motivo }); abaDocs(); }
+      catch(e){ alert(e.message); }
+    });
+  } catch(e){ conteudo().innerHTML = `<div class="carta"><div class="aviso">${e.message}</div></div>`; }
+}
+
+function formEnvio(equipe, tipos){
+  const d = document.createElement("dialog");
+  d.innerHTML = `
+    <h2>Enviar documento</h2>
+    <p class="sub">PDF de até 10 MB. O arquivo fica em área privada e só abre por link temporário.</p>
+    <label>Tipo</label>
+    <select id="e-tipo">${tipos.map(t => `<option value="${t.id}" data-assina="${t.assina}">${t.nome}</option>`).join("")}</select>
+    <label>Para quem</label>
+    <select id="e-pessoa">${equipe.filter(p=>p.ativo).map(p => `<option value="${p.id}">${p.nome}</option>`).join("")}</select>
+    <label>Título</label><input id="e-titulo" placeholder="Holerite de setembro">
+    <label>Competência (opcional)</label><input type="month" id="e-comp">
+    <label>Prazo para assinar (opcional)</label><input type="date" id="e-prazo">
+    <label style="display:flex;gap:8px;align-items:center;margin-top:14px;color:var(--texto)">
+      <input type="checkbox" id="e-assina" style="width:auto" checked> Exige assinatura
+    </label>
+    <label style="display:flex;gap:8px;align-items:center;color:var(--texto)">
+      <input type="checkbox" id="e-mural" style="width:auto"> É do mural (toda a equipe, sem assinatura)
+    </label>
+    <label>Arquivo PDF</label><input type="file" id="e-arquivo" accept="application/pdf">
+    <div id="e-erro"></div>
+    <div class="linha" style="margin-top:18px">
+      <button id="e-salvar">Enviar</button>
+      <button class="secundaria" id="e-cancelar">Cancelar</button>
+    </div>`;
+  document.body.appendChild(d); d.showModal();
+  d.querySelector("#e-cancelar").onclick = () => d.close();
+  d.addEventListener("close", () => d.remove());
+
+  const tipo = d.querySelector("#e-tipo");
+  tipo.onchange = () => {
+    d.querySelector("#e-assina").checked =
+      tipo.selectedOptions[0].dataset.assina === "true";
+  };
+  const mural = d.querySelector("#e-mural");
+  mural.onchange = () => {
+    d.querySelector("#e-pessoa").disabled = mural.checked;
+    if(mural.checked) d.querySelector("#e-assina").checked = false;
+  };
+
+  d.querySelector("#e-salvar").onclick = async (ev) => {
+    const erro = d.querySelector("#e-erro");
+    const arquivo = d.querySelector("#e-arquivo").files[0];
+    if(!arquivo) return erro.innerHTML = `<div class="aviso">Escolha o arquivo PDF.</div>`;
+    if(arquivo.size > 10*1024*1024) return erro.innerHTML = `<div class="aviso">O PDF passa de 10 MB.</div>`;
+
+    ev.target.disabled = true; ev.target.textContent = "Enviando…";
+    try {
+      const base64 = await new Promise((ok, falhou) => {
+        const fr = new FileReader();
+        fr.onload = () => ok(fr.result);
+        fr.onerror = () => falhou(new Error("Não consegui ler o arquivo."));
+        fr.readAsDataURL(arquivo);
+      });
+      const enviar = (confirmar) => chamarDocs({
+        action:"enviar", arquivo: base64,
+        tipo: tipo.value,
+        titulo: d.querySelector("#e-titulo").value,
+        competencia: d.querySelector("#e-comp").value || null,
+        prazo: d.querySelector("#e-prazo").value || null,
+        exige_assinatura: d.querySelector("#e-assina").checked,
+        visibilidade: mural.checked ? "mural" : "colaborador",
+        employee_id: mural.checked ? null : d.querySelector("#e-pessoa").value,
+        confirmar_duplicado: confirmar,
+      });
+      try { await enviar(false); }
+      catch(err){
+        // Arquivo idêntico já enviado: confirma em vez de duplicar em silêncio.
+        if(err.dados?.duplicado && confirm(err.message + "\nEnviar assim mesmo?")) await enviar(true);
+        else throw err;
+      }
+      d.close(); abaDocs();
+    } catch(e){
+      ev.target.disabled = false; ev.target.textContent = "Enviar";
+      erro.innerHTML = `<div class="aviso">${e.message}</div>`;
+    }
+  };
+}
+
+/* ---------- ponto do dia ---------- */
+let diaEscolhido = null;
+async function abaPonto(){
+  diaEscolhido = diaEscolhido || hojeLocal();
+  conteudo().innerHTML = `<div class="carta"><p class="vazio">Carregando…</p></div>`;
+  try {
+    const r = await chamar({ action:"dia", dia: diaEscolhido });
+    const porPessoa = new Map();
+    for(const m of r.marcacoes){
+      const l = porPessoa.get(m.nome) || []; l.push(m); porPessoa.set(m.nome, l);
+    }
+    conteudo().innerHTML = `
+      <div class="carta">
+        <div class="linha" style="margin-bottom:6px">
+          <div style="flex:0 0 180px">
+            <label>Dia operacional</label>
+            <input type="date" id="dia" value="${diaEscolhido}">
+          </div>
+          <button id="incluir">Incluir marcação</button>
+        </div>
+        <p class="sub" style="margin:10px 0 16px">
+          O dia fecha às 01:00 — marcação depois da meia-noite pertence ao dia anterior.</p>
+        ${porPessoa.size ? [...porPessoa.entries()].map(([nome, lista]) => `
+          <h2 style="margin:18px 0 6px">${nome}</h2>
+          <table>
+            <tr><th>Coluna</th><th>Marcação</th><th>Hora</th><th>Origem</th><th></th></tr>
+            ${lista.map(m => `<tr>
+              <td>${m.coluna}</td>
+              <td>${m.rotulo}
+                  ${m.e_correcao ? `<span class="etiqueta correcao">correção</span>` : ""}
+                  ${m.foi_corrigida ? `<span class="etiqueta substituida">substituída</span>` : ""}
+                  ${m.motivo ? `<div class="sub" style="margin:2px 0 0">${m.motivo}</div>` : ""}</td>
+              <td class="hora">${hora(m.occurred_at)}</td>
+              <td>${m.por === "gestor" ? "gestão" : "tablet"}${m.tem_foto ? " · foto" : ""}</td>
+              <td style="text-align:right">
+                <button class="discreto" data-corrigir='${JSON.stringify(
+                  {id:m.id, employee_id:m.employee_id, nome:m.nome, kind:m.kind})}'>corrigir</button>
+              </td></tr>`).join("")}
+          </table>`).join("") : `<p class="vazio">Nenhuma marcação neste dia.</p>`}
+      </div>`;
+    document.getElementById("dia").onchange = (e) => { diaEscolhido = e.target.value; abaPonto(); };
+    document.getElementById("incluir").onclick = () => formCorrecao(null);
+    conteudo().querySelectorAll("[data-corrigir]").forEach(b =>
+      b.onclick = () => formCorrecao(JSON.parse(b.dataset.corrigir)));
+  } catch(e){ conteudo().innerHTML = `<div class="carta"><div class="aviso">${e.message}</div></div>`; }
+}
+
+async function formCorrecao(alvo){
+  const { equipe } = await chamar({ action:"equipe" });
+  const marcam = equipe.filter(p => p.registra_ponto && p.ativo);
+  const d = document.createElement("dialog");
+  d.innerHTML = `
+    <h2>${alvo?.id ? "Corrigir marcação" : "Incluir marcação"}</h2>
+    <p class="sub">${alvo?.id
+      ? "A marcação original continua no histórico. Esta entra como correção."
+      : "Use para batida esquecida. Fica registrada como lançamento da gestão."}</p>
+    <label>Colaborador</label>
+    <select id="c-pessoa" ${alvo?.employee_id?"disabled":""}>
+      ${marcam.map(p => `<option value="${p.id}" ${alvo?.employee_id===p.id?"selected":""}>${p.nome}</option>`).join("")}
+    </select>
+    <label>Marcação</label>
+    <select id="c-kind">
+      ${[["entrada","Entrada (1ª Entrada)"],["intervalo_inicio","Saída para o intervalo (1ª Saída)"],
+         ["intervalo_fim","Volta do intervalo (2ª Entrada)"],["saida","Saída (2ª Saída)"]]
+        .map(([k,r]) => `<option value="${k}" ${alvo?.kind===k?"selected":""}>${r}</option>`).join("")}
+    </select>
+    <label>Data e hora que valem</label>
+    <input type="datetime-local" id="c-quando" value="${alvo?.dia || diaEscolhido || hojeLocal()}T12:00">
+    <label>Motivo (fica registrado)</label>
+    <input id="c-motivo" placeholder="Esqueceu de bater na saída">
+    <div id="c-erro"></div>
+    <div class="linha" style="margin-top:18px">
+      <button id="c-salvar">Registrar</button>
+      <button class="secundaria" id="c-cancelar">Cancelar</button>
+    </div>`;
+  document.body.appendChild(d); d.showModal();
+  d.querySelector("#c-cancelar").onclick = () => d.close();
+  d.addEventListener("close", () => d.remove());
+  d.querySelector("#c-salvar").onclick = async (ev) => {
+    ev.target.disabled = true;
+    try {
+      await chamar({ action:"corrigir",
+        employee_id: alvo?.employee_id || d.querySelector("#c-pessoa").value,
+        kind: d.querySelector("#c-kind").value,
+        occurred_at: new Date(d.querySelector("#c-quando").value).toISOString(),
+        motivo: d.querySelector("#c-motivo").value,
+        corrige_id: alvo?.id || null });
+      d.close();
+      // Lançou o ponto que faltava: roda o detector naquele dia para a
+      // pendência fechar na hora, em vez de esperar a passada da madrugada.
+      const dia = alvo?.dia || diaEscolhido;
+      if(aba === "pend"){
+        try { await chamarPend({ action:"rodar", inicio:dia, fim:dia }); } catch {}
+        await atualizarSelo(); abaPendencias();
+      } else {
+        atualizarSelo(); abaPonto();
+      }
+    } catch(e){
+      ev.target.disabled = false;
+      d.querySelector("#c-erro").innerHTML = `<div class="aviso">${e.message}</div>`;
+    }
+  };
+}
+
+/* ---------- pendências de ponto ---------- */
+// O número no alto da aba é o que faz a inconsistência ser vista sem ninguém
+// procurar. Atualiza sozinho depois de cada ação.
+async function atualizarSelo(){
+  try {
+    const { abertas } = await chamarPend({ action:"contar" });
+    pendenciasAbertas = abertas;
+    const botao = document.querySelector('[data-aba="pend"]');
+    if(botao) botao.innerHTML = `Pendências${abertas ? `<span class="selo">${abertas}</span>` : ""}`;
+  } catch { /* selo é enfeite: não atrapalha a tela se falhar */ }
+}
+
+let pendSituacao = "aberta";
+async function abaPendencias(){
+  conteudo().innerHTML = `<div class="carta"><p class="vazio">Carregando…</p></div>`;
+  try {
+    const desde = (() => { const d = new Date(Date.now() - 45*864e5); return d.toISOString().slice(0,10); })();
+    const { pendencias } = await chamarPend({ action:"listar", situacao: pendSituacao, desde });
+
+    conteudo().innerHTML = `
+      <div class="carta">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+          <h2 style="margin:0">Pendências de ponto</h2>
+          <div style="display:flex;gap:8px;align-items:center">
+            <select id="pd-situacao" style="width:auto">
+              <option value="aberta" ${pendSituacao==="aberta"?"selected":""}>Em aberto</option>
+              <option value="resolvida" ${pendSituacao==="resolvida"?"selected":""}>Resolvidas</option>
+              <option value="ignorada" ${pendSituacao==="ignorada"?"selected":""}>Ignoradas</option>
+              <option value="todas" ${pendSituacao==="todas"?"selected":""}>Todas</option>
+            </select>
+            <button class="secundaria" id="pd-checar">Checar agora</button>
+          </div>
+        </div>
+        <p class="sub">A checagem roda sozinha todo dia às 02:10, depois que o dia operacional fecha.
+          Cada dia corrigido no ponto fecha a pendência na próxima passada.</p>
+        ${pendencias.length ? `<table>
+          <tr><th>Dia</th><th>Quem</th><th>O que aconteceu</th><th></th></tr>
+          ${pendencias.map(p => `<tr>
+            <td class="hora">${p.dia.slice(8)}/${p.dia.slice(5,7)}</td>
+            <td>${p.nome}</td>
+            <td>
+              <span class="etiqueta ${p.gravidade}">${p.tipo.replace(/_/g," ")}</span>
+              <div style="font-size:13px;margin-top:3px">${p.detalhe}</div>
+              ${p.situacao!=="aberta" ? `<div style="font-size:12px;color:#7a7568">
+                ${p.situacao === "ignorada" ? "ignorada" : "resolvida"}: ${p.motivo ?? ""}</div>` : ""}
+            </td>
+            <td style="white-space:nowrap">
+              ${p.situacao==="aberta" ? `
+                <button class="discreto" data-marcar='${JSON.stringify(
+                  {employee_id:p.employee_id, nome:p.nome, dia:p.dia})}'>lançar ponto</button>
+                <button class="discreto" data-tratar='${JSON.stringify(
+                  {id:p.id, nome:p.nome, detalhe:p.detalhe})}'>tratar</button>` : ""}
+            </td></tr>`).join("")}
+        </table>` : `<p class="vazio">Nada em aberto por aqui.</p>`}
+      </div>`;
+
+    document.getElementById("pd-situacao").onchange = (e) => {
+      pendSituacao = e.target.value; abaPendencias();
+    };
+    document.getElementById("pd-checar").onclick = async (ev) => {
+      ev.target.disabled = true; ev.target.textContent = "Checando…";
+      try {
+        const fim = hojeLocal();
+        const inicio = new Date(new Date(fim).getTime() - 30*864e5).toISOString().slice(0,10);
+        await chamarPend({ action:"rodar", inicio, fim });
+        await atualizarSelo(); abaPendencias();
+      } catch(e){
+        ev.target.disabled = false; ev.target.textContent = "Checar agora";
+        conteudo().insertAdjacentHTML("afterbegin", `<div class="aviso">${e.message}</div>`);
+      }
+    };
+    conteudo().querySelectorAll("[data-marcar]").forEach(b =>
+      b.onclick = () => formCorrecao(JSON.parse(b.dataset.marcar)));
+    conteudo().querySelectorAll("[data-tratar]").forEach(b =>
+      b.onclick = () => formTratar(JSON.parse(b.dataset.tratar)));
+  } catch(e){
+    conteudo().innerHTML = `<div class="carta"><div class="aviso">${e.message}</div></div>`;
+  }
+}
+
+// Tratar é o caminho para o que não se resolve batendo ponto: atestado, acordo
+// verbal, folga trocada. O motivo é obrigatório — é ele que vira prova depois.
+function formTratar(p){
+  const d = document.createElement("dialog");
+  d.innerHTML = `
+    <form method="dialog">
+      <h2 style="margin-top:0">Tratar pendência</h2>
+      <p class="sub">${p.nome} — ${p.detalhe}</p>
+      <label>O que foi feito</label>
+      <select id="tr-situacao">
+        <option value="resolvida">Resolvida — tratei por fora (atestado, acordo, folga trocada)</option>
+        <option value="ignorada">Ignorar — não há o que fazer, não quero ver de novo</option>
+      </select>
+      <label>Motivo (fica registrado)</label>
+      <input id="tr-motivo" placeholder="ex.: atestado médico entregue em 24/09">
+      <div style="display:flex;gap:8px;margin-top:16px">
+        <button id="tr-salvar" type="button">Registrar</button>
+        <button class="secundaria" id="tr-cancelar" type="button">Cancelar</button>
+      </div>
+      <div id="tr-erro"></div>
+    </form>`;
+  document.body.appendChild(d); d.showModal();
+  d.querySelector("#tr-cancelar").onclick = () => { d.close(); d.remove(); };
+  d.querySelector("#tr-salvar").onclick = async (ev) => {
+    ev.target.disabled = true;
+    try {
+      await chamarPend({ action:"resolver", id:p.id,
+        situacao: d.querySelector("#tr-situacao").value,
+        motivo: d.querySelector("#tr-motivo").value.trim() });
+      d.close(); d.remove(); await atualizarSelo(); abaPendencias();
+    } catch(e){
+      ev.target.disabled = false;
+      d.querySelector("#tr-erro").innerHTML = `<div class="aviso">${e.message}</div>`;
+    }
+  };
+}
+
+/* ---------- escala, folgas e feriados ---------- */
+const DIAS_SEMANA = ["Domingo","Segunda","Terça","Quarta","Quinta","Sexta","Sábado"];
+
+async function abaEscala(){
+  conteudo().innerHTML = `<div class="carta"><p class="vazio">Carregando…</p></div>`;
+  try {
+    const [{ equipe }, { escala, excecoes }, { feriados }, { unidade:uni }] = await Promise.all([
+      chamar({ action:"equipe" }),
+      chamarPend({ action:"escala_listar" }),
+      chamarPend({ action:"feriados_listar", desde: hojeLocal() }),
+      chamarPend({ action:"unidade_ler" }),
+    ]);
+    const gente = equipe.filter(p => p.registra_ponto);
+    const porPessoa = new Map();
+    escala.forEach(e => {
+      const l = porPessoa.get(e.employee_id) ?? [];
+      l.push(e); porPessoa.set(e.employee_id, l);
+    });
+
+    conteudo().innerHTML = `
+      <div class="carta">
+        <h2 style="margin-top:0">Escala da semana</h2>
+        <p class="sub">É a escala que diz ao sistema o que é falta e o que é folga.
+          Sem ela, dia sem marcação passa em branco.</p>
+        ${gente.length ? `<table>
+          <tr><th>Quem</th>${DIAS_SEMANA.map(d => `<th>${d.slice(0,3)}</th>`).join("")}<th></th></tr>
+          ${gente.map(p => {
+            const linhas = porPessoa.get(p.id) ?? [];
+            return `<tr>
+              <td>${p.nome}</td>
+              ${DIAS_SEMANA.map((_,i) => {
+                const e = linhas.find(l => l.dia_semana === i);
+                return `<td style="font-size:12px">${
+                  !e ? `<span style="color:#b9b4a8">—</span>`
+                  : e.folga ? `<span class="etiqueta">folga</span>`
+                  : `${e.entrada.slice(0,5)}<br>${e.saida.slice(0,5)}`}</td>`;
+              }).join("")}
+              <td><button class="discreto" data-semana='${JSON.stringify(
+                {id:p.id, nome:p.nome})}'>editar</button></td></tr>`;
+          }).join("")}
+        </table>` : `<p class="vazio">Ninguém registra ponto nesta unidade.</p>`}
+      </div>
+
+      <div class="carta">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+          <h2 style="margin:0">Exceções de um dia</h2>
+          <button class="secundaria" id="es-excecao">Lançar exceção</button>
+        </div>
+        <p class="sub">Folga trocada, dia extra, horário diferente. A exceção vence a escala da semana.</p>
+        ${excecoes.length ? `<table>
+          <tr><th>Dia</th><th>Quem</th><th>O que é</th><th></th></tr>
+          ${excecoes.map(e => `<tr>
+            <td class="hora">${e.data.slice(8)}/${e.data.slice(5,7)}</td>
+            <td>${e.nome}</td>
+            <td>${e.folga ? `<span class="etiqueta">folga</span>`
+                 : `${e.entrada.slice(0,5)} às ${e.saida.slice(0,5)}`}
+                ${e.observacao ? `<div style="font-size:12px;color:#7a7568">${e.observacao}</div>` : ""}</td>
+            <td><button class="discreto" data-apagar="${e.id}">apagar</button></td></tr>`).join("")}
+        </table>` : `<p class="vazio">Nenhuma exceção daqui para frente.</p>`}
+      </div>
+
+      <div class="carta">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+          <h2 style="margin:0">Feriados</h2>
+          <button class="secundaria" id="es-feriado">Incluir feriado</button>
+        </div>
+        <p class="sub">Marque "fecha" nos feriados em que o pub não abre — nesses dias ninguém é
+          cobrado por falta, e quem trabalhar entra como pendência para você conferir o pagamento.</p>
+        ${feriados.length ? `<table>
+          <tr><th>Dia</th><th>Feriado</th><th>Tipo</th><th>Pub</th></tr>
+          ${feriados.slice(0,14).map(f => `<tr>
+            <td class="hora">${f.data.slice(8)}/${f.data.slice(5,7)}</td>
+            <td>${f.nome}${f.observacao ? `<div style="font-size:12px;color:#7a7568">${f.observacao}</div>` : ""}</td>
+            <td style="font-size:12px">${f.tipo}</td>
+            <td><button class="discreto" data-abre='${JSON.stringify(f)}'>${
+              f.abre ? "abre" : "fecha"}</button></td></tr>`).join("")}
+        </table>` : `<p class="vazio">Nenhum feriado cadastrado.</p>`}
+      </div>
+
+      <div class="carta">
+        <h2 style="margin-top:0">Ponto pelo celular</h2>
+        <p class="sub">Enquanto estiver desligado, o ponto só é batido no tablet do salão.
+          Ligando, a marcação pelo celular só é aceita dentro do raio marcado — e a distância
+          fica registrada em toda marcação, dentro ou fora.</p>
+        <div class="linha">
+          <div><label>Latitude</label><input id="ce-lat" value="${uni?.latitude ?? ""}" placeholder="—"></div>
+          <div><label>Longitude</label><input id="ce-lon" value="${uni?.longitude ?? ""}" placeholder="—"></div>
+          <div><label>Raio (metros)</label><input type="number" id="ce-raio" value="${uni?.raio_ponto_m ?? 150}"></div>
+          <button class="secundaria" id="ce-aqui">Usar onde estou</button>
+        </div>
+        <label style="display:flex;gap:8px;align-items:center;margin-top:10px">
+          <input type="checkbox" id="ce-liberar" style="width:auto" ${uni?.ponto_celular ? "checked" : ""}>
+          Liberar o ponto pelo celular nesta unidade</label>
+        <div style="margin-top:12px"><button id="ce-salvar">Salvar</button></div>
+        <div id="ce-erro"></div>
+      </div>`;
+
+    conteudo().querySelectorAll("[data-semana]").forEach(b =>
+      b.onclick = () => formSemana(JSON.parse(b.dataset.semana), porPessoa.get(JSON.parse(b.dataset.semana).id) ?? []));
+    conteudo().querySelectorAll("[data-apagar]").forEach(b =>
+      b.onclick = async () => {
+        try { await chamarPend({ action:"escala_apagar", id:b.dataset.apagar }); abaEscala(); }
+        catch(e){ alert(e.message); }
+      });
+    conteudo().querySelectorAll("[data-abre]").forEach(b =>
+      b.onclick = async () => {
+        const f = JSON.parse(b.dataset.abre);
+        try { await chamarPend({ action:"feriado_salvar", ...f, abre: !f.abre }); abaEscala(); }
+        catch(e){ alert(e.message); }
+      });
+    document.getElementById("es-excecao").onclick = () => formExcecao(gente);
+    document.getElementById("es-feriado").onclick = () => formFeriado();
+
+    document.getElementById("ce-aqui").onclick = (ev) => {
+      if(!navigator.geolocation) return alert("Este navegador não informa a localização.");
+      ev.target.disabled = true; ev.target.textContent = "Lendo…";
+      navigator.geolocation.getCurrentPosition(pos => {
+        document.getElementById("ce-lat").value = pos.coords.latitude.toFixed(6);
+        document.getElementById("ce-lon").value = pos.coords.longitude.toFixed(6);
+        ev.target.disabled = false; ev.target.textContent = "Usar onde estou";
+      }, () => {
+        ev.target.disabled = false; ev.target.textContent = "Usar onde estou";
+        document.getElementById("ce-erro").innerHTML =
+          `<div class="aviso">Não conseguimos ler a localização. Faça isso no celular, dentro do pub.</div>`;
+      }, { enableHighAccuracy:true, timeout:12000 });
+    };
+    document.getElementById("ce-salvar").onclick = async (ev) => {
+      ev.target.disabled = true;
+      try {
+        await chamarPend({ action:"unidade_salvar",
+          latitude: document.getElementById("ce-lat").value.trim(),
+          longitude: document.getElementById("ce-lon").value.trim(),
+          raio_ponto_m: document.getElementById("ce-raio").value,
+          ponto_celular: document.getElementById("ce-liberar").checked });
+        abaEscala();
+      } catch(e){
+        ev.target.disabled = false;
+        document.getElementById("ce-erro").innerHTML = `<div class="aviso">${e.message}</div>`;
+      }
+    };
+  } catch(e){
+    conteudo().innerHTML = `<div class="carta"><div class="aviso">${e.message}</div></div>`;
+  }
+}
+
+function formSemana(pessoa, atual){
+  const d = document.createElement("dialog");
+  d.style.maxWidth = "560px";
+  d.innerHTML = `
+    <form method="dialog">
+      <h2 style="margin-top:0">Escala de ${pessoa.nome}</h2>
+      <p class="sub">A escala anterior não é apagada: ganha data de fim. Assim, apurar um mês
+        passado continua usando a escala daquele mês.</p>
+      <label>Vale a partir de</label>
+      <input type="date" id="sm-vigencia" value="${hojeLocal()}">
+      <table style="margin-top:12px">
+        <tr><th>Dia</th><th>Folga</th><th>Entrada</th><th>Saída</th></tr>
+        ${DIAS_SEMANA.map((nome,i) => {
+          const e = atual.find(l => l.dia_semana === i);
+          return `<tr>
+            <td>${nome}</td>
+            <td><input type="checkbox" data-folga="${i}" style="width:auto" ${
+              e?.folga || !e ? "checked" : ""}></td>
+            <td><input type="time" data-entrada="${i}" value="${e?.entrada?.slice(0,5) ?? "17:00"}"></td>
+            <td><input type="time" data-saida="${i}" value="${e?.saida?.slice(0,5) ?? "23:00"}"></td>
+          </tr>`;
+        }).join("")}
+      </table>
+      <div style="display:flex;gap:8px;margin-top:16px">
+        <button id="sm-salvar" type="button">Salvar escala</button>
+        <button class="secundaria" id="sm-cancelar" type="button">Cancelar</button>
+      </div>
+      <div id="sm-erro"></div>
+    </form>`;
+  document.body.appendChild(d); d.showModal();
+  d.querySelector("#sm-cancelar").onclick = () => { d.close(); d.remove(); };
+  d.querySelector("#sm-salvar").onclick = async (ev) => {
+    ev.target.disabled = true;
+    const dias = DIAS_SEMANA.map((_,i) => ({
+      dia_semana: i,
+      folga: d.querySelector(`[data-folga="${i}"]`).checked,
+      entrada: d.querySelector(`[data-entrada="${i}"]`).value,
+      saida: d.querySelector(`[data-saida="${i}"]`).value,
+    }));
+    try {
+      await chamarPend({ action:"escala_semana", employee_id: pessoa.id, dias,
+        vigencia_inicio: d.querySelector("#sm-vigencia").value });
+      d.close(); d.remove(); abaEscala();
+    } catch(e){
+      ev.target.disabled = false;
+      d.querySelector("#sm-erro").innerHTML = `<div class="aviso">${e.message}</div>`;
+    }
+  };
+}
+
+function formExcecao(gente){
+  const d = document.createElement("dialog");
+  d.innerHTML = `
+    <form method="dialog">
+      <h2 style="margin-top:0">Exceção de um dia</h2>
+      <label>Quem</label>
+      <select id="ex-pessoa">${gente.map(p => `<option value="${p.id}">${p.nome}</option>`).join("")}</select>
+      <label>Dia</label><input type="date" id="ex-data" value="${hojeLocal()}">
+      <label style="display:flex;gap:8px;align-items:center;margin-top:10px">
+        <input type="checkbox" id="ex-folga" style="width:auto" checked> É folga</label>
+      <div class="linha" id="ex-horas" style="display:none">
+        <div><label>Entrada</label><input type="time" id="ex-entrada" value="17:00"></div>
+        <div><label>Saída</label><input type="time" id="ex-saida" value="23:00"></div>
+      </div>
+      <label>Observação</label>
+      <input id="ex-obs" placeholder="ex.: folga trocada com a Giovana">
+      <div style="display:flex;gap:8px;margin-top:16px">
+        <button id="ex-salvar" type="button">Salvar</button>
+        <button class="secundaria" id="ex-cancelar" type="button">Cancelar</button>
+      </div>
+      <div id="ex-erro"></div>
+    </form>`;
+  document.body.appendChild(d); d.showModal();
+  d.querySelector("#ex-cancelar").onclick = () => { d.close(); d.remove(); };
+  d.querySelector("#ex-folga").onchange = (e) => {
+    d.querySelector("#ex-horas").style.display = e.target.checked ? "none" : "flex";
+  };
+  d.querySelector("#ex-salvar").onclick = async (ev) => {
+    ev.target.disabled = true;
+    try {
+      await chamarPend({ action:"escala_excecao",
+        employee_id: d.querySelector("#ex-pessoa").value,
+        data: d.querySelector("#ex-data").value,
+        folga: d.querySelector("#ex-folga").checked,
+        entrada: d.querySelector("#ex-entrada").value,
+        saida: d.querySelector("#ex-saida").value,
+        observacao: d.querySelector("#ex-obs").value.trim() || null });
+      d.close(); d.remove(); abaEscala();
+    } catch(e){
+      ev.target.disabled = false;
+      d.querySelector("#ex-erro").innerHTML = `<div class="aviso">${e.message}</div>`;
+    }
+  };
+}
+
+function formFeriado(){
+  const d = document.createElement("dialog");
+  d.innerHTML = `
+    <form method="dialog">
+      <h2 style="margin-top:0">Incluir feriado</h2>
+      <label>Data</label><input type="date" id="fe-data" value="${hojeLocal()}">
+      <label>Nome</label><input id="fe-nome" placeholder="ex.: Padroeira da cidade">
+      <label>Tipo</label>
+      <select id="fe-tipo">
+        <option value="municipal">Municipal</option>
+        <option value="estadual">Estadual</option>
+        <option value="nacional">Nacional</option>
+        <option value="facultativo">Facultativo</option>
+        <option value="fechado">Fechamento nosso (não é feriado)</option>
+      </select>
+      <label style="display:flex;gap:8px;align-items:center;margin-top:10px">
+        <input type="checkbox" id="fe-abre" style="width:auto" checked> O pub abre neste dia</label>
+      <div style="display:flex;gap:8px;margin-top:16px">
+        <button id="fe-salvar" type="button">Salvar</button>
+        <button class="secundaria" id="fe-cancelar" type="button">Cancelar</button>
+      </div>
+      <div id="fe-erro"></div>
+    </form>`;
+  document.body.appendChild(d); d.showModal();
+  d.querySelector("#fe-cancelar").onclick = () => { d.close(); d.remove(); };
+  d.querySelector("#fe-salvar").onclick = async (ev) => {
+    ev.target.disabled = true;
+    try {
+      await chamarPend({ action:"feriado_salvar",
+        data: d.querySelector("#fe-data").value,
+        nome: d.querySelector("#fe-nome").value.trim(),
+        tipo: d.querySelector("#fe-tipo").value,
+        abre: d.querySelector("#fe-abre").checked });
+      d.close(); d.remove(); abaEscala();
+    } catch(e){
+      ev.target.disabled = false;
+      d.querySelector("#fe-erro").innerHTML = `<div class="aviso">${e.message}</div>`;
+    }
+  };
+}
+
+/* ---------- folha de ponto ---------- */
+// Mes fechado por padrao: do dia 1 ao ultimo dia do mes corrente.
+function mesAtual(){
+  const hoje = hojeLocal();
+  const [a,m] = hoje.split("-").map(Number);
+  const ultimo = new Date(Date.UTC(a, m, 0)).getUTCDate();
+  return { inicio:`${hoje.slice(0,7)}-01`, fim:`${hoje.slice(0,7)}-${String(ultimo).padStart(2,"0")}` };
+}
+let folhaFiltro = { employee_id:"", ...mesAtual() };
+
+async function abaFolha(){
+  conteudo().innerHTML = `<div class="carta"><p class="vazio">Carregando…</p></div>`;
+  try {
+    const { equipe } = await chamar({ action:"equipe" });
+    const gente = equipe.filter(p => p.registra_ponto);
+    if(!folhaFiltro.employee_id && gente.length) folhaFiltro.employee_id = gente[0].id;
+
+    conteudo().innerHTML = `
+      <div class="carta">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+          <h2 style="margin:0">Folha de ponto</h2>
+          <button class="discreto" id="parametros">Percentuais e tolerância</button>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin:14px 0">
+          <div style="flex:2;min-width:200px">
+            <label>Colaborador</label>
+            <select id="fp-pessoa">${gente.map(p =>
+              `<option value="${p.id}" ${p.id===folhaFiltro.employee_id?"selected":""}>${p.nome}</option>`).join("")}</select>
+          </div>
+          <div style="flex:1;min-width:130px">
+            <label>De</label><input type="date" id="fp-inicio" value="${folhaFiltro.inicio}">
+          </div>
+          <div style="flex:1;min-width:130px">
+            <label>Até</label><input type="date" id="fp-fim" value="${folhaFiltro.fim}">
+          </div>
+          <div style="display:flex;align-items:flex-end"><button id="fp-ver">Ver</button></div>
+        </div>
+        <div id="fp-saida">${gente.length ? `<p class="vazio">Escolha o período e clique em Ver.</p>`
+          : `<p class="vazio">Ninguém registra ponto nesta unidade.</p>`}</div>
+      </div>`;
+
+    document.getElementById("parametros").onclick = () => formParametros();
+    document.getElementById("fp-ver").onclick = async (ev) => {
+      folhaFiltro = {
+        employee_id: document.getElementById("fp-pessoa").value,
+        inicio: document.getElementById("fp-inicio").value,
+        fim: document.getElementById("fp-fim").value,
+      };
+      ev.target.disabled = true;
+      const saida = document.getElementById("fp-saida");
+      saida.innerHTML = `<p class="vazio">Apurando…</p>`;
+      try { desenharFolha(await chamarFolha({ action:"folha", ...folhaFiltro })); }
+      catch(e){ saida.innerHTML = `<div class="aviso">${e.message}</div>`; }
+      finally { ev.target.disabled = false; }
+    };
+  } catch(e){
+    conteudo().innerHTML = `<div class="carta"><div class="aviso">${e.message}</div></div>`;
+  }
+}
+
+function desenharFolha(r){
+  const { dias, resumo, jornada, colaborador } = r;
+  const aviso = resumo.parametros_confirmados ? "" :
+    `<div class="aviso" style="margin-bottom:12px">Os percentuais ainda não foram confirmados pela
+     contabilidade. A apuração usa ${resumo.he_percentual}% de hora extra e
+     ${resumo.noturno_percentual}% de adicional noturno — dá para trocar em “Percentuais e tolerância”
+     e gerar de novo.</div>`;
+
+  document.getElementById("fp-saida").innerHTML = `
+    ${aviso}
+    <p class="sub" style="margin-top:0">${colaborador.nome}${colaborador.cargo ? " — "+colaborador.cargo : ""}
+      · jornada de ${jornada.semanais}h em ${jornada.dias_semana} dias (${jornada.esperado_dia} por dia)</p>
+    <div style="overflow-x:auto">
+    <table>
+      <tr><th>Data</th><th>1ª Ent.</th><th>1ª Saí.</th><th>2ª Ent.</th><th>2ª Saí.</th>
+          <th>Interv.</th><th>Trabalhado</th><th>Extras</th><th>Débito</th><th>Noturno</th><th>Observação</th></tr>
+      ${dias.map(d => `<tr style="${d.observacao.includes("conferir") ? "background:#fdf4ec" : ""}">
+        <td>${d.rotulo}</td>
+        <td class="hora">${d.e1}</td><td class="hora">${d.s1}</td>
+        <td class="hora">${d.e2}</td><td class="hora">${d.s2}</td>
+        <td class="hora">${d.intervalo}</td><td class="hora">${d.trabalhado}</td>
+        <td class="hora">${d.extra}</td><td class="hora">${d.debito}</td><td class="hora">${d.noturno}</td>
+        <td style="font-size:12px;color:#7a7568">${d.observacao}</td></tr>`).join("")}
+      <tr style="font-weight:700;background:#f2f1ec">
+        <td>Totais</td><td colspan="4"></td>
+        <td class="hora">${resumo.intervalo}</td><td class="hora">${resumo.trabalhado}</td>
+        <td class="hora">${resumo.extras}</td><td class="hora">${resumo.debito}</td>
+        <td class="hora">${resumo.noturno}</td><td></td></tr>
+    </table>
+    </div>
+    ${resumo.hora_noturna_reduzida && resumo.noturno !== "0:00"
+      ? `<p class="sub">Com a hora noturna reduzida (art. 73 § 1º da CLT), ${resumo.noturno} de relógio
+         valem ${resumo.noturno_reduzido} para pagamento.</p>` : ""}
+    <div style="margin-top:14px"><button id="fp-pdf">Gerar PDF e enviar para assinatura</button></div>
+    <div id="fp-resultado"></div>`;
+
+  document.getElementById("fp-pdf").onclick = async (ev) => {
+    ev.target.disabled = true;
+    const caixa = document.getElementById("fp-resultado");
+    caixa.innerHTML = `<p class="vazio">Gerando…</p>`;
+    try {
+      const g = await chamarFolha({ action:"folha_pdf", ...folhaFiltro });
+      caixa.innerHTML = `<p class="sub">Folha gerada e publicada para assinatura no portal do
+        colaborador. Selo do arquivo: <code>${g.sha256_curto}</code>. Ela aparece na aba Documentos.</p>`;
+    } catch(e){
+      caixa.innerHTML = `<div class="aviso">${e.message}</div>`;
+      ev.target.disabled = false;
+    }
+  };
+}
+
+function formParametros(){
+  const d = document.createElement("dialog");
+  d.innerHTML = `
+    <form method="dialog" style="min-width:min(520px,92vw)">
+      <h2 style="margin-top:0">Percentuais e tolerância</h2>
+      <p class="sub">Salvar cria uma vigência nova. As folhas já geradas continuam com os
+        percentuais da época — não são reescritas.</p>
+      <div id="pa-corpo"><p class="vazio">Carregando…</p></div>
+      <div style="display:flex;gap:8px;margin-top:16px">
+        <button id="pa-salvar" type="button">Salvar</button>
+        <button class="secundaria" id="pa-fechar" type="button">Fechar</button>
+      </div>
+      <div id="pa-erro"></div>
+    </form>`;
+  document.body.appendChild(d); d.showModal();
+  d.querySelector("#pa-fechar").onclick = () => { d.close(); d.remove(); };
+
+  chamarFolha({ action:"parametros" }).then(({ parametros:p }) => {
+    d.querySelector("#pa-corpo").innerHTML = `
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <div style="flex:1;min-width:150px"><label>Hora extra (%)</label>
+          <input type="number" step="1" id="pa-he" value="${p?.he_percentual ?? 50}"></div>
+        <div style="flex:1;min-width:150px"><label>Hora extra 2ª faixa (%)</label>
+          <input type="number" step="1" id="pa-he2" value="${p?.he_percentual_2 ?? ""}" placeholder="opcional"></div>
+        <div style="flex:1;min-width:150px"><label>Adicional noturno (%)</label>
+          <input type="number" step="1" id="pa-not" value="${p?.noturno_percentual ?? 20}"></div>
+        <div style="flex:1;min-width:150px"><label>Noturno começa às</label>
+          <input type="time" id="pa-notini" value="${(p?.noturno_inicio ?? "22:00").slice(0,5)}"></div>
+        <div style="flex:1;min-width:150px"><label>Tolerância por dia (min)</label>
+          <input type="number" step="1" id="pa-tol" value="${p?.tolerancia_dia_min ?? 10}"></div>
+        <div style="flex:1;min-width:150px"><label>Vigência a partir de</label>
+          <input type="date" id="pa-vig" value="${hojeLocal()}"></div>
+      </div>
+      <label style="display:flex;gap:8px;align-items:center;margin-top:10px">
+        <input type="checkbox" id="pa-red" ${p?.hora_noturna_reduzida === false ? "" : "checked"}>
+        Hora noturna reduzida (52min30 contam como 1h)</label>
+      <label>Convenção aplicada</label>
+      <input id="pa-conv" value="${p?.convencao ?? ""}" placeholder="ex.: CCT SINTHORESP x SINDRESBAR 2025/2027">
+      <label>Observação</label>
+      <input id="pa-obs" value="${p?.observacao ?? ""}" placeholder="de onde veio esse número">`;
+
+    d.querySelector("#pa-salvar").onclick = async (ev) => {
+      ev.target.disabled = true;
+      try {
+        await chamarFolha({ action:"salvar_parametros",
+          vigencia_inicio: d.querySelector("#pa-vig").value,
+          he_percentual: d.querySelector("#pa-he").value,
+          he_percentual_2: d.querySelector("#pa-he2").value || null,
+          noturno_percentual: d.querySelector("#pa-not").value,
+          noturno_inicio: d.querySelector("#pa-notini").value,
+          hora_noturna_reduzida: d.querySelector("#pa-red").checked,
+          tolerancia_dia_min: d.querySelector("#pa-tol").value,
+          convencao: d.querySelector("#pa-conv").value.trim() || null,
+          observacao: d.querySelector("#pa-obs").value.trim() || null });
+        d.close(); d.remove(); abaFolha();
+      } catch(e){
+        ev.target.disabled = false;
+        d.querySelector("#pa-erro").innerHTML = `<div class="aviso">${e.message}</div>`;
+      }
+    };
+  }).catch(e => {
+    d.querySelector("#pa-corpo").innerHTML = `<div class="aviso">${e.message}</div>`;
+  });
+}
+
+/* ---------- importar modelos de documento ---------- */
+// Os arquivos .json ficam na pasta modelos/ do repositorio. Sobem daqui, do
+// navegador, para nao empurrar centenas de KB por outro caminho.
+function formModelos(){
+  const d = document.createElement("dialog");
+  d.innerHTML = `
+    <form method="dialog" style="min-width:min(560px,92vw)">
+      <h2 style="margin-top:0">Importar modelos</h2>
+      <p class="sub">Escolha os arquivos <code>.json</code> da pasta <code>modelos/</code>.
+        Cada importação cria uma versão nova e desativa a anterior. Modelo com campo
+        <code>[[pendente]]</code> entra desativado até você revisar.</p>
+      <input type="file" id="mo-arquivos" accept=".json,application/json" multiple>
+      <div id="mo-lista"></div>
+      <div style="display:flex;gap:8px;margin-top:16px">
+        <button id="mo-enviar" type="button">Importar</button>
+        <button class="secundaria" id="mo-fechar" type="button">Fechar</button>
+      </div>
+      <div id="mo-erro"></div>
+    </form>`;
+  document.body.appendChild(d); d.showModal();
+  d.querySelector("#mo-fechar").onclick = () => { d.close(); d.remove(); };
+
+  d.querySelector("#mo-enviar").onclick = async (ev) => {
+    const arquivos = [...(d.querySelector("#mo-arquivos").files || [])];
+    const erro = d.querySelector("#mo-erro");
+    if(!arquivos.length){ erro.innerHTML = `<div class="aviso">Escolha ao menos um arquivo.</div>`; return; }
+    ev.target.disabled = true; erro.innerHTML = "";
+    d.querySelector("#mo-lista").innerHTML = `<p class="vazio">Lendo ${arquivos.length} arquivo(s)…</p>`;
+    try {
+      const modelos = [];
+      for(const a of arquivos){
+        try { modelos.push(JSON.parse(await a.text())); }
+        catch { throw new Error(`O arquivo ${a.name} não é um JSON válido.`); }
+      }
+      const r = await chamarModelos({ action:"importar", modelos });
+      d.querySelector("#mo-lista").innerHTML = `
+        <p class="sub" style="margin-bottom:6px">${r.importados} importado(s), ${r.ativos} ativo(s).</p>
+        <table style="margin-top:4px">
+          <tr><th>Código</th><th>Título</th><th>Versão</th><th>Situação</th></tr>
+          ${(r.relatorio || []).map(m => `<tr>
+            <td>${m.codigo}</td><td>${m.titulo ?? ""}</td><td>${m.versao ?? ""}</td>
+            <td>${m.situacao}${m.motivo ? ` — ${m.motivo}` : ""}</td></tr>`).join("")}
+        </table>`;
+      ev.target.disabled = false;
+    } catch(e){
+      d.querySelector("#mo-lista").innerHTML = "";
+      erro.innerHTML = `<div class="aviso">${e.message}</div>`;
+      ev.target.disabled = false;
+    }
+  };
+}
+
+const { data:{ session } } = await sb.auth.getSession();
+session ? iniciar() : telaLogin();
+</script>
+</body>
+</html>
