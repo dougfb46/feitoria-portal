@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Portal do Colaborador — Feitoria</title>
+<style>
+  :root{--verde:#1f4d3a;--ambar:#c8871f;--fundo:#f4f2ed;--carta:#fff;--texto:#23261f;
+        --suave:#6b7169;--erro:#a3341f;--ok:#1f6b3f;--borda:#e2ded4}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--fundo);
+       color:var(--texto);padding:16px;min-height:100dvh}
+  .app{max-width:480px;margin:0 auto}
+  .carta{background:var(--carta);border:1px solid var(--borda);border-radius:16px;padding:20px;margin-bottom:14px}
+  h1{font-size:20px;margin:0 0 4px}
+  h2{font-size:15px;margin:0 0 10px}
+  .sub{color:var(--suave);font-size:14px;margin:0 0 16px}
+  label{display:block;font-size:13px;color:var(--suave);margin:12px 0 4px}
+  input{width:100%;padding:13px;border:1px solid var(--borda);border-radius:10px;font:inherit;background:#fff}
+  input.pin{font-size:26px;text-align:center;letter-spacing:10px}
+  button{font:inherit;cursor:pointer;border:none;border-radius:11px;padding:15px;
+         background:var(--verde);color:#fff;font-weight:600;width:100%}
+  button.secundaria{background:#fff;color:var(--verde);border:1.5px solid var(--verde)}
+  button.discreto{background:none;color:var(--suave);font-weight:500;padding:12px}
+  button[disabled]{opacity:.5;cursor:default}
+  .doc{border:1px solid var(--borda);border-radius:12px;padding:14px;margin-bottom:10px}
+  .doc.pendente{border-color:var(--ambar);background:#fffdf8}
+  .doc h3{font-size:15px;margin:0 0 3px}
+  .doc .meta{color:var(--suave);font-size:13px}
+  .selo{display:inline-block;font-size:11px;padding:3px 9px;border-radius:99px;margin-bottom:6px}
+  .selo.pendente{background:#fdf3e6;color:var(--ambar)}
+  .selo.assinado{background:#e6efe9;color:var(--ok)}
+  .selo.mural{background:#eceae4;color:var(--suave)}
+  .aviso{background:#fdf3f1;color:var(--erro);border-radius:10px;padding:12px;font-size:14px;margin:10px 0}
+  .faixa{background:#fffdf8;border:1px solid var(--ambar);color:var(--ambar);border-radius:10px;
+         padding:12px;font-size:14px;font-weight:600;margin-bottom:14px}
+  .aceite{background:#f7f5f0;border-radius:10px;padding:13px;font-size:13px;line-height:1.5;
+          color:var(--texto);margin:12px 0}
+  .vazio{color:var(--suave);font-size:14px}
+  .comprovante{font-family:ui-monospace,monospace;background:#eceae4;border-radius:8px;
+               padding:7px 12px;display:inline-block;letter-spacing:2px;margin-top:8px}
+  iframe{width:100%;height:58vh;border:1px solid var(--borda);border-radius:12px;background:#fff}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+
+<script>
+// Portal do colaborador. Fala só com a Edge Function `portal`.
+// Identidade: PIN + data de nascimento + aparelho vinculado.
+const FUNCAO = "https://kujelbcbrcmkitzyswbh.supabase.co/functions/v1/portal";
+const TOKEN_UNIDADE = new URLSearchParams(location.search).get("u") || "";
+
+const app = document.getElementById("app");
+let pin = "", nascimento = "", sessao = null;
+
+// Identificador do aparelho: gerado aqui, guardado aqui. Não é dado do celular,
+// é um número aleatório — serve só para reconhecer que é o mesmo aparelho.
+function aparelho(){
+  let id = null;
+  try { id = localStorage.getItem("feitoria_aparelho"); } catch {}
+  if(!id){
+    id = (crypto.randomUUID?.() || String(Date.now()) + Math.random()).replace(/-/g,"");
+    try { localStorage.setItem("feitoria_aparelho", id); } catch {}
+  }
+  return id;
+}
+
+const dataBR = (iso) => iso ? new Date(iso).toLocaleDateString("pt-BR",{timeZone:"America/Sao_Paulo"}) : "";
+const dataHoraBR = (iso) => iso ? new Date(iso).toLocaleString("pt-BR",
+  {dateStyle:"short", timeStyle:"short", timeZone:"America/Sao_Paulo"}) : "";
+
+async function chamar(payload){
+  const r = await fetch(FUNCAO, {
+    method:"POST", headers:{"Content-Type":"application/json"},
+    body: JSON.stringify({ unit_token: TOKEN_UNIDADE, pin, nascimento,
+      device_hash: aparelho(), device_label: navigator.platform || "Celular", ...payload })
+  });
+  const d = await r.json().catch(()=>({error:"Resposta inválida."}));
+  if(!r.ok) throw new Error(d.error || "Não foi possível completar.");
+  return d;
+}
+
+/* ---------- entrar ---------- */
+function telaEntrar(msg){
+  app.innerHTML = `
+    <div class="carta">
+      <h1>Portal do Colaborador</h1>
+      <p class="sub">Feitoria da Cerveja</p>
+      ${msg ? `<div class="aviso">${msg}</div>` : ""}
+      <label>Seu PIN</label>
+      <input class="pin" id="pin" inputmode="numeric" maxlength="6" placeholder="••••">
+      <label>Sua data de nascimento</label>
+      <input type="date" id="nasc">
+      <button id="entrar" style="margin-top:18px">Entrar</button>
+      <p class="sub" style="margin:14px 0 0;font-size:12px">
+        Seu PIN é pessoal. Não empreste: o que for feito com ele fica no seu nome.</p>
+    </div>`;
+  document.getElementById("entrar").onclick = entrar;
+  document.getElementById("nasc").onkeydown = (e) => e.key === "Enter" && entrar();
+}
+
+async function entrar(){
+  const bt = document.getElementById("entrar");
+  pin = document.getElementById("pin").value.trim();
+  nascimento = document.getElementById("nasc").value;
+  if(pin.length < 4 || !nascimento) return telaEntrar("Preencha o PIN e a data de nascimento.");
+  bt.disabled = true; bt.textContent = "Entrando…";
+  try { sessao = await chamar({ action:"entrar" }); telaInicio(); }
+  catch(e){ pin = ""; telaEntrar(e.message); }
+}
+
+/* ---------- início ---------- */
+function telaInicio(msg){
+  const docs = sessao.documentos;
+  app.innerHTML = `
+    <div class="carta">
+      <h1>Olá, ${sessao.colaborador.nome.split(" ")[0]}</h1>
+      <p class="sub" style="margin:0">${sessao.colaborador.funcao || ""} · ${sessao.unidade.nome}</p>
+    </div>
+    ${msg ? `<div class="carta"><div class="aviso">${msg}</div></div>` : ""}
+    <div class="carta">
+      <h2>Meus documentos</h2>
+      ${sessao.pendentes ? `<div class="faixa">
+        ${sessao.pendentes} documento${sessao.pendentes>1?"s":""} esperando sua assinatura</div>` : ""}
+      ${docs.length ? docs.map(d => `
+        <div class="doc ${d.pendente?"pendente":""}">
+          ${d.pendente ? `<span class="selo pendente">assinar</span>`
+            : d.assinado_em ? `<span class="selo assinado">assinado em ${dataBR(d.assinado_em)}</span>`
+            : d.mural ? `<span class="selo mural">mural</span>` : ""}
+          <h3>${d.titulo}</h3>
+          <p class="meta">${d.competencia ? "Competência "+d.competencia+" · " : ""}recebido em ${dataBR(d.recebido_em)}
+            ${d.prazo ? " · prazo "+dataBR(d.prazo) : ""}</p>
+          <button class="secundaria" style="margin-top:10px" data-abrir="${d.id}">Abrir</button>
+        </div>`).join("") : `<p class="vazio">Nenhum documento por aqui ainda.</p>`}
+    </div>
+    <button class="discreto" id="sair">Sair</button>`;
+
+  app.querySelectorAll("[data-abrir]").forEach(b => b.onclick = () => abrir(b.dataset.abrir));
+  document.getElementById("sair").onclick = () => { sessao=null; pin=""; telaEntrar(); };
+}
+
+/* ---------- abrir e assinar ---------- */
+async function abrir(id){
+  app.innerHTML = `<div class="carta"><p class="vazio">Abrindo…</p></div>`;
+  try {
+    const d = await chamar({ action:"abrir", id });
+    app.innerHTML = `
+      <div class="carta">
+        <h1>${d.titulo}</h1>
+        ${d.ja_assinei
+          ? `<p class="sub">Assinado em ${dataHoraBR(d.assinado_em)}
+               <br><span class="comprovante">${d.comprovante}</span></p>`
+          : d.exige_assinatura ? `<p class="sub">Leia até o fim antes de assinar.</p>` : ""}
+        <iframe src="${d.url}" title="Documento"></iframe>
+        <p class="sub" style="margin:8px 0 0;font-size:12px">
+          Não abriu? <a href="${d.url}" target="_blank" rel="noopener">toque aqui</a>.
+          O link vale por 5 minutos.</p>
+        ${(d.exige_assinatura && !d.ja_assinei) ? `
+          <div class="aceite">${d.texto_aceite}</div>
+          <label>Digite seu PIN para assinar</label>
+          <input class="pin" id="pin-assinar" inputmode="numeric" maxlength="6" placeholder="••••">
+          <div id="erro-assinar"></div>
+          <button id="assinar" style="margin-top:12px">Assinar documento</button>` : ""}
+        <button class="discreto" id="voltar" style="margin-top:10px">Voltar</button>
+      </div>`;
+    document.getElementById("voltar").onclick = voltar;
+    const bt = document.getElementById("assinar");
+    if(bt) bt.onclick = () => assinar(id, bt);
+  } catch(e){ telaInicio(e.message); }
+}
+
+async function assinar(id, bt){
+  const digitado = document.getElementById("pin-assinar").value.trim();
+  const erro = document.getElementById("erro-assinar");
+  // O PIN é o ato da assinatura: precisa ser digitado de novo, não herdado da sessão.
+  if(digitado !== pin){
+    erro.innerHTML = `<div class="aviso">PIN incorreto.</div>`;
+    return;
+  }
+  bt.disabled = true; bt.textContent = "Assinando…";
+  try {
+    const r = await chamar({ action:"assinar", id });
+    app.innerHTML = `
+      <div class="carta" style="text-align:center">
+        <div style="font-size:52px;color:var(--ok);line-height:1">✓</div>
+        <h1 style="margin:10px 0 4px">Documento assinado</h1>
+        <p class="sub">${r.titulo}<br>${dataHoraBR(r.assinado_em)}</p>
+        <span class="comprovante">${r.comprovante}</span>
+        <button style="margin-top:20px" id="ok">Pronto</button>
+      </div>`;
+    document.getElementById("ok").onclick = voltar;
+  } catch(e){
+    bt.disabled = false; bt.textContent = "Assinar documento";
+    erro.innerHTML = `<div class="aviso">${e.message}</div>`;
+  }
+}
+
+async function voltar(){
+  try { sessao = await chamar({ action:"documentos" }); telaInicio(); }
+  catch(e){ sessao=null; pin=""; telaEntrar(e.message); }
+}
+
+telaEntrar();
+</script>
+</body>
+</html>
