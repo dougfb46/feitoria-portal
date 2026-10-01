@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Feitoria · Operação</title>
+<style>
+/* Paleta e medidas vindas do mockup do portal, para as telas falarem a mesma língua. */
+:root{
+  color-scheme: light dark;
+  --bg:       light-dark(#f5f4ee, #171f1b);
+  --paper:    light-dark(#fffefa, #232e27);
+  --ink:      light-dark(#24352b, #eef3e9);
+  --muted:    light-dark(#626d64, #b6c3b8);
+  --line:     light-dark(#dde2d8, #3e4b42);
+  --verde:    light-dark(#234f3b, #c1dbbf);
+  --sobre-verde: light-dark(#fffefa, #1b3324);
+  --soft:     light-dark(#eaf0e5, #334133);
+  --ambar:    light-dark(#785015, #f0c876);
+  --ambar-bg: light-dark(#fbefcf, #413720);
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink)}
+body{font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;padding-bottom:64px}
+.topo{background:var(--paper);border-bottom:1px solid var(--line);padding:14px 16px;
+      display:flex;align-items:center;gap:11px;position:sticky;top:0;z-index:5}
+.marca{width:34px;height:34px;border-radius:50%;background:var(--verde);color:var(--sobre-verde);
+       font:24px Georgia,serif;display:grid;place-items:center;flex:0 0 auto}
+.marca span{transform:translateY(-1px)}
+.nome{font-weight:750;letter-spacing:.14em;font-size:15px}
+.sub{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+main{max-width:960px;margin:0 auto;padding:18px 16px}
+h2{font-size:24px;line-height:1.18;font-weight:650;letter-spacing:-.035em;margin:0 0 4px}
+.chapeu{font-size:11px;font-weight:650;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.legenda{color:var(--muted);font-size:13px;margin:0 0 16px}
+.painel{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px}
+.busca{width:100%;font-family:inherit;font-size:16px;line-height:1.4;color:inherit;background:var(--paper);
+       border:1px solid var(--line);border-radius:9px;padding:11px 13px;margin-bottom:12px}
+.busca:focus-visible,button:focus-visible,a:focus-visible{outline:3px solid var(--ambar);outline-offset:3px}
+
+/* ---------- mapa ---------- */
+.mapa-caixa{position:relative;overflow:auto;-webkit-overflow-scrolling:touch;
+            border:1px solid var(--line);border-radius:12px;background:#fffdf8}
+.mapa-interno{position:relative;width:var(--larg,1200px);min-width:100%}
+.mapa-interno img{display:block;width:100%;height:auto}
+.mesa{position:absolute;transform:translate(-50%,-50%);
+      width:var(--alvo,26px);height:var(--alvo,26px);border-radius:50%;
+      border:2px solid transparent;background:none;cursor:pointer;padding:0}
+.mesa[data-achou="sim"]{border-color:var(--ambar);background:#ffd88055;
+      box-shadow:0 0 0 4px #ffd88033;animation:pulsa 1.2s ease-out 2}
+@keyframes pulsa{from{box-shadow:0 0 0 0 #e8a33a88}to{box-shadow:0 0 0 14px #e8a33a00}}
+.dica{font-size:12px;color:var(--muted);margin:8px 2px 0}
+.zoom{display:flex;gap:8px;margin-bottom:10px}
+.zoom button{flex:0 0 auto;min-height:38px;padding:0 14px;border-radius:9px;border:1px solid var(--line);
+             background:var(--paper);color:var(--ink);font:600 13px inherit;cursor:pointer}
+.zoom button[aria-pressed="true"]{background:var(--verde);color:var(--sobre-verde);border-color:var(--verde)}
+
+/* ---------- listas ---------- */
+.fichas{display:grid;gap:10px}
+.ficha{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:14px}
+.ficha h3{margin:0 0 2px;font-size:16px;font-weight:650}
+.numeros{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 8px}
+.pino{font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;background:var(--soft);color:var(--verde)}
+.pino.ambar{background:var(--ambar-bg);color:var(--ambar)}
+.ficha p{margin:0;font-size:14px;color:var(--ink)}
+.ficha .harm{margin-top:8px;font-size:13px;color:var(--muted)}
+.vazio{color:var(--muted);font-size:14px;text-align:center;padding:26px 0}
+.aviso{background:var(--ambar-bg);color:var(--ambar);border-radius:9px;padding:11px 13px;font-size:13px;margin:10px 0}
+.lembretes{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.lembrete{background:var(--soft);border-radius:10px;padding:12px 14px}
+.lembrete b{display:block;font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--verde);margin-bottom:4px}
+.lembrete span{font-size:13px}
+label{display:block;font-size:13px;font-weight:600;margin:14px 0 5px}
+select,textarea,input[type=text],input[type=password]{width:100%;font-family:inherit;font-size:16px;
+  line-height:1.4;color:inherit;background:var(--paper);
+  border:1px solid var(--line);border-radius:9px;padding:11px 13px}
+textarea{min-height:120px;resize:vertical}
+.botao{width:100%;min-height:46px;border:none;border-radius:10px;background:var(--verde);
+  color:var(--sobre-verde);font:650 15px inherit;cursor:pointer;margin-top:16px}
+.botao[disabled]{opacity:.5;cursor:default}
+.modos{display:flex;gap:8px;margin:6px 0 2px}
+.modos button{flex:1;min-height:44px;border:1px solid var(--line);border-radius:10px;background:var(--paper);
+  color:var(--ink);font:600 14px inherit;cursor:pointer;padding:8px}
+.modos button[aria-pressed="true"]{background:var(--verde);color:var(--sobre-verde);border-color:var(--verde)}
+.modos small{display:block;font-weight:400;font-size:11px;opacity:.85;margin-top:2px}
+.ok{background:var(--soft);color:var(--verde);border-radius:9px;padding:12px 14px;font-size:14px;margin:10px 0}
+.posicao{display:flex;gap:10px;align-items:baseline;padding:9px 0;border-bottom:1px solid var(--line)}
+.posicao:last-child{border-bottom:none}
+.posicao b{flex:0 0 26px;height:26px;border-radius:50%;background:var(--ambar-bg);color:var(--ambar);
+  display:grid;place-items:center;font-size:12px}
+.escala pre{white-space:pre-wrap;font:14px/1.55 inherit;margin:8px 0 0}
+
+/* ---------- abas ---------- */
+.abas{position:fixed;left:0;right:0;bottom:0;background:var(--paper);border-top:1px solid var(--line);
+      display:flex;z-index:6;padding-bottom:env(safe-area-inset-bottom)}
+.abas button{flex:1;min-height:54px;border:none;background:none;color:var(--muted);
+             font:550 10px/1.2 inherit;letter-spacing:.02em;text-transform:uppercase;cursor:pointer;
+             padding:0 2px;
+             display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
+.abas button b{font-size:17px;font-weight:650;letter-spacing:0}
+.abas button[aria-selected="true"]{color:var(--verde)}
+@media (min-width:700px){
+  body{padding-bottom:0}
+  .abas{position:static;border-top:none;border-bottom:1px solid var(--line);max-width:960px;margin:0 auto}
+  .abas button{min-height:46px;flex-direction:row;gap:8px;font-size:13px;letter-spacing:0;text-transform:none}
+}
+</style>
+</head>
+<body>
+
+<header class="topo">
+  <div class="marca"><span>f</span></div>
+  <div>
+    <div class="nome">FEITORIA</div>
+    <div class="sub" id="unidade">PUB Mogi</div>
+  </div>
+</header>
+
+<nav class="abas" role="tablist" aria-label="Seções da operação">
+  <button role="tab" id="aba-mapa" aria-selected="true" aria-controls="p-mapa"><b>▦</b>Mapa</button>
+  <button role="tab" id="aba-chopp" aria-selected="false" aria-controls="p-chopp"><b>🍺</b>Cervejas</button>
+  <button role="tab" id="aba-turno" aria-selected="false" aria-controls="p-turno"><b>◷</b>Turno</button>
+  <button role="tab" id="aba-recado" aria-selected="false" aria-controls="p-recado"><b>✉</b>Recado</button>
+  <button role="tab" id="aba-lembretes" aria-selected="false" aria-controls="p-lembretes"><b>✦</b>Dicas</button>
+</nav>
+
+<main id="conteudo"><p class="vazio">Carregando…</p></main>
+
+<script>
+const $ = (s, r = document) => r.querySelector(s);
+const main = $("#conteudo");
+let dados = { mesas: null, cervejas: null };
+const TOKEN = new URLSearchParams(location.search).get("u") || "";
+const FUNCAO = "https://kujelbcbrcmkitzyswbh.supabase.co/functions/v1/operacao";
+let aba = "mapa";
+// No celular a planta inteira não cabe legível: começa ampliada e centralizada.
+// Em tela grande ela cabe, e começar ajustada evita rolagem sem motivo.
+let zoom = window.innerWidth < 700 ? 2.4 : 1;
+
+const texto = (tag, cls, str) => {
+  const el = document.createElement(tag);
+  if (cls) el.className = cls;
+  if (str !== undefined) el.textContent = str;   // sempre textContent: nada de HTML vindo de dado
+  return el;
+};
+
+async function chamar(payload){
+  let r;
+  try {
+    r = await fetch(FUNCAO, {
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({ unit_token: TOKEN, ...payload })
+    });
+  } catch {
+    // sem rede o navegador só diz "failed to fetch"; quem está no salão
+    // precisa saber o que fazer, não o nome do erro
+    throw new Error("Sem conexão agora. Confira o Wi-Fi e tente de novo — o que você escreveu continua aqui.");
+  }
+  const d = await r.json().catch(() => ({ error:"Resposta inválida do servidor." }));
+  if(!r.ok) throw new Error(d.error || "Não foi possível completar.");
+  return d;
+}
+
+function semLink(){
+  const frag = document.createDocumentFragment();
+  frag.append(texto("p","aviso",
+    "Este link não traz a unidade. Peça à gestão o endereço completo da tela de operação — "
+    + "o mapa e as cervejas funcionam assim mesmo, mas o turno e os recados precisam saber de qual casa se trata."));
+  return frag;
+}
+
+async function carregar(){
+  try {
+    const [m, c] = await Promise.all([
+      fetch("mesas.json").then(r => r.json()),
+      fetch("cervejas.json").then(r => r.json()),
+    ]);
+    dados.mesas = m; dados.cervejas = c;
+    $("#unidade").textContent = m.unidade || "PUB Mogi";
+    desenhar();
+  } catch {
+    main.replaceChildren(texto("p", "aviso",
+      "Não consegui carregar os dados da operação. Verifique a conexão e recarregue a página."));
+  }
+}
+
+/* ---------- mapa ---------- */
+function telaMapa(){
+  const d = dados.mesas;
+  const frag = document.createDocumentFragment();
+  frag.append(texto("div","chapeu","Salão"), texto("h2",null,"Mapa de mesas"),
+    texto("p","legenda", d.total + " mesas · digite o número para encontrar no salão"));
+
+  const painel = texto("div","painel");
+  const busca = texto("input","busca");
+  busca.type = "search"; busca.inputMode = "numeric";
+  busca.placeholder = "Número da mesa, ex. 27";
+  busca.setAttribute("aria-label","Procurar mesa pelo número");
+
+  const zoomBox = texto("div","zoom");
+  [["Planta inteira",1],["Maior",2.4],["Máximo",3.6]].forEach(([rot,z]) => {
+    const b = texto("button",null,rot);
+    b.setAttribute("aria-pressed", String(zoom === z));
+    b.onclick = () => { zoom = z; desenhar(); };
+    zoomBox.append(b);
+  });
+
+  const caixa = texto("div","mapa-caixa");
+  const interno = texto("div","mapa-interno");
+  interno.style.setProperty("--larg", zoom === 1 ? "100%" : Math.round(zoom * 100) + "%");
+  const img = new Image();
+  img.src = d.imagem; img.alt = "Planta do salão do PUB Mogi com os números das mesas";
+  // o alvo de toque acompanha o tamanho em que a planta foi desenhada
+  const ajustarAlvo = () => {
+    const alvo = Math.max(20, Math.round(interno.clientWidth * 0.013));
+    interno.style.setProperty("--alvo", alvo + "px");
+  };
+  img.addEventListener("load", () => { ajustarAlvo(); centralizar(); });
+  window.addEventListener("resize", ajustarAlvo, { passive:true });
+  interno.append(img);
+
+  d.mesas.forEach(mesa => {
+    const b = texto("button","mesa");
+    b.style.left = mesa.x + "%"; b.style.top = mesa.y + "%";
+    b.dataset.mesa = mesa.numero;
+    b.setAttribute("aria-label",
+      "Mesa " + mesa.numero + (mesa.area ? ", " + mesa.area : "") +
+      (mesa.tipo === "redonda" ? ", redonda" : ""));
+    b.onclick = () => { busca.value = mesa.numero; procurar(); };
+    interno.append(b);
+  });
+  caixa.append(interno);
+
+  // ao ampliar, mostra o meio do salão em vez do canto esquerdo
+  const centralizar = () => {
+    if (zoom > 1) caixa.scrollLeft = (caixa.scrollWidth - caixa.clientWidth) / 2;
+  };
+
+  const resultado = texto("p","dica","");
+
+  function procurar(){
+    const n = busca.value.replace(/\D/g,"");
+    interno.querySelectorAll(".mesa").forEach(b => b.removeAttribute("data-achou"));
+    if(!n){ resultado.textContent = ""; return; }
+    const alvo = interno.querySelector('.mesa[data-mesa="' + n + '"]');
+    if(!alvo){
+      resultado.textContent = "Não existe mesa " + n + " no salão. O mapa salta os números 19, 20 e 31.";
+      return;
+    }
+    alvo.dataset.achou = "sim";
+    const mesa = d.mesas.find(m => String(m.numero) === n);
+    resultado.textContent = "Mesa " + n + " · " + (mesa.area || "área a conferir") +
+      (mesa.tipo === "redonda" ? " · mesa redonda" : "");
+    alvo.scrollIntoView({ block:"center", inline:"center", behavior:"smooth" });
+  }
+  busca.addEventListener("input", procurar);
+
+  painel.append(busca, zoomBox, caixa, resultado);
+  frag.append(painel);
+
+  // por área, para quem prefere ler a lista a procurar no desenho
+  const porArea = new Map();
+  d.mesas.forEach(m => {
+    const a = m.area || "A conferir";
+    porArea.set(a, (porArea.get(a) || []).concat(m.numero));
+  });
+  const lista = texto("div","painel");
+  lista.append(texto("h3",null,"Por área"));
+  [...porArea.entries()].forEach(([area, nums]) => {
+    const linha = texto("div");
+    linha.style.margin = "10px 0 0";
+    linha.append(texto("div","chapeu", area + " · " + nums.length + " mesas"));
+    const pinos = texto("div","numeros");
+    nums.sort((a,b) => a-b).forEach(n => {
+      const redonda = d.mesas.find(m => m.numero === n).tipo === "redonda";
+      pinos.append(texto("span","pino" + (redonda ? " ambar" : ""), String(n)));
+    });
+    linha.append(pinos);
+    lista.append(linha);
+  });
+  lista.append(texto("p","dica","Em âmbar, as mesas redondas do deck e do jardim."));
+  frag.append(lista);
+
+  frag.append(texto("p","dica", d.rodape || ""));
+  return frag;
+}
+
+/* ---------- cervejas ---------- */
+function telaCervejas(){
+  const d = dados.cervejas;
+  const frag = document.createDocumentFragment();
+  frag.append(texto("div","chapeu","Carta"), texto("h2",null,"Nossas cervejas"),
+    texto("p","legenda", d.total + " estilos · procure pelo nome, pelo estilo ou pela harmonização"));
+
+  const busca = texto("input","busca");
+  busca.type = "search";
+  busca.placeholder = "ex.: IPA, pastel, taça, leve";
+  busca.setAttribute("aria-label","Procurar cerveja");
+  frag.append(busca);
+
+  const fichas = texto("div","fichas");
+  const resumo = texto("p","dica","");
+
+  function render(){
+    const q = busca.value.trim().toLowerCase();
+    const lista = !q ? d.cervejas : d.cervejas.filter(c =>
+      [c.nome, c.descricao, c.harmonizacao, c.servida_em].join(" ").toLowerCase().includes(q));
+    fichas.replaceChildren();
+    resumo.textContent = q ? lista.length + " de " + d.total : "";
+    if(!lista.length){
+      fichas.append(texto("p","vazio","Nenhuma cerveja com esse termo."));
+      return;
+    }
+    lista.forEach(c => {
+      const f = texto("div","ficha");
+      f.append(texto("h3",null,c.nome));
+      const pinos = texto("div","numeros");
+      if(c.abv) pinos.append(texto("span","pino","ABV " + c.abv));
+      if(c.ibu) pinos.append(texto("span","pino","IBU " + c.ibu));
+      if(c.servida_em) pinos.append(texto("span","pino ambar", c.servida_em));
+      f.append(pinos);
+      if(c.descricao) f.append(texto("p",null,c.descricao));
+      if(c.harmonizacao) f.append(texto("p","harm","Harmoniza com " + c.harmonizacao));
+      if(c.conferir && c.conferir.length)
+        f.append(texto("p","aviso","A conferir no descritivo: " + c.conferir.join("; ") + "."));
+      fichas.append(f);
+    });
+  }
+  busca.addEventListener("input", render);
+  render();
+  frag.append(resumo, fichas);
+  frag.append(texto("p","dica","Catálogo completo da casa. O que está nas 12 torneiras hoje muda a cada troca de barril — confira na chopeira."));
+  return frag;
+}
+
+/* ---------- lembretes ---------- */
+function telaLembretes(){
+  const d = dados.mesas;
+  const frag = document.createDocumentFragment();
+  frag.append(texto("div","chapeu","Combinados"), texto("h2",null,"Lembretes para a equipe"),
+    texto("p","legenda","O que faz diferença em todo turno."));
+  const caixa = texto("div","lembretes");
+  (d.lembretes || []).forEach(l => {
+    const c = texto("div","lembrete");
+    c.append(texto("b",null,l.titulo), texto("span",null,l.texto));
+    caixa.append(c);
+  });
+  frag.append(caixa);
+  return frag;
+}
+
+/* ---------- turno ---------- */
+const NOMES_ESCALA = { equipe:"Equipe", freelas:"Freelas", musicos:"Música", eventos:"Eventos" };
+
+async function telaTurno(){
+  if(!TOKEN) return semLink();
+  const frag = document.createDocumentFragment();
+  frag.append(texto("div","chapeu","Hoje"), texto("h2",null,"O turno"),
+    texto("p","legenda","Quem está em cada ponto do salão e o que está publicado."));
+  const alvo = texto("div");
+  frag.append(alvo);
+  alvo.append(texto("p","vazio","Carregando…"));
+
+  chamar({ action:"painel" }).then(d => {
+    alvo.replaceChildren();
+    const dia = d.dia_operacional.split("-").reverse().join("/");
+
+    const pos = texto("div","painel");
+    pos.append(texto("div","chapeu","Posições de " + dia));
+    if(!d.posicoes.length){
+      pos.append(texto("p","vazio","A gestão ainda não marcou as posições de hoje."));
+    } else {
+      d.posicoes.forEach(p => {
+        const l = texto("div","posicao");
+        l.append(texto("b",null,p.posicao));
+        const c = texto("div");
+        c.append(texto("div",null,p.nome || "—"));
+        if(p.observacao) c.append(texto("div","dica",p.observacao));
+        l.append(c);
+        pos.append(l);
+      });
+    }
+    alvo.append(pos);
+
+    if(!d.escalas.length){
+      alvo.append(texto("p","dica","Nenhuma escala publicada para o período."));
+    }
+    d.escalas.forEach(e => {
+      const c = texto("div","painel escala");
+      c.append(texto("div","chapeu", (NOMES_ESCALA[e.tipo] || e.tipo) + " · "
+        + e.periodo_inicio.split("-").reverse().slice(0,2).join("/") + " a "
+        + e.periodo_fim.split("-").reverse().slice(0,2).join("/")));
+      c.append(texto("pre",null,e.conteudo));
+      alvo.append(c);
+    });
+  }).catch(err => {
+    alvo.replaceChildren(texto("p","aviso", err.message));
+  });
+
+  return frag;
+}
+
+/* ---------- recado ---------- */
+const ASSUNTOS = [
+  ["problema","Alguma coisa não está funcionando"],
+  ["falta_de_material","Faltou material"],
+  ["equipamento","Equipamento com defeito"],
+  ["sugestao","Uma ideia para melhorar"],
+  ["elogio","Um elogio a alguém da equipe"],
+  ["outro","Outro assunto"],
+];
+
+function telaRecado(){
+  if(!TOKEN) return semLink();
+  let anonimo = false;
+  const frag = document.createDocumentFragment();
+  frag.append(texto("div","chapeu","Fale com a gestão"), texto("h2",null,"Mandar um recado"),
+    texto("p","legenda","Chega direto para quem pode resolver."));
+
+  const painel = texto("div","painel");
+
+  const modos = texto("div","modos");
+  const bAssinado = texto("button"); const bAnonimo = texto("button");
+  bAssinado.innerHTML = ""; bAnonimo.innerHTML = "";
+  bAssinado.append(texto("span",null,"Assinar"), texto("small",null,"a gestão pode te responder"));
+  bAnonimo.append(texto("span",null,"Anônimo"), texto("small",null,"ninguém sabe quem escreveu"));
+  const marcarModo = () => {
+    bAssinado.setAttribute("aria-pressed", String(!anonimo));
+    bAnonimo.setAttribute("aria-pressed", String(anonimo));
+    campoPin.style.display = anonimo ? "none" : "block";
+    nota.textContent = anonimo
+      ? "No modo anônimo não guardamos seu nome, seu aparelho nem seu endereço de rede. Por isso também não dá para te responder."
+      : "Você assina com o mesmo PIN do ponto. A gestão vê seu nome e pode responder.";
+  };
+  bAssinado.onclick = () => { anonimo = false; marcarModo(); };
+  bAnonimo.onclick  = () => { anonimo = true;  marcarModo(); };
+  modos.append(bAssinado, bAnonimo);
+
+  const nota = texto("p","dica","");
+
+  const lblAssunto = texto("label",null,"Sobre o que é"); lblAssunto.htmlFor = "r-assunto";
+  const assunto = texto("select"); assunto.id = "r-assunto";
+  ASSUNTOS.forEach(([v,t]) => { const o = texto("option",null,t); o.value = v; assunto.append(o); });
+
+  const lblOnde = texto("label",null,"Onde (opcional)"); lblOnde.htmlFor = "r-onde";
+  const onde = texto("input"); onde.type = "text"; onde.id = "r-onde";
+  onde.placeholder = "mesa 44, chopeira, banheiro…"; onde.maxLength = 120;
+
+  const lblTexto = texto("label",null,"O que aconteceu"); lblTexto.htmlFor = "r-texto";
+  const corpo = texto("textarea"); corpo.id = "r-texto"; corpo.maxLength = 2000;
+  corpo.placeholder = "Escreva com suas palavras. Quanto mais concreto, mais rápido resolve.";
+
+  const campoPin = texto("div");
+  const lblPin = texto("label",null,"Seu PIN"); lblPin.htmlFor = "r-pin";
+  const pin = texto("input"); pin.type = "password"; pin.id = "r-pin";
+  pin.inputMode = "numeric"; pin.maxLength = 6; pin.autocomplete = "off";
+  pin.placeholder = "••••";
+  campoPin.append(lblPin, pin);
+
+  const enviar = texto("button","botao","Enviar recado");
+  const retorno = texto("div");
+
+  enviar.onclick = async () => {
+    retorno.replaceChildren();
+    enviar.disabled = true; enviar.textContent = "Enviando…";
+    try {
+      const r = await chamar({ action:"recado", anonimo,
+        assunto: assunto.value, onde: onde.value.trim() || null,
+        texto: corpo.value.trim(), pin: anonimo ? undefined : pin.value.trim() });
+      corpo.value = ""; onde.value = ""; pin.value = "";
+      retorno.append(texto("p","ok", r.mensagem));
+    } catch(e){
+      retorno.append(texto("p","aviso", e.message));
+    } finally {
+      enviar.disabled = false; enviar.textContent = "Enviar recado";
+    }
+  };
+
+  painel.append(texto("div","chapeu","Como quer mandar"), modos, nota,
+    lblAssunto, assunto, lblOnde, onde, lblTexto, corpo, campoPin, enviar, retorno);
+  marcarModo();
+  frag.append(painel);
+  frag.append(texto("p","dica","Emergência não é recado: quebra, vazamento ou risco a alguém, fale na hora com o supervisor."));
+  return frag;
+}
+
+function desenhar(){
+  document.querySelectorAll('[role="tab"]').forEach(b =>
+    b.setAttribute("aria-selected", String(b.id === "aba-" + aba)));
+  const tela = aba === "mapa"   ? telaMapa()
+             : aba === "chopp"  ? telaCervejas()
+             : aba === "turno"  ? telaTurno()
+             : aba === "recado" ? telaRecado()
+             : telaLembretes();
+  Promise.resolve(tela).then(t => main.replaceChildren(t));
+  main.focus?.();
+}
+
+document.querySelectorAll('[role="tab"]').forEach(b => {
+  b.onclick = () => { aba = b.id.replace("aba-",""); if(aba === "mapa") zoom = 1; desenhar(); };
+});
+carregar();
+</script>
+</body>
+</html>
