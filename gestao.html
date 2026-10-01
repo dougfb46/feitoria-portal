@@ -16,8 +16,9 @@
   h2{font-size:16px;margin:0 0 12px}
   .sub{color:var(--suave);font-size:14px;margin:0 0 16px}
   label{display:block;font-size:13px;color:var(--suave);margin:10px 0 4px}
-  input,select{width:100%;padding:11px;border:1px solid var(--borda);border-radius:9px;
+  input,select,textarea{width:100%;padding:11px;border:1px solid var(--borda);border-radius:9px;
                font:inherit;background:#fff;color:var(--texto)}
+  textarea{resize:vertical;line-height:1.5}
   button{font:inherit;cursor:pointer;border:none;border-radius:9px;padding:11px 16px;
          background:var(--verde);color:#fff;font-weight:600}
   button.secundaria{background:#fff;color:var(--verde);border:1.5px solid var(--verde)}
@@ -65,15 +66,41 @@ const ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZ
 const sb = createClient(URL_SB, ANON);
 
 const app = document.getElementById("app");
+
+/* A07 da revisão: nada do servidor entra como HTML.
+   esc()   — texto e valor de atributo. Um nome com < ou " deixa de virar marcação.
+   guarde()— payload de botão. Antes ia JSON cru dentro de atributo com apóstrofo:
+             um nome com ' quebrava o atributo. Agora o atributo leva só o índice,
+             e o objeto fica em CARGA, na memória da página. CARGA cresce a cada
+             desenho da tela e é descartada quando a página recarrega — são poucos
+             objetos pequenos, não vale um controle de ciclo de vida. */
+const esc = (v) => String(v ?? "").replace(/[&<>"']/g, (ch) =>
+  ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[ch]));
+const CARGA = [];
+const guarde = (o) => CARGA.push(o) - 1;
 let unidades = [], unidade = null, aba = "equipe";
 let pendenciasAbertas = 0;   // aparece como selo na aba Pendências
+let recadosAbertos = 0;      // idem, na aba Operação
+let acoesVencidas = 0;       // idem, na aba NR-1: ação de risco com prazo passado
 
 const hora = (iso) => new Date(iso).toLocaleTimeString("pt-BR",
   { hour:"2-digit", minute:"2-digit", timeZone:"America/Sao_Paulo" });
-const hojeLocal = () => {
-  const d = new Date(Date.now() - 3600e3); // dia operacional fecha 01:00
+// A16 da revisão: o dia operacional era calculado no navegador, com o fuso do
+// aparelho. Um tablet configurado errado mudava a régua do relatório. Agora a
+// data vem do servidor (public.data_operacional), que é a mesma régua usada
+// pelo ponto, pela folha e pelo detector de pendências. O cálculo local fica
+// só como último recurso, e a tela avisa quando está nele.
+let diaOperacional = null;
+const hojeLocalAproximado = () => {
+  const d = new Date(Date.now() - 3600e3);
   return new Date(d.toLocaleString("en-US", { timeZone:"America/Sao_Paulo" }))
     .toISOString().slice(0,10);
+};
+const hojeLocal = () => diaOperacional || hojeLocalAproximado();
+
+const rotuloOrigem = (m) => {
+  if(m.por === "gestor") return "gestão";
+  return { totem:"tablet", celular:"celular" }[m.origem] || m.origem || "—";
 };
 
 async function chamar(payload){
@@ -95,7 +122,7 @@ function telaLogin(msg){
     <div class="carta" style="max-width:380px;margin:60px auto">
       <h1>Gestão da Feitoria</h1>
       <p class="sub">Entre com seu e-mail e senha</p>
-      ${msg ? `<div class="aviso">${msg}</div>` : ""}
+      ${msg ? `<div class="aviso">${esc(msg)}</div>` : ""}
       <label>E-mail</label><input type="email" id="email" autocomplete="username">
       <label>Senha</label><input type="password" id="senha" autocomplete="current-password">
       <button id="entrar" style="width:100%;margin-top:16px">Entrar</button>
@@ -121,6 +148,7 @@ async function iniciar(){
     unidades = r.unidades;
     if(!unidades.length) return telaLogin("Seu usuário não administra nenhuma unidade.");
     unidade = unidades.find(u => u.id === unidade?.id) || unidades[0];
+    diaOperacional = r.dia_operacional || null;
     moldura(r.usuario);
     atualizarSelo();
   } catch(e){ telaLogin(e.message); }
@@ -132,12 +160,12 @@ function moldura(usuario){
       <div class="linha">
         <div>
           <h1>Gestão da Feitoria</h1>
-          <p class="sub" style="margin:0">${usuario}</p>
+          <p class="sub" style="margin:0">${esc(usuario)}</p>
         </div>
         <div style="flex:0 0 200px">
           <label>Unidade</label>
           <select id="unidade">${unidades.map(u =>
-            `<option value="${u.id}" ${u.id===unidade.id?"selected":""}>${u.name}</option>`).join("")}</select>
+            `<option value="${u.id}" ${u.id===unidade.id?"selected":""}>${esc(u.name)}</option>`).join("")}</select>
         </div>
         <button class="discreto" id="sair">Sair</button>
       </div>
@@ -148,13 +176,28 @@ function moldura(usuario){
       <button data-aba="pend"   class="${aba==="pend"  ?"ativa":""}">Pendências${
         pendenciasAbertas ? `<span class="selo">${pendenciasAbertas}</span>` : ""}</button>
       <button data-aba="escala" class="${aba==="escala"?"ativa":""}">Escala</button>
+      <button data-aba="oper"   class="${aba==="oper"  ?"ativa":""}">Operação${
+        recadosAbertos ? `<span class="selo">${recadosAbertos}</span>` : ""}</button>
+      <button data-aba="nr1"    class="${aba==="nr1"   ?"ativa":""}">NR-1${
+        acoesVencidas ? `<span class="selo">${acoesVencidas}</span>` : ""}</button>
       <button data-aba="docs"   class="${aba==="docs"  ?"ativa":""}">Documentos</button>
       <button data-aba="folha"  class="${aba==="folha" ?"ativa":""}">Folha de ponto</button>
     </div>
     <div id="conteudo"></div>`;
 
   document.getElementById("unidade").onchange = (e) => {
-    unidade = unidades.find(u => u.id === e.target.value); render();
+    // A15 da revisão: antes só re-renderizava. Filtro de pessoa, período da
+    // folha, dia escolhido e o selo de pendências continuavam da unidade
+    // anterior — dados de uma casa aparecendo sob o nome da outra.
+    unidade = unidades.find(u => u.id === e.target.value);
+    filtroPessoa = "";
+    folhaFiltro = { employee_id:"", ...mesAtual() };
+    pendSituacao = "aberta";
+    diaEscolhido = null;
+    pendenciasAbertas = 0;
+    acoesVencidas = 0;
+    moldura(usuario);
+    atualizarSelo();
   };
   document.getElementById("sair").onclick = async () => { await sb.auth.signOut(); telaLogin(); };
   app.querySelectorAll("[data-aba]").forEach(b =>
@@ -165,6 +208,8 @@ const render = () => aba === "equipe" ? abaEquipe()
   : aba === "ponto" ? abaPonto()
   : aba === "pend" ? abaPendencias()
   : aba === "escala" ? abaEscala()
+  : aba === "oper" ? abaOperacao()
+  : aba === "nr1" ? abaNr1()
   : aba === "folha" ? abaFolha()
   : abaDocs();
 const conteudo = () => document.getElementById("conteudo");
@@ -190,35 +235,35 @@ async function abaEquipe(){
     conteudo().innerHTML = `
       <div class="carta">
         <div class="linha" style="margin-bottom:14px">
-          <h2 style="margin:0">Equipe · ${unidade.name}</h2>
+          <h2 style="margin:0">Equipe · ${esc(unidade.name)}</h2>
           <button id="novo">Novo colaborador</button>
         </div>
         ${r.equipe.length ? `<table>
           <tr><th>Nome</th><th>Função</th><th>Vínculo</th><th>Ponto</th><th>Portal</th><th>PIN</th><th></th></tr>
           ${r.equipe.map(p => `<tr style="${p.ativo?"":"opacity:.5"}">
-            <td><b>${p.nome}</b>${p.ativo?"":" <span class='etiqueta'>inativo</span>"}</td>
-            <td>${p.funcao || "—"}</td>
-            <td>${rotuloTipo(p.tipo)}</td>
+            <td><b>${esc(p.nome)}</b>${p.ativo?"":" <span class='etiqueta'>inativo</span>"}</td>
+            <td>${esc(p.funcao || "—")}</td>
+            <td>${esc(rotuloTipo(p.tipo))}</td>
             <td>${p.registra_ponto ? `<span class="etiqueta ponto">marca</span>` : "—"}</td>
             <td>${p.perfil_portal === "completo" ? `<span class="etiqueta ponto">completo</span>`
                  : p.perfil_portal === "treinamentos" ? `<span class="etiqueta atencao">treinamentos</span>`
                  : "—"}</td>
             <td>${p.tem_pin ? "definido" : `<span class="etiqueta">sem PIN</span>`}</td>
             <td style="text-align:right;white-space:nowrap">
-              <button class="discreto" data-editar='${JSON.stringify(p)}'>editar</button>
-              <button class="discreto" data-pin="${p.id}" data-nome="${p.nome}">PIN</button>
-              <button class="discreto" data-ficha='${JSON.stringify({id:p.id,nome:p.nome})}'>ficha</button>
+              <button class="discreto" data-editar='${guarde(p)}'>editar</button>
+              <button class="discreto" data-pin="${esc(p.id)}" data-nome="${esc(p.nome)}">PIN</button>
+              <button class="discreto" data-ficha='${guarde({id:p.id,nome:p.nome})}'>ficha</button>
             </td></tr>`).join("")}
         </table>` : `<p class="vazio">Nenhum colaborador cadastrado ainda.</p>`}
       </div>`;
     document.getElementById("novo").onclick = () => formulario(null);
     conteudo().querySelectorAll("[data-editar]").forEach(b =>
-      b.onclick = () => formulario(JSON.parse(b.dataset.editar)));
+      b.onclick = () => formulario(CARGA[b.dataset.editar]));
     conteudo().querySelectorAll("[data-pin]").forEach(b =>
       b.onclick = () => definirPin(b.dataset.pin, b.dataset.nome));
     conteudo().querySelectorAll("[data-ficha]").forEach(b =>
-      b.onclick = () => abrirFicha(JSON.parse(b.dataset.ficha)));
-  } catch(e){ conteudo().innerHTML = `<div class="carta"><div class="aviso">${e.message}</div></div>`; }
+      b.onclick = () => abrirFicha(CARGA[b.dataset.ficha]));
+  } catch(e){ conteudo().innerHTML = `<div class="carta"><div class="aviso">${esc(e.message)}</div></div>`; }
 }
 
 const rotuloTipo = (t) => ({clt:"CLT", freela_fixo:"Freela fixo",
@@ -230,16 +275,17 @@ function formulario(p){
   const d = document.createElement("dialog");
   d.innerHTML = `
     <h2>${p ? "Editar colaborador" : "Novo colaborador"}</h2>
-    <label>Nome completo</label><input id="f-nome" value="${p?.nome || ""}">
-    <label>Função</label><input id="f-funcao" value="${p?.funcao || ""}" placeholder="Atendente, cozinha…">
+    <label>Nome completo</label><input id="f-nome" value="${esc(p?.nome || "")}">
+    <label>Função</label><input id="f-funcao" value="${esc(p?.funcao || "")}" placeholder="Atendente, cozinha…">
     <label>Vínculo</label>
     <select id="f-tipo">${["clt","freela_fixo","freela_variavel","socio","pj"].map(t =>
       `<option value="${t}" ${p?.tipo===t?"selected":""}>${rotuloTipo(t)}</option>`).join("")}</select>
     <label>Data de nascimento</label>
     <input type="date" id="f-nascimento" value="${p?.nascimento || ""}">
     <p class="sub" style="margin:4px 0 0;font-size:12px">
-      Segundo fator do portal no celular. Sem ela a pessoa não acessa o portal —
-      o tablet do ponto continua só com PIN.</p>
+      Confere junto com o PIN no portal do celular. São dois dados que a pessoa
+      sabe, não autenticação de dois fatores — sem ela a pessoa não acessa o
+      portal, e o tablet do ponto continua só com PIN.</p>
     <label>Admissão</label><input type="date" id="f-admitido" value="${p?.admitido_em || ""}">
     <label>Desligamento (deixe vazio se está ativo)</label>
     <input type="date" id="f-desligado" value="${p?.desligado_em || ""}">
@@ -280,7 +326,7 @@ function formulario(p){
       d.close(); abaEquipe();
     } catch(e){
       ev.target.disabled = false;
-      d.querySelector("#f-erro").innerHTML = `<div class="aviso">${e.message}</div>`;
+      d.querySelector("#f-erro").innerHTML = `<div class="aviso">${esc(e.message)}</div>`;
     }
   };
 }
@@ -288,7 +334,7 @@ function formulario(p){
 function definirPin(id, nome){
   const d = document.createElement("dialog");
   d.innerHTML = `
-    <h2>PIN de ${nome}</h2>
+    <h2>PIN de ${esc(nome)}</h2>
     <p class="sub">De 4 a 6 números. É com ele que a pessoa marca o ponto e etiqueta na cozinha.</p>
     <input id="p-pin" inputmode="numeric" maxlength="6" placeholder="••••"
            style="font-size:26px;text-align:center;letter-spacing:10px">
@@ -307,7 +353,7 @@ function definirPin(id, nome){
       d.close(); abaEquipe();
     } catch(e){
       ev.target.disabled = false;
-      d.querySelector("#p-erro").innerHTML = `<div class="aviso">${e.message}</div>`;
+      d.querySelector("#p-erro").innerHTML = `<div class="aviso">${esc(e.message)}</div>`;
     }
   };
 }
@@ -339,6 +385,18 @@ async function chamarFn(fn, payload){
 }
 const chamarFolha   = (p) => chamarFn("gestao-folha", p);
 const chamarPend    = (p) => chamarFn("gestao-pendencias", p);
+async function chamarOper(payload){
+  const { data:{ session } } = await sb.auth.getSession();
+  if(!session) { telaLogin("Sua sessão expirou. Entre de novo."); throw new Error("sem sessão"); }
+  const r = await fetch(`${URL_SB}/functions/v1/operacao`, {
+    method:"POST",
+    headers:{ "Content-Type":"application/json", Authorization:`Bearer ${session.access_token}` },
+    body: JSON.stringify({ unit_token: unidade?.public_token, ...payload })
+  });
+  const d = await r.json().catch(()=>({error:"Resposta inválida."}));
+  if(!r.ok) throw new Error(d.error || "Não foi possível completar.");
+  return d;
+}
 const chamarModelos = (p) => chamarFn("gestao-modelos", p);
 
 /* ---------- ficha de registro ---------- */
@@ -379,7 +437,7 @@ async function abrirFicha(pessoa){
   const d = document.createElement("dialog");
   d.style.maxWidth = "560px";
   d.innerHTML = `
-    <h2>Ficha de ${pessoa.nome}</h2>
+    <h2>Ficha de ${esc(pessoa.nome)}</h2>
     <p class="sub">É daqui que saem os documentos. Campo vazio impede gerar o que depende dele.</p>
     ${empresa ? "" : `<div class="aviso">Cadastre os dados da empresa antes.</div>`}
     ${CAMPOS_FICHA.map(([grupo, campos]) => `
@@ -391,7 +449,7 @@ async function abrirFicha(pessoa){
           <select id="fi-${c}">${["", ...tipo.slice(7).split(",")].map(o =>
             `<option value="${o}" ${v(c)===o?"selected":""}>${o || "—"}</option>`).join("")}</select>`;
         return `<label>${rotulo}</label>
-          <input type="${tipo}" id="fi-${c}" value="${String(v(c)).replace(/"/g,"&quot;")}">`;
+          <input type="${tipo}" id="fi-${c}" value="${esc(v(c))}">`;
       }).join("")}`).join("")}
     <div id="fi-erro"></div>
     <div class="linha" style="margin-top:20px">
@@ -412,7 +470,7 @@ async function abrirFicha(pessoa){
       }
     try { await chamarGerar(dados); d.close(); abaEquipe(); }
     catch(e){ ev.target.disabled = false;
-      d.querySelector("#fi-erro").innerHTML = `<div class="aviso">${e.message}</div>`; }
+      d.querySelector("#fi-erro").innerHTML = `<div class="aviso">${esc(e.message)}</div>`; }
   };
 }
 
@@ -426,10 +484,10 @@ async function formGerar(equipe){
     <p class="sub">O PDF é montado com os dados da ficha e entra na fila de assinatura.</p>
     <label>Colaborador</label>
     <select id="g-pessoa">${equipe.filter(p=>p.ativo).map(p =>
-      `<option value="${p.id}">${p.nome}</option>`).join("")}</select>
+      `<option value="${esc(p.id)}">${esc(p.nome)}</option>`).join("")}</select>
     <label>Modelo</label>
     <select id="g-modelo">${modelos.map(m =>
-      `<option value="${m.id}">${m.codigo} — ${m.titulo}</option>`).join("")}</select>
+      `<option value="${esc(m.id)}">${esc(m.codigo)} — ${esc(m.titulo)}</option>`).join("")}</select>
     <label>Data do documento</label>
     <input type="date" id="g-data" value="${hojeLocal()}">
     <p class="sub" style="margin:4px 0 0;font-size:12px">
@@ -460,9 +518,9 @@ async function formGerar(equipe){
       const r = await chamarGerar({ action:"previa", ...payload() });
       erro.innerHTML = r.pronto
         ? `<div class="ok">Tudo preenchido. ${r.blocos.length} blocos.</div>`
-        : `<div class="aviso">Falta na ficha: ${(r.faltando||[]).join(", ") || "—"}
-           ${r.pendentes?.length ? "<br>Marcadores sem decisão: " + r.pendentes.join(", ") : ""}</div>`;
-    } catch(e){ erro.innerHTML = `<div class="aviso">${e.message}</div>`; }
+        : `<div class="aviso">Falta na ficha: ${esc((r.faltando||[]).join(", ") || "—")}
+           ${r.pendentes?.length ? "<br>Marcadores sem decisão: " + esc(r.pendentes.join(", ")) : ""}</div>`;
+    } catch(e){ erro.innerHTML = `<div class="aviso">${esc(e.message)}</div>`; }
   };
 
   d.querySelector("#g-gerar").onclick = async (ev) => {
@@ -470,12 +528,12 @@ async function formGerar(equipe){
     try {
       const r = await chamarGerar({ action:"gerar", ...payload() });
       d.close();
-      alert(`"${r.titulo}" gerado.\nImpressão digital: ${r.sha256_curto}`);
+      alert(`"${esc(r.titulo)}" gerado.\nImpressão digital: ${esc(r.sha256_curto)}`);
       abaDocs();
     } catch(e){
       ev.target.disabled = false; ev.target.textContent = "Gerar";
-      const f = e.dados?.faltando?.length ? "<br>Falta na ficha: " + e.dados.faltando.join(", ") : "";
-      erro.innerHTML = `<div class="aviso">${e.message}${f}</div>`;
+      const f = e.dados?.faltando?.length ? "<br>Falta na ficha: " + esc(e.dados.faltando.join(", ")) : "";
+      erro.innerHTML = `<div class="aviso">${esc(e.message)}${f}</div>`;
     }
   };
 }
@@ -498,8 +556,8 @@ async function abaDocs(){
         <table>
           <tr><th>Colaborador</th><th>Documento</th><th>Prazo</th></tr>
           ${pendentes.map(p => `<tr>
-            <td><b>${p.colaborador}</b></td>
-            <td>${p.titulo}</td>
+            <td><b>${esc(p.colaborador)}</b></td>
+            <td>${esc(p.titulo)}</td>
             <td>${p.prazo ? (p.atrasado
                   ? `<span class="etiqueta substituida">${p.prazo.split("-").reverse().join("/")}</span>`
                   : p.prazo.split("-").reverse().join("/")) : "—"}</td>
@@ -513,19 +571,20 @@ async function abaDocs(){
             <label>Filtrar por colaborador</label>
             <select id="filtro">
               <option value="">Todos</option>
-              ${equipe.map(p => `<option value="${p.id}" ${filtroPessoa===p.id?"selected":""}>${p.nome}</option>`).join("")}
+              ${equipe.map(p => `<option value="${esc(p.id)}" ${filtroPessoa===p.id?"selected":""}>${esc(p.nome)}</option>`).join("")}
             </select>
           </div>
           <button class="secundaria" id="gerar">Gerar de modelo</button>
           <button class="discreto" id="importar">Importar modelos</button>
+          <button class="secundaria" id="folha-mes">Publicar folha do mês</button>
           <button id="enviar">Enviar documento</button>
         </div>
         ${documentos.length ? `<table>
           <tr><th>Documento</th><th>De quem</th><th>Assinatura</th><th>Arquivo</th><th></th></tr>
           ${documentos.map(d => `<tr>
-            <td><b>${d.titulo}</b>
-                <div class="sub">${d.tipo}${d.competencia ? " · "+d.competencia : ""}</div></td>
-            <td>${d.colaborador}</td>
+            <td><b>${esc(d.titulo)}</b>
+                <div class="sub">${esc(d.tipo)}${esc(d.competencia ? " · "+d.competencia : "")}</div></td>
+            <td>${esc(d.colaborador)}</td>
             <td>${d.exige_assinatura
                   ? (d.assinaturas.length
                       ? `<span class="etiqueta ponto">assinado</span>
@@ -533,10 +592,10 @@ async function abaDocs(){
                             .toLocaleString("pt-BR",{dateStyle:"short",timeStyle:"short",timeZone:"America/Sao_Paulo"})}</div>`
                       : `<span class="etiqueta correcao">pendente</span>`)
                   : "—"}</td>
-            <td><span class="sub" title="impressão digital do arquivo">${d.sha256_curto}</span></td>
+            <td><span class="sub" title="impressão digital do arquivo">${esc(d.sha256_curto)}</span></td>
             <td style="text-align:right;white-space:nowrap">
-              <button class="discreto" data-abrir="${d.id}">abrir</button>
-              <button class="discreto" data-arquivar="${d.id}">arquivar</button>
+              <button class="discreto" data-abrir="${esc(d.id)}">abrir</button>
+              <button class="discreto" data-arquivar="${esc(d.id)}">arquivar</button>
             </td></tr>`).join("")}
         </table>` : `<p class="vazio">Nenhum documento ainda.</p>`}
       </div>`;
@@ -544,6 +603,7 @@ async function abaDocs(){
     document.getElementById("filtro").onchange = (e) => { filtroPessoa = e.target.value; abaDocs(); };
     document.getElementById("importar").onclick = () => formModelos();
     document.getElementById("enviar").onclick = () => formEnvio(equipe, tipos);
+    document.getElementById("folha-mes").onclick = () => formFolhaDoMes(equipe);
     document.getElementById("gerar").onclick = () => formGerar(equipe);
     conteudo().querySelectorAll("[data-abrir]").forEach(b => b.onclick = async () => {
       try { const { url } = await chamarDocs({ action:"abrir", id:b.dataset.abrir });
@@ -556,7 +616,7 @@ async function abaDocs(){
       try { await chamarDocs({ action:"arquivar", id:b.dataset.arquivar, motivo }); abaDocs(); }
       catch(e){ alert(e.message); }
     });
-  } catch(e){ conteudo().innerHTML = `<div class="carta"><div class="aviso">${e.message}</div></div>`; }
+  } catch(e){ conteudo().innerHTML = `<div class="carta"><div class="aviso">${esc(e.message)}</div></div>`; }
 }
 
 function formEnvio(equipe, tipos){
@@ -565,9 +625,9 @@ function formEnvio(equipe, tipos){
     <h2>Enviar documento</h2>
     <p class="sub">PDF de até 10 MB. O arquivo fica em área privada e só abre por link temporário.</p>
     <label>Tipo</label>
-    <select id="e-tipo">${tipos.map(t => `<option value="${t.id}" data-assina="${t.assina}">${t.nome}</option>`).join("")}</select>
+    <select id="e-tipo">${tipos.map(t => `<option value="${esc(t.id)}" data-assina="${t.assina}">${esc(t.nome)}</option>`).join("")}</select>
     <label>Para quem</label>
-    <select id="e-pessoa">${equipe.filter(p=>p.ativo).map(p => `<option value="${p.id}">${p.nome}</option>`).join("")}</select>
+    <select id="e-pessoa">${equipe.filter(p=>p.ativo).map(p => `<option value="${esc(p.id)}">${esc(p.nome)}</option>`).join("")}</select>
     <label>Título</label><input id="e-titulo" placeholder="Holerite de setembro">
     <label>Competência (opcional)</label><input type="month" id="e-comp">
     <label>Prazo para assinar (opcional)</label><input type="date" id="e-prazo">
@@ -632,9 +692,435 @@ function formEnvio(equipe, tipos){
       d.close(); abaDocs();
     } catch(e){
       ev.target.disabled = false; ev.target.textContent = "Enviar";
-      erro.innerHTML = `<div class="aviso">${e.message}</div>`;
+      erro.innerHTML = `<div class="aviso">${esc(e.message)}</div>`;
     }
   };
+}
+
+/* ---------- publicar a folha do mês (holerite e vale-transporte) ---------- */
+// A contabilidade manda um PDF só, com todo mundo junto. Esta tela separa por
+// pessoa e publica cada pedaço para assinatura no portal.
+//
+// Por que a separação acontece AQUI e não no servidor: o casamento entre o nome
+// impresso no PDF e o cadastro é a parte que erra. Separar no navegador deixa
+// você conferir a lista antes de publicar — e documento publicado no nome errado
+// é pior do que documento não publicado.
+//
+// Dois formatos, porque a contabilidade usa dois:
+//   Recibo de Pagamento        -> uma página por pessoa. Separa limpo.
+//   Recibo de Vale Transporte  -> vários recibos empilhados na mesma página.
+//
+// COMO O VALE-TRANSPORTE EMPILHADO É SEPARADO (01/10): recortar a página NÃO
+// serve. Testei os dois caminhos — mudar o MediaBox e usar embedPage com
+// bounding box — e nos dois o nome, o CPF e o valor da outra pessoa continuavam
+// dentro do arquivo: o recorte esconde, não apaga, e qualquer extrator de texto
+// traz de volta. Entregar assim seria dar o dado de um colega para o outro com
+// aparência de protegido.
+// A saída é desenhar de novo: a faixa do recibo é renderizada em imagem a 200
+// dpi e vira uma página nova. O que ficou fora não existe no arquivo, porque o
+// arquivo é feito só daquele pedaço. O preço é que o texto deixa de ser
+// selecionável — aceitável num recibo que vai ser lido e assinado, e o selo
+// SHA-256 da assinatura continua provando o conteúdo. Melhor ainda seria a
+// contabilidade mandar um recibo por página, como já faz no holerite.
+
+const semAcento = (s) => String(s ?? "").normalize("NFD").replace(/[̀-ͯ]/g, "");
+const chaveNome = (s) => semAcento(s).toUpperCase().replace(/[^A-Z ]/g, " ").replace(/\s+/g, " ").trim();
+const MESES_PT = ["janeiro","fevereiro","marco","abril","maio","junho",
+                  "julho","agosto","setembro","outubro","novembro","dezembro"];
+
+/** Agrupa os pedaços de texto do pdf.js em linhas, de cima para baixo.
+    Agrupa por proximidade, não por valor exato: numa mesma linha da tabela o
+    gerador do PDF varia meio ponto na altura, e arredondar partia a linha em
+    duas — foi o que fez a leitura dos campos falhar na primeira versão. */
+function linhasDaPagina(conteudoTexto){
+  const itens = conteudoTexto.items
+    .filter(i => i.str && i.str.trim())
+    .map(i => ({ y:i.transform[5], x:i.transform[4], txt:i.str }))
+    .sort((a,b) => b.y - a.y);
+
+  const linhas = [];
+  for(const it of itens){
+    const ultima = linhas[linhas.length - 1];
+    if(ultima && Math.abs(ultima.y - it.y) <= 2) ultima.partes.push(it);
+    else linhas.push({ y:it.y, partes:[it] });
+  }
+  return linhas.map(l => ({
+    y: l.y,
+    texto: l.partes.sort((a,b) => a.x - b.x).map(p => p.txt).join(" ").replace(/\s+/g, " ").trim(),
+  }));
+}
+
+function competenciaDeTexto(texto){
+  const m = /\b([A-Za-zç]+)\s+de\s+(\d{4})/.exec(semAcento(texto));
+  if(!m) return null;
+  const i = MESES_PT.indexOf(m[1].toLowerCase());
+  return i < 0 ? null : `${m[2]}-${String(i+1).padStart(2,"0")}`;
+}
+
+/** Lê o PDF consolidado e devolve um item por documento a publicar. */
+async function lerConsolidado(pdfjs, arquivo, especie, guardaPdf){
+  const bytes = new Uint8Array(await arquivo.arrayBuffer());
+  const pdf = await pdfjs.getDocument({ data: bytes }).promise;
+  if(guardaPdf) guardaPdf.set(arquivo, pdf);
+  const achados = [];
+
+  for(let p = 1; p <= pdf.numPages; p++){
+    const pagina = await pdf.getPage(p);
+    const linhas = linhasDaPagina(await pagina.getTextContent());
+
+    if(especie === "holerite"){
+      // "12 GIOVANA SANDOR CAMPOS JACINTO 513505 1 1"
+      let nome = null;
+      for(const l of linhas){
+        const m = /^(\d+)\s+([A-ZÀ-Ü][A-ZÀ-Ü\s.]{4,}?)\s+\d{6}\b/.exec(l.texto);
+        if(m){ nome = m[2].trim(); break; }
+      }
+      const comp = linhas.map(l => competenciaDeTexto(l.texto)).find(Boolean) || null;
+      achados.push({ pagina:p, nome, competencia:comp, dados:null, recorte:null });
+    } else {
+      // Cada "RECIBO DE VALE TRANSPORTE" abre um bloco. Agrupo as linhas de
+      // cada bloco e leio os campos: é com eles que o recibo individual é
+      // emitido, em vez de recortar a página alheia.
+      const topos = [];
+      for(const l of linhas){
+        if(/^RECIBO DE VALE TRANSPORTE/i.test(l.texto)) topos.push({ y:l.y, linhas:[] });
+        else if(topos.length) topos[topos.length-1].linhas.push(l.texto);
+      }
+      const juntos = topos.length > 1;
+      const [, , largura, altura] = pagina.view;
+      topos.forEach((t, k) => {
+        const dados = camposDoVale(t.linhas);
+        // Se a leitura dos campos falhar, cai no redesenho da faixa — pior,
+        // mas nunca entrega o recibo do colega junto.
+        const baixo = k + 1 < topos.length ? topos[k+1].y + 30 : 0;
+        const alto  = Math.min(altura, t.y + 30);
+        achados.push({
+          pagina: p, nome: dados?.nome ?? null, competencia: dados?.competencia ?? null,
+          dados: dados,
+          recorte: (juntos && !dados)
+            ? { x:0, baixo, largura, altura: alto - baixo, alturaPagina: altura } : null,
+        });
+      });
+    }
+  }
+  return achados;
+}
+
+/** Lê os campos de um recibo de vale-transporte. Devolve null se faltar o
+    essencial — melhor cair no redesenho do que emitir recibo com buraco. */
+function camposDoVale(linhas){
+  const txt = linhas.join("\n");
+  const d = {};
+
+  const mn = /Nome:\s*(\d+)\s*-\s*(.+?)\s+CPF:\s*([\d.\-]+)/.exec(txt);
+  if(!mn) return null;
+  d.codigo = mn[1]; d.nome = mn[2].trim(); d.cpf = mn[3].trim();
+
+  const mc = /Cargo:\s*(.+?)\s+Depto\.?:\s*(.+?)\s*$/m.exec(txt);
+  d.cargo = mc ? mc[1].trim() : "";
+  d.depto = mc ? mc[2].trim() : "";
+
+  // "250 MOGI DAS CRUZES R$ 5,50 48 x 5,50 R$ 264,00" — pode ter mais de uma
+  d.transportes = [];
+  for(const l of linhas){
+    const mt = /^(\d+)\s+(.+?)\s+R\$\s*([\d.,]+)\s+(.+?)\s+R\$\s*([\d.,]+)\s*$/.exec(l.trim());
+    if(mt) d.transportes.push({ codigo:mt[1], nome:mt[2].trim(), unitario:mt[3],
+                                quantidade:mt[4].trim(), total:mt[5] });
+  }
+  if(!d.transportes.length) return null;
+
+  const mtot = /Total do valor fornecido[.\s]*:?\s*R\$\s*([\d.,]+)/.exec(txt);
+  d.total = mtot ? mtot[1] : null;
+  if(!d.total) return null;
+
+  const me = /Recebi de\s+(.+?)\s+a quantidade/.exec(txt);
+  d.empresa = me ? me[1].trim() : "";
+
+  const mp = /per[ií]odo de\s+([A-Za-zç]+ de \d{4})/.exec(semAcento(txt).replace(/\n/g, " "));
+  d.periodo = mp ? mp[1] : "";
+  d.competencia = competenciaDeTexto(d.periodo);
+
+  const md = /^([A-ZÀ-Ü][A-ZÀ-Ü\s.]+),\s*(\d{1,2}\s+de\s+[A-Za-zç]+\s+de\s+\d{4})\s*$/m.exec(txt);
+  d.cidade = md ? md[1].trim() : "";
+  d.data   = md ? md[2].trim() : "";
+
+  return d;
+}
+
+/** Emite o recibo individual a partir dos campos lidos. Texto de verdade,
+    sem imagem e sem nenhum dado de outra pessoa — o arquivo é construído do
+    zero, não recortado. O original da contabilidade continua no e-mail, que é
+    de onde isto veio. */
+async function reciboDeVale(PDFDocument, StandardFonts, rgb, d){
+  const doc = await PDFDocument.create();
+  const L = 595.28, A = 300;
+  const pg = doc.addPage([L, A]);
+  const normal = await doc.embedFont(StandardFonts.Helvetica);
+  const forte  = await doc.embedFont(StandardFonts.HelveticaBold);
+  const preto = rgb(0, 0, 0);
+
+  const m = 40, dir = L - m;
+  const texto = (t, x, y, tam = 9, f = normal) =>
+    pg.drawText(String(t ?? ""), { x, y, size: tam, font: f, color: preto });
+  const direita = (t, x, y, tam = 9, f = normal) =>
+    texto(t, x - f.widthOfTextAtSize(String(t ?? ""), tam), y, tam, f);
+  const centro = (t, y, tam = 9, f = normal) =>
+    texto(t, (L - f.widthOfTextAtSize(String(t ?? ""), tam)) / 2, y, tam, f);
+  const linha = (y) =>
+    pg.drawLine({ start:{x:m,y}, end:{x:dir,y}, thickness:0.8, color:preto });
+
+  const baixoCaixa = 18, topoCaixa = A - 18;
+  pg.drawRectangle({ x:m, y:baixoCaixa, width:dir - m, height:topoCaixa - baixoCaixa,
+                     borderWidth:0.8, borderColor:preto });
+
+  let y = topoCaixa - 22;
+  centro("RECIBO DE VALE TRANSPORTE", y, 15, forte);
+  y -= 10; linha(y);
+
+  y -= 16;
+  texto("Nome:", m + 6, y, 9, forte);
+  texto(`${d.codigo} - ${d.nome}`, m + 44, y);
+  texto("CPF:", dir - 180, y, 9, forte);
+  texto(d.cpf, dir - 152, y);
+  y -= 14;
+  texto("Cargo:", m + 6, y, 9, forte);
+  texto(d.cargo, m + 44, y);
+  texto("Depto.:", dir - 180, y, 9, forte);
+  texto(d.depto, dir - 140, y);
+  y -= 10; linha(y);
+
+  const cols = [m, m + 42, m + 230, m + 320, m + 452, dir];
+  const cab = ["Cód.", "Transporte", "Valor Unitário", "Quantidade X Valor dos Passes do Mês", "Valor Total"];
+  y -= 14;
+  cab.forEach((c, i) => {
+    const meio = (cols[i] + cols[i+1]) / 2;
+    texto(c, meio - forte.widthOfTextAtSize(c, 7.5) / 2, y, 7.5, forte);
+  });
+  y -= 6; linha(y);
+  for(const t of d.transportes){
+    y -= 14;
+    direita(t.codigo, cols[1] - 6, y, 8);
+    texto(t.nome, cols[1] + 4, y, 8);
+    direita("R$ " + t.unitario, cols[3] - 6, y, 8);
+    texto(t.quantidade, (cols[3] + cols[4]) / 2 - normal.widthOfTextAtSize(t.quantidade, 8) / 2, y, 8);
+    direita("R$ " + t.total, dir - 6, y, 8);
+    y -= 5; linha(y);
+  }
+  y -= 14;
+  const rotulo = "Total do valor fornecido";
+  const alvo = dir - 120 - m - 12;
+  let pontos = "";
+  while(forte.widthOfTextAtSize(rotulo + pontos + ":", 8) < alvo) pontos += ".";
+  texto(rotulo + pontos + ":", m + 6, y, 8, forte);
+  direita("R$ " + d.total, dir - 6, y, 8, forte);
+  y -= 5; linha(y);
+
+  y -= 18;
+  const frase = `Recebi de ${d.empresa} a quantidade de Vales-Transportes acima `
+    + `discriminada para minha utilização no decorrer do período de ${d.periodo}`;
+  const largMax = dir - m - 24;
+  let atual = "";
+  for(const palavra of frase.split(" ")){
+    const tenta = atual ? atual + " " + palavra : palavra;
+    if(forte.widthOfTextAtSize(tenta, 8.5) > largMax){ texto(atual, m + 12, y, 8.5, forte); y -= 12; atual = palavra; }
+    else atual = tenta;
+  }
+  if(atual) texto(atual, m + 12, y, 8.5, forte);
+
+  y -= 16; linha(y);
+  y -= 18;
+  texto([d.cidade, d.data].filter(Boolean).join(", "), m + 6, y, 8.5);
+
+  y -= 48;
+  pg.drawLine({ start:{x:dir - 270, y}, end:{x:dir - 20, y}, thickness:0.8, color:preto });
+  y -= 12;
+  const meioAssinatura = dir - 145;
+  texto(d.nome, meioAssinatura - normal.widthOfTextAtSize(d.nome, 8.5) / 2, y, 8.5);
+
+  return doc;
+}
+
+/** Redesenha uma faixa da página em imagem. É isto que faz o pedaço do colega
+    deixar de existir no arquivo, em vez de só ficar fora da moldura. */
+async function faixaEmImagem(pdf, numeroPagina, r){
+  const pagina = await pdf.getPage(numeroPagina);
+  const escala = 200 / 72;                       // 200 dpi: legível e leve
+  const viewport = pagina.getViewport({ scale: escala });
+  const tela = document.createElement("canvas");
+  tela.width  = Math.ceil(r.largura * escala);
+  tela.height = Math.ceil(r.altura * escala);
+  const ctx = tela.getContext("2d");
+  ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, tela.width, tela.height);
+  // desloca a página para que o topo da faixa caia em 0,0 do canvas
+  const topo = r.baixo + r.altura;
+  await pagina.render({ canvasContext: ctx, viewport,
+    transform: [1, 0, 0, 1, -r.x * escala, -(r.alturaPagina - topo) * escala] }).promise;
+  const dataUrl = tela.toDataURL("image/png");
+  return Uint8Array.from(atob(dataUrl.split(",")[1]), c => c.charCodeAt(0));
+}
+
+function formFolhaDoMes(equipe){
+  const ativos = equipe.filter(p => p.ativo);
+  const d = document.createElement("dialog");
+  d.style.maxWidth = "640px";
+  d.innerHTML = `
+    <h2>Publicar a folha do mês</h2>
+    <p class="sub">Baixe do e-mail da contabilidade os PDFs com todo mundo junto e solte aqui.
+      Eu separo por pessoa; você confere a lista antes de publicar.</p>
+    <label>Recibo de Pagamento (holerite)</label>
+    <input type="file" id="fm-holerite" accept="application/pdf">
+    <label>Recibo de Vale Transporte</label>
+    <input type="file" id="fm-vt" accept="application/pdf">
+    <label>Prazo para assinar (opcional)</label>
+    <input type="date" id="fm-prazo">
+    <div id="fm-erro"></div>
+    <div id="fm-lista"></div>
+    <div class="linha" style="margin-top:18px">
+      <button id="fm-analisar">Analisar</button>
+      <button class="secundaria" id="fm-fechar">Fechar</button>
+    </div>`;
+  document.body.appendChild(d); d.showModal();
+  d.querySelector("#fm-fechar").onclick = () => d.close();
+  d.addEventListener("close", () => d.remove());
+
+  const erro = d.querySelector("#fm-erro");
+  const lista = d.querySelector("#fm-lista");
+  let achados = [];
+  const pdfsLidos = new Map();
+
+  const opcoesDeEquipe = (selecionado) =>
+    `<option value="">— escolha —</option>` + ativos.map(p =>
+      `<option value="${esc(p.id)}" ${p.id===selecionado?"selected":""}>${esc(p.nome)}</option>`).join("");
+
+  d.querySelector("#fm-analisar").onclick = async (ev) => {
+    ev.target.disabled = true; ev.target.textContent = "Lendo…";
+    erro.innerHTML = ""; lista.innerHTML = "";
+    try {
+      const pdfjs = await import("https://cdn.jsdelivr.net/npm/pdfjs-dist@4.6.82/+esm");
+      pdfjs.GlobalWorkerOptions.workerSrc =
+        "https://cdn.jsdelivr.net/npm/pdfjs-dist@4.6.82/build/pdf.worker.min.mjs";
+
+      const porChave = new Map(ativos.map(p => [chaveNome(p.nome), p.id]));
+      achados = [];
+      for(const [campo, especie, tipo, titulo] of [
+        ["#fm-holerite", "holerite", "holerite", "Holerite"],
+        ["#fm-vt", "vale_transporte", "vale_transporte", "Recibo de vale-transporte"],
+      ]){
+        const arq = d.querySelector(campo).files[0];
+        if(!arq) continue;
+        const itens = await lerConsolidado(pdfjs, arq, especie, pdfsLidos);
+        itens.forEach(i => achados.push({ ...i, arquivo:arq, especie, tipo, titulo,
+          employee_id: porChave.get(chaveNome(i.nome)) || "", situacao:"" }));
+      }
+
+      if(!achados.length){
+        erro.innerHTML = `<div class="aviso">Não encontrei nenhum recibo nesses arquivos.
+          Confira se são os PDFs da contabilidade.</div>`;
+        return;
+      }
+
+      lista.innerHTML = `
+        <h2 style="margin:18px 0 6px;font-size:15px">Confira antes de publicar</h2>
+        <p class="sub" style="margin:0 0 8px">Nome em branco ou errado? Escolha a pessoa na lista.
+          Quem ficar sem colaborador não é publicado.</p>
+        ${achados.some(a => a.dados) ? `<div class="sub" style="margin:0 0 8px">
+          Os recibos de vale-transporte vieram vários na mesma página. Em vez de recortar
+          — o que esconderia o do colega sem apagar —, a tela <b>lê os campos e emite o
+          recibo de cada um</b>, com o mesmo conteúdo e texto de verdade. O arquivo
+          original da contabilidade continua no e-mail, que é a fonte.</div>` : ""}
+        ${achados.some(a => a.recorte) ? `<div class="aviso">
+          Em algum recibo eu não consegui ler todos os campos, então esse vai
+          <b>redesenhado em imagem</b> — seguro, mas sem texto selecionável. Confira o
+          arquivo depois de publicar.</div>` : ""}
+        <table>
+          <tr><th>Documento</th><th>Nome no PDF</th><th>Colaborador</th><th>Competência</th><th></th></tr>
+          ${achados.map((a,i) => `<tr>
+            <td>${esc(a.titulo)}</td>
+            <td>${esc(a.nome || "não li o nome")}</td>
+            <td><select data-pessoa="${i}">${opcoesDeEquipe(a.employee_id)}</select></td>
+            <td><input data-comp="${i}" value="${esc(a.competencia || "")}"
+                  placeholder="AAAA-MM" style="width:95px"></td>
+            <td data-situacao="${i}">${a.dados
+              ? `<span class="sub" style="font-size:11px">recibo emitido aqui</span>`
+              : a.recorte ? `<span class="sub" style="font-size:11px">vai como imagem</span>` : ""}</td>
+          </tr>`).join("")}
+        </table>
+        <button id="fm-publicar" style="margin-top:14px">Publicar e pedir assinatura</button>`;
+
+      lista.querySelectorAll("[data-pessoa]").forEach(s =>
+        s.onchange = () => { achados[s.dataset.pessoa].employee_id = s.value; });
+      lista.querySelectorAll("[data-comp]").forEach(i =>
+        i.onchange = () => { achados[i.dataset.comp].competencia = i.value.trim(); });
+
+      lista.querySelector("#fm-publicar").onclick = (e2) => publicar(e2.target);
+    } catch(e){
+      erro.innerHTML = `<div class="aviso">${esc(e.message)}</div>`;
+    } finally {
+      ev.target.disabled = false; ev.target.textContent = "Analisar de novo";
+    }
+  };
+
+  async function publicar(botao){
+    botao.disabled = true;
+    const { PDFDocument, StandardFonts, rgb } =
+      await import("https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/+esm");
+    const prazo = d.querySelector("#fm-prazo").value || null;
+    const cache = new Map();
+    let publicados = 0, pulados = 0;
+
+    for(let i = 0; i < achados.length; i++){
+      const a = achados[i];
+      const celula = lista.querySelector(`[data-situacao="${i}"]`);
+      if(!a.employee_id){ celula.innerHTML = `<span class="etiqueta">sem colaborador</span>`; pulados++; continue; }
+      celula.innerHTML = `<span class="sub">publicando…</span>`;
+      try {
+        let saida;
+        if(a.dados){
+          saida = await reciboDeVale(PDFDocument, StandardFonts, rgb, a.dados);
+        } else if(a.recorte){
+          saida = await PDFDocument.create();
+          const png = await faixaEmImagem(pdfsLidos.get(a.arquivo), a.pagina, a.recorte);
+          const imagem = await saida.embedPng(png);
+          const pagina = saida.addPage([a.recorte.largura, a.recorte.altura]);
+          pagina.drawImage(imagem, { x:0, y:0, width:a.recorte.largura, height:a.recorte.altura });
+        } else {
+          saida = await PDFDocument.create();
+          if(!cache.has(a.arquivo)) cache.set(a.arquivo, await PDFDocument.load(await a.arquivo.arrayBuffer()));
+          const [pagina] = await saida.copyPages(cache.get(a.arquivo), [a.pagina - 1]);
+          saida.addPage(pagina);
+        }
+        const arquivo = await saida.saveAsBase64({ dataUri: true });
+
+        const nomePessoa = ativos.find(p => p.id === a.employee_id)?.nome || "";
+        await chamarDocs({ action:"enviar",
+          employee_id: a.employee_id,
+          tipo: a.tipo,
+          titulo: `${a.titulo} · ${a.competencia || "sem competência"}`,
+          competencia: /^\d{4}-\d{2}$/.test(a.competencia || "") ? a.competencia : undefined,
+          visibilidade: "colaborador",
+          exige_assinatura: true,
+          prazo,
+          arquivo });
+        celula.innerHTML = `<span class="etiqueta ponto">publicado</span>`;
+        publicados++;
+        if(nomePessoa && chaveNome(nomePessoa) !== chaveNome(a.nome || "")){
+          celula.innerHTML += `<div class="sub" style="font-size:11px">nome do PDF diferente do cadastro</div>`;
+        }
+      } catch(e){
+        const jaEstava = e.dados?.duplicado;
+        celula.innerHTML = jaEstava
+          ? `<span class="etiqueta">já estava no sistema</span>`
+          : `<span class="etiqueta grave">${esc(e.message)}</span>`;
+        pulados++;
+      }
+    }
+
+    erro.innerHTML = `<div class="${publicados ? "ok" : "aviso"}">${publicados} documento${
+      publicados===1?"":"s"} publicado${publicados===1?"":"s"}${
+      pulados ? ` · ${pulados} não ${pulados===1?"foi":"foram"}` : ""}. A pessoa assina no portal com o PIN.</div>`;
+    botao.disabled = false;
+    abaDocs();
+  }
 }
 
 /* ---------- ponto do dia ---------- */
@@ -646,7 +1132,10 @@ async function abaPonto(){
     const r = await chamar({ action:"dia", dia: diaEscolhido });
     const porPessoa = new Map();
     for(const m of r.marcacoes){
-      const l = porPessoa.get(m.nome) || []; l.push(m); porPessoa.set(m.nome, l);
+      // A02 da revisão: agrupar por nome juntava dois homônimos no mesmo bloco.
+      // A chave é o id; o nome é só rótulo.
+      const l = porPessoa.get(m.employee_id) || [];
+      l.push(m); porPessoa.set(m.employee_id, l);
     }
     conteudo().innerHTML = `
       <div class="carta">
@@ -659,20 +1148,20 @@ async function abaPonto(){
         </div>
         <p class="sub" style="margin:10px 0 16px">
           O dia fecha às 01:00 — marcação depois da meia-noite pertence ao dia anterior.</p>
-        ${porPessoa.size ? [...porPessoa.entries()].map(([nome, lista]) => `
-          <h2 style="margin:18px 0 6px">${nome}</h2>
+        ${porPessoa.size ? [...porPessoa.entries()].map(([, lista]) => `
+          <h2 style="margin:18px 0 6px">${esc(lista[0].nome)}</h2>
           <table>
             <tr><th>Coluna</th><th>Marcação</th><th>Hora</th><th>Origem</th><th></th></tr>
             ${lista.map(m => `<tr>
-              <td>${m.coluna}</td>
-              <td>${m.rotulo}
+              <td>${esc(m.coluna)}</td>
+              <td>${esc(m.rotulo)}
                   ${m.e_correcao ? `<span class="etiqueta correcao">correção</span>` : ""}
                   ${m.foi_corrigida ? `<span class="etiqueta substituida">substituída</span>` : ""}
-                  ${m.motivo ? `<div class="sub" style="margin:2px 0 0">${m.motivo}</div>` : ""}</td>
+                  ${m.motivo ? `<div class="sub" style="margin:2px 0 0">${esc(m.motivo)}</div>` : ""}</td>
               <td class="hora">${hora(m.occurred_at)}</td>
-              <td>${m.por === "gestor" ? "gestão" : "tablet"}${m.tem_foto ? " · foto" : ""}</td>
+              <td>${esc(rotuloOrigem(m))}${m.tem_foto ? " · foto" : ""}</td>
               <td style="text-align:right">
-                <button class="discreto" data-corrigir='${JSON.stringify(
+                <button class="discreto" data-corrigir='${guarde(
                   {id:m.id, employee_id:m.employee_id, nome:m.nome, kind:m.kind})}'>corrigir</button>
               </td></tr>`).join("")}
           </table>`).join("") : `<p class="vazio">Nenhuma marcação neste dia.</p>`}
@@ -680,8 +1169,8 @@ async function abaPonto(){
     document.getElementById("dia").onchange = (e) => { diaEscolhido = e.target.value; abaPonto(); };
     document.getElementById("incluir").onclick = () => formCorrecao(null);
     conteudo().querySelectorAll("[data-corrigir]").forEach(b =>
-      b.onclick = () => formCorrecao(JSON.parse(b.dataset.corrigir)));
-  } catch(e){ conteudo().innerHTML = `<div class="carta"><div class="aviso">${e.message}</div></div>`; }
+      b.onclick = () => formCorrecao(CARGA[b.dataset.corrigir]));
+  } catch(e){ conteudo().innerHTML = `<div class="carta"><div class="aviso">${esc(e.message)}</div></div>`; }
 }
 
 async function formCorrecao(alvo){
@@ -695,7 +1184,7 @@ async function formCorrecao(alvo){
       : "Use para batida esquecida. Fica registrada como lançamento da gestão."}</p>
     <label>Colaborador</label>
     <select id="c-pessoa" ${alvo?.employee_id?"disabled":""}>
-      ${marcam.map(p => `<option value="${p.id}" ${alvo?.employee_id===p.id?"selected":""}>${p.nome}</option>`).join("")}
+      ${marcam.map(p => `<option value="${esc(p.id)}" ${alvo?.employee_id===p.id?"selected":""}>${esc(p.nome)}</option>`).join("")}
     </select>
     <label>Marcação</label>
     <select id="c-kind">
@@ -736,7 +1225,7 @@ async function formCorrecao(alvo){
       }
     } catch(e){
       ev.target.disabled = false;
-      d.querySelector("#c-erro").innerHTML = `<div class="aviso">${e.message}</div>`;
+      d.querySelector("#c-erro").innerHTML = `<div class="aviso">${esc(e.message)}</div>`;
     }
   };
 }
@@ -780,18 +1269,18 @@ async function abaPendencias(){
           <tr><th>Dia</th><th>Quem</th><th>O que aconteceu</th><th></th></tr>
           ${pendencias.map(p => `<tr>
             <td class="hora">${p.dia.slice(8)}/${p.dia.slice(5,7)}</td>
-            <td>${p.nome}</td>
+            <td>${esc(p.nome)}</td>
             <td>
-              <span class="etiqueta ${p.gravidade}">${p.tipo.replace(/_/g," ")}</span>
-              <div style="font-size:13px;margin-top:3px">${p.detalhe}</div>
+              <span class="etiqueta ${esc(p.gravidade)}">${esc(p.tipo.replace(/_/g," "))}</span>
+              <div style="font-size:13px;margin-top:3px">${esc(p.detalhe)}</div>
               ${p.situacao!=="aberta" ? `<div style="font-size:12px;color:#7a7568">
-                ${p.situacao === "ignorada" ? "ignorada" : "resolvida"}: ${p.motivo ?? ""}</div>` : ""}
+                ${p.situacao === "ignorada" ? "ignorada" : "resolvida"}: ${esc(p.motivo ?? "")}</div>` : ""}
             </td>
             <td style="white-space:nowrap">
               ${p.situacao==="aberta" ? `
-                <button class="discreto" data-marcar='${JSON.stringify(
+                <button class="discreto" data-marcar='${guarde(
                   {employee_id:p.employee_id, nome:p.nome, dia:p.dia})}'>lançar ponto</button>
-                <button class="discreto" data-tratar='${JSON.stringify(
+                <button class="discreto" data-tratar='${guarde(
                   {id:p.id, nome:p.nome, detalhe:p.detalhe})}'>tratar</button>` : ""}
             </td></tr>`).join("")}
         </table>` : `<p class="vazio">Nada em aberto por aqui.</p>`}
@@ -809,15 +1298,15 @@ async function abaPendencias(){
         await atualizarSelo(); abaPendencias();
       } catch(e){
         ev.target.disabled = false; ev.target.textContent = "Checar agora";
-        conteudo().insertAdjacentHTML("afterbegin", `<div class="aviso">${e.message}</div>`);
+        conteudo().insertAdjacentHTML("afterbegin", `<div class="aviso">${esc(e.message)}</div>`);
       }
     };
     conteudo().querySelectorAll("[data-marcar]").forEach(b =>
-      b.onclick = () => formCorrecao(JSON.parse(b.dataset.marcar)));
+      b.onclick = () => formCorrecao(CARGA[b.dataset.marcar]));
     conteudo().querySelectorAll("[data-tratar]").forEach(b =>
-      b.onclick = () => formTratar(JSON.parse(b.dataset.tratar)));
+      b.onclick = () => formTratar(CARGA[b.dataset.tratar]));
   } catch(e){
-    conteudo().innerHTML = `<div class="carta"><div class="aviso">${e.message}</div></div>`;
+    conteudo().innerHTML = `<div class="carta"><div class="aviso">${esc(e.message)}</div></div>`;
   }
 }
 
@@ -828,7 +1317,7 @@ function formTratar(p){
   d.innerHTML = `
     <form method="dialog">
       <h2 style="margin-top:0">Tratar pendência</h2>
-      <p class="sub">${p.nome} — ${p.detalhe}</p>
+      <p class="sub">${esc(p.nome)} — ${esc(p.detalhe)}</p>
       <label>O que foi feito</label>
       <select id="tr-situacao">
         <option value="resolvida">Resolvida — tratei por fora (atestado, acordo, folga trocada)</option>
@@ -853,7 +1342,7 @@ function formTratar(p){
       d.close(); d.remove(); await atualizarSelo(); abaPendencias();
     } catch(e){
       ev.target.disabled = false;
-      d.querySelector("#tr-erro").innerHTML = `<div class="aviso">${e.message}</div>`;
+      d.querySelector("#tr-erro").innerHTML = `<div class="aviso">${esc(e.message)}</div>`;
     }
   };
 }
@@ -887,7 +1376,7 @@ async function abaEscala(){
           ${gente.map(p => {
             const linhas = porPessoa.get(p.id) ?? [];
             return `<tr>
-              <td>${p.nome}</td>
+              <td>${esc(p.nome)}</td>
               ${DIAS_SEMANA.map((_,i) => {
                 const e = linhas.find(l => l.dia_semana === i);
                 return `<td style="font-size:12px">${
@@ -895,7 +1384,7 @@ async function abaEscala(){
                   : e.folga ? `<span class="etiqueta">folga</span>`
                   : `${e.entrada.slice(0,5)}<br>${e.saida.slice(0,5)}`}</td>`;
               }).join("")}
-              <td><button class="discreto" data-semana='${JSON.stringify(
+              <td><button class="discreto" data-semana='${guarde(
                 {id:p.id, nome:p.nome})}'>editar</button></td></tr>`;
           }).join("")}
         </table>` : `<p class="vazio">Ninguém registra ponto nesta unidade.</p>`}
@@ -911,11 +1400,11 @@ async function abaEscala(){
           <tr><th>Dia</th><th>Quem</th><th>O que é</th><th></th></tr>
           ${excecoes.map(e => `<tr>
             <td class="hora">${e.data.slice(8)}/${e.data.slice(5,7)}</td>
-            <td>${e.nome}</td>
+            <td>${esc(e.nome)}</td>
             <td>${e.folga ? `<span class="etiqueta">folga</span>`
                  : `${e.entrada.slice(0,5)} às ${e.saida.slice(0,5)}`}
-                ${e.observacao ? `<div style="font-size:12px;color:#7a7568">${e.observacao}</div>` : ""}</td>
-            <td><button class="discreto" data-apagar="${e.id}">apagar</button></td></tr>`).join("")}
+                ${e.observacao ? `<div style="font-size:12px;color:#7a7568">${esc(e.observacao)}</div>` : ""}</td>
+            <td><button class="discreto" data-apagar="${esc(e.id)}">apagar</button></td></tr>`).join("")}
         </table>` : `<p class="vazio">Nenhuma exceção daqui para frente.</p>`}
       </div>
 
@@ -930,9 +1419,9 @@ async function abaEscala(){
           <tr><th>Dia</th><th>Feriado</th><th>Tipo</th><th>Pub</th></tr>
           ${feriados.slice(0,14).map(f => `<tr>
             <td class="hora">${f.data.slice(8)}/${f.data.slice(5,7)}</td>
-            <td>${f.nome}${f.observacao ? `<div style="font-size:12px;color:#7a7568">${f.observacao}</div>` : ""}</td>
-            <td style="font-size:12px">${f.tipo}</td>
-            <td><button class="discreto" data-abre='${JSON.stringify(f)}'>${
+            <td>${esc(f.nome)}${f.observacao ? `<div style="font-size:12px;color:#7a7568">${esc(f.observacao)}</div>` : ""}</td>
+            <td style="font-size:12px">${esc(f.tipo)}</td>
+            <td><button class="discreto" data-abre='${guarde(f)}'>${
               f.abre ? "abre" : "fecha"}</button></td></tr>`).join("")}
         </table>` : `<p class="vazio">Nenhum feriado cadastrado.</p>`}
       </div>
@@ -956,7 +1445,7 @@ async function abaEscala(){
       </div>`;
 
     conteudo().querySelectorAll("[data-semana]").forEach(b =>
-      b.onclick = () => formSemana(JSON.parse(b.dataset.semana), porPessoa.get(JSON.parse(b.dataset.semana).id) ?? []));
+      b.onclick = () => formSemana(CARGA[b.dataset.semana], porPessoa.get(CARGA[b.dataset.semana].id) ?? []));
     conteudo().querySelectorAll("[data-apagar]").forEach(b =>
       b.onclick = async () => {
         try { await chamarPend({ action:"escala_apagar", id:b.dataset.apagar }); abaEscala(); }
@@ -964,7 +1453,7 @@ async function abaEscala(){
       });
     conteudo().querySelectorAll("[data-abre]").forEach(b =>
       b.onclick = async () => {
-        const f = JSON.parse(b.dataset.abre);
+        const f = CARGA[b.dataset.abre];
         try { await chamarPend({ action:"feriado_salvar", ...f, abre: !f.abre }); abaEscala(); }
         catch(e){ alert(e.message); }
       });
@@ -995,11 +1484,11 @@ async function abaEscala(){
         abaEscala();
       } catch(e){
         ev.target.disabled = false;
-        document.getElementById("ce-erro").innerHTML = `<div class="aviso">${e.message}</div>`;
+        document.getElementById("ce-erro").innerHTML = `<div class="aviso">${esc(e.message)}</div>`;
       }
     };
   } catch(e){
-    conteudo().innerHTML = `<div class="carta"><div class="aviso">${e.message}</div></div>`;
+    conteudo().innerHTML = `<div class="carta"><div class="aviso">${esc(e.message)}</div></div>`;
   }
 }
 
@@ -1008,7 +1497,7 @@ function formSemana(pessoa, atual){
   d.style.maxWidth = "560px";
   d.innerHTML = `
     <form method="dialog">
-      <h2 style="margin-top:0">Escala de ${pessoa.nome}</h2>
+      <h2 style="margin-top:0">Escala de ${esc(pessoa.nome)}</h2>
       <p class="sub">A escala anterior não é apagada: ganha data de fim. Assim, apurar um mês
         passado continua usando a escala daquele mês.</p>
       <label>Vale a partir de</label>
@@ -1048,7 +1537,7 @@ function formSemana(pessoa, atual){
       d.close(); d.remove(); abaEscala();
     } catch(e){
       ev.target.disabled = false;
-      d.querySelector("#sm-erro").innerHTML = `<div class="aviso">${e.message}</div>`;
+      d.querySelector("#sm-erro").innerHTML = `<div class="aviso">${esc(e.message)}</div>`;
     }
   };
 }
@@ -1059,7 +1548,7 @@ function formExcecao(gente){
     <form method="dialog">
       <h2 style="margin-top:0">Exceção de um dia</h2>
       <label>Quem</label>
-      <select id="ex-pessoa">${gente.map(p => `<option value="${p.id}">${p.nome}</option>`).join("")}</select>
+      <select id="ex-pessoa">${gente.map(p => `<option value="${esc(p.id)}">${esc(p.nome)}</option>`).join("")}</select>
       <label>Dia</label><input type="date" id="ex-data" value="${hojeLocal()}">
       <label style="display:flex;gap:8px;align-items:center;margin-top:10px">
         <input type="checkbox" id="ex-folga" style="width:auto" checked> É folga</label>
@@ -1093,7 +1582,7 @@ function formExcecao(gente){
       d.close(); d.remove(); abaEscala();
     } catch(e){
       ev.target.disabled = false;
-      d.querySelector("#ex-erro").innerHTML = `<div class="aviso">${e.message}</div>`;
+      d.querySelector("#ex-erro").innerHTML = `<div class="aviso">${esc(e.message)}</div>`;
     }
   };
 }
@@ -1134,7 +1623,521 @@ function formFeriado(){
       d.close(); d.remove(); abaEscala();
     } catch(e){
       ev.target.disabled = false;
-      d.querySelector("#fe-erro").innerHTML = `<div class="aviso">${e.message}</div>`;
+      d.querySelector("#fe-erro").innerHTML = `<div class="aviso">${esc(e.message)}</div>`;
+    }
+  };
+}
+
+/* ---------- operação: recados, posições e escala publicada ---------- */
+const ASSUNTO_ROTULO = { problema:"Problema", falta_de_material:"Falta de material",
+  equipamento:"Equipamento", sugestao:"Sugestão", elogio:"Elogio", outro:"Outro",
+  sobrecarga_ou_pressao:"Sobrecarga ou pressão", assedio_ou_conduta:"Assédio ou conduta" };
+const TIPO_ESCALA = { equipe:"Equipe", freelas:"Freelas", musicos:"Música", eventos:"Eventos" };
+let recadoSituacao = "aberto";
+
+async function abaOperacao(){
+  conteudo().innerHTML = `<div class="carta"><p class="vazio">Carregando…</p></div>`;
+  try {
+    const [{ recados, abertos }, pos, { escalas }] = await Promise.all([
+      chamarOper({ action:"recados", situacao: recadoSituacao }),
+      chamarOper({ action:"posicoes" }),
+      chamarOper({ action:"escalas" }),
+    ]);
+    recadosAbertos = abertos;
+    const selo = document.querySelector('[data-aba="oper"]');
+    if(selo) selo.innerHTML = `Operação${abertos ? `<span class="selo">${abertos}</span>` : ""}`;
+
+    const porPosicao = new Map((pos.posicoes || []).map(p => [p.posicao, p]));
+
+    conteudo().innerHTML = `
+      <div class="carta">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+          <h2 style="margin:0">Recados da equipe</h2>
+          <select id="rc-situacao" style="width:auto">
+            <option value="aberto" ${recadoSituacao==="aberto"?"selected":""}>Abertos</option>
+            <option value="em_tratamento" ${recadoSituacao==="em_tratamento"?"selected":""}>Em tratamento</option>
+            <option value="resolvido" ${recadoSituacao==="resolvido"?"selected":""}>Resolvidos</option>
+            <option value="todos" ${recadoSituacao==="todos"?"selected":""}>Todos</option>
+          </select>
+        </div>
+        <p class="sub">Recado anônimo não tem autor guardado em lugar nenhum — nem para você.
+          Responder só é possível nos assinados.</p>
+        ${recados.length ? recados.map(r => `
+          <div style="border-top:1px solid var(--borda);padding:12px 0">
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+              <span class="etiqueta ${r.assunto==="elogio"?"ponto":r.assunto==="sugestao"?"":"atencao"}">${esc(
+                ASSUNTO_ROTULO[r.assunto] || r.assunto)}</span>
+              <span class="etiqueta ${r.anonimo?"":"ponto"}">${esc(r.anonimo ? "anônimo" : r.employee_nome || "assinado")}</span>
+              ${r.onde ? `<span class="sub" style="font-size:12px">${esc(r.onde)}</span>` : ""}
+              <span class="sub" style="font-size:12px;margin-left:auto">${
+                new Date(r.created_at).toLocaleString("pt-BR",{timeZone:"America/Sao_Paulo",
+                  day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"})}</span>
+            </div>
+            <p style="margin:8px 0 6px;white-space:pre-wrap">${esc(r.texto)}</p>
+            ${r.resposta ? `<p class="sub" style="margin:0 0 6px"><b>Resposta:</b> ${esc(r.resposta)}</p>` : ""}
+            <div style="display:flex;gap:6px;flex-wrap:wrap">
+              ${r.situacao !== "em_tratamento" ? `<button class="discreto" data-rc='${guarde({id:r.id,s:"em_tratamento"})}'>em tratamento</button>` : ""}
+              ${r.situacao !== "resolvido" ? `<button class="discreto" data-rc='${guarde({id:r.id,s:"resolvido"})}'>resolvido</button>` : ""}
+              ${!r.anonimo ? `<button class="discreto" data-resp='${guarde({id:r.id,nome:r.employee_nome})}'>responder</button>` : ""}
+              <button class="discreto" data-rc='${guarde({id:r.id,s:"arquivado"})}'>arquivar</button>
+            </div>
+          </div>`).join("") : `<p class="vazio">Nenhum recado nesta situação.</p>`}
+      </div>
+
+      <div class="carta">
+        <h2 style="margin-top:0">Posições do turno</h2>
+        <p class="sub">As sete marcações do mapa de mesas. A equipe vê na tela de operação,
+          em ${pos.dia.split("-").reverse().join("/")} · ${pos.turno === "almoco" ? "almoço" : "noite"}.</p>
+        <div class="linha" style="margin-bottom:10px">
+          <div style="flex:0 0 150px"><label>Turno</label>
+            <select id="po-turno">
+              <option value="noite" ${pos.turno==="noite"?"selected":""}>Noite</option>
+              <option value="almoco" ${pos.turno==="almoco"?"selected":""}>Almoço</option>
+            </select></div>
+        </div>
+        ${["A","B","C","D","E","F","G"].map(letra => `
+          <div class="linha" style="margin-bottom:8px">
+            <div style="flex:0 0 34px"><span class="etiqueta atencao">${letra}</span></div>
+            <div style="flex:2"><input id="po-${letra}" placeholder="quem está aqui"
+              value="${esc(porPosicao.get(letra)?.nome || "")}"></div>
+            <div style="flex:2"><input id="ob-${letra}" placeholder="observação"
+              value="${esc(porPosicao.get(letra)?.observacao || "")}"></div>
+          </div>`).join("")}
+        <div style="margin-top:12px"><button id="po-salvar">Salvar posições</button></div>
+        <div id="po-erro"></div>
+      </div>
+
+      <div class="carta">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+          <h2 style="margin:0">Escala publicada</h2>
+          <button class="secundaria" id="es-publicar">Publicar escala</button>
+        </div>
+        <p class="sub">A montagem continua na planilha. Aqui fica a versão que a equipe consulta.</p>
+        ${escalas.length ? `<table>
+          <tr><th>Tipo</th><th>Período</th><th>Publicada</th><th></th></tr>
+          ${escalas.map(e => `<tr style="${e.ativo?"":"opacity:.5"}">
+            <td>${esc(TIPO_ESCALA[e.tipo] || e.tipo)}</td>
+            <td class="hora">${e.periodo_inicio.split("-").reverse().slice(0,2).join("/")} a ${
+              e.periodo_fim.split("-").reverse().slice(0,2).join("/")}</td>
+            <td class="sub" style="font-size:12px">${new Date(e.publicado_em).toLocaleDateString("pt-BR")}</td>
+            <td>${e.ativo ? `<span class="etiqueta ponto">no ar</span>` : `<span class="etiqueta">antiga</span>`}</td>
+          </tr>`).join("")}
+        </table>` : `<p class="vazio">Nada publicado ainda.</p>`}
+      </div>`;
+
+    document.getElementById("rc-situacao").onchange = (e) => {
+      recadoSituacao = e.target.value; abaOperacao();
+    };
+    conteudo().querySelectorAll("[data-rc]").forEach(b => b.onclick = async () => {
+      const { id, s } = CARGA[b.dataset.rc];
+      b.disabled = true;
+      try { await chamarOper({ action:"tratar", id, situacao:s }); abaOperacao(); }
+      catch(e){ b.disabled = false; alert(e.message); }
+    });
+    conteudo().querySelectorAll("[data-resp]").forEach(b =>
+      b.onclick = () => formResposta(CARGA[b.dataset.resp]));
+
+    document.getElementById("po-salvar").onclick = async (ev) => {
+      ev.target.disabled = true;
+      try {
+        await chamarOper({ action:"posicoes",
+          turno: document.getElementById("po-turno").value,
+          posicoes: ["A","B","C","D","E","F","G"].map(l => ({
+            posicao: l,
+            nome: document.getElementById("po-"+l).value.trim(),
+            observacao: document.getElementById("ob-"+l).value.trim(),
+          })) });
+        abaOperacao();
+      } catch(e){
+        ev.target.disabled = false;
+        document.getElementById("po-erro").innerHTML = `<div class="aviso">${esc(e.message)}</div>`;
+      }
+    };
+    document.getElementById("po-turno").onchange = () => abaOperacao();
+    document.getElementById("es-publicar").onclick = () => formPublicar();
+  } catch(e){
+    conteudo().innerHTML = `<div class="carta"><div class="aviso">${esc(e.message)}</div></div>`;
+  }
+}
+
+function formResposta(r){
+  const d = document.createElement("dialog");
+  d.innerHTML = `
+    <form method="dialog">
+      <h2 style="margin-top:0">Responder ${esc(r.nome || "")}</h2>
+      <p class="sub">A resposta fica junto do recado. Quem escreveu vê quando abrir o portal.</p>
+      <label>Resposta</label><textarea id="rp-texto" rows="4"></textarea>
+      <div style="display:flex;gap:8px;margin-top:16px">
+        <button id="rp-salvar" type="button">Responder e marcar resolvido</button>
+        <button class="secundaria" id="rp-cancelar" type="button">Cancelar</button>
+      </div>
+      <div id="rp-erro"></div>
+    </form>`;
+  document.body.appendChild(d); d.showModal();
+  d.querySelector("#rp-cancelar").onclick = () => { d.close(); d.remove(); };
+  d.querySelector("#rp-salvar").onclick = async (ev) => {
+    ev.target.disabled = true;
+    try {
+      await chamarOper({ action:"tratar", id:r.id, situacao:"resolvido",
+        resposta: d.querySelector("#rp-texto").value.trim() });
+      d.close(); d.remove(); abaOperacao();
+    } catch(e){
+      ev.target.disabled = false;
+      d.querySelector("#rp-erro").innerHTML = `<div class="aviso">${esc(e.message)}</div>`;
+    }
+  };
+}
+
+/* Converte a aba FUNÇÃO da planilha de escala no texto que a equipe lê.
+   A planilha chega colada como TSV: a primeira linha traz os dias de três em
+   três colunas, a segunda os rótulos, e o resto são as pessoas. Nada é
+   inventado — célula vazia some, e pessoa sem horário aparece com "horário a
+   definir", para o buraco ficar visível em vez de passar batido. */
+function escalaDaPlanilha(bruto){
+  const linhas = String(bruto).replace(/\r/g, "").split("\n").map(l => l.split("\t"));
+  if(linhas.length < 3) return "";
+
+  const dias = linhas[0].map((c, i) => [String(c).trim(), i]).filter(([c]) => c);
+  if(!dias.length) return "";
+
+  const corpo = /pessoa/i.test((linhas[1] || []).join(" ")) ? linhas.slice(2) : linhas.slice(1);
+
+  const blocos = [];
+  for(const [titulo, col] of dias){
+    const gente = [];
+    for(const l of corpo){
+      const nome = String(l[col] ?? "").trim();
+      if(!nome) continue;
+      gente.push({ nome, hora: String(l[col+1] ?? "").trim(), funcao: String(l[col+2] ?? "").trim() });
+    }
+    if(gente.length) blocos.push({ titulo, gente });
+  }
+  if(!blocos.length) return "";
+
+  return blocos.map(b => {
+    const larg = Math.max(...b.gente.map(g => g.nome.length));
+    return b.titulo + "\n" + b.gente.map(g => {
+      let linha = "  " + g.nome.padEnd(larg) + "  " + (g.hora || "horário a definir");
+      if(g.funcao) linha += "  ·  " + g.funcao;
+      return linha;
+    }).join("\n");
+  }).join("\n\n");
+}
+
+function formPublicar(){
+  const hoje = hojeLocal();
+  const d = document.createElement("dialog");
+  d.style.maxWidth = "560px";
+  d.innerHTML = `
+    <form method="dialog">
+      <h2 style="margin-top:0">Publicar escala</h2>
+      <p class="sub">Publicar de novo o mesmo tipo tira a anterior do ar, sem apagar.</p>
+      <label>Tipo</label>
+      <select id="pb-tipo">
+        <option value="equipe">Equipe</option>
+        <option value="freelas">Freelas</option>
+        <option value="musicos">Música</option>
+        <option value="eventos">Eventos</option>
+      </select>
+      <div class="linha">
+        <div><label>De</label><input type="date" id="pb-ini" value="${hoje}"></div>
+        <div><label>Até</label><input type="date" id="pb-fim" value="${hoje}"></div>
+      </div>
+      <label>Conteúdo</label>
+      <p class="sub" style="margin:0 0 6px;font-size:12px">
+        Vem da planilha? Abra a aba <b>FUNÇÃO</b>, selecione o bloco inteiro
+        (da linha dos dias até a última pessoa), copie e use
+        <button class="discreto" id="pb-colar" type="button"
+          style="padding:2px 6px">colar da planilha</button>.</p>
+      <textarea id="pb-texto" rows="9" placeholder="Cole aqui a escala da semana, como a equipe precisa ler.
+Ex.:
+Sexta 03/10 — 18h
+Salão: Ana, Kennedy
+Bar: Josué
+Música: trio de blues, 21h"></textarea>
+      <div style="display:flex;gap:8px;margin-top:16px">
+        <button id="pb-salvar" type="button">Publicar</button>
+        <button class="secundaria" id="pb-cancelar" type="button">Cancelar</button>
+      </div>
+      <div id="pb-erro"></div>
+    </form>`;
+  document.body.appendChild(d); d.showModal();
+  d.querySelector("#pb-cancelar").onclick = () => { d.close(); d.remove(); };
+  d.querySelector("#pb-colar").onclick = async () => {
+    const erro = d.querySelector("#pb-erro");
+    erro.innerHTML = "";
+    let bruto = "";
+    try { bruto = await navigator.clipboard.readText(); }
+    catch {
+      erro.innerHTML = `<div class="aviso">O navegador não deixou ler a área de
+        transferência. Cole direto no campo abaixo com Ctrl+V — funciona igual,
+        só sem a arrumação automática.</div>`;
+      return;
+    }
+    const texto = escalaDaPlanilha(bruto);
+    if(!texto){
+      erro.innerHTML = `<div class="aviso">Não reconheci o formato. Copie a aba FUNÇÃO
+        inteira, com a linha dos dias e a linha Pessoa / Horário / Função.</div>`;
+      return;
+    }
+    d.querySelector("#pb-texto").value = texto;
+    erro.innerHTML = `<div class="ok">Escala arrumada. Confira antes de publicar.</div>`;
+  };
+  d.querySelector("#pb-salvar").onclick = async (ev) => {
+    ev.target.disabled = true;
+    try {
+      await chamarOper({ action:"publicar",
+        tipo: d.querySelector("#pb-tipo").value,
+        periodo_inicio: d.querySelector("#pb-ini").value,
+        periodo_fim: d.querySelector("#pb-fim").value,
+        conteudo: d.querySelector("#pb-texto").value });
+      d.close(); d.remove(); abaOperacao();
+    } catch(e){
+      ev.target.disabled = false;
+      d.querySelector("#pb-erro").innerHTML = `<div class="aviso">${esc(e.message)}</div>`;
+    }
+  };
+}
+
+/* ---------- NR-1: riscos psicossociais e informativos ---------- */
+// A norma pede três coisas: inventário de risco com plano, prova de que a
+// equipe foi informada, e canal de relato. O canal é o de recados — os dois
+// assuntos psicossociais já entram por lá. Aqui ficam o inventário e o texto
+// que a equipe lê na tela pública.
+//
+// Risco não é editado por cima: corrigir gera versão nova apontando para a
+// anterior, e o banco recusa UPDATE. É o que sustenta, um ano depois, mostrar
+// o que a casa sabia em cada data.
+const SITUACAO_RISCO = { planejada:"A fazer", em_andamento:"Em andamento",
+  concluida:"Feito", descartada:"Descartada" };
+
+async function abaNr1(){
+  conteudo().innerHTML = `<div class="carta"><p class="vazio">Carregando…</p></div>`;
+  try {
+    const d = await chamarOper({ action:"nr1_painel" });
+    acoesVencidas = d.acoes_vencidas;
+    const selo = document.querySelector('[data-aba="nr1"]');
+    if(selo) selo.innerHTML = `NR-1${acoesVencidas ? `<span class="selo">${acoesVencidas}</span>` : ""}`;
+
+    const hoje = hojeLocal();
+    const vivos = d.riscos.filter(r => r.situacao !== "descartada");
+    const link = `${location.origin}${location.pathname.replace(/[^/]*$/,"")}nr1.html?u=${
+      encodeURIComponent(unidade?.public_token || "")}`;
+
+    conteudo().innerHTML = `
+      <div class="carta">
+        <h2 style="margin-top:0">NR-1 · riscos psicossociais</h2>
+        <p class="sub">Desde 26/05/2026 a NR-1 cobra da empresa o mesmo cuidado com risco
+          psicossocial que já cobrava com risco físico, sem dispensa por tamanho de empresa.
+          A <b>multa</b> está suspensa por decisão do STF (ADPF 1.316) — prorrogada em
+          24/09/2026 por mais 90 dias —, mas a <b>obrigação de gerir</b> continua de pé, e
+          reclamação trabalhista não depende dessa suspensão. Isto aqui é o registro: o que a
+          casa reconhece, o que vai fazer, e a prova de que a equipe foi informada.</p>
+        <div class="linha" style="margin:14px 0 0">
+          <div><span class="etiqueta ${vivos.length?"ponto":"aviso"}">${vivos.length} risco${
+            vivos.length===1?"":"s"} no inventário</span></div>
+          <div><span class="etiqueta ${acoesVencidas?"grave":"ponto"}">${acoesVencidas} ação${
+            acoesVencidas===1?"":"ões"} com prazo vencido</span></div>
+          <div><span class="etiqueta">${d.relatos_psicossociais} relato${
+            d.relatos_psicossociais===1?"":"s"} pelo canal</span></div>
+        </div>
+        <label style="margin-top:16px">Link público para a equipe</label>
+        <input id="nr-link" readonly value="${esc(link)}">
+        <p class="sub" style="margin:6px 0 0;font-size:12px">Não pede senha, de propósito:
+          esconder informação de segurança atrás de login derrota o objetivo da norma.
+          Imprima como QR no quadro de avisos e no vestiário.</p>
+      </div>
+
+      <div class="carta">
+        <div class="linha" style="margin-bottom:12px">
+          <h2 style="margin:0">Inventário</h2>
+          <button id="nr-novo">Novo risco</button>
+        </div>
+        ${vivos.length ? `<table>
+          <tr><th>Fator</th><th>Onde</th><th>Nível</th><th>Prazo</th><th>Situação</th><th></th></tr>
+          ${vivos.map(r => {
+            const vencido = r.prazo && r.prazo < hoje && r.situacao !== "concluida";
+            return `<tr>
+              <td><b>${esc(r.fator)}</b>
+                <div class="sub" style="margin:2px 0 0">${esc(r.medidas)}</div>
+                ${r.responsavel ? `<div class="sub" style="font-size:12px">com ${esc(r.responsavel)}</div>` : ""}
+                ${r.mostrar_na_tela ? "" : `<span class="etiqueta">fora da tela da equipe</span>`}</td>
+              <td>${esc(r.onde || "—")}${r.quem ? `<div class="sub" style="font-size:12px">${esc(r.quem)}</div>` : ""}</td>
+              <td><span class="etiqueta ${r.nivel>=15?"grave":r.nivel>=8?"atencao":""}">${r.nivel}</span>
+                <div class="sub" style="font-size:11px">${r.severidade}×${r.probabilidade}</div></td>
+              <td>${r.prazo
+                ? `<span class="${vencido?"etiqueta grave":""}">${r.prazo.split("-").reverse().join("/")}</span>`
+                : "—"}</td>
+              <td><span class="etiqueta ${r.situacao==="concluida"?"ponto":"atencao"}">${
+                esc(SITUACAO_RISCO[r.situacao] || r.situacao)}</span></td>
+              <td style="text-align:right;white-space:nowrap">
+                <button class="discreto" data-risco='${guarde(r)}'>revisar</button></td>
+            </tr>`;
+          }).join("")}
+        </table>` : `<p class="vazio">Nada no inventário ainda. Comece pelo que você já sabe
+          que aperta: noite de pico com pouca gente, cliente alterado, jornada que termina
+          de madrugada.</p>`}
+        ${d.riscos.filter(r => r.situacao === "descartada").length ? `
+          <details style="margin-top:14px">
+            <summary class="sub" style="cursor:pointer">Descartados (${
+              d.riscos.filter(r => r.situacao === "descartada").length})</summary>
+            ${d.riscos.filter(r => r.situacao === "descartada").map(r => `
+              <div class="linha" style="margin-top:8px">
+                <span style="flex:1">${esc(r.fator)}</span>
+                <button class="discreto" data-risco='${guarde(r)}'>trazer de volta</button>
+              </div>`).join("")}
+            <p class="sub" style="margin:8px 0 0;font-size:12px">Descartar não apaga: o item
+              continua no histórico e pode voltar como revisão.</p>
+          </details>` : ""}
+      </div>
+
+      <div class="carta">
+        <div class="linha" style="margin-bottom:12px">
+          <h2 style="margin:0">Informativos da tela pública</h2>
+          <button id="nr-texto-novo" class="secundaria">Novo texto</button>
+        </div>
+        <p class="sub">O que a equipe lê. Use **duas estrelas** em volta da palavra para
+          destacar. Linha vazia separa parágrafo.</p>
+        ${d.informativos.length ? d.informativos.map(i => `
+          <div style="border-top:1px solid var(--borda);padding:10px 0">
+            <div class="linha">
+              <b style="flex:1">${esc(i.titulo)}</b>
+              <span class="etiqueta ${i.publicado?"ponto":"aviso"}">${i.publicado?"no ar":"fora do ar"}</span>
+              <button class="discreto" data-texto='${guarde(i)}'>editar</button>
+            </div>
+            <p class="sub" style="margin:4px 0 0;white-space:pre-wrap">${esc(
+              i.corpo.length > 220 ? i.corpo.slice(0,220)+"…" : i.corpo)}</p>
+          </div>`).join("") : `<p class="vazio">Nenhum texto publicado.</p>`}
+      </div>`;
+
+    document.getElementById("nr-link").onclick = (e) => e.target.select();
+    document.getElementById("nr-novo").onclick = () => formRisco(null);
+    document.getElementById("nr-texto-novo").onclick = () => formInformativo(null);
+    conteudo().querySelectorAll("[data-risco]").forEach(b =>
+      b.onclick = () => formRisco(CARGA[b.dataset.risco]));
+    conteudo().querySelectorAll("[data-texto]").forEach(b =>
+      b.onclick = () => formInformativo(CARGA[b.dataset.texto]));
+  } catch(e){
+    conteudo().innerHTML = `<div class="carta"><div class="aviso">${esc(e.message)}</div></div>`;
+  }
+}
+
+function formRisco(r){
+  const d = document.createElement("dialog");
+  d.style.maxWidth = "520px";
+  d.innerHTML = `
+    <h2>${r ? "Revisar risco" : "Novo risco"}</h2>
+    <p class="sub">${r
+      ? "A versão atual continua no histórico. Esta entra como revisão, com a data de hoje."
+      : "Escreva com as palavras da casa, não com as da norma. Quem vai ler é a equipe."}</p>
+    <label>O que aperta</label>
+    <input id="nr-fator" value="${esc(r?.fator || "")}"
+      placeholder="Dois no salão em noite de pico">
+    <div class="linha">
+      <div><label>Onde</label><input id="nr-onde" value="${esc(r?.onde || "")}" placeholder="Salão externo"></div>
+      <div><label>Quem sente</label><input id="nr-quem" value="${esc(r?.quem || "")}" placeholder="Atendimento"></div>
+    </div>
+    <div class="linha">
+      <div><label>Gravidade (1 a 5)</label>
+        <select id="nr-sev">${[1,2,3,4,5].map(n =>
+          `<option value="${n}" ${Number(r?.severidade || 3)===n?"selected":""}>${n}</option>`).join("")}</select></div>
+      <div><label>Chance de acontecer (1 a 5)</label>
+        <select id="nr-prob">${[1,2,3,4,5].map(n =>
+          `<option value="${n}" ${Number(r?.probabilidade || 3)===n?"selected":""}>${n}</option>`).join("")}</select></div>
+    </div>
+    <p class="sub" style="margin:4px 0 0;font-size:12px">Os dois números se multiplicam e dão
+      o nível. Servem para ordenar a fila, não para virar laudo: 15 ou mais pede ação com data.</p>
+    <label>O que a casa vai fazer</label>
+    <textarea id="nr-medidas" rows="3"
+      placeholder="Terceiro freela fixo na sexta e no sábado">${esc(r?.medidas || "")}</textarea>
+    <div class="linha">
+      <div><label>Responsável</label><input id="nr-resp" value="${esc(r?.responsavel || "")}"></div>
+      <div><label>Até quando</label><input type="date" id="nr-prazo" value="${r?.prazo || ""}"></div>
+    </div>
+    <label>Situação</label>
+    <select id="nr-sit">${Object.entries(SITUACAO_RISCO).map(([v,rot]) =>
+      `<option value="${v}" ${(r?.situacao || "planejada")===v?"selected":""}>${esc(rot)}</option>`).join("")}</select>
+    <label>De onde veio</label>
+    <input id="nr-fonte" value="${esc(r?.fonte || "")}"
+      placeholder="Recado da equipe, conversa de turno, observação da gestão">
+    <label style="display:flex;gap:8px;align-items:center;margin-top:14px;color:var(--texto)">
+      <input type="checkbox" id="nr-mostrar" style="width:auto" ${
+        r?.mostrar_na_tela === false ? "" : "checked"}>
+      Mostrar na tela pública da equipe
+    </label>
+    <p class="sub" style="margin:4px 0 0;font-size:12px">Deixe marcado como regra. Desmarque
+      só quando o texto do risco expõe uma pessoa — nesse caso reescreva o fator sem nomes
+      e volte a mostrar.</p>
+    <div id="nr-erro"></div>
+    <div class="linha" style="margin-top:18px">
+      <button id="nr-salvar">${r ? "Registrar revisão" : "Registrar"}</button>
+      <button class="secundaria" id="nr-cancelar">Cancelar</button>
+    </div>`;
+  document.body.appendChild(d); d.showModal();
+  d.querySelector("#nr-cancelar").onclick = () => d.close();
+  d.addEventListener("close", () => d.remove());
+  d.querySelector("#nr-salvar").onclick = async (ev) => {
+    ev.target.disabled = true;
+    try {
+      await chamarOper({ action:"nr1_risco",
+        substitui: r?.id || null,
+        fator: d.querySelector("#nr-fator").value,
+        onde: d.querySelector("#nr-onde").value || null,
+        quem: d.querySelector("#nr-quem").value || null,
+        severidade: Number(d.querySelector("#nr-sev").value),
+        probabilidade: Number(d.querySelector("#nr-prob").value),
+        medidas: d.querySelector("#nr-medidas").value,
+        responsavel: d.querySelector("#nr-resp").value || null,
+        prazo: d.querySelector("#nr-prazo").value || null,
+        situacao: d.querySelector("#nr-sit").value,
+        fonte: d.querySelector("#nr-fonte").value || null,
+        mostrar_na_tela: d.querySelector("#nr-mostrar").checked });
+      d.close(); abaNr1();
+    } catch(e){
+      ev.target.disabled = false;
+      d.querySelector("#nr-erro").innerHTML = `<div class="aviso">${esc(e.message)}</div>`;
+    }
+  };
+}
+
+function formInformativo(i){
+  const d = document.createElement("dialog");
+  d.style.maxWidth = "520px";
+  d.innerHTML = `
+    <h2>${i ? "Editar informativo" : "Novo informativo"}</h2>
+    <p class="sub">Isto a equipe lê sem senha. Escreva curto e direto.</p>
+    <label>Título</label>
+    <input id="in-titulo" value="${esc(i?.titulo || "")}">
+    <label>Texto</label>
+    <textarea id="in-corpo" rows="8">${esc(i?.corpo || "")}</textarea>
+    <div class="linha">
+      <div style="flex:0 0 120px"><label>Ordem</label>
+        <input type="number" id="in-ordem" value="${Number(i?.ordem ?? 100)}"></div>
+      <div><label style="display:flex;gap:8px;align-items:center;margin-top:24px;color:var(--texto)">
+        <input type="checkbox" id="in-pub" style="width:auto" ${i?.publicado === false ? "" : "checked"}>
+        No ar</label></div>
+    </div>
+    <div id="in-erro"></div>
+    <div class="linha" style="margin-top:18px">
+      <button id="in-salvar">Salvar</button>
+      <button class="secundaria" id="in-cancelar">Cancelar</button>
+    </div>`;
+  document.body.appendChild(d); d.showModal();
+  d.querySelector("#in-cancelar").onclick = () => d.close();
+  d.addEventListener("close", () => d.remove());
+  d.querySelector("#in-salvar").onclick = async (ev) => {
+    ev.target.disabled = true;
+    try {
+      await chamarOper({ action:"nr1_informativo",
+        id: i?.id || null,
+        titulo: d.querySelector("#in-titulo").value,
+        corpo: d.querySelector("#in-corpo").value,
+        ordem: Number(d.querySelector("#in-ordem").value) || 100,
+        publicado: d.querySelector("#in-pub").checked });
+      d.close(); abaNr1();
+    } catch(e){
+      ev.target.disabled = false;
+      d.querySelector("#in-erro").innerHTML = `<div class="aviso">${esc(e.message)}</div>`;
     }
   };
 }
@@ -1166,7 +2169,7 @@ async function abaFolha(){
           <div style="flex:2;min-width:200px">
             <label>Colaborador</label>
             <select id="fp-pessoa">${gente.map(p =>
-              `<option value="${p.id}" ${p.id===folhaFiltro.employee_id?"selected":""}>${p.nome}</option>`).join("")}</select>
+              `<option value="${esc(p.id)}" ${p.id===folhaFiltro.employee_id?"selected":""}>${esc(p.nome)}</option>`).join("")}</select>
           </div>
           <div style="flex:1;min-width:130px">
             <label>De</label><input type="date" id="fp-inicio" value="${folhaFiltro.inicio}">
@@ -1191,11 +2194,11 @@ async function abaFolha(){
       const saida = document.getElementById("fp-saida");
       saida.innerHTML = `<p class="vazio">Apurando…</p>`;
       try { desenharFolha(await chamarFolha({ action:"folha", ...folhaFiltro })); }
-      catch(e){ saida.innerHTML = `<div class="aviso">${e.message}</div>`; }
+      catch(e){ saida.innerHTML = `<div class="aviso">${esc(e.message)}</div>`; }
       finally { ev.target.disabled = false; }
     };
   } catch(e){
-    conteudo().innerHTML = `<div class="carta"><div class="aviso">${e.message}</div></div>`;
+    conteudo().innerHTML = `<div class="carta"><div class="aviso">${esc(e.message)}</div></div>`;
   }
 }
 
@@ -1209,19 +2212,19 @@ function desenharFolha(r){
 
   document.getElementById("fp-saida").innerHTML = `
     ${aviso}
-    <p class="sub" style="margin-top:0">${colaborador.nome}${colaborador.cargo ? " — "+colaborador.cargo : ""}
+    <p class="sub" style="margin-top:0">${esc(colaborador.nome)}${esc(colaborador.cargo ? " — "+colaborador.cargo : "")}
       · jornada de ${jornada.semanais}h em ${jornada.dias_semana} dias (${jornada.esperado_dia} por dia)</p>
     <div style="overflow-x:auto">
     <table>
       <tr><th>Data</th><th>1ª Ent.</th><th>1ª Saí.</th><th>2ª Ent.</th><th>2ª Saí.</th>
           <th>Interv.</th><th>Trabalhado</th><th>Extras</th><th>Débito</th><th>Noturno</th><th>Observação</th></tr>
       ${dias.map(d => `<tr style="${d.observacao.includes("conferir") ? "background:#fdf4ec" : ""}">
-        <td>${d.rotulo}</td>
+        <td>${esc(d.rotulo)}</td>
         <td class="hora">${d.e1}</td><td class="hora">${d.s1}</td>
         <td class="hora">${d.e2}</td><td class="hora">${d.s2}</td>
         <td class="hora">${d.intervalo}</td><td class="hora">${d.trabalhado}</td>
         <td class="hora">${d.extra}</td><td class="hora">${d.debito}</td><td class="hora">${d.noturno}</td>
-        <td style="font-size:12px;color:#7a7568">${d.observacao}</td></tr>`).join("")}
+        <td style="font-size:12px;color:#7a7568">${esc(d.observacao)}</td></tr>`).join("")}
       <tr style="font-weight:700;background:#f2f1ec">
         <td>Totais</td><td colspan="4"></td>
         <td class="hora">${resumo.intervalo}</td><td class="hora">${resumo.trabalhado}</td>
@@ -1242,9 +2245,9 @@ function desenharFolha(r){
     try {
       const g = await chamarFolha({ action:"folha_pdf", ...folhaFiltro });
       caixa.innerHTML = `<p class="sub">Folha gerada e publicada para assinatura no portal do
-        colaborador. Selo do arquivo: <code>${g.sha256_curto}</code>. Ela aparece na aba Documentos.</p>`;
+        colaborador. Selo do arquivo: <code>${esc(g.sha256_curto)}</code>. Ela aparece na aba Documentos.</p>`;
     } catch(e){
-      caixa.innerHTML = `<div class="aviso">${e.message}</div>`;
+      caixa.innerHTML = `<div class="aviso">${esc(e.message)}</div>`;
       ev.target.disabled = false;
     }
   };
@@ -1287,9 +2290,9 @@ function formParametros(){
         <input type="checkbox" id="pa-red" ${p?.hora_noturna_reduzida === false ? "" : "checked"}>
         Hora noturna reduzida (52min30 contam como 1h)</label>
       <label>Convenção aplicada</label>
-      <input id="pa-conv" value="${p?.convencao ?? ""}" placeholder="ex.: CCT SINTHORESP x SINDRESBAR 2025/2027">
+      <input id="pa-conv" value="${esc(p?.convencao ?? "")}" placeholder="ex.: CCT SINTHORESP x SINDRESBAR 2025/2027">
       <label>Observação</label>
-      <input id="pa-obs" value="${p?.observacao ?? ""}" placeholder="de onde veio esse número">`;
+      <input id="pa-obs" value="${esc(p?.observacao ?? "")}" placeholder="de onde veio esse número">`;
 
     d.querySelector("#pa-salvar").onclick = async (ev) => {
       ev.target.disabled = true;
@@ -1307,11 +2310,11 @@ function formParametros(){
         d.close(); d.remove(); abaFolha();
       } catch(e){
         ev.target.disabled = false;
-        d.querySelector("#pa-erro").innerHTML = `<div class="aviso">${e.message}</div>`;
+        d.querySelector("#pa-erro").innerHTML = `<div class="aviso">${esc(e.message)}</div>`;
       }
     };
   }).catch(e => {
-    d.querySelector("#pa-corpo").innerHTML = `<div class="aviso">${e.message}</div>`;
+    d.querySelector("#pa-corpo").innerHTML = `<div class="aviso">${esc(e.message)}</div>`;
   });
 }
 
@@ -1347,7 +2350,7 @@ function formModelos(){
       const modelos = [];
       for(const a of arquivos){
         try { modelos.push(JSON.parse(await a.text())); }
-        catch { throw new Error(`O arquivo ${a.name} não é um JSON válido.`); }
+        catch { throw new Error(`O arquivo ${esc(a.name)} não é um JSON válido.`); }
       }
       const r = await chamarModelos({ action:"importar", modelos });
       d.querySelector("#mo-lista").innerHTML = `
@@ -1355,13 +2358,13 @@ function formModelos(){
         <table style="margin-top:4px">
           <tr><th>Código</th><th>Título</th><th>Versão</th><th>Situação</th></tr>
           ${(r.relatorio || []).map(m => `<tr>
-            <td>${m.codigo}</td><td>${m.titulo ?? ""}</td><td>${m.versao ?? ""}</td>
-            <td>${m.situacao}${m.motivo ? ` — ${m.motivo}` : ""}</td></tr>`).join("")}
+            <td>${esc(m.codigo)}</td><td>${esc(m.titulo ?? "")}</td><td>${esc(m.versao ?? "")}</td>
+            <td>${esc(m.situacao)}${m.motivo ? ` — ${esc(m.motivo)}` : ""}</td></tr>`).join("")}
         </table>`;
       ev.target.disabled = false;
     } catch(e){
       d.querySelector("#mo-lista").innerHTML = "";
-      erro.innerHTML = `<div class="aviso">${e.message}</div>`;
+      erro.innerHTML = `<div class="aviso">${esc(e.message)}</div>`;
       ev.target.disabled = false;
     }
   };
