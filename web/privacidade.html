@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Como o Feitoria Portal utiliza, protege e mantém dados na integração com o Google Drive.">
+<title>Política de Privacidade — Feitoria Portal</title>
+<style>
+:root{color-scheme:light;--verde:#1f4d3a;--texto:#23261f;--suave:#626960;--borda:#e2ded4}
+*{box-sizing:border-box}body{margin:0;background:#f4f2ed;color:var(--texto);font:16px/1.65 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:860px;margin:32px auto;padding:32px;background:white;border:1px solid var(--borda);border-radius:16px}
+h1{font-size:clamp(25px,5vw,36px);line-height:1.2;margin:12px 0}h2{font-size:20px;color:var(--verde);margin:28px 0 8px}
+p{margin:12px 0}a{color:var(--verde);text-underline-offset:3px}li{margin:8px 0}
+.meta{color:var(--suave);font-size:14px}.aviso{background:#eef3ef;padding:16px;border-radius:10px}
+footer{border-top:1px solid var(--borda);padding-top:20px;margin-top:30px}
+@media(max-width:600px){main{margin:12px;padding:20px}}
+</style>
+</head>
+<body>
+<main>
+<nav aria-label="Navegação"><a href="gestao.html">Voltar ao portal</a></nav>
+<header><p class="meta">FEITORIA PORTAL · PUB MOGI</p><h1>Política de Privacidade</h1>
+<p class="meta">Atualizada em 6 de outubro de 2026</p></header>
+<p>Esta página explica o tratamento de dados pelo Feitoria Portal, sistema de gestão da Feitoria da Cerveja, em Mogi das Cruzes/SP, especialmente na conexão com o Google Drive. A gestão da Feitoria é responsável pelas decisões sobre os dados. O contato para dúvidas e solicitações é <a href="mailto:feitoria.mogi@gmail.com">feitoria.mogi@gmail.com</a>.</p>
+<div class="aviso">A página é pública para permitir a consulta desta política. Documentos de funcionários, assinaturas, senhas e credenciais não são publicados nela nem no site público.</div>
+<h2>1. Finalidade e pessoas com acesso</h2>
+<p>O portal organiza documentos de trabalho e registros da operação. A integração com o Drive permite receber PDFs para revisão e manter cópias de segurança dos documentos do portal e dos registros de assinatura. Não se trata de um serviço aberto para conectar contas de outras empresas: a conexão do servidor aceita a conta Google da Feitoria.</p>
+<p>O dono revisa os documentos recebidos e escolhe a unidade e o colaborador antes de publicá-los no portal. O acesso a documentos e funções de gestão depende de identificação e das permissões atribuídas no sistema. Os colaboradores acessam os documentos disponibilizados para eles, conforme as regras do portal.</p>
+<h2>2. Dados acessados na conta Google</h2>
+<ul>
+<li>Endereço de e-mail e confirmação desse endereço, para identificar a conta autorizada.</li>
+<li>Identificadores das pastas e arquivos, nome, tipo, tamanho, versão e informações de integridade dos PDFs da pasta “Portal — Para publicar”.</li>
+<li>Conteúdo dos PDFs selecionados para aprovação, necessário para guardar a cópia no portal.</li>
+<li>Permissões da pasta “Portal — Backup privado”, para verificar se o backup continua restrito ao proprietário.</li>
+<li>Arquivos de backup criados pela integração, lidos novamente para comparar sua integridade com o original.</li>
+</ul>
+<p>Para automatizar as duas pastas existentes, o Google solicita uma permissão ampla do Drive, que tecnicamente permite ver e gerenciar arquivos da conta. O código da integração limita suas operações às pastas configuradas e às cópias nelas criadas. Não percorre outras pastas para coletar documentos, não vende dados e não apaga os arquivos originais do Drive.</p>
+<h2>3. Como os dados são usados</h2>
+<p>A consulta da pasta de entrada cria pendências. A aprovação humana confere a versão do PDF e guarda uma cópia fixa em armazenamento privado do portal. Alterações futuras no Drive não substituem essa cópia: entram como outra pendência.</p>
+<p>O backup periódico copia o PDF original do portal e um arquivo de metadados. Os metadados podem incluir unidade, colaborador, título, tipo, competência, data, autor, integridade do documento e registros de assinatura, como identidade de quem assinou, horário, texto de aceite e informações técnicas da marcação. Os dados pessoais presentes no próprio PDF também acompanham a cópia.</p>
+<p>Essas informações são usadas para gestão documental, disponibilização ao colaborador, recuperação de arquivos, segurança e preservação da evidência das assinaturas. O portal não utiliza dados recebidos do Google para publicidade, venda de informações, avaliação de crédito ou treinamento de modelos de inteligência artificial. Esta integração não envia o conteúdo dos arquivos do Drive para serviços de IA.</p>
+<p>O uso de informações recebidas das APIs do Google observará a <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noopener noreferrer">Política de Dados do Usuário dos Serviços de API do Google</a>, inclusive os requisitos de uso limitado.</p>
+<h2>4. Armazenamento, proteção e fornecedores</h2>
+<p>Os PDFs aprovados, seus registros e as assinaturas ficam no Supabase, em banco e armazenamento privado. As cópias de segurança ficam na conta Google da Feitoria, na pasta privada configurada. O código das páginas públicas é hospedado no GitHub Pages; documentos e credenciais não são colocados nesse repositório público.</p>
+<p>Supabase e Google processam os dados para fornecer essas funções de armazenamento e integração. Esses serviços podem envolver infraestrutura e processamento fora do Brasil, conforme seus contratos e políticas. Não há venda ou compartilhamento com anunciantes. Acesso humano pela gestão ou por suporte deve se limitar à finalidade autorizada, à segurança ou ao atendimento de obrigações aplicáveis.</p>
+<p>A conexão utiliza HTTPS. A credencial do aplicativo permanece no servidor, e o token de renovação da conta Google é armazenado de forma criptografada. Documentos do portal são abertos por links temporários. Cada backup só é registrado como verificado após a leitura da cópia e a comparação de sua impressão digital de integridade.</p>
+<p>A rotina de backup é interrompida se detectar compartilhamento da pasta de destino além do proprietário. Essa proteção depende também de a gestão manter corretas as permissões da conta Google e os acessos do portal.</p>
+<h2>5. Tempo de conservação e exclusão</h2>
+<p>O sistema mantém o histórico dos documentos e das assinaturas e cria novas cópias quando os dados mudam. A integração atual não possui limpeza automática por prazo. Arquivar um documento no portal o retira de circulação, mas preserva seu histórico e as cópias existentes.</p>
+<p>A gestão deve revisar a necessidade de conservação considerando a finalidade do registro, as obrigações aplicáveis e a preservação de direitos. Pedidos de exclusão serão analisados também para as cópias de segurança; determinados registros poderão precisar ser conservados quando houver fundamento legal para isso. A simples revogação da conexão Google não elimina cópias já feitas.</p>
+<h2>6. Controle da conexão e solicitações</h2>
+<p>O titular da conta pode revogar o acesso do Feitoria Portal nas configurações de conexões de terceiros da Conta Google. A revogação impede novas operações quando a autorização deixa de ser válida, mas não remove dados anteriormente guardados no portal ou no backup.</p>
+<p>Para solicitar informações sobre seus dados, acesso, correção de cadastro, avaliação de exclusão, interrupção de acesso ou esclarecimentos sobre compartilhamento, escreva para <a href="mailto:feitoria.mogi@gmail.com">feitoria.mogi@gmail.com</a>. A gestão poderá confirmar sua identidade para evitar entregar informações à pessoa errada.</p>
+<p>Uma correção em registro de evidência é feita preservando o histórico. As solicitações serão avaliadas conforme a <a href="https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm" target="_blank" rel="noopener noreferrer">Lei Geral de Proteção de Dados Pessoais</a> e as obrigações aplicáveis ao registro.</p>
+<h2>7. Dados de navegação e mudanças nesta política</h2>
+<p>O portal utiliza armazenamento de sessão para manter o acesso autenticado e informações técnicas necessárias à segurança e operação. A página desta política não usa anúncios nem ferramentas de rastreamento publicitário.</p>
+<p>Esta política será atualizada quando o funcionamento ou as finalidades mudarem. Mudanças relevantes no uso de dados da conta Google serão informadas e, quando necessário, dependerão de nova autorização antes de serem aplicadas.</p>
+<footer><p><strong>Feitoria Portal — gestão da Feitoria da Cerveja / PUB Mogi</strong><br>
+Contato: <a href="mailto:feitoria.mogi@gmail.com">feitoria.mogi@gmail.com</a></p></footer>
+</main>
+</body>
+</html>

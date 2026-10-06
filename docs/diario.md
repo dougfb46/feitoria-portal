@@ -54,3 +54,11 @@ trabalho de quem pegar o projeto.**
 **Próximo passo:** cadastrar a jornada dos 4 CLT; depois `av-qtd` no repositório de
 etiquetas (único defeito conhecido que corrompe dado); depois publicar as 4 telas
 pendentes no GitHub Pages.
+
+### 06/10/2026 — Política de privacidade da integração
+Página pública web/privacidade.html criada e linkada na gestão.
+Descreve uso real do Drive, escopo amplo, pastas limitadas no código, backup de PDFs/assinaturas e retenção sem limpeza automática.
+Contato feitoria.mogi@gmail.com, informações de revogação, pedidos e fornecedores.
+Publicação autorizada por Douglas com 'execute tudo', para completar Branding e sair de Testando.
+Conferidas sintaxe/links e apresentação local; sem scripts, credenciais ou dados de pessoas na página.
+
