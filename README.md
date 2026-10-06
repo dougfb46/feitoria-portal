@@ -81,3 +81,41 @@ serializada por uma concessão no banco, porque reusar um refresh já consumido
 revoga a família inteira de tokens.
 
 Contratos consultados: `docs/contratos-takeat.md`.
+
+---
+
+## Primeira coisa a fazer ao abrir este repositório num agente de código
+
+Leia `AGENTS.md` inteiro. Depois **puxe o estado real do Supabase**: este repositório
+não é a cópia completa do que está no ar.
+
+Em 06/10/2026 havia **21 Edge Functions** e **54 migrations aplicadas** no projeto, e o
+repositório carregava 4 functions e 1 migration. A lista completa, com o que está em uso
+e o que é para apagar, está em `docs/mapa-do-sistema.md`.
+
+```bash
+# 1. autenticar (o Douglas gera o token no painel do Supabase; nunca pedir no chat)
+supabase login
+
+# 2. ligar o repositório ao projeto
+supabase link --project-ref kujelbcbrcmkitzyswbh
+
+# 3. trazer o schema atual como migration
+supabase db pull
+
+# 4. trazer o código das functions, uma por slug (lista em docs/mapa-do-sistema.md)
+supabase functions download portal
+supabase functions download ponto
+supabase functions download checklists
+# ... e as demais
+```
+
+Só depois disso comece a mexer. Trabalhar a partir do repositório sem isso é trabalhar
+a partir de uma foto velha.
+
+### O que fica de fora de propósito
+
+- **Segredos.** Nenhum valor real de credencial existe neste repositório, e não deve
+  passar a existir. Só `.env.example`, com nomes e valores fictícios. Os valores moram
+  no painel do Supabase, em Edge Functions › Secrets.
+- **A tela da cozinha.** Vive em `dougfb46/feitoria-etiquetas` e está em produção.
