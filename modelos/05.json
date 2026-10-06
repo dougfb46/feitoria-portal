@@ -1,0 +1,838 @@
+{
+ "codigo": "05",
+ "titulo": "Contrato Individual de Trabalho",
+ "blocos": [
+  {
+   "tipo": "titulo",
+   "texto": "CONTRATO INDIVIDUAL DE TRABALHO"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "(Com Cláusula de Experiência)"
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Identificação Das Partes"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "EMPREGADOR(A): {{empresa.razao_social}}, pessoa jurídica de direito privado inscrita no CNPJ sob o nº {{empresa.cnpj}}, ou pessoa física inscrita no Registro Geral (CPF) sob o nº {{pessoa.cpf}}, com sede/endereço na {{empresa.endereco}}, doravante denominado(a) EMPREGADOR(A)."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "EMPREGADO(A): {{pessoa.nome}}, {{pessoa.nacionalidade}}, {{pessoa.estado_civil}}, {{contrato.funcao}}, portador(a) do Registro Geral (CPF) sob o nº {{pessoa.cpf}}, residente e domiciliado(a) na [Endereço Completo do Empregado, não esquecer de colocar número, quadra, lote e CEP], doravante denominado(a) EMPREGADO(A)."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 1: Do Objeto"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ O objeto do presente contrato é a prestação de serviços pelo(a) EMPREGADO(A) ao"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "EMPREGADOR(A) mediante subordinação, pessoalidade, habitualidade e exclusividade."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 2: Do Local De Trabalho"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ O(A) EMPREGADO(A) desempenhará sua função ao(à) EMPREGADOR(A), no seguinte"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "endereço: {{contrato.local_prestacao}}, ou em qualquer outro local a ser determinado pelo(a) EMPREGADOR(A)."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2.​ Durante a vigência deste contrato, o(a) EMPREGADO(A) poderá ser transferido de forma"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "provisória ou definitiva, para exercer sua função em localidade diversa daquela acima indicada, seja na região metropolitana de Mogi das Cruzes ou fora dela."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 3: Da Função"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ O(A) EMPREGADO(A) se compromete a prestar seus serviços junto ao quadro de funcionários"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "do(a) EMPREGADOR(A), ocupando a função de {{contrato.funcao}} obrigando-se às seguintes atividades, mas não a estas se limitando: [QUADRO EXEMPLIFICATIVO ABAIXO; LISTAR O MÁXIMO DE"
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Atividades Que O Empregado Exercerá]"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "a.​ Auxílio na preparação de materiais e ferramentas para os serviços de construção; b.​ Transporte de materiais dentro do canteiro de obras; c.​ Limpeza e organização do ambiente de trabalho;"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "d.​ Apoio aos pedreiros, carpinteiros e demais profissionais da obra; e.​ Preparação do canteiro de obras, montagem e organização do local de trabalho, incluindo disposição de ferramentas e equipamentos; f.​ Demolição e retirada de entulhos, auxílio na remoção de estruturas antigas e transporte de materiais descartáveis; g.​ Mistura de materiais, preparo de argamassa, concreto e outros insumos para uso na obra; h.​ Transporte de materiais, carregamento e movimentação de tijolos, cimento, areia e outros insumos dentro do canteiro; i.​ Escavação manual, abertura de valas e buracos para fundações, tubulações e demais infraestruturas; j.​ Apoio na montagem de andaimes, auxílio na instalação e desmontagem de andaimes, respeitando as normas de segurança; k.​ Corte de materiais, uso de ferramentas manuais para cortar madeira, ferro e outros materiais conforme orientação dos superiores; l.​ Preenchimento de formas, lançamento de concreto em formas para construção de lajes, vigas e colunas; m.​ Limpeza e manutenção de ferramentas, higienização e conservação de pás, enxadas, betoneiras e outros equipamentos; n.​ Sinalização e isolamento de áreas, colocação de placas, fitas e barreiras para garantir a segurança no local de trabalho."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2.​ Fica estabelecido que as atividades do(a) EMPREGADO(A) não se limitam às descritas neste"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "contrato, podendo o(a) EMPREGADOR(A), quando necessário, atribuir outras tarefas compatíveis com a função contratada e com a qualificação profissional do(a) EMPREGADO(A), desde que não haja desvio de função, rebaixamento ou acúmulo indevido de atividades."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "3.​ O(A) EMPREGADO(A) não poderá transferir a terceiros quaisquer das responsabilidades"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "inerentes às suas atividades, salvo em situações expressamente autorizadas pelo(a) EMPREGADOR(A). O descumprimento desta obrigação poderá caracterizar falta grave, sujeita às sanções cabíveis, inclusive dispensa por justa causa."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "4.​ Durante a vigência do contrato, o(a) EMPREGADO(A) compromete-se a dedicar seu tempo,"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "atenção e habilidades de forma diligente ao desempenho das atividades, atuando com profissionalismo, responsabilidade e boa-fé, sempre em alinhamento com os interesses legítimos do(a)"
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Empregador(A)."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "5.​ A eventual prestação de serviços em favor de outras empresas pertencentes ao mesmo grupo"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "econômico do(a) EMPREGADOR(A), já existentes ou que venham a ser constituídas, não configurará a existência de múltiplos contratos de trabalho, integrando-se este vínculo contratual de forma única e contínua."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 4: Da Remuneração E Benefícios"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ Como contraprestação pelos serviços prestados, o(a) EMPREGADOR(A) pagará ao(à)"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "EMPREGADO(A), a título de salário base mensal, o valor de R$ {{contrato.salario}} ({{contrato.salario_extenso}}), com pagamento a ser efetuado até o 5º (quinto) dia útil do mês subsequente ao vencido, mediante depósito bancário na conta informada pelo(a) EMPREGADO(A) ou outro meio acordado entre as partes."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2.​ O valor acima será submetido aos descontos legais previstos na Consolidação das Leis do"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Trabalho (CLT), bem como aos descontos decorrentes de adiantamentos eventualmente concedidos."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "3.​ Fica estabelecido que valores pagos a título de ajuda de custo, auxílio-alimentação, diárias de"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "viagem, prêmios e outros benefícios de natureza indenizatória, ainda que habituais, não integram a remuneração do(a) EMPREGADO(A), não servindo de base para o cálculo de encargos trabalhistas e previdenciários, nem se incorporando ao contrato de trabalho."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "4.​ Em caso de alteração dos dados bancários ou outras informações necessárias ao pagamento,"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "o(a) EMPREGADO(A) deverá comunicar e atualizar imediatamente tais dados junto ao departamento de recursos humanos. A responsabilidade por eventuais atrasos causados por dados incorretos ou desatualizados será do(a) EMPREGADO(A)."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "5.​ No momento da assinatura deste contrato, o(a) EMPREGADO(A) deverá informar por escrito se"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "deseja receber o benefício do vale-transporte, bem como qualquer pedido de cancelamento ou alteração desse benefício também deverá ser formalizado por escrito."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "6.​ O(a) EMPREGADO(A) também deverá declarar se possui dependentes, apresentando os"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "documentos comprobatórios junto ao departamento de recursos humanos, para fins de registro e cumprimento das obrigações legais."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "7.​ Além dos direitos previstos na legislação vigente, o(a) EMPREGADO(A) fará jus aos adicionais e"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "benefícios previstos na convenção coletiva da categoria profissional, caso aplicável, observadas as condições e requisitos ali estabelecidos."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 5: Dos Descontos"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ O(A) EMPREGADO(A) autoriza, desde já, os descontos em sua remuneração relativos aos"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "benefícios oferecidos pelo(a) EMPREGADOR(A), desde que expressamente solicitados ou aceitos por ele(a), no momento da contratação ou durante a vigência do vínculo de trabalho."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2.​ Também poderão ser efetuados os descontos legais previstos em lei ou em normas coletivas,"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "bem como valores referentes a adiantamentos salariais ou obrigações assumidas formalmente pelo(a)"
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Empregado(A)."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "3.​ No caso de dano, perda, extravio ou mau uso de equipamentos, materiais, ferramentas,"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "veículos, móveis, utensílios ou quaisquer outros bens fornecidos pelo(a) EMPREGADOR(A), será possível o desconto salarial correspondente somente quando houver comprovação de culpa ou dolo do(a) EMPREGADO(A), nos termos da legislação aplicável."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "4.​ O(A) EMPREGADO(A) compromete-se a devolver em bom estado de uso e conservação todo"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "material ou equipamento que lhe tenha sido fornecido em razão do contrato de trabalho. Em caso de não devolução, dano ou extravio comprovado, o valor poderá ser descontado do salário ou das verbas rescisórias, respeitado o limite legal e mediante autorização específica."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 6: Da Jornada De Trabalho"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ A jornada de trabalho do(a) EMPREGADO(A) será de até 44 (quarenta e quatro) horas"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "semanais, distribuídas de acordo com a escala definida pelo(a) EMPREGADOR(A), respeitadas as disposições legais vigentes e as normas coletivas aplicáveis. O horário de trabalho será registrado em sistema próprio ou livro de registro de empregados e poderá ser ajustado conforme a necessidade operacional da empresa, mediante aviso prévio ao(à) EMPREGADO(A)."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2.​ A realização de horas extraordinárias poderá ser solicitada pelo(a) EMPREGADOR(A), devendo"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "o(a) EMPREGADO(A) manifestar sua concordância, conforme previsto na legislação. Tais horas poderão ser compensadas através de sistema de Banco de Horas, ou pagas com o adicional previsto na convenção coletiva da categoria."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "3.​ O Banco de Horas adotado terá vigência de até 12 (doze) meses para compensação das horas"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "trabalhadas além da jornada normal. Caso o contrato seja encerrado antes da compensação, o(a)"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "EMPREGADO(A) terá direito ao pagamento das horas extras não compensadas, com acréscimo de 50% (cinquenta por cento) sobre o valor da hora normal."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "4.​ Será assegurado ao(à) EMPREGADO(A) um intervalo mínimo de 1 (uma) hora para repouso e"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "alimentação durante a jornada diária, podendo este ser ajustado por acordo escrito entre as partes, respeitados os limites legais, e mediante pagamento adicional correspondente caso ocorra supressão parcial do intervalo."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "5.​ Em caso de faltas ou atrasos não justificados, poderá haver desconto proporcional na"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "remuneração, salvo se houver compensação autorizada por escrito ou previsão legal. O não comparecimento ao trabalho sem justificativa válida poderá acarretar a perda do direito ao descanso semanal remunerado, conforme legislação vigente."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "6.​ As faltas injustificadas impactarão diretamente no cálculo do período aquisitivo de férias,"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "conforme dispõe a legislação trabalhista aplicável."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 7: Atestados Médicos"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ O(A) EMPREGADO(A) deverá apresentar atestados médicos que justifiquem sua ausência ao"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "trabalho no prazo máximo de até 48 (quarenta e oito) horas após sua emissão, preferencialmente diretamente ao departamento de recursos humanos, localizado na sede do(a) EMPREGADOR(A). Em situações em que isso não for possível, a entrega poderá ser feita ao superior imediato mediante prova por escrito, que encaminhará o documento ao setor competente."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2.​ Atestados apresentados fora do prazo ou entregues de forma irregular poderão ser"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "desconsiderados, salvo em casos de força maior ou justificativa plausível devidamente comunicada ao(à)"
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Empregador(A)."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "3.​ Fica estabelecido que documentos de “comparecimento” não é suficiente para abono da falta ao"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "trabalho."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 8: Direito De Imagem"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ O(A) EMPREGADO(A) autoriza expressamente, de forma gratuita e por prazo indeterminado, a"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "utilização de sua imagem para fins institucionais do(a) EMPREGADOR(A), exclusivamente em materiais de divulgação internos ou externos, tais como fotos em treinamentos, eventos, campanhas internas, catálogos, vídeos corporativos, publicações em redes sociais institucionais, embalagens e outros meios relacionados à atividade empresarial."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2.​ É vedado ao(à) EMPREGADO(A) o uso de uniforme fornecido pelo(a) EMPREGADOR(A) em"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "ambientes inapropriados ou que possam causar danos à imagem da empresa, como bares, festas ou locais incompatíveis com o ambiente profissional."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "3.​ Também é proibida a divulgação de imagens em redes sociais ou qualquer outro meio público"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "em que o uniforme ou a marca do(a) EMPREGADOR(A) apareça, sempre que isso puder afetar negativamente a reputação institucional, a segurança das operações ou violar regras internas de conduta previamente comunicadas."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "4.​ O descumprimento das disposições acima poderá ensejar medidas disciplinares cabíveis,"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "inclusive advertência, suspensão e, nos casos graves, dispensa por justa causa."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 9: Das Declarações"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ O EMPREGADO(A) compromete-se a manifestar-se favoravelmente ao EMPREGADOR(A) a"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "respeito da prestação dos serviços sempre que interpelado sob pena de responder por perdas e danos materiais e/ou morais."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2.​ O(A) EMPREGADO(A) compromete-se a zelar pela imagem institucional do(a) EMPREGADOR(A)"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "durante o exercício de suas atividades e a abster-se de realizar manifestações públicas ofensivas, caluniosas ou difamatórias que não estejam baseadas em fatos concretos ou que não tenham sido encaminhadas pelos canais internos apropriados."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "3.​ Eventuais críticas ou denúncias relacionadas ao ambiente de trabalho devem ser"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "encaminhadas por meio dos canais internos de comunicação ou pelas vias legais competentes, respeitando os princípios da boa-fé e do respeito mútuo."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "4.​ O descumprimento desta cláusula poderá ensejar a aplicação de medidas disciplinares,"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "conforme a gravidade da conduta."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "CLÁUSULA 10: POLÍTICA DE USO DE APARELHOS CELULARES DURANTE O HORÁRIO DE TRABALHO NA"
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Empresa"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1​ É proibido o uso de aparelho celular (inclusive \"smartphone\") durante o horário de trabalho"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "para acesso a sites não permitidos tais como pornografia, pedofilia, racismo, redes sociais, WhatsApp ou quaisquer outros que possam comprometer a atenção, a produtividade ou a segurança no ambiente de trabalho."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2​ Salientamos que o uso para fins de comunicação (ligações) não está vedado, entretanto,"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "solicitamos que evite a utilização durante o horário de trabalho, procurando fazê-lo nos horários de intervalos. Caso necessário o uso durante o horário de trabalho (em momentos de urgência), evite toques barulhentos e conversa alta."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "3​ O uso de celulares em desacordo com esta política poderá ser considerado conduta imprópria"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "ou ato de indisciplina, sujeitando o(a) EMPREGADO(A) às sanções previstas na legislação trabalhista, inclusive a dispensa por justa causa, conforme o artigo 482, alínea \"e\", da Consolidação das Leis do Trabalho (CLT), quando caracterizada a desídia no desempenho das funções."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "CLÁUSULA 11: MONITORAMENTO DO AMBIENTE DE TRABALHO (UTILIZAÇÃO DE CÂMERAS DE"
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Segurança)"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ O(A) EMPREGADO(A) declara estar ciente e de acordo com a utilização de câmeras de segurança"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "nas dependências do(a) EMPREGADOR(A), exclusivamente para fins de monitoramento do ambiente de trabalho, proteção patrimonial e segurança física de empregados, prestadores de serviços e terceiros."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2.​ O monitoramento será realizado de forma restrita às áreas comuns de trabalho, sendo vedada a"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "instalação de câmeras em locais que possam comprometer a privacidade ou causar constrangimento, como vestiários, banheiros ou áreas de descanso individuais."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "3.​ As imagens captadas serão de propriedade exclusiva do(a) EMPREGADOR(A), armazenadas de"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "forma segura, e não serão compartilhadas com terceiros, exceto quando houver obrigação legal, ordem judicial ou necessidade de apuração de fatos que envolvam eventual responsabilidade disciplinar, cível ou criminal."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "4.​ O monitoramento respeitará os princípios da finalidade, necessidade e transparência, nos"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "termos da legislação vigente, inclusive a Lei Geral de Proteção de Dados Pessoais (LGPD)."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 12: Embriaguez – Uso De Alucinógenos"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ É expressamente proibido ao(à) EMPREGADO(A) exercer suas atividades sob o efeito de"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "bebidas alcoólicas ou substâncias psicoativas ilícitas que comprometam sua capacidade física ou mental, especialmente em atividades que envolvam riscos operacionais, segurança de terceiros ou da própria empresa."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2.​ A embriaguez em serviço, bem como o uso ou porte de substâncias entorpecentes no"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "ambiente de trabalho, poderá ensejar a rescisão do contrato por justa causa, conforme previsto na"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "legislação trabalhista."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 13: Atividades Proibidas"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ Fica expressamente proibida, durante o horário de trabalho e nas dependências do(a)"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "EMPREGADOR(A), a prática de atividades estranhas ao contrato de trabalho, tais como, não a estas se limitando: vendas ou ofertas de produtos e serviços de qualquer natureza a colegas, clientes ou terceiros; organização ou participação em jogos de azar, apostas, rifas ou correntes financeiras; realização de empréstimos pessoais entre colegas de trabalho ou a terceiros dentro do ambiente laboral."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2.​ O descumprimento desta cláusula poderá sujeitar o(a) EMPREGADO(A) à aplicação de medidas"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "disciplinares cabíveis, inclusive rescisão por justa causa, quando configurada falta grave, nos termos da legislação trabalhista."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "3.​ Esta disposição não exclui outras hipóteses de falta disciplinar ou justa causa previstas em lei"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "ou no regulamento interno da empresa, se houver."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Clausula 14: Do Sigilo E Confidencialidade"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ O(A) EMPREGADO(A) compromete-se a manter absoluto sigilo sobre todas as informações"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "confidenciais a que tiver acesso em razão de seu vínculo com o(a) EMPREGADOR(A), durante e após a vigência deste contrato, independentemente do motivo de seu encerramento. Consideram-se informações confidenciais, entre outras: dados técnicos, operacionais e estratégicos; projetos, métodos de construção e processos internos; informações comerciais, incluindo estratégias de mercado; listas de clientes e fornecedores; políticas internas e treinamentos; dados financeiros e quaisquer outras informações que não sejam públicas ou de acesso irrestrito."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2.​ O(A) EMPREGADO(A) se compromete a não divulgar, reproduzir, utilizar ou repassar tais"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "informações, seja por meio físico, eletrônico ou verbal, a qualquer pessoa física ou jurídica, sem a devida autorização expressa do(a) EMPREGADOR(A)."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "3.​ O descumprimento do dever de confidencialidade poderá sujeitar o(a) EMPREGADO(A) às"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "sanções legais cabíveis, inclusive a obrigação de indenizar por perdas e danos causados, sem prejuízo de outras medidas administrativas ou judiciais que se façam necessárias."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 15: Proteção De Dados (Lgpd)"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ Em conformidade com a Lei nº 13.709/2018 – Lei Geral de Proteção de Dados Pessoais (LGPD),"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "o(a) EMPREGADO(A) autoriza o(a) EMPREGADOR(A) a coletar, tratar, armazenar, utilizar e compartilhar seus dados pessoais, exclusivamente para finalidades relacionadas à execução deste contrato de trabalho, tais como: administração de pessoal; cumprimento de obrigações legais, trabalhistas, fiscais e previdenciárias; gestão de benefícios (como plano de saúde, vale-transporte, vale-alimentação, entre outros); segurança do ambiente de trabalho; processos internos de auditoria, compliance e controle; outras atividades correlatas à relação de emprego."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2.​ O(A) EMPREGADOR(A) compromete-se a adotar medidas técnicas e administrativas de"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "segurança da informação, capazes de proteger os dados pessoais do(a) EMPREGADO(A) contra acessos não autorizados e situações acidentais ou ilícitas de destruição, perda, alteração, comunicação ou difusão."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "3.​ O(A) EMPREGADO(A), como titular dos dados, poderá exercer os direitos previstos na LGPD,"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "mediante solicitação formal ao(à) EMPREGADOR(A), incluindo, acesso aos dados, correção de dados incompletos, inexatos ou desatualizados, portabilidade de seus dados pessoais, quando aplicável, dentre outros."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "4.​ Após o término do contrato de trabalho, o(a) EMPREGADOR(A) poderá manter os dados"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "pessoais do(a) EMPREGADO(A) pelo período necessário ao cumprimento de obrigações legais, regulatórias e contratuais, observando os prazos prescricionais aplicáveis."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 16: Dos Deveres Gerais"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ Além dos deveres previstos na legislação trabalhista, no presente contrato e em eventuais"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "regulamentos internos, constituem obrigações específicas do(a) EMPREGADO(A):"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "Comunicar à administração quaisquer fatos de que tenha conhecimento, no exercício de suas funções, que contrariem as normas da empresa ou que comprometam a segurança, a ética ou o bom funcionamento do ambiente de trabalho;",
+    "Não ausentar-se do posto de trabalho sem autorização prévia do(a) superior imediato;",
+    "Zelar pela conservação dos equipamentos, materiais e demais recursos disponibilizados para a execução de suas atividades;",
+    "Comparecer ao trabalho com vestuário adequado e, quando exigido, devidamente uniformizado e em condições de higiene pessoal;",
+    "Abster-se de se manifestar publicamente em nome da empresa sem autorização expressa;",
+    "Tratar colegas de trabalho, clientes, fornecedores e superiores com urbanidade, respeito e profissionalismo, inclusive fora do ambiente laboral, sempre que representar a imagem institucional da empresa;",
+    "Comunicar formalmente ao setor de Recursos Humanos, mediante protocolo, eventual estado gravídico, quando aplicável, por escrito e mediante recibo.",
+    "2.​ Da mesma forma, além dos deveres legais, constituem obrigações específicas do(a)"
+   ]
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Empregador(A):"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "Efetuar o pagamento da remuneração acordada ao(à) EMPREGADO(A) na forma e nos prazos estabelecidos neste contrato e pela legislação;",
+    "Garantir condições adequadas de saúde, segurança e higiene no ambiente de trabalho, bem como infraestrutura compatível com as atividades desempenhadas;",
+    "Informar ao(à) EMPREGADO(A), no momento da contratação, as normas internas da empresa, incluindo eventuais códigos de conduta, manuais ou regulamentos, entregando cópia do material, se houver;",
+    "Assegurar a confidencialidade dos dados de acesso fornecidos ao(à) EMPREGADO(A), sendo responsabilidade deste(a) zelar pela guarda e uso adequado de senhas, crachás e sistemas fornecidos para o exercício das funções."
+   ]
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Clausula 17: Do Prazo Do Contrato De Trabalho"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1​ O presente contrato de trabalho tem início em [[]], sendo firmado sob a modalidade de"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Contrato de Experiência, com vigência inicial de 45 (quarenta e cinco) dias, podendo ser prorrogado uma única vez por igual período, salvo manifestação expressa em sentido contrário por qualquer das partes antes do término do prazo vigente."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2​ Caso não haja manifestação formal de rescisão ao final do período de experiência (inicial ou"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "prorrogado), o presente contrato será automaticamente convertido em contrato de trabalho por prazo indeterminado, permanecendo válidas todas as cláusulas e condições aqui estabelecidas."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 18: Da Rescisão Do Contrato De Trabalho"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ O presente contrato poderá ser rescindido por qualquer das partes, a qualquer tempo, mediante"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "comunicação formal, observadas as regras previstas na Consolidação das Leis do Trabalho (CLT) e, quando aplicável, na convenção coletiva da categoria."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2.​ Em caso de rescisão sem justa causa por iniciativa do(a) EMPREGADOR(A), serão assegurados"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "ao(à) EMPREGADO(A) todos os direitos previstos na legislação vigente, incluindo aviso prévio, saldo de salário, férias proporcionais acrescidas de 1/3, 13º salário proporcional, liberação do FGTS com multa de 40%, e acesso ao seguro-desemprego, quando cabível."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "3.​ No caso de rescisão por iniciativa do(a) EMPREGADO(A), sem justa causa, deverá ser respeitado",
+    "prazo de aviso prévio previsto em lei, sob pena de desconto equivalente ao período não cumprido.",
+    "4.​ Fica resguardado ao(à) EMPREGADOR(A) o direito de aplicar a justa causa ao(à) EMPREGADO,"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "conforme as hipóteses previstas no artigo 482 da Consolidação das Leis do Trabalho (CLT)."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 19: Das Penalidades Disciplinares"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ O descumprimento, por parte do(a) EMPREGADO(A), das obrigações legais ou contratuais"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "poderá ensejar a aplicação das penalidades disciplinares cabíveis, observada a proporcionalidade e a gravidade da infração podendo ser aplicadas as penalidades: a) advertência verbal ou escrita; b) suspensão disciplinar por período proporcional à infração; c) dispensa por justa causa, nos termos da CLT, em caso de infração grave ou reiteração de condutas irregulares."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2.​ Toda penalidade será precedida de apuração dos fatos e será formalmente registrada,"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "garantindo-se ao(à) EMPREGADO(A) o direito de apresentar sua versão dos acontecimentos."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 20: Do Foro De Eleição"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ Para dirimir quaisquer controvérsias oriundas deste contrato, as partes elegem o foro da"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Comarca de {{empresa.comarca}}, com renúncia expressa a qualquer outro, por mais privilegiado que seja."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "E por estarem assim justos e contratados, assinam o presente instrumento em duas vias, para que surta seus efeitos jurídicos e legais."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "{{empresa.cidade}}, {{data.completa}}."
+  },
+  {
+   "tipo": "espaco",
+   "altura": 18
+  },
+  {
+   "tipo": "assinatura",
+   "quem": "Empregado(a)",
+   "nome": "{{pessoa.nome}} — CPF {{pessoa.cpf}}"
+  },
+  {
+   "tipo": "assinatura",
+   "quem": "Empregador",
+   "nome": "{{empresa.razao_social}} — CNPJ {{empresa.cnpj}}"
+  }
+ ],
+ "campos_pendentes": [],
+ "ativo": true
+}

@@ -1,0 +1,363 @@
+{
+ "codigo": "15",
+ "titulo": "Programa Interno Premiac o es Meritocra ticas",
+ "blocos": [
+  {
+   "tipo": "titulo",
+   "texto": "PROGRAMA INTERNO DE PREMIAÇÕES MERITOCRÁTICAS"
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Identificação Das Partes"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "EMPREGADOR(A): {{empresa.razao_social}}, pessoa jurídica de direito privado inscrita no CNPJ sob o nº {{empresa.cnpj}}, ou pessoa física inscrita no CPF sob o nº {{pessoa.cpf}}, com sede/endereço na {{empresa.endereco}}, doravante denominado(a) EMPRESA."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "COLABORADORES: Todos os empregados contratados sob regime da Consolidação das Leis do Trabalho, CLT, doravante denominados EMPREGADOS."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "01.​ Objetivo Do Programa"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ O principal objetivo deste Programa é reconhecer e valorizar o desempenho de Empregados que"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "alcançarem ou superarem metas previamente estabelecidas pela Empresa, estimulando produtividade, qualidade, comprometimento e alinhamento aos valores corporativos. Trata-se de política de incentivo com caráter exclusivamente indenizatório, sem qualquer natureza salarial."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "02.​ Elegibilidade"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1. São elegíveis ao Programa todos os empregados ativos da Empresa, em efetivo exercício de suas"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "funções durante o período de apuração, desde que:"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "estejam adimplentes com suas obrigações contratuais;",
+    "não tenham sofrido penalidades disciplinares no período;",
+    "cumpram os requisitos mínimos de assiduidade, pontualidade e desempenho estabelecidos.",
+    "2.​ O afastamento por licenças (remuneradas ou não remuneradas) ou suspensão contratual exclui"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "automaticamente o empregado do ciclo vigente de premiação."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "03.​ Condições De Não Elegibilidade"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ Não fará jus à premiação o Empregado que não atingir as metas mínimas estabelecidas, que"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "descumprir políticas internas ou que incorrer em faltas graves, assédio, fraude, conduta antiética ou violação de normas de compliance e integridade."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "04.​ Definições De Metas E Indicadores"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ As metas, indicadores de performance e critérios de avaliação serão estabelecidos pela Empresa"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "a cada ciclo de premiação, considerando a área de atuação, a função exercida e os objetivos estratégicos do negócio."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2.​ [[CRIAR METAS E ESTRUTURA DE PREMIAÇÃO DE ACORDO COM SUA ATIVIDADE]]"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "SEGUE INFRA UM MODELO DE METAS E ESTRUTURA DE PREMIAÇÃO QUE VOCÊ PODE CRIAR NA SUA"
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Empresa:"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "Metas e Estrutura de Premiação",
+    "Meta Básica de Entregas: A meta mensal é de 350 entregas. ▪​ Prêmio por Meta Alcançada: Ao cumprir a meta básica de 350 entregas, o motoboy receberá um valor fixo de R$ 350,00.",
+    "Premiação Incremental por Excedente ▪​ A cada 50 entregas adicionais acima das 350 (ou seja, 400, 450, etc.), o motoboy receberá um valor extra de R$ 200,00. ▪​ Exemplos: ▪​ 400 entregas (350 + 50 extras) = R$ 350,00 + R$ 200,00 (total de R$"
+   ]
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "550,00)."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "▪​ 450 entregas (350 + 100 extras) = R$ 350,00 + R$ 400,00 (total de R$"
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "750,00)."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "3.​ A apuração será realizada com base em indicadores mensuráveis e objetivos, como"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "produtividade, qualidade, segurança, inovação e resultados financeiros, podendo ser complementada por metas coletivas vinculadas ao desempenho do setor ou da unidade."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "05.​ Formas De Premiação"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ As premiações poderão ser concedidas em [valores monetários, vouchers, bens, viagens,"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "experiências ou outras formas definidas pela Empresas], sempre de caráter eventual e vinculadas aos critérios previamente estabelecidos. Quando em valor monetário, o pagamento será realizado em rubrica própria e destacada no holerite sob a denominação “Prêmio por Desempenho”, reforçando a transparência sua natureza não salarial."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "06.​ Condição Vinculada Ao Desempenho Excepcional"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ A premiação será concedida unicamente em razão do desempenho superior do colaborador ou"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "da equipe, que supere as metas e resultados ordinariamente esperados para a sua função. Não será considerada como remuneração por produtividade esperada ou por cumprimento de jornada de trabalho."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "07.​ Inexistência De Vínculo Com Comissões"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ Fica expressamente estabelecido que as premiações concedidas por este Programa não possuem"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "qualquer vinculação ou natureza de comissões. Comissões são pagamentos atrelados diretamente à venda de produtos ou serviços ou à realização de negócios, com base em um percentual sobre o valor negociado. As premiações, por sua vez, são decorrentes de um desempenho global ou de atingimento de metas qualitativas e/ou quantitativas que superem o esperado, e não de uma simples transação comercial."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2.​ As premiações concedidas no âmbito deste Programa possuem caráter exclusivamente"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "indenizatório, não se incorporando à remuneração para quaisquer fins trabalhistas, previdenciários ou fiscais. Não geram reflexos em férias, 13º salário, FGTS, aviso prévio ou verbas rescisórias, tampouco integram a base de cálculo de encargos sociais."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "3.​ As premiações não configuram comissões, gratificações habituais ou contraprestação direta pelo"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "trabalho, sendo sempre de caráter eventual e vinculadas ao cumprimento de critérios objetivos definidos pela Empresa."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "08.​ Caráter Excepcional E Não Habitual"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1. As premiações concedidas sob este Programa terão caráter excepcional e não habitual. A sua"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "concessão não será condicionada à periodicidade fixa (mensal, trimestral, anual), mas sim ao atingimento de metas ou desempenho extraordinário, superando as expectativas e os padrões regulares de trabalho."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "09.​ Ausência De Pré-Fixação Contratual"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1. Não haverá qualquer previsão ou promessa de premiação no contrato de trabalho do colaborador. O"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Programa será divulgado internamente, mas a decisão de conceder e o valor da premiação serão sempre discricionários da empresa, baseados na análise do desempenho e nos resultados alcançados, conforme os critérios estabelecidos neste documento."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "10.​ Flexibilidade E Discricionariedade"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ A Empresa reserva-se o direito de revisar, suspender ou encerrar este Programa a qualquer"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "tempo, mediante comunicação formal, sem que tal medida gere direito adquirido, expectativa de direito ou qualquer obrigação de indenização."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2.​ A participação no Programa é facultativa e condicionada ao cumprimento dos critérios definidos,"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "não constituindo obrigação contratual permanente."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "11.​ Validade E Reavaliação Do Programa"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1. O Programa será válido por 6 (seis) meses sendo passível de ajustes anuais para adequação às"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "demandas e objetivos da Empresa."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2. A Empresa poderá realizar ajustes na meta ou nos valores dos prêmios, mediante comunicação"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "prévia e formal aos Empregados participantes."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "12.​ Critérios Claros E Objetivos Para A Premiação"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ Os critérios para a concessão da premiação serão claros, objetivos e divulgados previamente aos"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "colaboradores. Tais critérios estarão vinculados a resultados específicos, projetos concluídos com excelência, metas de melhoria contínua, inovação, superação de desafios ou outros indicadores de desempenho excepcional, que se diferenciam da mera execução das tarefas rotineiras."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "13.​ Documentação E Transparência"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ Toda premiação concedida será formalizada por meio de documento interno, contendo a"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "justificativa da premiação, os critérios atendidos e o valor pago, com a devida ciência do colaborador. Esta documentação servirá como prova da natureza jurídica da premiação."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "14.​ Disposições Finais"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ Este Programa visa assegurar um ambiente de trabalho justo e motivador, onde o mérito é"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "valorizado, sem, contudo, desvirtuar a natureza das verbas pagas aos colaboradores. A interpretação e aplicação deste Programa devem sempre estar em conformidade com a legislação trabalhista brasileira, em especial o Art. 457, § 4º da CLT."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "{{empresa.cidade}}, {{data.dia}} de {{data.mes}} de {{data.ano}}."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "[RAZÃO SOCIAL COMPLETA DO(A) EMPREGADOR(A)"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Termo de Ciência e Adesão Eu, {{pessoa.nome}}, inscrito(a) no Registro Geral (CPF) n. {{pessoa.cpf}}, declaro ter recebido uma cópia do Programa Interno de Premiações Meritocráticas da {{empresa.razao_social}}, ter lido e compreendido seu conteúdo e estar ciente das regras e procedimentos nele estabelecidos."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Declaro que:"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "Os [[benefícios ou valores]] pagos a título de prêmio não possuem natureza salarial. [[escrever “ciente”]]",
+    "Todos os requisitos e condições do Programa foram explicados, lidos e são de conhecimento do Empregado. [[escrever “ciente”]]"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "{{empresa.cidade}}, {{data.dia}} de {{data.mes}} de {{data.ano}}."
+  },
+  {
+   "tipo": "espaco",
+   "altura": 18
+  },
+  {
+   "tipo": "assinatura",
+   "quem": "Empregado(a)",
+   "nome": "{{pessoa.nome}} — CPF {{pessoa.cpf}}"
+  },
+  {
+   "tipo": "assinatura",
+   "quem": "Empregador",
+   "nome": "{{empresa.razao_social}} — CNPJ {{empresa.cnpj}}"
+  }
+ ],
+ "campos_pendentes": [
+  "CRIAR METAS E ESTRUTURA DE PREMIAÇÃO DE ACORDO COM SUA ATIVIDADE",
+  "benefícios ou valores",
+  "escrever “ciente”"
+ ],
+ "ativo": false,
+ "motivo_inativo": "Depende de o Douglas definir metas e valores de premiação. Reativar quando definido."
+}

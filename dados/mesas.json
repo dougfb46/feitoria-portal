@@ -1,0 +1,431 @@
+{
+ "_leia": [
+  "Mapa de mesas do PUB Mogi, extraído do cartaz A3 da casa (versão de 2026).",
+  "x e y são a posição do número na planta, em porcentagem da largura e da altura",
+  "da imagem web/img/mapa-mesas.webp. Se a planta mudar, a imagem e estes números",
+  "mudam juntos.",
+  "As ÁREAS foram deduzidas do desenho e precisam da sua conferência — o cartaz",
+  "não nomeia as áreas, só marca DECK, BOQUETA e COZINHA.",
+  "Não existem as mesas 19, 20 e 31: o cartaz salta esses números."
+ ],
+ "unidade": "PUB Mogi",
+ "total": 54,
+ "imagem": "mapa-mesas.webp",
+ "posicoes_do_turno": [
+  "A",
+  "B",
+  "C",
+  "D",
+  "E",
+  "F",
+  "G"
+ ],
+ "_posicoes": "O cartaz 'COM equipe' tem 7 posições fixas (A a G) para escrever quem está em cada ponto do salão no turno. No portal isso vira um campo que o gestor preenche e a equipe consulta.",
+ "lembretes": [
+  {
+   "titulo": "Cuidado com o espaço",
+   "texto": "Cuide com carinho do nosso espaço e da experiência de cada cliente."
+  },
+  {
+   "titulo": "Atenção aos detalhes",
+   "texto": "Mesa organizada, ambiente acolhedor e cliente bem cuidado fazem diferença."
+  },
+  {
+   "titulo": "Cliente feliz?",
+   "texto": "Convide com carinho para deixar uma avaliação da Feitoria no Google."
+  },
+  {
+   "titulo": "Chope no ponto",
+   "texto": "Copo limpo, colarinho certo e entrega rápida: chope parado perde qualidade."
+  },
+  {
+   "titulo": "Olho na mesa",
+   "texto": "Copo vazio é oportunidade: ofereça a próxima rodada antes de pedirem."
+  },
+  {
+   "titulo": "Avisou, resolveu",
+   "texto": "Quebra, falta de item ou demora? Fale com o supervisor na hora."
+  }
+ ],
+ "rodape": "Confira o número da mesa antes de abrir ou finalizar a comanda.",
+ "mesas": [
+  {
+   "numero": 1,
+   "tipo": "comum",
+   "area": "Chalé",
+   "x": 10.0,
+   "y": 70.5
+  },
+  {
+   "numero": 2,
+   "tipo": "comum",
+   "area": "Chalé",
+   "x": 9.8,
+   "y": 57.6
+  },
+  {
+   "numero": 3,
+   "tipo": "comum",
+   "area": "Chalé",
+   "x": 14.2,
+   "y": 70.5
+  },
+  {
+   "numero": 4,
+   "tipo": "comum",
+   "area": "Chalé",
+   "x": 14.1,
+   "y": 52.5
+  },
+  {
+   "numero": 5,
+   "tipo": "comum",
+   "area": "Chalé",
+   "x": 23.1,
+   "y": 70.5
+  },
+  {
+   "numero": 6,
+   "tipo": "comum",
+   "area": "Chalé",
+   "x": 23.1,
+   "y": 52.5
+  },
+  {
+   "numero": 7,
+   "tipo": "comum",
+   "area": "Chalé",
+   "x": 27.4,
+   "y": 70.5
+  },
+  {
+   "numero": 8,
+   "tipo": "comum",
+   "area": "Chalé",
+   "x": 27.4,
+   "y": 52.5
+  },
+  {
+   "numero": 9,
+   "tipo": "comum",
+   "area": "Chalé",
+   "x": 9.1,
+   "y": 39.8
+  },
+  {
+   "numero": 10,
+   "tipo": "comum",
+   "area": "Chalé",
+   "x": 9.1,
+   "y": 20.4
+  },
+  {
+   "numero": 11,
+   "tipo": "comum",
+   "area": "Chalé",
+   "x": 13.2,
+   "y": 44.4
+  },
+  {
+   "numero": 12,
+   "tipo": "comum",
+   "area": "Chalé",
+   "x": 14.6,
+   "y": 25.6
+  },
+  {
+   "numero": 13,
+   "tipo": "comum",
+   "area": "Chalé",
+   "x": 14.9,
+   "y": 10.6
+  },
+  {
+   "numero": 14,
+   "tipo": "comum",
+   "area": "Chalé",
+   "x": 21.7,
+   "y": 30.5
+  },
+  {
+   "numero": 15,
+   "tipo": "comum",
+   "area": "Central",
+   "x": 44.8,
+   "y": 38.8
+  },
+  {
+   "numero": 16,
+   "tipo": "comum",
+   "area": "Central",
+   "x": 44.8,
+   "y": 24.5
+  },
+  {
+   "numero": 17,
+   "tipo": "redonda",
+   "area": "Jardim",
+   "x": 48.0,
+   "y": 54.6
+  },
+  {
+   "numero": 18,
+   "tipo": "redonda",
+   "area": "Jardim",
+   "x": 55.2,
+   "y": 45.4
+  },
+  {
+   "numero": 21,
+   "tipo": "comum",
+   "area": "Salão externo",
+   "x": 55.8,
+   "y": 25.6
+  },
+  {
+   "numero": 22,
+   "tipo": "comum",
+   "area": "Salão externo",
+   "x": 55.8,
+   "y": 13.1
+  },
+  {
+   "numero": 23,
+   "tipo": "comum",
+   "area": "Salão externo",
+   "x": 61.5,
+   "y": 13.1
+  },
+  {
+   "numero": 24,
+   "tipo": "comum",
+   "area": "Salão externo",
+   "x": 67.4,
+   "y": 25.6
+  },
+  {
+   "numero": 25,
+   "tipo": "comum",
+   "area": "Salão externo",
+   "x": 67.4,
+   "y": 13.1
+  },
+  {
+   "numero": 26,
+   "tipo": "comum",
+   "area": "Salão externo",
+   "x": 73.0,
+   "y": 25.6
+  },
+  {
+   "numero": 27,
+   "tipo": "comum",
+   "area": "Salão externo",
+   "x": 73.0,
+   "y": 13.1
+  },
+  {
+   "numero": 28,
+   "tipo": "comum",
+   "area": "Salão externo",
+   "x": 77.6,
+   "y": 18.9
+  },
+  {
+   "numero": 29,
+   "tipo": "comum",
+   "area": "Salão externo",
+   "x": 84.0,
+   "y": 25.6
+  },
+  {
+   "numero": 30,
+   "tipo": "comum",
+   "area": "Salão externo",
+   "x": 84.0,
+   "y": 13.1
+  },
+  {
+   "numero": 32,
+   "tipo": "redonda",
+   "area": "Jardim",
+   "x": 88.3,
+   "y": 62.2
+  },
+  {
+   "numero": 33,
+   "tipo": "comum",
+   "area": "Salão externo",
+   "x": 73.0,
+   "y": 63.6
+  },
+  {
+   "numero": 34,
+   "tipo": "comum",
+   "area": "Salão externo",
+   "x": 73.0,
+   "y": 51.9
+  },
+  {
+   "numero": 35,
+   "tipo": "comum",
+   "area": "Salão externo",
+   "x": 73.0,
+   "y": 41.9
+  },
+  {
+   "numero": 36,
+   "tipo": "comum",
+   "area": "Salão externo",
+   "x": 67.4,
+   "y": 60.8
+  },
+  {
+   "numero": 37,
+   "tipo": "comum",
+   "area": "Salão externo",
+   "x": 67.4,
+   "y": 44.4
+  },
+  {
+   "numero": 38,
+   "tipo": "comum",
+   "area": "Salão externo",
+   "x": 72.2,
+   "y": 89.4
+  },
+  {
+   "numero": 39,
+   "tipo": "comum",
+   "area": "Salão externo",
+   "x": 72.2,
+   "y": 78.0
+  },
+  {
+   "numero": 40,
+   "tipo": "comum",
+   "area": "Salão externo",
+   "x": 67.4,
+   "y": 89.4
+  },
+  {
+   "numero": 41,
+   "tipo": "comum",
+   "area": "Salão externo",
+   "x": 67.4,
+   "y": 78.0
+  },
+  {
+   "numero": 42,
+   "tipo": "comum",
+   "area": "Salão externo",
+   "x": 62.5,
+   "y": 83.9
+  },
+  {
+   "numero": 43,
+   "tipo": "redonda",
+   "area": "Jardim",
+   "x": 55.2,
+   "y": 66.6
+  },
+  {
+   "numero": 44,
+   "tipo": "comum",
+   "area": "Salão externo",
+   "x": 54.6,
+   "y": 87.4
+  },
+  {
+   "numero": 45,
+   "tipo": "comum",
+   "area": "Salão externo",
+   "x": 51.6,
+   "y": 87.4
+  },
+  {
+   "numero": 46,
+   "tipo": "comum",
+   "area": "Salão externo",
+   "x": 46.0,
+   "y": 86.5
+  },
+  {
+   "numero": 47,
+   "tipo": "comum",
+   "area": "Salão externo",
+   "x": 43.3,
+   "y": 86.5
+  },
+  {
+   "numero": 48,
+   "tipo": "comum",
+   "area": "Central",
+   "x": 39.0,
+   "y": 87.4
+  },
+  {
+   "numero": 49,
+   "tipo": "comum",
+   "area": "Central",
+   "x": 38.3,
+   "y": 70.8
+  },
+  {
+   "numero": 50,
+   "tipo": "comum",
+   "area": "Central",
+   "x": 32.7,
+   "y": 71.1
+  },
+  {
+   "numero": 51,
+   "tipo": "redonda",
+   "area": "Deck",
+   "x": 17.3,
+   "y": 94.0
+  },
+  {
+   "numero": 52,
+   "tipo": "redonda",
+   "area": "Deck",
+   "x": 10.5,
+   "y": 94.0
+  },
+  {
+   "numero": 53,
+   "tipo": "comum",
+   "area": "Deck",
+   "x": 13.0,
+   "y": 79.0
+  },
+  {
+   "numero": 54,
+   "tipo": "comum",
+   "area": "Deck",
+   "x": 7.5,
+   "y": 79.0
+  },
+  {
+   "numero": 55,
+   "tipo": "comum",
+   "area": "Deck",
+   "x": 3.5,
+   "y": 77.3
+  },
+  {
+   "numero": 56,
+   "tipo": "comum",
+   "area": "Deck",
+   "x": 3.5,
+   "y": 60.2
+  },
+  {
+   "numero": 57,
+   "tipo": "redonda",
+   "area": "Deck",
+   "x": 3.7,
+   "y": 41.9
+  }
+ ]
+}

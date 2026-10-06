@@ -1,0 +1,133 @@
+{
+ "codigo": "12",
+ "titulo": "Termo de Entrega de Senhas Uniforme e EPI",
+ "blocos": [
+  {
+   "tipo": "titulo",
+   "texto": "TERMO DE ENTREGA DE SENHAS, UNIFORMES E EPI’S"
+  },
+  {
+   "tipo": "campos",
+   "itens": [
+    {
+     "rotulo": "Empregador",
+     "valor": "{{empresa.razao_social}} — CNPJ {{empresa.cnpj}}"
+    },
+    {
+     "rotulo": "Endereço",
+     "valor": "{{empresa.endereco}}, {{empresa.cidade}}/{{empresa.estado}}"
+    },
+    {
+     "rotulo": "Empregado(a)",
+     "valor": "{{pessoa.nome}}"
+    },
+    {
+     "rotulo": "CPF",
+     "valor": "{{pessoa.cpf}}"
+    },
+    {
+     "rotulo": "Nacionalidade / estado civil",
+     "valor": "{{pessoa.nacionalidade}}, {{pessoa.estado_civil}}"
+    },
+    {
+     "rotulo": "Cargo / função",
+     "valor": "{{contrato.funcao}}"
+    }
+   ]
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "O(A) EMPREGADO(A) declara ter recebido da empresa, nesta data, os itens abaixo relacionados,"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "destinados ao desempenho de suas funções, em conformidade com as normas internas da empresa e com a NR-6 do Ministério do Trabalho e Emprego."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Item Quantidade N. Série/Identificação Estado de Conservação (Uniforme/Senha/EPI)"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "O(A) EMPREGADO(A) compromete-se a:"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "i.​ utilizar uniformes e EPI’s de forma correta e obrigatória, sempre que necessário; ii.​ zelar pela guarda e conservação dos itens recebidos; iii.​ não emprestar, compartilhar ou permitir o uso por terceiros; iv.​ manter sigilo absoluto quanto às senhas e acessos eletrônicos, sob pena de responsabilização administrativa, civil e criminal."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "O(A) EMPREGADO(A) declara estar ciente de que o uso dos Equipamentos de Proteção"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Individual (EPI) fornecidos pela empresa é obrigatório durante a execução de suas atividades. a.​ O descumprimento dessa obrigação caracteriza falta grave, sujeitando o(a) EMPREGADO(A) à aplicação das penalidades cabíveis, inclusive à rescisão do contrato de trabalho por justa causa, nos termos do art. 482, alíneas “h” (ato de indisciplina ou insubordinação) e “k” (ato lesivo da honra e da boa-fé contratual) da CLT."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "O(A) EMPREGADO(A) declara estar ciente de que é expressamente proibido o"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "compartilhamento de logins e senhas de acesso aos sistemas, plataformas, e-mails corporativos, aplicativos de mensagens (WhatsApp Business, Digisac ou equivalentes) e demais ferramentas de trabalho fornecidas pela empresa. a.​ O descumprimento desta obrigação configurará falta grave, sujeitando o(a) EMPREGADO(A) à aplicação das penalidades disciplinares cabíveis, incluindo a rescisão do contrato de trabalho por justa causa, nos termos do art. 482, alíneas “h” (ato de indisciplina ou insubordinação) e “g” (violação de segredo da empresa) da CLT."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "Em caso de perda, dano por mau uso ou extravio dos itens entregues, o(a) EMPREGADO(A)"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "poderá ser responsabilizado(a), autorizando desde já o desconto em folha de pagamento, conforme art. 462, §1º, da CLT, quando comprovada sua culpa ou dolo."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "Todos os itens entregues deverão ser devolvidos em perfeito estado ao término do contrato de"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "trabalho ou quando solicitados pela empresa."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "O(A) EMPREGADO(A) declara estar ciente das obrigações aqui estabelecidas, assinando o"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "presente termo em duas vias de igual teor e forma."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "{{empresa.cidade}}, {{data.dia}} de {{data.mes}} de {{data.ano}}. Assinaturas:"
+  },
+  {
+   "tipo": "espaco",
+   "altura": 18
+  },
+  {
+   "tipo": "assinatura",
+   "quem": "Empregado(a)",
+   "nome": "{{pessoa.nome}} — CPF {{pessoa.cpf}}"
+  },
+  {
+   "tipo": "assinatura",
+   "quem": "Empregador",
+   "nome": "{{empresa.razao_social}} — CNPJ {{empresa.cnpj}}"
+  }
+ ],
+ "campos_pendentes": [],
+ "ativo": true
+}

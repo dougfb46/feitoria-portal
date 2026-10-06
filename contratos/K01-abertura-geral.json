@@ -1,0 +1,105 @@
+{
+  "codigo": "K01",
+  "titulo": "Preparação da equipe e abertura geral",
+  "quando": "Antes de abrir as portas · 1º checklist do dia",
+  "setor": "geral",
+  "frequencia": "por_turno",
+  "turnos": ["almoco", "noite"],
+  "unidades": [],
+  "responsavel_padrao": "responsável da abertura",
+  "exige_revisao": true,
+  "nota_final": { "usa": false, "justifica_abaixo_de": null, "plano_de_acao_abaixo_de": null },
+  "grupos": [
+    {
+      "titulo": "Equipe",
+      "dica": "conferir antes do briefing",
+      "itens": [
+        { "id": "equipe.completa", "texto": "Equipe completa conforme escala", "criticidade": "normal", "resposta": "conforme_nao_conforme", "evidencia": "nenhuma", "permite_nao_aplicavel": false, "abre_ocorrencia_se_nao_conforme": true, "avisa_na_hora": false, "referencia": null, "reaproveita": null },
+        { "id": "equipe.faltas", "texto": "Faltas e atrasos anotados", "criticidade": "normal", "resposta": "conforme_nao_conforme", "evidencia": "nenhuma", "permite_nao_aplicavel": true, "abre_ocorrencia_se_nao_conforme": false, "avisa_na_hora": false, "referencia": null, "reaproveita": "ponto.presenca" },
+        { "id": "equipe.substituicoes", "texto": "Substituições definidas", "criticidade": "normal", "resposta": "conforme_nao_conforme", "evidencia": "nenhuma", "permite_nao_aplicavel": true, "abre_ocorrencia_se_nao_conforme": false, "avisa_na_hora": false, "referencia": null, "reaproveita": null },
+        { "id": "equipe.funcoes", "texto": "Funções do turno definidas (bar, salão, cozinha, caixa)", "criticidade": "normal", "resposta": "conforme_nao_conforme", "evidencia": "nenhuma", "permite_nao_aplicavel": false, "abre_ocorrencia_se_nao_conforme": false, "avisa_na_hora": false, "referencia": null, "reaproveita": null },
+        { "id": "equipe.uniforme", "texto": "Uniforme limpo e completo", "criticidade": "normal", "resposta": "conforme_nao_conforme", "evidencia": "foto_se_nao_conforme", "permite_nao_aplicavel": false, "abre_ocorrencia_se_nao_conforme": false, "avisa_na_hora": false, "referencia": null, "reaproveita": null },
+        { "id": "equipe.aparencia", "texto": "Cabelo preso e unhas curtas", "criticidade": "normal", "resposta": "conforme_nao_conforme", "evidencia": "nenhuma", "permite_nao_aplicavel": false, "abre_ocorrencia_se_nao_conforme": false, "avisa_na_hora": false, "referencia": "RDC 216/2004", "reaproveita": null },
+        { "id": "equipe.adornos", "texto": "Ninguém usando brinco, anel, relógio ou pulseira", "criticidade": "critica", "resposta": "conforme_nao_conforme", "evidencia": "foto_se_nao_conforme", "permite_nao_aplicavel": false, "abre_ocorrencia_se_nao_conforme": true, "avisa_na_hora": false, "referencia": "RDC 216/2004 · reprovado na auditoria de 19/03/2026", "reaproveita": null },
+        { "id": "equipe.maos", "texto": "Higienização das mãos feita no início do turno", "criticidade": "critica", "resposta": "conforme_nao_conforme", "evidencia": "nenhuma", "permite_nao_aplicavel": false, "abre_ocorrencia_se_nao_conforme": true, "avisa_na_hora": false, "referencia": "RDC 216/2004", "reaproveita": null }
+      ]
+    },
+    {
+      "titulo": "Briefing",
+      "dica": "o que a equipe precisa saber antes do primeiro cliente",
+      "itens": [
+        { "id": "briefing.feito", "texto": "Briefing realizado com todos", "criticidade": "normal", "resposta": "conforme_nao_conforme", "evidencia": "nenhuma", "permite_nao_aplicavel": false, "abre_ocorrencia_se_nao_conforme": false, "avisa_na_hora": false, "referencia": null, "reaproveita": null },
+        { "id": "briefing.reservas", "texto": "Reservas do dia informadas", "criticidade": "normal", "resposta": "conforme_nao_conforme", "evidencia": "nenhuma", "permite_nao_aplicavel": true, "abre_ocorrencia_se_nao_conforme": false, "avisa_na_hora": false, "referencia": null, "reaproveita": null },
+        { "id": "briefing.cortesias", "texto": "Aniversários e cortesias informados", "criticidade": "normal", "resposta": "conforme_nao_conforme", "evidencia": "nenhuma", "permite_nao_aplicavel": true, "abre_ocorrencia_se_nao_conforme": false, "avisa_na_hora": false, "referencia": null, "reaproveita": null },
+        { "id": "briefing.indisponiveis", "texto": "Produtos indisponíveis informados", "criticidade": "normal", "resposta": "conforme_nao_conforme", "evidencia": "nenhuma", "permite_nao_aplicavel": false, "abre_ocorrencia_se_nao_conforme": false, "avisa_na_hora": false, "referencia": null, "reaproveita": null },
+        { "id": "briefing.chopps", "texto": "Chopps do dia informados (12 torneiras)", "criticidade": "normal", "resposta": "conforme_nao_conforme", "evidencia": "nenhuma", "permite_nao_aplicavel": false, "abre_ocorrencia_se_nao_conforme": false, "avisa_na_hora": false, "referencia": null, "reaproveita": null },
+        { "id": "briefing.prioritarios", "texto": "Produtos prioritários apresentados", "criticidade": "normal", "resposta": "conforme_nao_conforme", "evidencia": "nenhuma", "permite_nao_aplicavel": true, "abre_ocorrencia_se_nao_conforme": false, "avisa_na_hora": false, "referencia": null, "reaproveita": null },
+        { "id": "briefing.promocoes", "texto": "Promoções válidas do dia informadas", "criticidade": "normal", "resposta": "conforme_nao_conforme", "evidencia": "nenhuma", "permite_nao_aplicavel": true, "abre_ocorrencia_se_nao_conforme": false, "avisa_na_hora": false, "referencia": null, "reaproveita": null },
+        { "id": "briefing.desconto", "texto": "Limite de desconto e cortesia autorizado informado", "criticidade": "normal", "resposta": "conforme_nao_conforme", "evidencia": "nenhuma", "permite_nao_aplicavel": false, "abre_ocorrencia_se_nao_conforme": false, "avisa_na_hora": false, "referencia": null, "reaproveita": null }
+      ]
+    },
+    {
+      "titulo": "Segurança da unidade",
+      "dica": null,
+      "itens": [
+        { "id": "seg.alarme", "texto": "Alarme desativado sem ocorrência", "criticidade": "normal", "resposta": "conforme_nao_conforme", "evidencia": "nenhuma", "permite_nao_aplicavel": false, "abre_ocorrencia_se_nao_conforme": true, "avisa_na_hora": true, "referencia": null, "reaproveita": null },
+        { "id": "seg.invasao", "texto": "Sem sinal de invasão ou dano", "criticidade": "critica", "resposta": "conforme_nao_conforme", "evidencia": "foto_se_nao_conforme", "permite_nao_aplicavel": false, "abre_ocorrencia_se_nao_conforme": true, "avisa_na_hora": true, "referencia": null, "reaproveita": null },
+        { "id": "seg.portas", "texto": "Portas e portões funcionando", "criticidade": "normal", "resposta": "conforme_nao_conforme", "evidencia": "foto_se_nao_conforme", "permite_nao_aplicavel": false, "abre_ocorrencia_se_nao_conforme": true, "avisa_na_hora": false, "referencia": null, "reaproveita": null },
+        { "id": "seg.janelas", "texto": "Janelas conferidas", "criticidade": "normal", "resposta": "conforme_nao_conforme", "evidencia": "nenhuma", "permite_nao_aplicavel": false, "abre_ocorrencia_se_nao_conforme": false, "avisa_na_hora": false, "referencia": null, "reaproveita": null },
+        { "id": "seg.recebimento_vedado", "texto": "Área de recebimento protegida e o vão da porta vedado", "criticidade": "critica", "resposta": "conforme_nao_conforme", "evidencia": "foto_se_nao_conforme", "permite_nao_aplicavel": false, "abre_ocorrencia_se_nao_conforme": true, "avisa_na_hora": false, "referencia": "ponto crítico da auditoria de 19/03/2026", "reaproveita": null },
+        { "id": "seg.pragas", "texto": "Sem sinal de pragas", "criticidade": "critica", "resposta": "conforme_nao_conforme", "evidencia": "foto_se_nao_conforme", "permite_nao_aplicavel": false, "abre_ocorrencia_se_nao_conforme": true, "avisa_na_hora": true, "referencia": "RDC 216/2004", "reaproveita": null },
+        { "id": "seg.extintores", "texto": "Extintores acessíveis e dentro da validade", "criticidade": "critica", "resposta": "conforme_nao_conforme", "evidencia": "foto_se_nao_conforme", "permite_nao_aplicavel": false, "abre_ocorrencia_se_nao_conforme": true, "avisa_na_hora": false, "referencia": null, "reaproveita": null },
+        { "id": "seg.rotas", "texto": "Rotas de circulação livres", "criticidade": "critica", "resposta": "conforme_nao_conforme", "evidencia": "nenhuma", "permite_nao_aplicavel": false, "abre_ocorrencia_se_nao_conforme": true, "avisa_na_hora": false, "referencia": null, "reaproveita": null }
+      ]
+    },
+    {
+      "titulo": "Estrutura",
+      "dica": null,
+      "itens": [
+        { "id": "estr.luz_interna", "texto": "Iluminação interna", "criticidade": "normal", "resposta": "conforme_nao_conforme", "evidencia": "nenhuma", "permite_nao_aplicavel": false, "abre_ocorrencia_se_nao_conforme": true, "avisa_na_hora": false, "referencia": null, "reaproveita": null },
+        { "id": "estr.luz_externa", "texto": "Iluminação externa e do quintal", "criticidade": "normal", "resposta": "conforme_nao_conforme", "evidencia": "nenhuma", "permite_nao_aplicavel": false, "abre_ocorrencia_se_nao_conforme": true, "avisa_na_hora": false, "referencia": null, "reaproveita": null },
+        { "id": "estr.luz_fachada", "texto": "Iluminação da fachada", "criticidade": "normal", "resposta": "conforme_nao_conforme", "evidencia": "nenhuma", "permite_nao_aplicavel": false, "abre_ocorrencia_se_nao_conforme": true, "avisa_na_hora": false, "referencia": null, "reaproveita": null },
+        { "id": "estr.banheiros", "texto": "Banheiros liberados e abastecidos", "criticidade": "critica", "resposta": "conforme_nao_conforme", "evidencia": "foto_se_nao_conforme", "permite_nao_aplicavel": false, "abre_ocorrencia_se_nao_conforme": true, "avisa_na_hora": false, "referencia": null, "reaproveita": null },
+        { "id": "estr.trocador", "texto": "Trocador em condição de uso", "criticidade": "normal", "resposta": "conforme_nao_conforme", "evidencia": "nenhuma", "permite_nao_aplicavel": false, "abre_ocorrencia_se_nao_conforme": false, "avisa_na_hora": false, "referencia": null, "reaproveita": null },
+        { "id": "estr.aquecedores", "texto": "Aquecedores ligados e testados", "criticidade": "normal", "resposta": "conforme_nao_conforme", "evidencia": "nenhuma", "permite_nao_aplicavel": true, "abre_ocorrencia_se_nao_conforme": false, "avisa_na_hora": false, "referencia": "só nos dias frios — marcar não aplicável no calor", "reaproveita": null },
+        { "id": "estr.quintal", "texto": "Quintal, deck e circulação limpos", "criticidade": "normal", "resposta": "conforme_nao_conforme", "evidencia": "foto_obrigatoria", "permite_nao_aplicavel": false, "abre_ocorrencia_se_nao_conforme": false, "avisa_na_hora": false, "referencia": null, "reaproveita": null },
+        { "id": "estr.odor", "texto": "Odor e aparência geral da casa", "criticidade": "normal", "resposta": "conforme_nao_conforme", "evidencia": "nenhuma", "permite_nao_aplicavel": false, "abre_ocorrencia_se_nao_conforme": false, "avisa_na_hora": false, "referencia": null, "reaproveita": null }
+      ]
+    },
+    {
+      "titulo": "Sistemas",
+      "dica": null,
+      "itens": [
+        { "id": "sis.internet", "texto": "Internet e Wi-Fi", "criticidade": "normal", "resposta": "conforme_nao_conforme", "evidencia": "nenhuma", "permite_nao_aplicavel": false, "abre_ocorrencia_se_nao_conforme": true, "avisa_na_hora": true, "referencia": null, "reaproveita": null },
+        { "id": "sis.pdv", "texto": "PDV Takeat", "criticidade": "critica", "resposta": "conforme_nao_conforme", "evidencia": "nenhuma", "permite_nao_aplicavel": false, "abre_ocorrencia_se_nao_conforme": true, "avisa_na_hora": true, "referencia": null, "reaproveita": null },
+        { "id": "sis.impressoras", "texto": "Impressoras e bobinas", "criticidade": "normal", "resposta": "conforme_nao_conforme", "evidencia": "nenhuma", "permite_nao_aplicavel": false, "abre_ocorrencia_se_nao_conforme": true, "avisa_na_hora": false, "referencia": null, "reaproveita": null },
+        { "id": "sis.maquininhas", "texto": "Maquininhas de cartão", "criticidade": "critica", "resposta": "conforme_nao_conforme", "evidencia": "nenhuma", "permite_nao_aplicavel": false, "abre_ocorrencia_se_nao_conforme": true, "avisa_na_hora": true, "referencia": null, "reaproveita": null },
+        { "id": "sis.whatsapp", "texto": "WhatsApp da casa", "criticidade": "normal", "resposta": "conforme_nao_conforme", "evidencia": "nenhuma", "permite_nao_aplicavel": false, "abre_ocorrencia_se_nao_conforme": false, "avisa_na_hora": false, "referencia": null, "reaproveita": null },
+        { "id": "sis.qrcode", "texto": "QR Code testado no celular", "criticidade": "normal", "resposta": "conforme_nao_conforme", "evidencia": "nenhuma", "permite_nao_aplicavel": false, "abre_ocorrencia_se_nao_conforme": true, "avisa_na_hora": false, "referencia": null, "reaproveita": null },
+        { "id": "sis.cardapio", "texto": "Cardápio digital atualizado", "criticidade": "normal", "resposta": "conforme_nao_conforme", "evidencia": "nenhuma", "permite_nao_aplicavel": false, "abre_ocorrencia_se_nao_conforme": true, "avisa_na_hora": false, "referencia": null, "reaproveita": null },
+        { "id": "sis.musica", "texto": "Música ligada em volume adequado", "criticidade": "normal", "resposta": "conforme_nao_conforme", "evidencia": "nenhuma", "permite_nao_aplicavel": false, "abre_ocorrencia_se_nao_conforme": false, "avisa_na_hora": false, "referencia": null, "reaproveita": null },
+        { "id": "sis.tvs", "texto": "TVs e telão", "criticidade": "normal", "resposta": "conforme_nao_conforme", "evidencia": "nenhuma", "permite_nao_aplicavel": true, "abre_ocorrencia_se_nao_conforme": false, "avisa_na_hora": false, "referencia": null, "reaproveita": null }
+      ]
+    },
+    {
+      "titulo": "Caixa — abertura",
+      "dica": "valores só no Takeat",
+      "itens": [
+        { "id": "caixa.aberto", "texto": "Caixa aberto no Takeat", "criticidade": "critica", "resposta": "conforme_nao_conforme", "evidencia": "nenhuma", "permite_nao_aplicavel": false, "abre_ocorrencia_se_nao_conforme": true, "avisa_na_hora": true, "referencia": null, "reaproveita": "fechamento.caixa" },
+        { "id": "caixa.fundo", "texto": "Fundo de troco conferido", "criticidade": "critica", "resposta": "numero", "unidade_medida": "R$", "limites": null, "exige_cadastro": true, "evidencia": "nenhuma", "permite_nao_aplicavel": false, "abre_ocorrencia_se_nao_conforme": true, "avisa_na_hora": true, "referencia": "o valor esperado do fundo precisa ser cadastrado e aprovado — não está no papel", "reaproveita": null },
+        { "id": "caixa.teste", "texto": "Pedido de teste impresso corretamente", "criticidade": "normal", "resposta": "conforme_nao_conforme", "evidencia": "nenhuma", "permite_nao_aplicavel": false, "abre_ocorrencia_se_nao_conforme": true, "avisa_na_hora": false, "referencia": null, "reaproveita": null },
+        { "id": "caixa.divergencia", "texto": "Sem divergência ou falha na abertura", "criticidade": "critica", "resposta": "conforme_nao_conforme", "evidencia": "nenhuma", "permite_nao_aplicavel": false, "abre_ocorrencia_se_nao_conforme": true, "avisa_na_hora": true, "referencia": "divergência é ocorrência crítica: avisar no mesmo dia", "reaproveita": null }
+      ]
+    },
+    {
+      "titulo": "Registro fotográfico",
+      "dica": null,
+      "itens": [
+        { "id": "foto.unidade_pronta", "texto": "Foto geral da unidade pronta", "criticidade": "normal", "resposta": "conforme_nao_conforme", "evidencia": "foto_obrigatoria", "permite_nao_aplicavel": false, "abre_ocorrencia_se_nao_conforme": false, "avisa_na_hora": false, "referencia": null, "reaproveita": null }
+      ]
+    }
+  ],
+  "tabelas": [],
+  "observacoes_livres": true,
+  "assinaturas": ["Responsável pela abertura", "Conferência da gerência"]
+}

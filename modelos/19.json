@@ -1,0 +1,186 @@
+{
+ "codigo": "19",
+ "titulo": "Termo de Confidencialidade",
+ "blocos": [
+  {
+   "tipo": "titulo",
+   "texto": "TERMO DE CONFIDENCIALIDADE"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Este Termo de Confidencialidade (doravante denominado “Acordo”) é celebrado entre as partes, com o objetivo de proteger informações confidenciais reveladas em um contexto de negócios."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Identificação Das Partes"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "EMPREGADOR(A): {{empresa.razao_social}}, pessoa jurídica de direito privado inscrita no CNPJ sob o nº {{empresa.cnpj}}, ou pessoa física inscrita no Registro Geral (CPF) sob o nº {{pessoa.cpf}}, com sede/endereço na {{empresa.endereco}}, doravante denominado(a) EMPREGADOR(A)."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "EMPREGADO(A): {{pessoa.nome}}, {{pessoa.nacionalidade}}, {{pessoa.estado_civil}}, {{contrato.funcao}}, portador(a) do Registro Geral (CPF) sob o nº {{pessoa.cpf}}, residente e domiciliado(a) na [Endereço Completo do Empregado, não esquecer de colocar número, quadra, lote e CEP], doravante denominado(a) EMPREGADO(A)."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "As partes acima qualificadas, doravante denominadas em conjunto “Partes”, resolvem firmar o presente Termo de Confidencialidade, que será regido pelas cláusulas e condições seguintes:"
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 01: Do Objeto"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ O presente Acordo tem como objeto a proteção de informações confidenciais e sigilosas, sejam"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "elas técnicas, comerciais, financeiras, de marketing, de clientes, de fornecedores, de processos, de projetos, know-how, segredos industriais ou quaisquer outras informações divulgadas pela Parte Reveladora à Parte Receptora, de forma verbal, escrita, eletrônica ou por qualquer outro meio, a que o(a) EMPREGADO(A) venha a ter acesso em razão de sua relação com o(a) EMPREGADOR(A)."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 02: Do Conceiro De Informações Confidenciais"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Para fins deste Termo, “Informações Confidenciais” significam todas e quaisquer informações, de natureza técnica, comercial, financeira, operacional ou de qualquer outra natureza, de propriedade ou relacionadas ao(à) EMPREGADOR(A) que o(a) EMPREGADO(A) tomou conhecimento em razão do vínculo empregatício/contratual, sejam elas escritas, verbais, digitais ou em qualquer outro formato, cujas informações foram repassadas de forma direta ou indiretamente, por escrito, oralmente, visualmente, por meios eletrônicos ou por meio de observação, incluindo, mas não se limitando a:"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "●​ Dados de clientes, fornecedores, parceiros; ●​ Dados financeiros e estratégicos; ●​ Listas de clientes e fornecedores; ●​ Planos de negócios e marketing; ●​ Tecnologias, softwares e algoritmos; ●​ Segredos comerciais e industriais; ●​ Patentes pendentes e marcas registradas; ●​ Resultados de pesquisas e desenvolvimentos; ●​ Informações técnicas, comerciais, operacionais, estratégicas ou financeiras;"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "●​ Documentos internos, contratos, relatórios, senhas de acesso, softwares e sistemas; ●​ Informações pessoais de colaboradores e dados pessoais protegidos pela Lei Geral de Proteção de Dados – LGPD (Lei nº 13.709/2018). ●​ Qualquer outra informação que seja designada como confidencial ou que, pela sua natureza, deva ser considerada confidencial."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 03: Exceções À Confidencialidade"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1. Não serão consideradas Informações Confidenciais, e, portanto, não sujeitas às obrigações deste"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Acordo, aquelas informações que:"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "●​ Já eram de domínio público no momento da revelação; ●​ Tenham sido comprovadamente desenvolvidas de forma independente pela Parte Receptora, sem o uso das Informações Confidenciais da Parte Reveladora; ●​ Tenham sido legitimamente obtidas de terceiros, sem violação de qualquer obrigação de confidencialidade; ●​ Devam ser reveladas por força de lei, ordem judicial ou administrativa, ou em conformidade com as exigências de órgãos reguladores, desde que a Parte Receptora notifique previamente a Parte Reveladora sobre tal exigência, sempre que legalmente permitido."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 04: Das Obrigaçòes Do(A) Empregado(A)"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1. O(A) EMPREGADO(A)/COLABORADOR(A) se compromete a:"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "●​ Manter sigilo absoluto sobre todas as informações confidenciais a que tiver acesso; ●​ Não utilizar informações confidenciais em benefício próprio ou de terceiros, direta ou indiretamente; ●​ Não copiar, reproduzir, divulgar, compartilhar ou armazenar informações sem autorização prévia do(a) EMPREGADOR(A); ●​ Zelar pela guarda e segurança dos documentos, equipamentos e acessos disponibilizados; ●​ Comunicar imediatamente ao(à) EMPREGADOR(A) qualquer violação ou suspeita de violação de confidencialidade."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 05: Das Obrigações Da Parte Receptora"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1. A Parte Receptora se compromete a:"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "●​ Manter em sigilo absoluto todas as Informações Confidenciais recebidas da Parte Reveladora; ●​ Utilizar as Informações Confidenciais exclusivamente para a finalidade específica acordada entre as partes; ●​ Não reproduzir, copiar, divulgar, transmitir ou de qualquer forma disponibilizar as Informações Confidenciais a terceiros, sem o prévio consentimento por escrito da Parte Reveladora; ●​ Tomar todas as medidas razoáveis para proteger a confidencialidade das Informações Confidenciais, com o mesmo grau de cuidado que dedica à proteção de suas próprias informações confidenciais; ●​ Restringir o acesso às Informações Confidenciais apenas aos seus empregados, colaboradores, diretores ou agentes que tenham necessidade de conhecê-las para a finalidade acordada, e que estejam vinculados a obrigações de confidencialidade tão ou mais rigorosas que as previstas neste Acordo; ●​ Notificar imediatamente a Parte Reveladora sobre qualquer uso ou divulgação não autorizado das Informações Confidenciais de que venha a ter conhecimento."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 06: Prazo Da Confidencialidade"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1. A obrigação de confidencialidade ora assumida permanecerá em vigor durante toda a vigência do"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "vínculo contratual e subsistirá mesmo após seu término, por prazo indeterminado, salvo se as informações se tornarem públicas por meios lícitos e sem culpa do(a) EMPREGADO(A)."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 07: Da Devolução Ou Destruição Das Informações"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1. Em caso de desligamento, ou a qualquer momento mediante solicitação, o(a)"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "EMPREGADO(A)/COLABORADOR(A) se obriga a devolver todos os documentos, equipamentos, materiais ou acessos fornecidos pelo(a) EMPREGADOR(A), em perfeito estado de uso e conservação, sob pena de responsabilização pelos danos decorrentes da retenção indevida."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 08: Das Penalidades"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1. O descumprimento das obrigações aqui previstas sujeitará o(a) EMPREGADO(A)/COLABORADOR(A)"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "às penalidades trabalhistas cabíveis, incluindo a possibilidade de rescisão por justa causa, bem como à responsabilização civil e criminal por eventuais prejuízos causados ao(à) EMPREGADOR(A), sem prejuízo da adoção de medidas judiciais para reparação de danos materiais e morais."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 11: Da Ciência E Aceite"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1. O(A) EMPREGADO(A) declara ter lido, compreendido e aceitado integralmente as disposições deste"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Termo Aditivo, estando plenamente ciente de suas responsabilidades e consequências pelo uso indevido das ferramentas de comunicação."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "As partes ratificam todas as demais cláusulas do Contrato de Trabalho principal, e por estarem assim justos e contratados, assinam o presente instrumento em duas vias para que surta seus efeitos jurídicos e legais."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "{{empresa.cidade}}, {{data.dia}} de {{data.mes}} de {{data.ano}}."
+  },
+  {
+   "tipo": "espaco",
+   "altura": 18
+  },
+  {
+   "tipo": "assinatura",
+   "quem": "Empregado(a)",
+   "nome": "{{pessoa.nome}} — CPF {{pessoa.cpf}}"
+  },
+  {
+   "tipo": "assinatura",
+   "quem": "Empregador",
+   "nome": "{{empresa.razao_social}} — CNPJ {{empresa.cnpj}}"
+  }
+ ],
+ "campos_pendentes": [],
+ "ativo": true
+}

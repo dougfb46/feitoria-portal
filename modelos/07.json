@@ -1,0 +1,204 @@
+{
+ "codigo": "07",
+ "titulo": "Termo Aditivo ao Contrato de Trabalho - Monitoramenteo por Ca meras",
+ "blocos": [
+  {
+   "tipo": "titulo",
+   "texto": "TERMO ADITIVO AO CONTRATO DE TRABALHO"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Ambiente Monitorado por Câmeras"
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Identificação Das Partes"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "EMPREGADOR(A): {{empresa.razao_social}}, pessoa jurídica de direito privado inscrita no CNPJ sob o nº {{empresa.cnpj}}, ou pessoa física inscrita no Registro Geral (CPF) sob o nº {{pessoa.cpf}}, com sede/endereço na {{empresa.endereco}}, doravante denominado(a) EMPREGADOR(A)."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "EMPREGADO(A): {{pessoa.nome}}, {{pessoa.nacionalidade}}, {{pessoa.estado_civil}}, {{contrato.funcao}}, portador(a) do Registro Geral (CPF) sob o nº {{pessoa.cpf}}, residente e domiciliado(a) na [Endereço Completo do Empregado, não esquecer de colocar número, quadra, lote e CEP], doravante denominado(a) EMPREGADO(A)."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 01: Do Objeto"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ O presente Termo Aditivo tem como objeto a formalização e regulamentação do monitoramento"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "por câmeras no ambiente de trabalho do(a) EMPREGADOR(A), visando a segurança patrimonial, a proteção dos colaboradores, a prevenção de fraudes, a averiguação de incidentes e a melhoria dos processos de trabalho."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 02: Da Ciência E Consentimento"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ O(A) EMPREGADO(A) declara, para todos os fins de direito, ter ciência e consentir com a"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "instalação e operação de sistema de câmeras de segurança e monitoramento por vídeo nas dependências do(a) EMPREGADOR(A)."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2.​ O(A) EMPREGADO(A) reconhece que o monitoramento é realizado de forma lícita, transparente"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "e com finalidade legítima, não se destinando à vigilância ostensiva e abusiva sobre a vida privada ou intimidade dos empregados."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 03: Da Localização Das Câmeras"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ O monitoramento não será realizado em áreas de uso pessoal ou íntimo, como banheiros,"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "vestiários e refeitórios, respeitando a dignidade e a privacidade do(a) EMPREGADO(A), em conformidade com a Constituição Federal, a CLT e a LGPD (Lei nº 13.709/2018)."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2.​ O(A) EMPREGADOR(A) compromete-se a manter as câmeras instaladas de forma visível e a"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "sinalizar adequadamente as áreas monitoradas."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 04: Do Acesso E Da Utilização Das Imagens"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ O(A) EMPREGADO(A) reconhece que as imagens captadas pelo sistema de monitoramento não"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "estão disponíveis a empregados, colaboradores, prestadores de serviços ou terceiros em geral, sendo restritas à administração da empresa. O acesso somente poderá ocorrer mediante ordem judicial ou requisição de autoridade pública competente."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2.​ As imagens capturadas serão utilizadas exclusivamente para os fins previstos na Cláusula"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Primeira deste Termo Aditivo."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "3.​ O(A) EMPREGADOR(A) garante que o acesso às imagens será restrito a pessoas devidamente"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "autorizadas e que as imagens serão armazenadas de forma segura, conforme as diretrizes da Lei Geral de Proteção de Dados (LGPD – Lei nº 13.709/2018)."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "4.​ As imagens poderão ser utilizadas como prova em processos administrativos internos, processos"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "judiciais, ou para cooperação com autoridades policiais e judiciárias, quando houver suspeita ou ocorrência de ilícitos."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 05: Da Vigência E Alterações"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ Este Termo Aditivo passa a integrar o Contrato de Trabalho original, com vigência a partir da data"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "de sua assinatura."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2.​ Quaisquer alterações nas condições de monitoramento por câmeras, que impliquem em"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "mudança substancial para o(a) EMPREGADO(A), deverão ser formalizadas mediante novo Termo Aditivo."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 06: Das Disposições Finais"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ O(A) EMPREGADO(A) declara ter lido e compreendido todas as cláusulas e condições deste"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Termo Aditivo e manifesta sua plena concordância."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2.​ Este Termo Aditivo é celebrado em 02 (duas) vias de igual teor e forma, para que produza seus"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "devidos efeitos legais."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "As partes ratificam todas as demais cláusulas do Contrato de Trabalho principal, e por estarem assim justos e contratados, assinam o presente instrumento em duas vias, e na presença de duas testemunhas abaixo, para que surta seus efeitos jurídicos e legais."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "{{empresa.cidade}}, {{data.dia}} de {{data.mes}} de {{data.ano}}."
+  },
+  {
+   "tipo": "espaco",
+   "altura": 18
+  },
+  {
+   "tipo": "assinatura",
+   "quem": "Empregado(a)",
+   "nome": "{{pessoa.nome}} — CPF {{pessoa.cpf}}"
+  },
+  {
+   "tipo": "assinatura",
+   "quem": "Empregador",
+   "nome": "{{empresa.razao_social}} — CNPJ {{empresa.cnpj}}"
+  }
+ ],
+ "campos_pendentes": [],
+ "ativo": true
+}

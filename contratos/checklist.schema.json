@@ -1,0 +1,82 @@
+{
+  "_como_usar": [
+    "Este arquivo é o CONTRATO de um modelo de checklist do Portal Feitoria.",
+    "Um arquivo = um modelo = um bloco do checklist impresso (são 8 hoje).",
+    "Você pode gerar esses arquivos em qualquer conversa, com o material técnico em mãos,",
+    "e depois importar pela tela de gestão. Cada importação cria uma VERSÃO nova e",
+    "desativa a anterior; execução já feita continua apontando para a versão que foi usada.",
+    "É isso que permite corrigir e reenviar mais tarde sem apagar o histórico.",
+    "Regra que não se quebra: nunca inventar limite numérico de temperatura, tempo ou",
+    "pressão. Se o material não trouxer o número, o campo fica null e o item nasce",
+    "como 'exige_cadastro': true — a tela cobra o cadastro aprovado antes de usar."
+  ],
+
+  "codigo": "string · obrigatório · identificador estável do modelo, ex. 'K01'. Não muda entre versões.",
+  "titulo": "string · obrigatório · como aparece na tela, ex. 'Preparação da equipe e abertura geral'",
+  "quando": "string · obrigatório · em palavras, ex. 'Antes de abrir as portas · 1º checklist do dia'",
+  "setor": "string · um de: equipe, salao, bar, chopeira, cozinha, estoque, geral",
+  "frequencia": "string · um de: por_turno, diaria, a_cada_entrega, a_cada_troca, ronda, semanal, por_evento",
+  "turnos": "array de string · vazio = qualquer turno · valores: almoco, noite",
+  "unidades": "array de string · vazio = todas · valores: pub_mogi, prainha",
+  "responsavel_padrao": "string · função esperada, ex. 'responsável do turno'. Não é nome de pessoa.",
+  "exige_revisao": "boolean · true = execução vai para a fila da liderança antes de valer",
+  "nota_final": {
+    "usa": "boolean · o bloco termina com nota de 0 a 10?",
+    "justifica_abaixo_de": "number · abaixo disso, justificativa escrita obrigatória (o papel usa 8)",
+    "plano_de_acao_abaixo_de": "number ou null · abaixo disso, abre plano de ação. Só preencher onde o papel exige — não espalhar para todos os blocos."
+  },
+  "grupos": [
+    {
+      "titulo": "string · ex. 'Equipe'",
+      "dica": "string ou null · o texto pequeno ao lado do título no papel",
+      "itens": [
+        {
+          "id": "string · único dentro do modelo, ex. 'equipe.uniforme'. Estável entre versões: é por ele que o histórico se liga.",
+          "texto": "string · a instrução, curta e no imperativo do dia a dia",
+          "criticidade": "string · um de: normal, critica · 'critica' = sanitário, segurança ou dinheiro (no papel é o quadradinho de borda grossa)",
+          "resposta": "string · um de: conforme_nao_conforme, numero, texto, escolha, tabela",
+          "opcoes": "array de string · só quando resposta = escolha",
+          "unidade_medida": "string ou null · só quando resposta = numero, ex. '°C', 'R$', 'litros'",
+          "limites": "objeto ou null · {minimo, maximo} · NUNCA inventar. null quando o material não traz o número.",
+          "exige_cadastro": "boolean · true quando o item depende de um limite/padrão que ainda precisa ser aprovado",
+          "evidencia": "string · um de: nenhuma, foto_obrigatoria, foto_se_nao_conforme, anexo",
+          "permite_nao_aplicavel": "boolean · false nos itens críticos",
+          "abre_ocorrencia_se_nao_conforme": "boolean · true faz a não conformidade nascer como ocorrência com responsável e prazo",
+          "avisa_na_hora": "boolean · true = avisar a gestão no ato, além de registrar",
+          "referencia": "string ou null · POP, norma ou cláusula que sustenta o item",
+          "reaproveita": "string ou null · quando o dado já existe em outro módulo e não deve ser digitado de novo. Valores: etiquetas.validade, etiquetas.foto, fechamento.caixa, contagem.estoque, ponto.presenca"
+        }
+      ]
+    }
+  ],
+  "tabelas": [
+    {
+      "id": "string · ex. 'temperatura'",
+      "titulo": "string",
+      "dica": "string ou null",
+      "colunas": [
+        {
+          "id": "string",
+          "titulo": "string",
+          "tipo": "string · um de: texto, numero, hora, escolha, conforme_nao_conforme",
+          "opcoes": "array de string · só quando tipo = escolha",
+          "unidade_medida": "string ou null",
+          "limites": "objeto ou null · mesma regra: não inventar"
+        }
+      ],
+      "linhas_fixas": "array de string · rótulos que já vêm prontos, ex. os equipamentos. Vazio = o executor adiciona linhas.",
+      "linhas_livres": "boolean · o executor pode acrescentar linha?"
+    }
+  ],
+  "observacoes_livres": "boolean · o bloco termina com campo aberto de observações?",
+  "assinaturas": "array de string · quem assina no fim, ex. ['Responsável pela execução', 'Conferência da gerência']",
+
+  "_estados_que_o_sistema_usa": {
+    "item": ["pendente", "conforme", "nao_conforme", "nao_aplicavel"],
+    "_nota_item": "Branco é pendente e nunca vira conforme sozinho. 'nao_aplicavel' exige motivo escrito.",
+    "execucao": ["programada", "em_andamento", "enviada", "devolvida", "validada"],
+    "_nota_execucao": "Devolvida volta para a MESMA execução, com o motivo da liderança. Corrigir e reenviar não cria execução nova nem crédito novo.",
+    "ocorrencia": ["aberta", "em_tratamento", "resolvida", "verificada"],
+    "_nota_ocorrencia": "Ocorrência tem vida própria: continua aberta mesmo depois de a execução ser validada. Execução bem feita que aponta um problema é execução bem feita."
+  }
+}

@@ -1,0 +1,335 @@
+{
+ "codigo": "16",
+ "titulo": "Termo de Acordo Individual de Teletrabalho",
+ "blocos": [
+  {
+   "tipo": "titulo",
+   "texto": "TERMO DE ACORDO INDIVIDUAL DE TELETRABALHO"
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Identificação Das Partes"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "EMPREGADOR(A): {{empresa.razao_social}}, pessoa jurídica de direito privado inscrita no CNPJ sob o nº {{empresa.cnpj}}, ou pessoa física inscrita no Registro Geral (CPF) sob o nº {{pessoa.cpf}}, com sede/endereço na {{empresa.endereco}}, doravante denominado(a) EMPREGADOR(A)."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "EMPREGADO(A): {{pessoa.nome}}, {{pessoa.nacionalidade}}, {{pessoa.estado_civil}}, {{contrato.funcao}}, portador(a) do Registro Geral (CPF) sob o nº {{pessoa.cpf}}, residente e domiciliado(a) na [Endereço Completo do Empregado, não esquecer de colocar número, quadra, lote e CEP], doravante denominado(a) EMPREGADO(A)."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Considerando que a legislação trabalhista brasileira, especificamente o artigo 75-B da Consolidação das Leis do Trabalho (CLT), com redação dada pela Lei nº 13.467/2017 e alterações posteriores, refere-se ao regime de \"teletrabalho\" para as atividades realizadas fora das dependências do empregador, com a utilização de tecnologias de informação e comunicação;"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Considerando que a expressão \"teletrabalho\" é a mais adequada do ponto de vista legal e jurídico, englobando de forma mais abrangente as diferentes modalidades de trabalho remoto, enquanto \"home office\" é uma expressão mais coloquial que se refere especificamente ao trabalho realizado em casa, uma das formas de teletrabalho;"
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 01: Do Objeto"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ O presente termo tem por objeto formalizar o regime de teletrabalho para o(a) EMPREGADO(A),"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "que passará a desempenhar suas atividades laborais remotamente, utilizando-se dos recursos tecnológicos necessários, a partir da data de [[___/___/]]."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 02: Regime De Teletrabalho"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ O regime de teletrabalho será aplicado à [[totalidade ou parte]] da jornada de trabalho do(a)"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "EMPREGADO(A). [NA HIPÓTESE DE JORNADA PARCIAL, SEGUE CLÁUSULA: ●​ O(a) EMPREGADO(A) exercerá suas atividades em regime de teletrabalho parcial, sendo obrigado(a) a comparecer presencialmente na sede da EMPRESA, localizada em {{pessoa.endereco}}, nos dias [especificar os dias presenciais, ex.: segundas, quartas e sextas-feiras], no horário habitual de trabalho."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "●​ Nos demais dias da semana, o(a) EMPREGADO(A) prestará serviços em regime remoto, a partir de seu domicílio localizado em [[endereço residencial do empregado]] ou em outro local previamente autorizado pela EMPREGADOR, observada a jornada de trabalho contratual. ●​ A alteração dos dias de comparecimento presencial poderá ser realizada pela EMPRESA, de forma temporária ou definitiva, mediante comunicação prévia de no mínimo dias, de modo a atender às necessidades organizacionais."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2.​ A alteração do regime de teletrabalho para o regime presencial poderá ocorrer por"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "determinação do EMPREGADOR, garantido prazo de transição mínimo de 15 (quinze) dias para adaptação do(a) EMPREGADO(A), ou por acordo entre as partes."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 03: Da Infraestrutura E Equipamentos"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1. O(A) EMPREGADO(A) declara possuir, em sua residência ou local previamente autorizado pelo"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "EMPREGADOR, espaço físico adequado para o desempenho de suas atividades em regime de teletrabalho, garantindo que o ambiente disponha de mesa ou superfície apropriada, cadeira ergonômica, iluminação adequada e ventilação mínima, de modo a preservar sua saúde e bem-estar."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2. O EMPREGADOR poderá fornecer, em regime de comodato, os equipamentos tecnológicos"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "necessários à execução das atividades laborais, tais como computador, monitor, teclado, mouse e softwares licenciados, permanecendo tais bens como propriedade da EMPRESA. Nesse caso, será firmado Termo de Responsabilidade específico, que regulará a guarda, conservação, manutenção e devolução dos equipamentos."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "3. As despesas ordinárias relacionadas à infraestrutura, como energia elétrica, acesso à internet banda"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "larga com velocidade mínima de [[X Mbps]] e mobiliário adequado, serão de responsabilidade exclusiva do(a) [[EMPREGADO(A)/EMPREGADOR]], [[salvo previsão diversa em instrumento coletivo de trabalho]]."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "4. Eventuais ressarcimentos pelo EMPREGADOR deverão estar previamente autorizados e"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "expressamente definidos em aditivo contratual, não sendo admitidas compensações tácitas ou automáticas."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 04: Jornada De Trabalho E Controle De Ponto"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1. A jornada de trabalho do(a) EMPREGADO(A) em regime de teletrabalho será a mesma praticada no"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "regime presencial, fixada em [[8 (oito)]] horas diárias e [[44 (quarenta e quatro)]] horas semanais, de segunda a sexta-feira, com intervalo para repouso e alimentação de [[1 (uma)]] hora, salvo disposição diversa em contrato individual ou instrumento coletivo."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2. O controle da jornada será realizado por meio do sistema eletrônico de ponto adotado pelo"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "EMPREGADOR, acessível remotamente, com login e senha individualizados do(a) EMPREGADO(A). O sistema registrará, de forma automática, os horários de início e término da jornada, intervalos intrajornada e eventuais horas extraordinárias."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "3. Para fins de conformidade, o EMPREGADOR poderá utilizar ferramentas tecnológicas de"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "monitoramento de atividades, como softwares de registro de login/logout em sistemas corporativos, autenticação de rede (VPN) ou relatórios automatizados de produtividade. Em nenhuma hipótese tais ferramentas terão finalidade de invadir a privacidade do(a) EMPREGADO(A), restringindo-se ao acompanhamento objetivo da jornada de trabalho."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "4. Nos casos em que o(a) EMPREGADO(A) for contratado para atividades por tarefa ou produção, e não"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "por jornada, ficará dispensado do controle de ponto, nos termos do artigo 62, inciso III, da CLT, hipótese em que será estabelecido instrumento contratual próprio para definir as metas e entregas pactuadas."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 05: Saúde E Segurança No Teletrabalho"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1. O EMPREGADOR compromete-se a instruir o(a) EMPREGADO(A), de forma clara, expressa e"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "ostensiva, sobre as normas de saúde, ergonomia e segurança aplicáveis ao regime de teletrabalho, por meio de treinamentos periódicos, cartilhas digitais, comunicados internos e demais materiais de orientação."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2. O(A) EMPREGADO(A) declara-se ciente dessas instruções e assina o competente Termo de"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Responsabilidade em Saúde e Segurança no Teletrabalho, comprometendo-se a observar integralmente as diretrizes recebidas, bem como a organizar seu ambiente de trabalho de forma compatível com as normas de ergonomia e segurança estabelecidas."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "3. O(A) EMPREGADO(A) deverá informar de imediato ao EMPREGADOR qualquer alteração em suas"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "condições de saúde ou no ambiente de teletrabalho que possa comprometer sua integridade física, mental ou a regularidade da prestação dos serviços, responsabilizando-se por seguir as recomendações de prevenção e reportar riscos de acidentes."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 06: Comunicação E Monitoramento"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1. As comunicações entre o EMPREGADOR e o(a) EMPREGADO(A) no regime de teletrabalho deverão"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "ser realizadas exclusivamente pelos canais oficiais disponibilizados pela Empresa, tais como e-mail corporativo, plataforma de mensagens instantâneas corporativa (ex.: Microsoft Teams, Slack ou equivalente) e videoconferências em plataformas autorizadas, sempre dentro do horário regular de trabalho, salvo situações excepcionais previamente justificadas."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2. O EMPREGADOR poderá monitorar, de forma proporcional e razoável, as atividades do(a)"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "EMPREGADO(A) durante o teletrabalho, por meio de registros de acesso a sistemas, relatórios de produtividade, acompanhamento de tarefas e reuniões periódicas de alinhamento, assegurando que tais medidas tenham finalidade exclusivamente profissional e respeitem o direito à privacidade do(a) EMPREGADO(A), em conformidade com a legislação vigente e com a Lei Geral de Proteção de Dados (Lei nº 13.709/2018)."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 07: Confidencialidade E Proteção De Dados"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1. O(A) EMPREGADO(A) compromete-se a manter sigilo absoluto sobre todas as informações,"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "documentos, dados, estratégias, segredos comerciais e demais conteúdos a que tiver acesso em razão de suas atividades, sejam físicos ou digitais, pertencentes ao EMPREGADOR ou a terceiros vinculados, não podendo utilizá-los em benefício próprio ou de terceiros, sob qualquer pretexto, mesmo após o término do contrato de trabalho."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2. O(A) EMPREGADO(A) deverá zelar pela integridade e segurança dos dados e equipamentos"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "fornecidos pelo EMPREGADOR, observando as políticas internas de tecnologia da informação, segurança cibernética e proteção de dados pessoais, em conformidade com a Lei Geral de Proteção de Dados - LGPD (Lei nº 13.709/2018)."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "3. O uso de sistemas, plataformas e credenciais de acesso é pessoal e intransferível, sendo"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "expressamente vedado ao(à) EMPREGADO(A) compartilhar senhas ou permitir que terceiros utilizem recursos tecnológicos do EMPREGADOR. A inobservância desta obrigação poderá configurar falta grave, ensejando a aplicação de medidas disciplinares, inclusive a rescisão por justa causa, sem prejuízo da responsabilização civil e criminal cabível."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 08: Sanções Disciplinares"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1. O descumprimento das regras estabelecidas neste Termo ou na Política de Teletrabalho poderá"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "ensejar a aplicação de medidas disciplinares, inclusive rescisão contratual por justa causa, conforme previsto na CLT."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 09: Da Ciência E Aceite"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1. O(A) EMPREGADO(A) declara ter lido, compreendido e aceitado integralmente as disposições deste"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Termo Aditivo, estando plenamente ciente de suas responsabilidades e consequências pelo uso indevido das ferramentas de comunicação."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2. Fica estabelecido que o presente Termo de Acordo Individual de Teletrabalho possui natureza de"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "aditivo contratual, integrando-se ao Contrato de Trabalho original e demais documentos firmados entre as partes, sem substituí-los ou revogá-los, salvo naquilo que for expressamente previsto em contrário."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "3. Todas as demais disposições contratuais e regulamentares permanecem inalteradas e em pleno"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "vigor, aplicando-se de forma complementar ao regime de teletrabalho ora ajustado."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "As partes ratificam todas as demais cláusulas do Contrato de Trabalho principal, e por estarem assim justos e contratados, assinam o presente instrumento em duas vias para que surta seus efeitos jurídicos e legais."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "{{empresa.cidade}}, {{data.dia}} de {{data.mes}} de {{data.ano}}."
+  },
+  {
+   "tipo": "espaco",
+   "altura": 18
+  },
+  {
+   "tipo": "assinatura",
+   "quem": "Empregado(a)",
+   "nome": "{{pessoa.nome}} — CPF {{pessoa.cpf}}"
+  },
+  {
+   "tipo": "assinatura",
+   "quem": "Empregador",
+   "nome": "{{empresa.razao_social}} — CNPJ {{empresa.cnpj}}"
+  }
+ ],
+ "campos_pendentes": [
+  "1 (uma)",
+  "44 (quarenta e quatro)",
+  "8 (oito)",
+  "EMPREGADO(A)/EMPREGADOR",
+  "X Mbps",
+  "___/___/",
+  "endereço residencial do empregado",
+  "salvo previsão diversa em instrumento coletivo de trabalho",
+  "totalidade ou parte"
+ ],
+ "ativo": false,
+ "motivo_inativo": "Teletrabalho não se aplica: toda a operação é presencial no salão, bar e cozinha."
+}

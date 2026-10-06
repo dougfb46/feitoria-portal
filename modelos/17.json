@@ -1,0 +1,58 @@
+{
+ "codigo": "17",
+ "titulo": "Carta de Nomeac a o de Cargo de Confianc a",
+ "blocos": [
+  {
+   "tipo": "titulo",
+   "texto": "CARTA DE NOMEAÇÃO PARA CARGO DE CONFIANÇA"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "(Art. 62, II DA CLT) Sr(a). {{pessoa.nome}}"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Temos a satisfação de comunicar que, a partir desta data, Vossa Senhoria passa a exercer o cargo de {{contrato.funcao}} da {{empresa.nome_fantasia}} (doravante denominada EMPREGADORA), com plenos poderes para gerir todas as rotinas administrativas e operacionais do estabelecimento, assumindo a responsabilidade integral pela consecução dos objetivos da empresa. Para o desempenho de suas funções, ficam-lhe asseguradas, entre outras, as seguintes atribuições e prerrogativas: ●​ Admitir e dispensar empregados; ●​ Aplicar medidas disciplinares aos empregados, tais como advertências e suspensões; ●​ Estabelecer escalas de horário e avaliar o desempenho de seus subordinados; ●​ Realizar compras; ●​ Autorizar pagamentos e despesas de sua competência; ●​ Negociar condições, preços e quantidades de mercadorias, bem como adquirir e assinar pedidos de materiais; ●​ Cumprir e fazer cumprir as políticas internas e regulamentos da empresa, além de exercer quaisquer outros poderes de mando e gestão necessários ao fiel desempenho do cargo de confiança."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Nos termos do artigo 62, inciso II, da Consolidação das Leis do Trabalho (CLT), Vossa Senhoria exercerá cargo de confiança, ficando dispensada do controle de horário e ponto, bem como desobrigada do direito à percepção de horas extras, considerando a plena autonomia para a execução de suas atribuições."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Esta Carta de Nomeação integra o contrato de trabalho firmado entre as partes, prevalecendo, em caso de divergência, o disposto no art. 62, II, da CLT."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Em razão das responsabilidades ora assumidas, Vossa Senhoria fará jus a uma gratificação de função correspondente a 40% (quarenta por cento) sobre o salário base, em substituição à gratificação anteriormente percebida até a presente data."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "As atribuições aqui definidas integram as políticas permanentes da empresa, sendo certo que os resultados obtidos, assim como o desempenho funcional de Vossa Senhoria, serão avaliados periodicamente, em especial mediante análise anual de desempenho."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Atenciosamente,"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "{{empresa.cidade}}, {{data.dia}} de {{data.mes}} de {{data.ano}}."
+  },
+  {
+   "tipo": "espaco",
+   "altura": 18
+  },
+  {
+   "tipo": "assinatura",
+   "quem": "Empregado(a)",
+   "nome": "{{pessoa.nome}} — CPF {{pessoa.cpf}}"
+  },
+  {
+   "tipo": "assinatura",
+   "quem": "Empregador",
+   "nome": "{{empresa.razao_social}} — CNPJ {{empresa.cnpj}}"
+  }
+ ],
+ "campos_pendentes": [],
+ "ativo": true
+}

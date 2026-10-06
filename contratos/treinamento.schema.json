@@ -1,0 +1,66 @@
+{
+  "_como_usar": [
+    "Contrato de um treinamento do Portal Feitoria. Um arquivo = um treinamento.",
+    "Gere em qualquer conversa, junto com o material técnico, e importe pela tela de gestão.",
+    "Cada importação cria uma VERSÃO nova. Quem concluiu a versão antiga continua concluído",
+    "nela; reciclagem é atribuição nova, com a versão nova — não é o mesmo evento.",
+    "Regra de crédito: uma conclusão elegível por pessoa por atribuição. Reassistir não credita",
+    "de novo, repetir a mesma avaliação não credita de novo.",
+    "Regra de conteúdo: abrir um vídeo não é conclusão. Sem verificação de aprendizagem,",
+    "'gera_certificado' e 'coins' precisam ficar em zero/false — é o que separa treinamento de aviso."
+  ],
+
+  "codigo": "string · estável, ex. 'T01'",
+  "titulo": "string · ex. 'Identificação e validade'",
+  "linha": "string · o tema, aparece na capa como sobretítulo, ex. 'Operação com cuidado'",
+  "resumo": "string · uma ou duas frases: o que a pessoa vai saber fazer depois",
+  "publico": {
+    "funcoes": "array de string · vazio = todos · ex. ['cozinha','bar','atendimento']",
+    "vinculos": "array de string · vazio = todos · ex. ['clt','freela_fixo','freela_variavel']",
+    "unidades": "array de string · vazio = todas"
+  },
+  "obrigatorio": "boolean · entra na lista de pendências da pessoa",
+  "prazo_dias": "number ou null · dias após a atribuição",
+  "reciclagem_meses": "number ou null · null = não recicla",
+  "duracao_min": "number · minutos estimados, aparece como '8 min'",
+  "etapas": [
+    {
+      "id": "string · estável, ex. 'e1'",
+      "tipo": "string · um de: texto, imagem, video, documento, pratica",
+      "titulo": "string",
+      "corpo": "string · o conteúdo em si, quando tipo = texto. Markdown simples.",
+      "url": "string ou null · quando tipo = video ou documento. Link público ou caminho no bucket.",
+      "legenda": "string ou null · quando tipo = imagem",
+      "exige_confirmacao": "boolean · a pessoa precisa marcar que leu/assistiu antes de seguir"
+    }
+  ],
+  "verificacao": {
+    "usa": "boolean · false = não gera certificado nem Coins",
+    "acertos_minimos": "number · quantas questões a pessoa precisa acertar",
+    "tentativas": "number ou null · null = sem limite; a tentativa extra não gera crédito novo",
+    "questoes": [
+      {
+        "id": "string · estável",
+        "pergunta": "string",
+        "alternativas": [
+          { "texto": "string", "correta": "boolean", "retorno": "string ou null · o que a pessoa lê ao escolher esta" }
+        ]
+      }
+    ]
+  },
+  "certificado": {
+    "gera": "boolean",
+    "titulo": "string · o que sai impresso, ex. 'Certificado de treinamento — Identificação e validade'",
+    "validade_meses": "number ou null",
+    "texto": "string · o corpo do certificado. Marcadores disponíveis: {{nome}}, {{cargo}}, {{empresa}}, {{cnpj}}, {{titulo}}, {{duracao}}, {{data}}, {{versao}}"
+  },
+  "coins": "number · 0 quando não há verificação de aprendizagem",
+  "referencias": "array de string · POP, norma ou material de origem que sustenta o conteúdo",
+
+  "_o_que_o_sistema_guarda": [
+    "atribuição: quem, qual versão, quando, prazo",
+    "progresso: etapa alcançada, sem apagar o anterior",
+    "tentativas: cada uma com data e resultado",
+    "conclusão: data, versão, acertos — e é ela que gera certificado e crédito, uma vez"
+  ]
+}

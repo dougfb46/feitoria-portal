@@ -1,0 +1,70 @@
+{
+ "codigo": "21",
+ "titulo": "Cla usula de na o Concorre ncia",
+ "blocos": [
+  {
+   "tipo": "titulo",
+   "texto": "CLÁUSULA DE NÃO CONCORRÊNCIA"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Prezado(a) Empreendedor(a),"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Com grande satisfação, apresento a você mais um documento essencial para a proteção jurídica da sua micro ou pequena empresa. Não é em toda modalidade contratual que a cláusula de não concorrência será necessária, motivo pelo qual decidi colocá-la à parte, fora do contrato individual de trabalho. Seguem orientações práticas para o (bom) uso."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Instruções de Uso Quando usar: ●​ Em contratos que envolvem empregados com acesso a informações estratégicas: gestores, coordenadores, vendedores-chave, profissionais de tecnologia, etc. ●​ Evitar usar em funções operacionais comuns, pois pode ser considerado abusivo. Forma de inclusão: ●​ Contrato de Trabalho inicial: inserir a cláusula já no corpo do contrato. ●​ Termo Aditivo: pode ser incluída posteriormente, mediante acordo escrito entre as partes. Regras de validade: ●​ Limitação de prazo: geralmente até 12 meses após a rescisão. ●​ Delimitação geográfica: definir região (ex.: mesma cidade, estado ou raio em km). ●​ Contrapartida financeira: em determinadas situações sugiro que conste obrigação de pagar valor ao empregado durante o período da restrição (a jurisprudência exige essa compensação para evitar enriquecimento sem causa). Riscos se mal aplicada: ●​ Se a cláusula for genérica, desproporcional (ex.: 5 anos em todo o Brasil) ou sem compensação financeira, há alta chance de nulidade. ●​ Pode gerar passivo trabalhista se usada de forma abusiva."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Modelo Prático de Aditivo"
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Termo Aditivo De Não Concorrência"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Pelo presente aditivo, as partes ajustam que, após a rescisão do contrato de trabalho, o(a) EMPREGADO(A) se compromete a não exercer atividade concorrente com a do(a) EMPREGADOR(A) pelo prazo de [[12 meses]], na região de [[cidade/estado/raio km]], recebendo, como compensação, o valor de [[X% da última remuneração mensal]] por cada mês de restrição."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Modelo Prático de Cláusula de Não Concorrência"
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula : Da Não Concorrência"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Durante a vigência deste contrato, e pelo prazo de até [[12 (doze)]] meses após a sua rescisão, independentemente do motivo, o(a) EMPREGADO(A) obriga-se a não exercer, direta ou indiretamente, atividades concorrentes às do(a) EMPREGADOR(A), seja como sócio, empregado, prestador de serviços, consultor, administrador ou de qualquer outra forma, em empresas que atuem no mesmo ramo de atividade, no raio de [[X km / região específica]], salvo autorização expressa do(a) EMPREGADOR(A). Em contrapartida à restrição imposta, o(a) EMPREGADOR(A) compromete-se a pagar ao(à) EMPREGADO(A) compensação equivalente a [[X% da remuneração mensal]] durante o período de vigência da obrigação pós-contratual, em conformidade com os princípios da razoabilidade e proporcionalidade reconhecidos pela jurisprudência trabalhista."
+  },
+  {
+   "tipo": "espaco",
+   "altura": 18
+  },
+  {
+   "tipo": "assinatura",
+   "quem": "Empregado(a)",
+   "nome": "{{pessoa.nome}} — CPF {{pessoa.cpf}}"
+  },
+  {
+   "tipo": "assinatura",
+   "quem": "Empregador",
+   "nome": "{{empresa.razao_social}} — CNPJ {{empresa.cnpj}}"
+  }
+ ],
+ "campos_pendentes": [
+  "12 (doze)",
+  "12 meses",
+  "X km / região específica",
+  "X% da remuneração mensal",
+  "X% da última remuneração mensal",
+  "cidade/estado/raio km"
+ ],
+ "ativo": false,
+ "motivo_inativo": "Não concorrência pós-contratual exige indenizar o ex-empregado em, no mínimo, a remuneração mensal multiplicada pelos meses de restrição (jurisprudência do TST). Para funções operacionais de bar, é desproporcional e tende a ser declarada nula. A proteção real de receitas e fichas técnicas vem do Termo de Confidencialidade (19)."
+}

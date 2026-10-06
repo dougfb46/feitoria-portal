@@ -1,0 +1,83 @@
+{
+ "codigo": "22",
+ "titulo": "Termo de Responsabilidade por Treinamento Po s-Admissa o",
+ "blocos": [
+  {
+   "tipo": "titulo",
+   "texto": "TERMO DE RESPONSABILIDADE POR TREINAMENTO PÓS ADMISSÃO"
+  },
+  {
+   "tipo": "campos",
+   "itens": [
+    {
+     "rotulo": "Empregador",
+     "valor": "{{empresa.razao_social}} — CNPJ {{empresa.cnpj}}"
+    },
+    {
+     "rotulo": "Endereço",
+     "valor": "{{empresa.endereco}}, {{empresa.cidade}}/{{empresa.estado}}"
+    },
+    {
+     "rotulo": "Empregado(a)",
+     "valor": "{{pessoa.nome}}"
+    },
+    {
+     "rotulo": "CPF",
+     "valor": "{{pessoa.cpf}}"
+    },
+    {
+     "rotulo": "Nacionalidade / estado civil",
+     "valor": "{{pessoa.nacionalidade}}, {{pessoa.estado_civil}}"
+    },
+    {
+     "rotulo": "Cargo / função",
+     "valor": "{{contrato.funcao}}"
+    }
+   ]
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Declaração"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Eu, acima qualificado(a), declaro para os devidos fins que comprometo-me a participar ativamente dos treinamentos pós-admissão, conforme cronograma e modalidade (presencial ou online) estabelecidos pela Empresa. Entendo que a minha participação e assimilação do conteúdo são essenciais para o bom desempenho das minhas funções e para a minha integração na equipe. Fui informado sobre a importância de:"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "Registrar minha presença nos treinamentos, conforme os métodos estabelecidos (assinatura, sistema eletrônico, etc.).",
+    "Manter a confidencialidade das informações compartilhadas durante os treinamentos, quando aplicável.",
+    "Cumprir as diretrizes e normas internas da empresa relativas aos treinamentos."
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Estou ciente de que a não participação injustificada nos treinamentos ou o descumprimento das normas internas poderá acarretar as medidas disciplinares cabíveis, conforme previsto na legislação trabalhista."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "{{empresa.cidade}}, {{data.dia}} de {{data.mes}} de {{data.ano}}."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Assinaturas:"
+  },
+  {
+   "tipo": "espaco",
+   "altura": 18
+  },
+  {
+   "tipo": "assinatura",
+   "quem": "Empregado(a)",
+   "nome": "{{pessoa.nome}} — CPF {{pessoa.cpf}}"
+  },
+  {
+   "tipo": "assinatura",
+   "quem": "Empregador",
+   "nome": "{{empresa.razao_social}} — CNPJ {{empresa.cnpj}}"
+  }
+ ],
+ "campos_pendentes": [],
+ "ativo": true
+}

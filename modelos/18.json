@@ -1,0 +1,222 @@
+{
+ "codigo": "18",
+ "titulo": "Termo Aditivo ao Contrato de Trabalho - Cargo de Confianc a",
+ "blocos": [
+  {
+   "tipo": "titulo",
+   "texto": "TERMO ADITIVO AO CONTRATO DE TRABALHO:"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Nomeação para Cargo de Confiança"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Este infoproduto tem como objetivo auxiliar micro e pequenos empresários na correta formalização da nomeação de um empregado para cargo de confiança, por meio de um termo aditivo ao contrato de trabalho. É fundamental que esta alteração contratual seja feita de maneira clara e em conformidade com a legislação trabalhista brasileira, em especial o Art. 62, inciso II, da CLT, que trata dos empregados não sujeitos a controle de jornada."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Instruções de Preenchimento e Uso"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Antes de preencher o termo aditivo, leia atentamente as seguintes instruções: ●​ Identificação das Partes: Preencha com os dados completos da empresa e do empregado. ●​ Cargo Anterior e Novo Cargo: Indique o cargo que o empregado ocupava e o novo cargo de confiança para o qual está sendo nomeado. ●​ Remuneração e Gratificação de Função: Especifique o valor da gratificação de função, que deve ser de, no mínimo, 40% do salário efetivo do cargo. Esta gratificação é um requisito legal para a configuração do cargo de confiança. ●​ Poderes de Mando e Gestão: Descreva de forma detalhada as novas responsabilidades e os poderes de mando, gestão e fiscalização que o empregado passará a exercer. É crucial que estas atribuições demonstrem a real fidúcia e a autonomia do cargo. ●​ Assinaturas: O termo aditivo deve ser assinado pela empresa (representada por seu sócio administrador ou procurador) e pelo empregado, na presença de duas testemunhas. ●​ Vias: Faça duas vias de igual teor e forma, ficando uma com a empresa e outra com o empregado."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Siga com segurança para a nomeação de um talento."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Bem utilizado, agregará muito valor no seu negócio."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Termo Aditivo Ao Contrato De Trabalho"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Nomeação Cargo de Confiança"
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Identificação Das Partes"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "EMPREGADOR(A): {{empresa.razao_social}}, pessoa jurídica de direito privado inscrita no CNPJ sob o nº {{empresa.cnpj}}, ou pessoa física inscrita no Registro Geral (CPF) sob o nº {{pessoa.cpf}}, com sede/endereço na {{empresa.endereco}}, doravante denominado(a) EMPREGADOR(A)."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "EMPREGADO(A): {{pessoa.nome}}, {{pessoa.nacionalidade}}, {{pessoa.estado_civil}}, {{contrato.funcao}}, portador(a) do Registro Geral (CPF) sob o nº {{pessoa.cpf}}, residente e domiciliado(a) na [Endereço Completo do Empregado, não esquecer de colocar número, quadra, lote e CEP], doravante denominado(a) EMPREGADO(A)."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Considerando que o(a) EMPREGADO(A) foi admitido(a) na Empresa {{empresa.razao_social}} em {{contrato.data_assinatura_original}}, para exercer o cargo de {{contrato.cargo_anterior}};"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Considerando a necessidade e o interesse do(a) EMPREGADOR(A) em atribuir ao(à) EMPREGADO(A) funções de maior responsabilidade e fidúcia, que se enquadram na definição legal de cargo de confiança, nos termos do Art. 62, inciso II, da Consolidação das Leis do Trabalho (CLT);"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "RESOLVEM as partes, de comum acordo, aditar o Contrato de Trabalho original mediante as seguintes cláusulas e condições:"
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 01: Alteração De Cargo E Função"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ O(A) EMPREGADO(A), a partir de {{data.completa}}, passa a ser nomeado para o cargo de"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "confiança de [NOME DO CARGO DEVE CONSTAR DIREÇÃO, GERÊNCIA, COORDENAÇÃO OU EQUIVALENTE], em substituição ao cargo anteriormente ocupado."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 02: Atribuições E Poderes"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1. O(A) EMPREGADO(A), no exercício do novo cargo de confiança, passa a deter poderes de mando,"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "gestão e fiscalização, com autonomia para [DESCREVER AS ATRIBUIÇÕES E PODERES DE MANDO E GESTÃO, ex: tomar decisões estratégicas, contratar e demitir funcionários, gerenciar equipes, aprovar orçamentos, etc]."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Modelo Detalhadinho De Como Pode Ser A Descrição:"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Para o desempenho do cargo de confiança, o(a) EMPREGADO(A) atuará como representante do(a) EMPREGADOR(A) no serviço, detendo plenos poderes para gerir as rotinas administrativas e operacionais do estabelecimento, sempre sob sua responsabilidade. Nesse"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "sentido, poderá admitir e dispensar empregados; aplicar medidas disciplinares, tais como advertências e suspensões; estabelecer escalas de trabalho e avaliar o desempenho dos subordinados; realizar compras; autorizar pagamentos e despesas de sua competência; negociar condições, preços e quantidades de mercadorias; assinar pedidos de materiais; bem como cumprir e fazer cumprir as políticas internas, regulamentos e quaisquer outros poderes de mando e gestão necessários ao fiel desempenho da função."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2. As novas atribuições implicam em especial fidúcia e poder de gestão, não estando o Empregado"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "sujeito ao controle da jornada de trabalho."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 03: Da Função"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1. O(A) EMPREGADO(A) exercerá a função de comprometendo-se a desempenhar suas atribuições de"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "forma diligente, conforme as orientações, diretrizes e políticas estabelecidas pelo(a) EMPREGADOR(A). Poderá, ainda, ser designado(a) para executar outras tarefas compatíveis com sua formação, experiência e capacidade técnica, sempre que necessário ao regular andamento das atividades empresariais, sem que isso configure alteração contratual ou desvio de função."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2. As funções e responsabilidades atribuídas são de caráter pessoal e intransferível, vedada sua"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "delegação a terceiros estranhos ao quadro do(a) EMPREGADOR(A)."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "3. O(A) EMPREGADO(A) deverá dedicar ao(à) EMPREGADOR(A) todo o tempo de trabalho ajustado, sua"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "atenção e esforço profissional, zelando pela fiel execução das tarefas que lhe forem atribuídas e pela promoção dos interesses da empresa."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "4. A prestação de serviços a mais de uma empresa integrante do mesmo grupo econômico do(a)"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "EMPREGADOR(A), já existentes ou que venham a ser constituídas, durante a mesma jornada de trabalho, será considerada parte integrante deste contrato, não implicando a existência de vínculos trabalhistas distintos."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 04: Remuneração E Gratificação De Função"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1. Em razão da nomeação ao cargo de confiança, o(a) EMPREGADO(A) receberá, a partir da data de"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "início do novo cargo, uma gratificação de função no valor de R$ {{contrato.gratificacao}} ({{contrato.gratificacao_extenso}}), correspondente a no mínimo 40% (quarenta por cento) do salário efetivo do cargo."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2. Esta gratificação se incorpora ao salário para todos os efeitos legais. A remuneração total do"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Empregado passará a ser de R$ {{contrato.salario}} ({{contrato.salario_extenso}})."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 05: Da Ciência E Aceite"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1. O(A) EMPREGADO(A) declara ter lido, compreendido e aceitado integralmente as disposições deste"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Termo Aditivo, estando plenamente ciente de suas responsabilidades e consequências pelo uso indevido das ferramentas de comunicação."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "As partes ratificam todas as demais cláusulas do Contrato de Trabalho principal, e por estarem assim justos e contratados, assinam o presente instrumento em duas vias para que surta seus efeitos jurídicos e legais."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "{{empresa.cidade}}, {{data.dia}} de {{data.mes}} de {{data.ano}}."
+  },
+  {
+   "tipo": "espaco",
+   "altura": 18
+  },
+  {
+   "tipo": "assinatura",
+   "quem": "Empregado(a)",
+   "nome": "{{pessoa.nome}} — CPF {{pessoa.cpf}}"
+  },
+  {
+   "tipo": "assinatura",
+   "quem": "Empregador",
+   "nome": "{{empresa.razao_social}} — CNPJ {{empresa.cnpj}}"
+  }
+ ],
+ "campos_pendentes": [],
+ "ativo": true
+}

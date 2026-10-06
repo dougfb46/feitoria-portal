@@ -1,0 +1,219 @@
+{
+ "codigo": "24",
+ "titulo": "Poli tica de Prevenc a o e Combate ao Asse dio no Ambiente de Trabalho",
+ "blocos": [
+  {
+   "tipo": "titulo",
+   "texto": "POLÍTICA DE PREVENÇÃO E COMBATE AO ASSÉDIO NO AMBIENTE DE TRABALHO"
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Identificação Das Partes"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "EMPREGADOR(A): {{empresa.razao_social}}, pessoa jurídica de direito privado inscrita no CNPJ sob o nº {{empresa.cnpj}}, ou pessoa física inscrita no CPF sob o nº {{pessoa.cpf}}, com sede/endereço na {{empresa.endereco}}, doravante denominado(a) EMPRESA."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "COLABORADORES: Todos os empregados contratados sob regime da Consolidação das Leis do Trabalho, CLT, doravante denominados EMPREGADOS."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "A Política de Prevenção e Combate ao Assédio no Ambiente de Trabalho (“Política”) foi elaborada com"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "objetivo de assegurar um ambiente profissional íntegro, ético e respeitoso, livre de práticas abusivas,"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "discriminatórias ou constrangedoras, em conformidade com a legislação trabalhista e princípios de governança corporativa. Este documento reflete o compromisso da Empresa em prevenir, identificar e coibir qualquer forma de assédio moral ou sexual, garantindo que todos os colaboradores exerçam suas funções em condições de dignidade, igualdade e segurança. O cumprimento desta Política não apenas protege os empregados contra condutas lesivas, mas também fortalece a cultura organizacional de respeito, diversidade e responsabilidade social, alinhando-se às melhores práticas de compliance e integridade corporativa."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "01.​ Objetivo Da Política"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ A presente Política tem por finalidade prevenir, coibir e combater toda e qualquer prática de"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "assédio moral ou sexual no ambiente de trabalho, garantindo que todos os colaboradores da Empresa desenvolvam suas atividades em um ambiente ético, saudável, seguro e pautado pelo respeito mútuo e pela dignidade da pessoa humana."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "02.​ Definições"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​Para fins desta Política, entende-se por:",
+    "Assédio moral: conduta abusiva, repetitiva ou sistemática, que se manifeste por gestos, palavras ou comportamentos, e que tenha por objetivo ou efeito degradar o ambiente de trabalho, ofender a dignidade, humilhar, constranger ou desestabilizar emocionalmente o empregado.",
+    "Assédio sexual: toda conduta de natureza sexual, indesejada e não consentida, praticada no ambiente de trabalho ou em razão dele, que cause constrangimento, intimidação ou chantagem, incluindo situações em que haja promessa de vantagem ou ameaça em caso de recusa."
+   ]
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "03.​ Princípios E Diretrizes"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​A EMPRESA adota política de tolerância zero ao assédio, comprometendo-se a:",
+    "zelar por um ambiente de trabalho íntegro, inclusivo e respeitoso;",
+    "promover treinamentos, campanhas de conscientização e orientações preventivas sobre assédio;",
+    "assegurar canais de denúncia acessíveis, confidenciais e sem retaliação;",
+    "apurar todas as denúncias com rigor, imparcialidade e celeridade;",
+    "aplicar sanções disciplinares proporcionais, podendo chegar à rescisão por justa causa, quando comprovada a prática de assédio."
+   ]
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "04.​ Responsabilidades Do Empregado"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​O(A) EMPREGADO(A) declara estar ciente de que:",
+    "deve adotar conduta ética, respeitosa e profissional em todas as suas relações de trabalho;",
+    "está proibido de praticar qualquer forma de assédio moral ou sexual, em qualquer nível hierárquico;",
+    "deve comunicar formalmente à EMPRESA, por meio dos canais oficiais, qualquer prática de assédio da qual seja vítima ou testemunha;",
+    "está protegido contra retaliações decorrentes de denúncias feitas de boa-fé."
+   ]
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "05.​ Sanções"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ A prática de assédio moral ou sexual constitui falta grave e poderá ensejar a rescisão do contrato"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "de trabalho por justa causa, nos termos do artigo 482 da CLT, sem prejuízo de outras medidas legais de natureza cível e criminal cabíveis contra o infrator."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "06.​ Canais De Denúncia"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ A Empresa manterá canais oficiais para recebimento de denúncias, garantindo sigilo,"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "confidencialidade e não retaliação ao denunciante. As denúncias poderão ser feitas diretamente ao setor de Recursos Humanos, à liderança imediata ou por meio eletrônico específico, conforme regulamentação interna."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "{{empresa.cidade}}, {{data.dia}} de {{data.mes}} de {{data.ano}}."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Termo De Ciência E Adesão Sobre Assédio Moral E Sexual"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Eu, {{pessoa.nome}}, inscrito(a) no Registro Geral (CPF) n. {{pessoa.cpf}},declaro ter tomado ciência e compreendido integralmente as diretrizes e políticas da empresa {{empresa.razao_social}} referentes à prevenção e combate ao assédio moral e sexual no ambiente de trabalho."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Declaro, para todos os fins de direito, que fui devidamente informado(a) sobre:"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "Definições de Assédio Moral e Sexual: Compreendo que assédio moral consiste em condutas"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "abusivas, repetitivas e sistemáticas que expõem o(a) colaborador(a) a situações humilhantes e vexatórias, capazes de comprometer sua dignidade, saúde física e mental, e desempenho profissional. Entendo que assédio sexual se caracteriza por constrangimentos com o intuito de obter vantagens ou favores sexuais, ou por manifestações de cunho sexual que criem um ambiente de trabalho hostil, intimidador, ofensivo ou humilhante, independentemente de hierarquia."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "Princípios da Empresa: A Empresa repudia veementemente qualquer forma de assédio moral ou"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "sexual, comprometendo-se a manter um ambiente de trabalho ético, respeitoso e livre de preconceitos e discriminações."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "Canais de Denúncia: Fui informado(a) sobre os canais confidenciais e seguros disponibilizados"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "pela Empresa para a denúncia de casos de assédio moral ou sexual, tais como [Exemplos: canal de ética, e-mail dedicado, ouvidoria, RH, liderança direta/indireta, etc.]. Reconheço a importância de utilizar esses canais para relatar qualquer situação que configure ou possa configurar assédio."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "Não Retaliação: Fui esclarecido(a) de que a Empresa garante a não retaliação contra qualquer"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Empregado(a) que, de boa-fé, apresente uma denúncia, testemunhe ou coopere em uma investigação sobre assédio. Qualquer forma de retaliação será considerada uma violação grave da política da Empresa e sujeitará o(a) responsável às sanções disciplinares cabíveis."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "Consequências: Estou ciente de que a comprovação de assédio moral ou sexual resultará na"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "aplicação de sanções disciplinares, que podem variar de advertências a demissão por justa causa, conforme a gravidade da conduta e a legislação vigente, sem prejuízo de eventuais responsabilidades civis e criminais."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "Responsabilidade Individual: Reconheço que é responsabilidade de cada colaborador(a)"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "contribuir para um ambiente de trabalho saudável, respeitando os colegas, superiores e subordinados, e abstendo-se de qualquer conduta que possa ser caracterizada como assédio."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Ao assinar este Termo, declaro que li, compreendi e concordo com todas as disposições aqui contidas, e me comprometo a cumprir a Política da Empresa de combate ao assédio moral e sexual. Declaro, ainda, que tive a oportunidade de esclarecer todas as minhas dúvidas sobre o tema."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "{{empresa.cidade}}, {{data.dia}} de {{data.mes}} de {{data.ano}}."
+  },
+  {
+   "tipo": "espaco",
+   "altura": 18
+  },
+  {
+   "tipo": "assinatura",
+   "quem": "Empregado(a)",
+   "nome": "{{pessoa.nome}} — CPF {{pessoa.cpf}}"
+  },
+  {
+   "tipo": "assinatura",
+   "quem": "Empregador",
+   "nome": "{{empresa.razao_social}} — CNPJ {{empresa.cnpj}}"
+  }
+ ],
+ "campos_pendentes": [],
+ "ativo": true
+}
