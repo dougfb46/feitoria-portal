@@ -1,0 +1,8 @@
+# Segredos nunca entram no repositorio
+.env
+.env.*
+!.env.example
+
+node_modules/
+.DS_Store
+*.log

@@ -1,0 +1,63 @@
+{
+ "codigo": "08",
+ "titulo": "Ficha de Registro de Empregado",
+ "blocos": [
+  {
+   "tipo": "titulo",
+   "texto": "FICHA DE REGISTRO DE"
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "(Fotografia Do Empregado"
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Empregado"
+  },
+  {
+   "tipo": "campos",
+   "itens": [
+    {
+     "rotulo": "Empregador",
+     "valor": "{{empresa.razao_social}} — CNPJ {{empresa.cnpj}}"
+    },
+    {
+     "rotulo": "Endereço",
+     "valor": "{{empresa.endereco}}, {{empresa.cidade}}/{{empresa.estado}}"
+    },
+    {
+     "rotulo": "Empregado(a)",
+     "valor": "{{pessoa.nome}}"
+    },
+    {
+     "rotulo": "CPF",
+     "valor": "{{pessoa.cpf}}"
+    },
+    {
+     "rotulo": "Nacionalidade / estado civil",
+     "valor": "{{pessoa.nacionalidade}}, {{pessoa.estado_civil}}"
+    },
+    {
+     "rotulo": "Cargo / função",
+     "valor": "{{contrato.funcao}}"
+    }
+   ]
+  },
+  {
+   "tipo": "espaco",
+   "altura": 18
+  },
+  {
+   "tipo": "assinatura",
+   "quem": "Empregado(a)",
+   "nome": "{{pessoa.nome}} — CPF {{pessoa.cpf}}"
+  },
+  {
+   "tipo": "assinatura",
+   "quem": "Empregador",
+   "nome": "{{empresa.razao_social}} — CNPJ {{empresa.cnpj}}"
+  }
+ ],
+ "campos_pendentes": [],
+ "ativo": true
+}

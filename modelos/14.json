@@ -1,0 +1,270 @@
+{
+ "codigo": "14",
+ "titulo": "Poli tica de Compensac a o de Jornada e Banco de Horas",
+ "blocos": [
+  {
+   "tipo": "titulo",
+   "texto": "POLÍTICA INTERNA DE BANCO DE HORAS E COMPENSAÇÃO DE JORNADA"
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Identificação Das Partes"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "EMPREGADOR(A): {{empresa.razao_social}}, pessoa jurídica de direito privado inscrita no CNPJ sob o nº {{empresa.cnpj}}, ou pessoa física inscrita no CPF sob o nº {{pessoa.cpf}}, com sede/endereço na {{empresa.endereco}}, doravante denominado(a) EMPRESA."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "COLABORADORES: Todos os empregados contratados sob regime da Consolidação das Leis do Trabalho, CLT, doravante denominados EMPREGADOS."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "01. Objetivo"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ O presente Regulamento tem como objetivo principal formalizar as regras de utilização do"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "sistema de Banco de Horas, proporcionando flexibilidade na jornada de trabalho, permitindo a compensação de horas extras com folgas ou redução da jornada em outros dias, sempre visando o equilíbrio entre as necessidades da Empresa e o bem-estar de seus empregados."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2.​ A Empresa se compromete a gerenciar o Banco de Horas de forma transparente,"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "disponibilizando aos empregados, sempre que solicitados, os extratos de suas horas, positivas e negativas."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "02. Definição"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1. O Banco de Horas consiste em um sistema de compensação de jornada pelo qual as horas"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "excedentes trabalhadas em determinado período podem ser compensadas com a correspondente diminuição da jornada em outro. As horas trabalhadas além da jornada contratual são consideradas créditos ou horas positivas, enquanto as ausências, atrasos e saídas antecipadas são consideradas débitos ou horas negativas, que deverão ser posteriormente compensados."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "03. Crédito E Débito De Horas"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1. Crédito de Horas: Consideram-se créditos de horas, a favor do Empregado, aquelas trabalhadas"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "além da jornada regular contratual, desde que devidamente autorizadas e registradas. Também serão computadas como créditos as horas laboradas em dias destinados ao descanso semanal remunerado e em feriados, quando não houver compensação dentro da mesma semana (folgas), hipótese em que deverão ser lançadas no Banco de Horas com o adicional legal ou convencional correspondente."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2. Débito de Horas: Por sua vez, consideram-se débitos de horas, a favor da Empresa, as ausências ao"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "trabalho, integrais ou parciais, desde que previamente acordadas para futura compensação, bem como as horas não trabalhadas em razão de flexibilização da jornada."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2.1. Os atrasos e ausências injustificadas poderão ser registrados como débito no Banco de Horas bem como serão tratados conforme as demais políticas disciplinares internas da Empresa."
+   ]
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "04. Limites E Prazos Para Compensação"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1. O limite máximo de horas extras diárias passíveis de crédito no Banco de Horas será de duas horas,"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "de modo que a jornada não ultrapasse dez horas de trabalho por dia, incluídas a jornada normal e as horas suplementares, salvo se houver previsão mais favorável em acordo ou convenção coletiva de trabalho."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2. O prazo para a compensação das horas, sejam elas de crédito ou de débito, será de, no máximo, 6"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "(seis) , iniciando-se em data de início do semestre de apuração e encerrando-se em último dia do semestre de apuração. No mês de janeiro do ano subsequente será realizada a apuração das horas positivas e negativas, sendo que, em fevereiro, proceder-se-á ao pagamento das horas positivas eventualmente não compensadas, com o respectivo adicional legal ou convencional."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "3. As horas negativas não serão descontadas de imediato, permanecendo registradas no sistema para"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "compensação em período posterior, desde que dentro do prazo estabelecido. As compensações deverão ocorrer, preferencialmente, em dias úteis, evitando-se o acúmulo excessivo de horas positivas ou negativas que possa comprometer o equilíbrio da jornada de trabalho."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "4. A Empresa poderá determinar a compensação de horas, seja mediante a concessão de folgas ou pela"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "redução da jornada em determinados dias, mediante comunicação prévia ao empregado, com antecedência mínima de 1 (um) ano, ressalvadas situações emergenciais. O empregado também poderá solicitar a compensação de suas horas, desde que o faça de maneira formal e com antecedência razoável, ficando o deferimento sujeito à análise e aprovação da chefia imediata e da área de Recursos Humanos, de acordo com as necessidades do setor e da Empresa."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "05. Do Usufruto Das Folgas"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1. As folgas oriundas da compensação de horas serão concedidas a critério exclusivo da Empresa e"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "somente poderão ser usufruídas em dias úteis, sendo vedada sua utilização em períodos que possam comprometer a produção, o atendimento ao cliente ou a regularidade das atividades empresariais."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2. A Empresa reserva-se o direito de organizar escalas, limitar a quantidade de empregados em gozo"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "simultâneo e definir datas específicas para a utilização das horas acumuladas, de modo a preservar a continuidade dos serviços, a eficiência operacional e o adequado funcionamento da empresa."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "06. Rescisão Do Contrato De Trabalho"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1. Em caso de rescisão do contrato de trabalho, seja por iniciativa da Empresa ou do Empregado, se"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "houver saldo de horas positivas no Banco de Horas, estas serão quitadas como horas extras na rescisão, calculadas com o adicional legal ou convencional."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2. Se houver saldo de horas negativas no Banco de Horas, estas não poderão ser descontadas das"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "verbas rescisórias do empregado, exceto se houver acordo individual expresso prevendo tal possibilidade e o saldo negativo decorrer de faltas injustificadas ou ausências não autorizadas pela Empresa."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "07. Do Controle Das Horas"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2. O controle das horas trabalhadas, incluídas aquelas lançadas como crédito ou débito"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "no Banco de Horas, será realizado por meio do sistema de registro de ponto adotado pela EMPREGADORA, seja eletrônico, manual ou outro equivalente que esteja em conformidade com a legislação vigente. É de responsabilidade do empregado registrar corretamente sua jornada de trabalho, observando rigorosamente os horários de entrada, saída e intervalos, de forma a possibilitar o acompanhamento preciso do saldo do Banco de Horas e a transparência na gestão da jornada."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "08. Das Disposições Finais"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1. Esta Política da Empresa poderá ser alterada ou revogada a qualquer tempo, desde"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "que com comunicação prévia ao Empregado e em conformidade com a legislação trabalhista vigente."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2. Os casos omissos serão resolvidos pela [Administrador/Diretoria da Empresa/ou"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "outro nome utilizado no seu estabelecimento], observando-se sempre os princípios da boa-fé, da razoabilidade e da legalidade."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "3. A Empresa se reserva o direito de fiscalizar o cumprimento desta Política Interna,"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "podendo aplicar as sanções disciplinares cabíveis em caso de descumprimento, nos termos da CLT."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "4. Ao assinar o Termo de Ciência e Aceite desta Política Interna, o Empregado declara"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "ter lido, compreendido e concordado com todas as suas disposições."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "{{empresa.cidade}}, {{data.dia}} de {{data.mes}} de {{data.ano}}."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Termo de Ciência e Aceite Eu, {{pessoa.nome}}, inscrito(a) no Registro Geral (CPF) n. {{pessoa.cpf}}, declaro ter recebido uma cópia da Política Interna de Banco de Horas e Compensação de Jornada da Empresa {{empresa.razao_social}}, ter lido e compreendido seu conteúdo e estar ciente das regras e procedimentos nele estabelecidos."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "{{empresa.cidade}}, {{data.dia}} de {{data.mes}} de {{data.ano}}."
+  },
+  {
+   "tipo": "espaco",
+   "altura": 18
+  },
+  {
+   "tipo": "assinatura",
+   "quem": "Empregado(a)",
+   "nome": "{{pessoa.nome}} — CPF {{pessoa.cpf}}"
+  },
+  {
+   "tipo": "assinatura",
+   "quem": "Empregador",
+   "nome": "{{empresa.razao_social}} — CNPJ {{empresa.cnpj}}"
+  }
+ ],
+ "campos_pendentes": [],
+ "ativo": false,
+ "observacao": "Prazo de compensação de 1 ano, conforme cláusula 15ª \"a\" da CCT SINTHORESP × SINDRESBAR 2025/2027, aplicável a empresa cadastrada (cláusula 9ª). Sem o cadastramento o prazo cai para 90 dias.",
+ "motivo_inativo": "A casa não trabalha com banco de horas: hora extra é paga e atraso é descontado no mês (confirmado por Douglas em 24/09/2026 e visível nas rubricas do holerite). Reativar só se a política mudar — e, nesse caso, o prazo de compensação é de 1 ano para empresa cadastrada na CCT, 90 dias sem cadastramento."
+}

@@ -1,0 +1,56 @@
+# Diário de sessão
+
+Quem trabalhou no projeto escreve aqui **antes de encerrar**. Entrada nova vai
+**no topo**. Isto substitui a conversa entre os agentes: o Claude e o Codex não se
+falam, então o que não estiver escrito aqui não chega ao próximo.
+
+Formato — cinco linhas, sem cerimônia:
+
+```
+## AAAA-MM-DD · <Claude | Codex | Douglas>
+Fiz: ...
+Aberto: ...
+Cuidado: ...
+Próximo passo: ...
+```
+
+`Cuidado:` é a linha mais importante. É onde entra "não mexa em X", "Y está pela
+metade", "Z parece defeito mas é de propósito".
+
+---
+
+## 2026-10-06 · Codex
+Fiz: importei feitoria-portal-codex.zip em branch para revisão no GitHub.
+Aberto: pacote não contém todo o estado vivo; não houve deploy de functions ou migrations.
+Cuidado: arquivos da raiz foram preservados para manter os endereços atuais; novas versões estão em web/.
+Próximo passo: revisar o PR e definir a publicação das telas; obter o estado vivo antes de alterar lógica.
+
+
+## 2026-10-06 · Claude
+
+**Fiz:** montei o pacote de transferência para o Codex. Criei o `AGENTS.md` (regras
+que não se negociam, contexto legal, coisas já testadas que não funcionam), o
+`docs/mapa-do-sistema.md` (inventário do que está no ar) e este diário. O `CLAUDE.md`
+virou ponteiro para o `AGENTS.md` — a versão antiga descrevia o estado de 23/09 e
+contradizia a realidade. Sincronizei as 6 telas de `web/` com as versões atuais.
+
+**Aberto:** o repositório ainda não tem a cópia completa do que está no ar — 21 Edge
+Functions e 54 migrations contra 5 functions e 1 migration aqui. O README tem o
+bootstrap (`supabase db pull` + `functions download`). **Rodar isso é o primeiro
+trabalho de quem pegar o projeto.**
+
+**Cuidado:**
+- O dia operacional fecha às **01:30**, não 01:00. Confirmado no banco em 06/10
+  (`dia_da_baixa` subtrai `interval '1 hour 30 minutes'`). Vários `.md` antigos dizem
+  01:00 — estão errados.
+- `work_schedules` está **vazia** (0 linhas), com 4 colaboradores marcando ponto. Por
+  isso "Total Esperado", "Presentes/Ausentes" e "Horas Extras" aparecem zerados, e as
+  4 pendências de ponto abertas comparam contra uma jornada que não existe. O
+  formulário de cadastro já existe na `gestao.html`. **É cadastro, não código.**
+- `web/contagem.html` não existe neste repositório e nunca existiu neste ambiente.
+- Sobraram 2 registros de teste em `checklist_respostas` (K99). Os triggers foram
+  reabilitados e conferidos (`tgenabled = 'O'`).
+
+**Próximo passo:** cadastrar a jornada dos 4 CLT; depois `av-qtd` no repositório de
+etiquetas (único defeito conhecido que corrompe dado); depois publicar as 4 telas
+pendentes no GitHub Pages.

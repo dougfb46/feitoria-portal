@@ -1,0 +1,244 @@
+{
+ "codigo": "13",
+ "titulo": "Termo Aditivo ao Contrato de Trabalho - Poli tica de Uso da Internet corresponde ncia eletro nica e-mail e WhatsApp",
+ "blocos": [
+  {
+   "tipo": "titulo",
+   "texto": "TERMO ADITIVO AO CONTRATO DE TRABALHO"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Política de Uso da Internet, correspondência eletrônica (e-mail) e WhatsApp"
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Identificação Das Partes"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "EMPREGADOR(A): {{empresa.razao_social}}, pessoa jurídica de direito privado inscrita no CNPJ sob o nº {{empresa.cnpj}}, ou pessoa física inscrita no Registro Geral (CPF) sob o nº {{pessoa.cpf}}, com sede/endereço na {{empresa.endereco}}, doravante denominado(a) EMPREGADOR(A)."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "EMPREGADO(A): {{pessoa.nome}}, {{pessoa.nacionalidade}}, {{pessoa.estado_civil}}, {{contrato.funcao}}, portador(a) do Registro Geral (CPF) sob o nº {{pessoa.cpf}}, residente e domiciliado(a) na [Endereço Completo do Empregado, não esquecer de colocar número, quadra, lote e CEP], doravante denominado(a) EMPREGADO(A)."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 01: Do Objeto"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ O presente Termo Aditivo tem por finalidade formalizar a ciência e aceite, pelo(a)"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "EMPREGADO(A), do Código de Conduta da empresa e da Política de Uso das ferramentas digitais e de comunicação interna, abrangendo e-mail corporativo, aplicativos de mensagens como WhatsApp Business e Digisac, intranet, softwares internos e demais canais de comunicação disponibilizados pela empresa para o desempenho das atividades profissionais."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 02: Do Uso Adequado"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ O O(A) EMPREGADO(A) compromete-se a utilizar as ferramentas digitais de forma ética,"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "responsável e exclusivamente para fins profissionais, abstendo-se de qualquer conduta que envolva compartilhamento de conteúdo pessoal, ofensivo, discriminatório, político-partidário ou alheio às atividades da empresa. Reconhece ainda que não poderá valer-se desses recursos para a prática de assédio moral ou sexual, tampouco para qualquer conduta que viole normas legais, contratuais ou o Código de Conduta da empresa."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 03: Da Confidencialidade E Segurança"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ Todas as informações transmitidas, armazenadas ou tratadas por meio das ferramentas"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "corporativas são de propriedade exclusiva da empresa e devem ser tratadas como sigilosas. O(A)"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "EMPREGADO(A) declara estar ciente de que a empresa poderá monitorar, auditar ou restringir o uso dessas ferramentas, sempre em conformidade com a legislação aplicável, a LGPD e os princípios de transparência e finalidade. Fica vedado ao(à) EMPREGADO(A) compartilhar com terceiros, sem autorização, qualquer dado estratégico ou confidencial, sob pena de responsabilização civil, trabalhista e criminal."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 04: Da Correspondência Eletrônica"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ Os sistemas de correio eletrônico (e-mail corporativo) são disponibilizados pela EMPREGADORA"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "com a finalidade exclusiva de transmitir, receber e processar informações de interesse profissional, relacionadas às atividades da empresa. Todas as mensagens, documentos e dados armazenados nesse sistema, bem como o próprio banco de dados, constituem propriedade exclusiva da EMPREGADORA. É expressamente vedada a utilização do e-mail corporativo para fins particulares, assim como qualquer uso inadequado em ambiente de trabalho ou fora dele, incluindo pesquisas, cadastros ou navegação em sites na rede denominada “internet” que não estejam diretamente relacionados à atividade profissional."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 05: Da Inspeção De Equipamentos"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ A EMPREGADORA, a qualquer tempo e sem necessidade de aviso prévio ou consentimento,"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "poderá inspecionar o uso e o conteúdo dos equipamentos de sua propriedade ou que estejam instalados em suas dependências, abrangendo tanto “hardwares” quanto “softwares”. Tal prerrogativa tem por finalidade resguardar a segurança das informações corporativas, a integridade dos equipamentos e o cumprimento das normas internas da empresa."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 06: Da Disciplina No Interior Do Estabelecimento"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ É terminantemente proibido utilizar o e-mail corporativo, a internet ou quaisquer outros veículos"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "de comunicação disponibilizados pela EMPREGADORA para tratar de assuntos de natureza particular ou para fins que não estejam relacionados às atividades da empresa. Também é vedado o uso desses recursos para realizar ofensas, zombarias, brincadeiras, trotes, vendas, envio de mensagens em cadeia (“correntes”) ou quaisquer práticas extraprofissionais, irregulares ou que possam configurar ilícitos de qualquer natureza."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 07: Do Uso De Aparelhos Celulares"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ É expressamente proibido ao(à) EMPREGADO(A) utilizar aparelhos celulares, inclusive"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "smartphones, durante o horário de trabalho para acessar sites, aplicativos ou conteúdos impróprios ou não autorizados, tais como pornografia, pedofilia, racismo, redes sociais, aplicativos de mensagens instantâneas e quaisquer outras plataformas de entretenimento que comprometam a produtividade ou configurem desídia."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2.​ O uso do celular para fins pessoais (ligações telefônicas) deve ocorrer, preferencialmente, nos"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "intervalos."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "3.​ Em casos de urgência durante o expediente, o(a) EMPREGADO(A) deverá manter discrição,"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "evitando toques sonoros altos e conversas prolongadas."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "4.​ O descumprimento desta norma poderá ensejar rescisão por justa causa, nos termos do art. 482,"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "alínea “e”, da CLT."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 08: Do Compartilhamento De Senhas"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ É expressamente proibido ao(à) EMPREGADO(A) compartilhar logins e senhas de acesso aos"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "sistemas internos, e-mails corporativos, aplicativos de mensagens e demais ferramentas digitais fornecidas pela empresa. O descumprimento desta obrigação caracteriza falta grave e poderá ensejar a rescisão do contrato de trabalho por justa causa, nos termos do art. 482, alíneas “g” e “h” da CLT."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 09: Da Responsabilidade Do Empregado"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ O(A) EMPREGADO(A) reconhece que será responsabilizado(a) sempre que o uso das ferramentas"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "corporativas resultar em prejuízo à empresa ou a terceiros. Essa responsabilidade abrange, de modo expresso, a divulgação de informações não autorizadas, a prática de infrações éticas, legais ou contratuais, incluindo situações de assédio moral ou sexual, bem como todas as consequências trabalhistas, civis e criminais decorrentes da má utilização dos recursos digitais colocados à sua disposição."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 10: Do Acesso E Privacidade"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ O(A) EMPREGADO(A) declara ciência de que os canais corporativos de comunicação não"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "possuem caráter pessoal e que, portanto, não há expectativa de privacidade quanto ao seu conteúdo, considerando que são recursos destinados exclusivamente ao trabalho. O acesso às mensagens, dados e registros permanecerá restrito à administração da empresa, sendo vedado a outros empregados, salvo por ordem judicial ou requisição de autoridade competente."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2.​Diante disso, o(a) EMPREGADO(A) declara estar ciente de que:"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "i.​ os canais corporativos de comunicação são de uso exclusivamente profissional; ii.​ não há direito de privacidade nas mensagens trocadas em ambiente corporativo, considerando que são ferramentas de trabalho disponibilizadas pela empresa; iii.​ o acesso às mensagens poderá ser restrito à administração da empresa, sendo vedado a outros empregados, exceto mediante ordem judicial ou requisição de autoridade competente."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 11: Da Ciência E Aceite"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1. O(A) EMPREGADO(A) declara ter lido, compreendido e aceitado integralmente as disposições deste"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Termo Aditivo, estando plenamente ciente de suas responsabilidades e consequências pelo uso indevido das ferramentas de comunicação."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "As partes ratificam todas as demais cláusulas do Contrato de Trabalho principal, e por estarem assim justos e contratados, assinam o presente instrumento em duas vias para que surta seus efeitos jurídicos e legais. {{empresa.cidade}}, {{data.dia}} de {{data.mes}} de {{data.ano}}."
+  },
+  {
+   "tipo": "espaco",
+   "altura": 18
+  },
+  {
+   "tipo": "assinatura",
+   "quem": "Empregado(a)",
+   "nome": "{{pessoa.nome}} — CPF {{pessoa.cpf}}"
+  },
+  {
+   "tipo": "assinatura",
+   "quem": "Empregador",
+   "nome": "{{empresa.razao_social}} — CNPJ {{empresa.cnpj}}"
+  }
+ ],
+ "campos_pendentes": [],
+ "ativo": true
+}

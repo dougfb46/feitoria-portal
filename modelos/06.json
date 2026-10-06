@@ -1,0 +1,603 @@
+{
+ "codigo": "06",
+ "titulo": "Contrato de Prestac a o de Servic os",
+ "blocos": [
+  {
+   "tipo": "titulo",
+   "texto": "CONTRATO DE PRESTAÇÃO DE SERVIÇOS"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Pelo presente instrumento particular, de um lado:"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "CONTRATANTE: {{empresa.razao_social}}, pessoa jurídica de direito privado, inscrita no CNPJ sob nº , com sede na {{pessoa.endereco}}, neste ato representada por seu representante legal {{pessoa.nome}}, {{pessoa.nacionalidade}}, {{pessoa.estado_civil}}, {{contrato.funcao}}, RG {{pessoa.rg}}, CPF {{pessoa.cpf}}, doravante denominada simplesmente CONTRATANTE."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Contratado(A):"
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "(Pessoa Física)"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "{{pessoa.nome}}, {{pessoa.nacionalidade}}, {{contrato.funcao}}, inscrito no Registro Geral (CPF) n. , residente e domiciliado na {{pessoa.endereco}}, endereços eletrônicos e-mail contato@rcassessoria.com.br e WhatsApp +55 , doravante denominado(a) CONTRATADO(A);"
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "(Pessoa Jurídica)"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "{{empresa.razao_social}}, pessoa jurídica de direito privado, inscrita no CNPJ sob nº , com sede na {{pessoa.endereco}}, neste ato representada por seu representante legal {{pessoa.nome}}, {{pessoa.nacionalidade}}, {{pessoa.estado_civil}}, {{contrato.funcao}}, RG {{pessoa.rg}}, CPF {{pessoa.cpf}}, doravante denominada CONTRATADO(A)."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "As partes decidem celebrar o presente CONTRATO DE PRESTAÇÃO DE SERVIÇOS, que se regerá pelas cláusulas e condições a seguir estipuladas:"
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 1: Do Objeto"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ O presente contrato tem por objeto a prestação, pelo(a) CONTRATADO(A), dos seguintes"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "serviços: {{contrato.objeto_servico}}, em caráter autônomo e independente."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2.​ Fica expressamente ajustado que a execução dos serviços não gera, em nenhuma hipótese,"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "vínculo empregatício entre as partes, nos termos do art. 3º e do art. 442-B da Consolidação das Leis do Trabalho."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "3.​ O(A) CONTRATADO(A) compromete-se a utilizar, por sua conta e risco, os recursos próprios"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "necessários à execução dos serviços objeto deste contrato, tais como equipamentos (aparelho celular, computador, softwares, acesso à internet, entre outros), não cabendo ao(à) CONTRATANTE qualquer responsabilidade, obrigação de custeio, fornecimento, manutenção ou reposição desses recursos."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 2: Da Natureza Jurídica"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ O presente ajuste possui natureza exclusivamente civil, afastando-se qualquer interpretação de"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "relação de emprego."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2.​ O(A) CONTRATADO(A) terá autonomia técnica, organizacional e gerencial para a execução dos"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "serviços, sem qualquer subordinação hierárquica em relação ao(à) CONTRATANTE."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 3: Do Preço E Das Condições De Pagamento"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ Pelos serviços prestados, o(a) CONTRATANTE pagará ao(à) CONTRATADO(A) a quantia de R$"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "({{contrato.salario_extenso}}), na forma de por demanda."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2.​ O pagamento será realizado mediante apresentação de nota fiscal e boleto bancário emitidos"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "pelo(a) CONTRATADO(A) cujo vencimento será no dia de cada mês posterior à prestação de serviços."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "3.​ Tanto as notas fiscais quanto os boletos bancários deverão ser encaminhados conjuntamente"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "para o e-mail contato@rcassessoria.com.br pelo(a) CONTRATADO(A) no primeiro dia útil do mês posterior à prestação dos serviços."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "4.​ O valor pactuado poderá ser reajustado anualmente, conforme o índice [IGP-M, IPCA ou outro a"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "definir], ou por negociação entre as partes."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "5.​ Em caso de atraso no pagamento das parcelas acima, o(a) CONTRATANTE pagará ao(à)"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "CONTRATADO(A) uma multa correspondente a 2% (dois por cento) do valor da parcela em atraso, mais juros de 1% (um por cento) ao mês, além da correção monetária pelo INPC (ou o índice que vier a substituí-lo)."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "6.​ O valor ajustado entre as partes é global e engloba todas as despesas ordinárias e"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "extraordinárias, diretas ou indiretas, necessárias ao cumprimento integral do objeto contratado, incluindo, mas não se limitando a: tributos e impostos de qualquer natureza, encargos sociais, trabalhistas, previdenciários, fiscais e comerciais, taxas administrativas, custos operacionais, transporte, frete, seguros, materiais, insumos, bem como quaisquer outros encargos que recaiam ou venham a recair sobre a execução deste contrato, não assistindo ao(à) CONTRATADO(A) direito a qualquer ressarcimento ou cobrança adicional junto ao(à) CONTRATANTE"
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 4: Das Obrigações Da Contratante"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ O(A) CONTRATANTE deverá fornecer ao(à) CONTRATADO(A) todas as informações necessárias"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "para realização do serviço, devendo especificar os detalhes necessários à perfeita consecução dele."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2.​ O(A) CONTRATANTE deverá efetuar o pagamento na forma e condições estabelecidas neste"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "contrato."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 5: Das Obrigações Do(A) Contratado(A)"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ Executar os serviços de forma diligente, observando os padrões técnicos aplicáveis.",
+    "2.​ Manter regularidade fiscal, previdenciária e trabalhista, apresentando ao CONTRATANTE, sempre"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "que solicitado, certidões comprobatórias."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "3.​ O(A) CONTRATADO(A) obriga-se a manter absoluto sigilo e confidencialidade sobre todas as"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "informações, dados, documentos, operações, estratégias, materiais, especificações, registros e quaisquer outros elementos de natureza técnica, comercial ou pessoal a que tiver acesso em razão deste contrato, seja diretamente relacionados ao CONTRATANTE ou a terceiros vinculados."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "4.​ O(A) CONTRATADO(A) obriga-se a utilizar os contatos, informações, dados, materiais e"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "documentos pertencentes à CONTRATANTE ou a seus clientes exclusivamente para a execução dos serviços objeto deste contrato, sendo vedada qualquer outra forma de uso, divulgação, reprodução, cessão ou compartilhamento sem a autorização expressa e por escrito da CONTRATANTE."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "5.​ Será de responsabilidade do(a) CONTRATADO(A) todo o ônus trabalhista ou tributário referente à"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "execução dos serviços decorrentes deste contrato, inclusive, caso o(a) CONTRATADO(A) utilize empregados próprios para a execução deste contrato, é de sua responsabilidade exclusiva todo o ônus trabalhista e tributário decorrente, ficando o(a) CONTRATANTE isento de qualquer obrigação em relação a eles ficando resguardado o direito de regresso do(a) CONTRATANTE (art. 934 do Código Civil)."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 6: Da Responsabilidade Civil"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ O CONTRATADO responderá pelos danos materiais e morais decorrentes de dolo ou culpa na"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "execução dos serviços."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2.​ Fica limitada a responsabilidade do CONTRATANTE, não havendo solidariedade ou"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "subsidiariedade, exceto em casos de comprovada fraude ou má-fé."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 7: Da Propriedade Intelectual"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1. Todos os materiais, relatórios, documentos, projetos ou produtos elaborados no âmbito deste"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "contrato pertencerão ao CONTRATANTE, salvo ajuste escrito em contrário."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 8: Do Prazo E Validade"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ O presente contrato terá vigência de meses, contados da assinatura, podendo ser prorrogado"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "mediante aditivo contratual.​ Este instrumento é válido por prazo indeterminado, não ficando o(a) CONTRATADO(a) isento das obrigações regulamentadas nas cláusulas que tratam do sigilo, confidencialidade e tratamento de dados após a rescisão podendo, o(a) CONTRATANTE, interpor as medidas judiciais cabíveis no caso de descumprimento."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 9: Da Rescisão"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ O descumprimento de qualquer uma das cláusulas por qualquer parte implicará na sua rescisão"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "imediata deste contrato, não isentando o(a) CONTRATADO(a) de suas responsabilidades referente ao zelo com informações e dados da CONTRATANTE."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2.​ Havendo descumprimento deste contrato por parte do(a) CONTRATADO(A), deverão ser"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "devolvidos os valores referentes aos serviços não desenvolvidos que já houverem sido pagos, caso existam."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "3.​ Poderá o presente instrumento ser rescindido por qualquer das partes, em qualquer momento,"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "sem que haja qualquer tipo de motivo relevante, desde seja notificada a outra parte por escrito no prazo de mínimo de 30 (trinta) dias."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "4.​ Em caso de rescisão imotivada por qualquer das partes, será devida multa correspondente a 20%"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "(vinte por cento) do valor restante do contrato, além de perdas e danos."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 10: Do Sigilo E Da Confidencialidade"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ Todas as informações, dados, documentos, materiais, estratégias, bancos de dados (incluindo"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "números de WhatsApp e demais contatos) fornecidos pela CONTRATANTE ao(à) CONTRATADO(A) são de propriedade exclusiva da CONTRATANTE e deverão ser mantidos em sigilo por prazo indeterminado, inclusive após o término da relação contratual."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2.​ Consideram-se Informações Confidenciais todas aquelas de natureza técnica, administrativa,"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "comercial, financeira ou estratégica relacionadas à CONTRATANTE, suas empresas do grupo, subsidiárias, afiliadas, clientes, fornecedores e parceiros, abrangendo, a título exemplificativo: listas de clientes e preços, segredos de mercado, know-how, contratos, manuais, sistemas, softwares, programas de computador, códigos, relatórios, dados financeiros, planos de negócio, correspondências, materiais publicitários, registros internos e quaisquer outros dados que não sejam de domínio público."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "3.​ O(A) CONTRATADO(A) compromete-se a:",
+    "não divulgar, reproduzir, copiar, armazenar, compartilhar ou utilizar as Informações Confidenciais para qualquer finalidade diversa da execução deste contrato;"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "ii)​ estender essa obrigação de sigilo a seus empregados, prepostos, subcontratados e parceiros, respondendo solidariamente por violações;"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "iii)​ devolver ao(à) CONTRATANTE, ao término do vínculo, todo e qualquer material físico ou digital relacionado às Informações Confidenciais, abstendo-se de manter cópias ou backups, em qualquer meio; iv)​ observar a confidencialidade inclusive quanto aos termos e condições deste contrato, salvo exigência legal ou ordem judicial."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "4. A obrigação de confidencialidade é válida em todo o território nacional e internacional, subsistindo"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "por prazo indeterminado, inclusive após a rescisão ou encerramento do contrato."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 11: Da Proteção Dos Dados Pessoais (Lgpd)"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ A CONTRATADA compromete-se a observar integralmente as disposições da Lei nº 13.709/2018"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "– Lei Geral de Proteção de Dados (LGPD), obrigando-se a tratar quaisquer dados pessoais eventualmente coletados da CONTRATANTE unicamente nos limites da necessidade ou obrigatoriedade decorrente da execução deste contrato, em estrita conformidade com os princípios da finalidade, adequação, necessidade, livre acesso, qualidade dos dados, transparência, segurança, prevenção, não discriminação e responsabilização."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2.​ A CONTRATANTE, por sua vez, também se obriga a respeitar todos os preceitos legais previstos"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "na LGPD, tratando os dados pessoais da CONTRATADA eventualmente coletados apenas para os fins estritamente necessários à execução do presente contrato, observando os mesmos princípios legais acima elencados."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "3.​ Ambas as partes comprometem-se a adotar medidas técnicas e organizacionais adequadas para"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "garantir a segurança e a confidencialidade dos dados pessoais sob sua responsabilidade, inclusive por meio da implementação de política interna de privacidade, que deverá ser observada por todos os seus colaboradores, prepostos ou terceiros que venham a ter acesso a tais dados."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "4.​ Os dados pessoais tratados no âmbito deste contrato serão armazenados somente pelo período"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "necessário ao cumprimento das finalidades contratuais, sendo posteriormente eliminados de forma segura e definitiva, ressalvadas as hipóteses legais de conservação previstas no art. 16 da LGPD."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "5.​ Em caso de término do presente instrumento, independentemente do motivo, as partes"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "obrigam-se a cessar imediatamente qualquer forma de uso, tratamento ou compartilhamento de dados pessoais obtidos durante a vigência contratual, preservando, inclusive, o dever de sigilo quanto às informações acessadas ou tratadas."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 12: Das Disposições Gerais"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ Em nenhuma hipótese este Contrato implicará vínculo trabalhista entre os sócios e"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "colaboradores dos CONTRATADOS e a CONTRATANTE, ou vice-versa, cada qual respondendo por eventuais ações trabalhistas propostas por seus funcionários, prepostos e demais colaboradores."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2.​ Cabe aos CONTRATADOS a exclusiva e integral responsabilidade pelo recrutamento, admissão,"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "gestão e fiscalização dos profissionais por ela designados para a execução dos serviços ora contratados, bem como pelo cumprimento das correspondentes obrigações de natureza trabalhista, tributária e previdenciária."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "3.​ A tolerância, por qualquer das partes, com relação ao descumprimento de qualquer termo ou"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "condição aqui ajustado, não será considerada como desistência em exigir o cumprimento de disposição nele contida, nem representará novação com relação à obrigação passada, presente ou futura, no tocante ao termo ou condição cujo descumprimento foi tolerado."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "4.​ Fica vedado aos CONTRATADOS transferir ou subcontratar os serviços previstos neste"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Instrumento Particular, sob pena de rescisão imediata, salvo quando expressamente autorizada a transferência ou subcontratação pela CONTRATANTE."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "5.​ O presente contrato é celebrado em caráter de absoluta irrevogabilidade e irretratabilidade e o"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "seu cumprimento obriga as partes, seus herdeiros e sucessores a qualquer título."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "6.​ A nulidade de qualquer cláusula não prejudicará a validade das demais disposições contratuais.",
+    "7.​ As comunicações entre as partes poderão ser realizadas por e-mail ou aplicativo de mensagens,"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "desde que haja confirmação de recebimento."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "8.​ O presente contrato substitui qualquer ajuste verbal ou escrito anteriormente firmado entre as"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "partes, prevalecendo sobre todos os demais."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 13: Da Validação Das Assinaturas"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ Para fins de segurança, validade jurídica e autenticidade deste instrumento, as partes acordam"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "que a assinatura será realizada exclusivamente em meio eletrônico, mediante o uso de certificados digitais emitidos no âmbito da Infraestrutura de Chaves Públicas Brasileira – ICP-Brasil, ou, alternativamente, por meio de plataformas especializadas de assinatura eletrônica reconhecidas no mercado (tais como D4Sign, DocuSign, Clicksign, AdobeSign ou outra equivalente."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2.​ Quando realizada por meio da ICP-Brasil, a assinatura eletrônica deverá ser passível de validação"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "pública junto ao sítio oficial do Instituto Nacional de Tecnologia da Informação – ITI (https://validar.iti.gov.br/)."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "3.​ As partes reconhecem e declaram que as assinaturas digitais realizadas nos termos desta"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "cláusula possuem a mesma validade jurídica das assinaturas manuscritas, para todos os fins de direito, dispensando reconhecimento de firma, autenticação ou qualquer outra formalidade adicional."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "4.​ Após a assinatura eletrônica, o contrato será considerado plenamente válido, eficaz e vinculante,"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "produzindo efeitos imediatos em relação às partes e seus sucessores, a qualquer título."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "5.​ O documento final, devidamente assinado, será disponibilizado por meio da plataforma"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "utilizada, cabendo a cada parte manter a guarda e o arquivamento do instrumento em meio digital seguro, sendo facultado o armazenamento em nuvem ou em dispositivo físico de sua escolha."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 14: Do Foro"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ Para dirimir quaisquer controvérsias oriundas do presente contrato, as partes elegem o foro da"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Comarca de Mogi das Cruzes, Estado de São Paulo."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "E, por estarem assim justas e contratadas, assinam o presente contrato em 02 (duas) vias de igual teor e forma, juntamente com duas testemunhas, para que produza seus efeitos jurídicos e legais."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "{{empresa.cidade}},{{data.completa}}."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Rg: Rg:"
+  },
+  {
+   "tipo": "espaco",
+   "altura": 18
+  },
+  {
+   "tipo": "assinatura",
+   "quem": "Empregado(a)",
+   "nome": "{{pessoa.nome}} — CPF {{pessoa.cpf}}"
+  },
+  {
+   "tipo": "assinatura",
+   "quem": "Empregador",
+   "nome": "{{empresa.razao_social}} — CNPJ {{empresa.cnpj}}"
+  }
+ ],
+ "campos_pendentes": [],
+ "ativo": true
+}

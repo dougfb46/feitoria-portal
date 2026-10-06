@@ -1,0 +1,80 @@
+{
+  "codigo": "T01",
+  "titulo": "Identificação e validade",
+  "linha": "Operação com cuidado",
+  "resumo": "Depois deste treinamento você sabe etiquetar um produto manipulado, ler uma etiqueta antes de usar o produto e encaminhar uma divergência sem esconder o problema.",
+  "publico": { "funcoes": ["cozinha", "bar"], "vinculos": [], "unidades": [] },
+  "obrigatorio": true,
+  "prazo_dias": 7,
+  "reciclagem_meses": 12,
+  "duracao_min": 8,
+  "etapas": [
+    {
+      "id": "e1",
+      "tipo": "texto",
+      "titulo": "Por que a etiqueta existe",
+      "corpo": "A etiqueta responde três perguntas para quem pega o produto depois de você: **o que é**, **desde quando está pronto** e **até quando pode ser usado**. Sem ela, quem chega no turno seguinte tem duas opções ruins: jogar comida boa fora ou usar comida vencida.\n\nA etiqueta também responde uma quarta pergunta, que interessa à casa: **quem manipulou**. Isso não é vigilância — é o que permite a gente melhorar o processo em vez de adivinhar onde algo deu errado.",
+      "url": null, "legenda": null, "exige_confirmacao": false
+    },
+    {
+      "id": "e2",
+      "tipo": "texto",
+      "titulo": "O que precisa estar na etiqueta",
+      "corpo": "Produto, data e hora da manipulação, validade, método de conservação e responsável. É o que a **RDC 216/2004** e a **Portaria CVS 5/2013** pedem, e é exatamente o que a tela da cozinha imprime — você não precisa decorar prazo, o sistema calcula.\n\nDuas coisas que dependem de você:\n\n- escolher o **método de conservação certo** na tela, porque é ele que define o prazo;\n- **colar a etiqueta no produto**, não na prateleira nem na tampa que vai ser trocada.",
+      "url": null, "legenda": null, "exige_confirmacao": false
+    },
+    {
+      "id": "e3",
+      "tipo": "texto",
+      "titulo": "Quando você encontra uma divergência",
+      "corpo": "Produto sem etiqueta, etiqueta rasgada, validade vencida, produto que não parece bom mesmo dentro do prazo: nada disso é culpa de quem encontrou.\n\nO caminho é sempre o mesmo: **registre o que encontrou e encaminhe**. No checklist, isso significa marcar o item como não conforme e escrever o que aconteceu. Um checklist que aponta um problema de verdade é um checklist bem executado — e continua valendo o reconhecimento.\n\nO que **não** vale é marcar como conforme para o checklist ficar bonito. Isso transfere o problema para o cliente.",
+      "url": null, "legenda": null, "exige_confirmacao": true
+    }
+  ],
+  "verificacao": {
+    "usa": true,
+    "acertos_minimos": 2,
+    "tentativas": null,
+    "questoes": [
+      {
+        "id": "q1",
+        "pergunta": "Ao encontrar um produto manipulado sem etiqueta, o que você faz?",
+        "alternativas": [
+          { "texto": "Uso, porque provavelmente foi feito hoje.", "correta": false, "retorno": "Sem etiqueta não há como saber a data. Na dúvida, o produto não pode ser usado." },
+          { "texto": "Registro a situação e encaminho à liderança.", "correta": true, "retorno": "É isso. O registro mantém a informação disponível para quem vai tratar." },
+          { "texto": "Etiqueto com a data de hoje para regularizar.", "correta": false, "retorno": "Isso cria um registro falso: a data de hoje não é a data em que o produto foi feito." }
+        ]
+      },
+      {
+        "id": "q2",
+        "pergunta": "O que define o prazo de validade que sai na etiqueta?",
+        "alternativas": [
+          { "texto": "O método de conservação escolhido na tela.", "correta": true, "retorno": "Exato. Resfriado, congelado e ambiente têm prazos diferentes para o mesmo produto." },
+          { "texto": "O tamanho da porção.", "correta": false, "retorno": "A quantidade não muda o prazo." },
+          { "texto": "Quem está manipulando.", "correta": false, "retorno": "O responsável fica registrado, mas não altera o prazo." }
+        ]
+      },
+      {
+        "id": "q3",
+        "pergunta": "Um checklist em que você marcou um item como não conforme e explicou o problema:",
+        "alternativas": [
+          { "texto": "Foi mal executado e não conta.", "correta": false, "retorno": "Ao contrário: apontar o que está errado é parte da execução." },
+          { "texto": "Foi bem executado, e a ocorrência continua aberta até ser resolvida.", "correta": true, "retorno": "É assim que funciona aqui." },
+          { "texto": "Deveria ter ficado em branco.", "correta": false, "retorno": "Em branco ninguém sabe se você conferiu ou esqueceu." }
+        ]
+      }
+    ]
+  },
+  "certificado": {
+    "gera": true,
+    "titulo": "Certificado de treinamento — Identificação e validade",
+    "validade_meses": 12,
+    "texto": "Certificamos que {{nome}}, {{cargo}} de {{empresa}} (CNPJ {{cnpj}}), concluiu o treinamento {{titulo}}, com carga horária de {{duracao}}, em {{data}}, com verificação de aprendizagem aprovada. Conteúdo na versão {{versao}}."
+  },
+  "coins": 20,
+  "referencias": [
+    "RDC 216/2004 (ANVISA)",
+    "Portaria CVS 5/2013 (São Paulo)",
+    "Tabela de prazos da casa — ver claude/modulo-validade-e-prazos.md"
+  ]
+}

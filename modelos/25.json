@@ -1,0 +1,110 @@
+{
+ "codigo": "25",
+ "titulo": "Comunicado Interno Novo Colaborador",
+ "blocos": [
+  {
+   "tipo": "titulo",
+   "texto": "COMUNICADO INTERNO:"
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Boas Vindas Ao Novo Colaborador!"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Prezado(a) Empreendedor(a),"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "É com grande satisfação que apresento este documento, elaborado para fortalecer o relacionamento entre a sua empresa e seus colaboradores desde o primeiro contato."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "O primeiro dia de trabalho é decisivo para o sucesso da integração do novo empregado, influenciando diretamente seu engajamento, desempenho e permanência na equipe. Por isso, receber bem é um gesto simples que produz resultados duradouros — melhora o clima organizacional, aumenta a produtividade e reduz a rotatividade."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Com o objetivo de agregar valor ao seu negócio e tornar o processo de integração mais humano e eficiente, preparamos este material com orientações práticas sobre como acolher e apresentar novos colaboradores à sua equipe."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Aproveite o conteúdo e transforme a experiência de admissão em um momento de conexão e confiança."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Instruções de Uso"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Quando usar: ●​ O comunicado deve ser emitido no dia da admissão ou até dois dias após a entrada do colaborador. Ele é enviado por e-mail, fixado em murais ou compartilhado nos canais de comunicação interna (WhatsApp, mural digital, intranet, etc.)."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Objetivo prático: ●​ Reforçar a cultura de integração e acolhimento. ●​ Evitar ruídos internos (ex: colaboradores não saberem quem é o novo colega). ●​ Demonstrar organização e profissionalismo perante os empregados e clientes."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Como usar no meu negócio: ●​ Preencha os dados básicos do novo colaborador. ●​ Personalize o texto institucional com o tom da sua empresa (formal ou mais descontraído). ●​ Envie para toda a equipe ou fixe em local visível. ●​ Mantenha uma cópia digital arquivada no dossiê de admissão."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Boas práticas: ●​ Utilize uma foto do colaborador (com autorização). ●​ Inclua o valor da empresa ou missão para reforçar o clima organizacional. ●​ Envie também para fornecedores e parceiros diretos (se o cargo for estratégico)."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Comunicado Interno:"
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Boas Vindas Ao Novo Colaborador!"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Prezados(as),"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "É com grande satisfação que anunciamos a chegada de um novo membro à nossa equipe! Gostaríamos de dar as boas-vindas a {{pessoa.nome}}, que se junta a nós a partir de {{contrato.admissao}}."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "{{pessoa.nome}} assumirá a posição de {{contrato.funcao}} no departamento de {{contrato.departamento}}. Com sua experiência e habilidades em [mencione brevemente 1-2 pontos relevantes do currículo ou experiência, por exemplo: \"gestão de projetos\" ou \"atendimento ao cliente\"], temos certeza de que {{pessoa.pronome}} trará uma valiosa contribuição para o nosso time e para o sucesso de nossos projetos."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Pedimos a todos que deem uma calorosa recepção e ofereçam todo o suporte necessário para sua rápida integração. Acreditamos que um ambiente colaborativo e acolhedor é fundamental para o desenvolvimento de todos."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Em breve, {{pessoa.nome}} estará apresentando-se formalmente aos demais."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Atenciosamente,"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "{{empresa.cidade}}, {{data.dia}} de {{data.mes}} de {{data.ano}}."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Representante do Empregador​ {{pessoa.nome}}​ {{contrato.funcao}}"
+  },
+  {
+   "tipo": "espaco",
+   "altura": 18
+  },
+  {
+   "tipo": "assinatura",
+   "quem": "Empregado(a)",
+   "nome": "{{pessoa.nome}} — CPF {{pessoa.cpf}}"
+  },
+  {
+   "tipo": "assinatura",
+   "quem": "Empregador",
+   "nome": "{{empresa.razao_social}} — CNPJ {{empresa.cnpj}}"
+  }
+ ],
+ "campos_pendentes": [],
+ "ativo": true
+}

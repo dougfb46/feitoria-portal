@@ -1,0 +1,327 @@
+{
+ "codigo": "20",
+ "titulo": "Termo de Protec a o de Dados",
+ "blocos": [
+  {
+   "tipo": "titulo",
+   "texto": "TERMO DE CONFIDENCIALIDADE E PROTEÇÃO DE DADOS"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Empregados e Prestadores de Serviços Prezado(a) Empreendedor(a), Com grande satisfação, apresento a você mais um documento essencial para a proteção jurídica da sua micro ou pequena empresa. No cenário atual, a segurança da informação e a conformidade com a Lei Geral de Proteção de Dados (LGPD) são pilares fundamentais para a longevidade e reputação do seu negócio. Pensando nisso, desenvolvi este \"Termo de Confidencialidade e Proteção de Dados para Empregados e Prestadores de Serviços\". Este documento foi cuidadosamente elaborado para ser eficiente, blindado e adaptável a qualquer modelo de negócio, protegendo as informações sensíveis da sua empresa e garantindo a responsabilidade de todos que têm acesso a elas."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Instruções para Preenchimento e Utilização Este documento foi criado para ser o mais intuitivo possível. Para auxiliá-lo(a) no preenchimento e na correta utilização, siga as instruções abaixo:"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "Identificação da Empresa: Preencha os dados completos da sua empresa nos campos indicados.",
+    "Identificação do Empregado/Prestador de Serviços: Insira as informações pessoais e de contato"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "do indivíduo que irá assinar o termo."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "Definição de Informações Confidenciais: Leia atentamente a seção que define o que é"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "considerado informação confidencial. Se necessário, adicione exemplos específicos do seu negócio."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "Prazo de Confidencialidade: O prazo sugerido é de 5 anos após o término da relação. Avalie se"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "este período é adequado para o seu tipo de negócio."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "Sanções: As sanções estão predefinidas. Certifique-se de que estão de acordo com a política"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "interna da sua empresa."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "Assinaturas: O termo deve ser assinado em duas vias, uma para a empresa e outra para o"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "empregado/prestador de serviços, e testemunhado por duas pessoas."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "Armazenamento: Mantenha uma cópia física e digital deste termo em local seguro e acessível."
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Bem utilizado, esse documento agregará muito valor no seu negócio."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Termo De Proteção De Dados E Confidencialidade"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Este Termo de Proteção de Dados e Confidencialidade (doravante denominado “Acordo”) é celebrado entre as partes, com o objetivo de proteger informações confidenciais reveladas em um contexto de negócios."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Identificação Das Partes"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "CONTROLADORA: {{empresa.razao_social}}, pessoa jurídica de direito privado inscrita no CNPJ sob o nº {{empresa.cnpj}}, ou pessoa física inscrita no Registro Geral (CPF) sob o nº {{pessoa.cpf}}, com sede/endereço na {{empresa.endereco}}, doravante denominado(a) EMPRESA."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "OPERADOR(A) ADERENTE: {{pessoa.nome}}, {{pessoa.nacionalidade}}, {{pessoa.estado_civil}}, {{contrato.funcao}}, portador(a) do Registro Geral (CPF) sob o nº {{pessoa.cpf}}, residente e domiciliado(a) na [Endereço Completo do Empregado, não esquecer de colocar número, quadra, lote e CEP], doravante denominado(a) DETENTOR(A) DA INFORMAÇÃO."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "As partes acima qualificadas, doravante denominadas em conjunto “Partes”, resolvem firmar o presente Termo de Proteção de Dados Confidencialidade, que será regido pelas cláusulas e condições seguintes:"
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 01: Do Objeto"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1.​ O presente Acordo tem como objeto a proteção das informações confidenciais e dos dados"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "pessoais, sensíveis ou não, da EMPRESA e de seus clientes, com os quais o(a) DETENTOR(A) DA INFORMAÇÃO terá acesso em razão de sua relação empregatícia."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 02: Das Definições"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1. Para os fins deste Termo, considera-se:"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "●​ Controladora: a EMPRESA, responsável pelas decisões referentes ao tratamento de dados pessoais. ●​ Operador: o(a) EMPREGADO(A)/PRESTADOR(A) que realiza o tratamento de dados em nome da"
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Empresa."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "●​ Dados pessoais: informações que identifiquem ou possam identificar pessoa natural. ●​ Dados sensíveis: informações sobre origem racial ou étnica, convicção religiosa, opinião política, saúde, vida sexual, dado genético ou biométrico."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 03: Das Informações Confidenciais E Dados Pessoais"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1. Para os fins deste Termo, consideram-se Informações Confidenciais e Dados Pessoais, não a estes se"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "limitando:"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "Todas as informações técnicas, comerciais, financeiras, jurídicas, operacionais, estratégicas, de marketing, de gestão, planos de negócios, segredos industriais, know-how, metodologias, fórmulas, dados de pesquisa e desenvolvimento, projetos, especificações, desenhos, protótipos, softwares, bancos de dados, informações sobre clientes, fornecedores, parceiros, empregados, estratégias de vendas, preços, políticas comerciais, dados financeiros, resultados, relatórios e qualquer outra informação, seja ela escrita,"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "verbal, eletrônica, visual ou de qualquer outra forma, que não seja de domínio público e que seja revelada ou obtida em razão da relação com a EMPRESA."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "Quaisquer dados pessoais (nome, CPF, RG, endereço, e-mail, telefone, dados bancários, informações de saúde, dados biométricos, etc.), tanto de titulares de dados da própria EMPRESA quanto de seus clientes, fornecedores e parceiros, que sejam coletados, armazenados, processados ou compartilhados pela EMPRESA, em conformidade com a Lei nº 13.709/2018 (Lei Geral de Proteção de Dados Pessoais - LGPD)."
+   ]
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 04: Das Obrigações Do(A) Detentor(A) Da Informação"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1. O(A) DETENTOR(A) DA INFORMAÇÃO se compromete a:",
+    "Manter em sigilo absoluto todas as Informações Confidenciais e Dados Pessoais a que tiver acesso, utilizando-os exclusivamente para o cumprimento de suas atividades junto à"
+   ]
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Empresa."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "Não divulgar, copiar, reproduzir, comercializar, utilizar para benefício próprio ou de terceiros, ou de qualquer outra forma dispor das Informações Confidenciais e Dados Pessoais, sem a prévia e expressa autorização por escrito da EMPRESA.",
+    "Adotar todas as medidas de segurança razoáveis para proteger as Informações Confidenciais e Dados Pessoais contra acesso não autorizado, divulgação, alteração ou destruição.",
+    "Informar imediatamente a EMPRESA sobre qualquer violação ou suspeita de violação da confidencialidade ou da segurança dos dados.",
+    "Devolver à EMPRESA, ao término da relação empregatícia, ou a qualquer tempo quando solicitado, todos os documentos, arquivos, mídias e quaisquer outros materiais que contenham Informações Confidenciais e Dados Pessoais, sob sua posse ou controle."
+   ]
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 05: Das Limitações Da Responsabilidade"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1. O(A) EMPREGADO(A)/PRESTADOR(A) reconhece que qualquer uso indevido de dados pessoais, fora"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "das finalidades autorizadas, poderá ensejar responsabilização disciplinar, trabalhista, civil e criminal, nos termos da legislação aplicável."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 06: Do Prazo"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1. As obrigações previstas neste Termo permanecem válidas durante toda a vigência do contrato e"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "subsistirão após seu término, por prazo indeterminado, enquanto as informações não forem tornadas públicas por meios lícitos e independentes da atuação do(a) EMPREGADO(A)/PRESTADOR(A)."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 07: Das Penalidades"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1. O descumprimento de qualquer das obrigações previstas neste Termo sujeitará o(a) DETENTOR(A)"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "DA INFORMAÇÃO às seguintes sanções, sem prejuízo de outras medidas legais cabíveis:"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "Responsabilização por perdas e danos causados à EMPRESA, incluindo lucros cessantes e danos emergentes.",
+    "Rescisão imediata do contrato de trabalho por justa causa, sem prejuízo do direito da EMPRESA de pleitear indenização pelos danos sofridos.",
+    "Ação de regresso em caso de condenação da EMPRESA em decorrência de violação de dados ou confidencialidade pelo(a) DETENTOR(A) DA INFORMAÇÃO.",
+    "Aplicação de multas administrativas previstas na Lei Geral de Proteção de Dados (LGPD).",
+    "Responsabilização Criminal nos Casos Previstos em Lei."
+   ]
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 08: Da Lei Geral De Proteção De Dados (Lgpd)"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1. As partes reconhecem e concordam que as disposições deste Termo estão em conformidade com a"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Lei nº 13.709/2018 (Lei Geral de Proteção de Dados Pessoais - LGPD)."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2. O(A) DETENTOR(A) DA INFORMAÇÃO declara-se ciente de que a violação das disposições deste"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Termo relacionadas à proteção de dados pessoais poderá sujeitá-lo(a) às penalidades previstas na LGPD, bem como às sanções civis e criminais cabíveis."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 09: Das Disposições Gerais"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1. A tolerância por parte da EMPRESA, quanto ao descumprimento de qualquer das cláusulas e"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "condições do presente Acordo, não implicará em novação, renúncia ou alteração das disposições nele contidas."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "2. Qualquer alteração ou aditamento a este Acordo somente será válida se feita por escrito e assinada"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "por ambas as partes."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Cláusula 10: Do Foro"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "1. Fica eleito o foro da comarca de {{empresa.cidade}}, Estado de {{empresa.estado}}, para dirimir quaisquer dúvidas ou"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "litígios decorrentes do presente Acordo, com renúncia expressa a qualquer outro, por mais privilegiado que seja."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "{{empresa.cidade}}, {{data.dia}} de {{data.mes}} de {{data.ano}}."
+  },
+  {
+   "tipo": "espaco",
+   "altura": 18
+  },
+  {
+   "tipo": "assinatura",
+   "quem": "Empregado(a)",
+   "nome": "{{pessoa.nome}} — CPF {{pessoa.cpf}}"
+  },
+  {
+   "tipo": "assinatura",
+   "quem": "Empregador",
+   "nome": "{{empresa.razao_social}} — CNPJ {{empresa.cnpj}}"
+  }
+ ],
+ "campos_pendentes": [],
+ "ativo": true
+}

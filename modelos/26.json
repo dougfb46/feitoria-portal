@@ -1,0 +1,58 @@
+{
+ "codigo": "26",
+ "titulo": "Procedimento Operacional Padra o POP para contratos a serem firmados com pessoa juri dica",
+ "blocos": [
+  {
+   "tipo": "titulo",
+   "texto": "POP – PROCEDIMENTO OPERACIONAL PADRÃO"
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Para Contrato Prestação De Serviços"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Este Procedimento Operacional Padrão (POP) tem por finalidade orientar o empresário na formalização de contratos de prestação de serviços com pessoas jurídicas, garantindo segurança jurídica, transparência e conformidade documental em todas as etapas da contratação. PERFIL DO(A) CONTRATADO(A): O(A) contratado(a) deverá ser pessoa jurídica de direito privado, regularmente constituída, preferencialmente enquadrada como sociedade empresária limitada ou sociedade unipessoal. Atenção: Contratações de prestadores enquadrados como MEI (Microempreendedor Individual) reduzem o nível de segurança contratual, especialmente em caso de judicialização, podendo ser questionada a natureza da relação jurídica. ●​ Cartão CNJ."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Documentos A Serem Exigidos"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "●​ Contrato Social e Alterações. PELO(A) CONTRATANTE À(AO) ●​ Documentos de Identificação dos Sócios. ●​ Carteira profissional ou documento de identificação técnica, se aplicável."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Contratado(A):"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "●​ Comprovante de endereço atualizado. ●​ Certidão negative de débitos (municipal, estadual e federal), quando pertinentes. QUALIFICAÇÃO DAS PARTES: deve ●​ Razão social completa; conter todas as informações ●​ Espécie da sociedade empresária (LTDA, EIRELI, etc.); essenciais, sem abreviações ●​ Número do CNPJ; conforme segue ●​ Endereço completo com CEP; ●​ Número de telefone e WhatsApp corporativo; ●​ Endereço eletrônico (e-mail institucional); ●​ Nome e CPF do representante legal, com indicação de poderes para assinatura. FORMALIZAÇÃO E ASSINATURAS: ●​ O contrato deverá ser impresso em duas vias originais, numeradas e datadas. para assegurar a validade e ●​ Todas as páginas devem ser rubricadas e assinadas pelas partes. autenticidade do contrato, observar ●​ O representante legal da contratada deverá ser o único signatário autorizado, conforme poderes estabelecidos no contrato social. os seguintes procedimentos ●​ Caso exista cláusula específica (como a de número 10.1), esta deverá ser assinada separadamente pelo contratado no campo designado. ●​ Cada parte deve permanecer com uma via original assinada. ●​ Todos os documentos comprobatórios deverão ser arquivados em cópia junto ao contrato, compondo o dossiê contratual. ARQUIVAMENTO E CONTROLE O contrato e seus anexos devem ser arquivados em pasta física e/ou digital de “Contratos de INTERNO: Prestação de Serviços”, contendo identificação do contratado e data de assinatura.​ É recomendável a digitalização e o controle por meio de planilha ou software de gestão documental, assegurando rastreabilidade e fácil acesso em auditorias internas ou fiscais OBSERVAÇÕES IMPORTANTES: ●​ Nenhuma contratação deve ser efetivada sem conferência prévia dos documentos. ●​ É vedada a assinatura por terceiros que não sejam formalmente designados no contrato social. ●​ Recomenda-se o uso de assinatura eletrônica com certificado digital (ICP-Brasil) para reforçar a validade jurídica."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "{{empresa.cidade}}, {{data.dia}} de {{data.mes}} de {{data.ano}}."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Representante do Empregador​ {{pessoa.nome}}​ {{contrato.funcao}}"
+  },
+  {
+   "tipo": "espaco",
+   "altura": 18
+  },
+  {
+   "tipo": "assinatura",
+   "quem": "Empregado(a)",
+   "nome": "{{pessoa.nome}} — CPF {{pessoa.cpf}}"
+  },
+  {
+   "tipo": "assinatura",
+   "quem": "Empregador",
+   "nome": "{{empresa.razao_social}} — CNPJ {{empresa.cnpj}}"
+  }
+ ],
+ "campos_pendentes": [],
+ "ativo": true
+}

@@ -1,0 +1,86 @@
+{
+ "codigo": "10",
+ "titulo": "Declarac a o de Sau de Ocupacional",
+ "blocos": [
+  {
+   "tipo": "titulo",
+   "texto": "DECLARAÇÃO DE SAÚDE OCUPACIONAL"
+  },
+  {
+   "tipo": "campos",
+   "itens": [
+    {
+     "rotulo": "Empregador",
+     "valor": "{{empresa.razao_social}} — CNPJ {{empresa.cnpj}}"
+    },
+    {
+     "rotulo": "Endereço",
+     "valor": "{{empresa.endereco}}, {{empresa.cidade}}/{{empresa.estado}}"
+    },
+    {
+     "rotulo": "Empregado(a)",
+     "valor": "{{pessoa.nome}}"
+    },
+    {
+     "rotulo": "CPF",
+     "valor": "{{pessoa.cpf}}"
+    },
+    {
+     "rotulo": "Nacionalidade / estado civil",
+     "valor": "{{pessoa.nacionalidade}}, {{pessoa.estado_civil}}"
+    },
+    {
+     "rotulo": "Cargo / função",
+     "valor": "{{contrato.funcao}}"
+    }
+   ]
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Declaração"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Eu, acima qualificado(a), declaro para os devidos fins que:"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "Submeti-me ao Exame Médico Admissional, realizado em {{contrato.exame_admissional}}, conforme determina a Norma Regulamentadora nº 7 do Ministério do Trabalho e Emprego"
+   ]
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "(Nr-7)."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "Declaro que não omiti informações relevantes sobre minha condição de saúde e que estou ciente de que quaisquer doenças ou limitações preexistentes devem ser informadas ao médico examinador.",
+    "Reconheço que a presente declaração não substitui o Atestado de Saúde Ocupacional (ASO), sendo este o documento médico oficial que atesta minha aptidão ou inaptidão para o exercício das funções contratadas.",
+    "Comprometo-me a comunicar imediatamente à empresa qualquer alteração significativa em minha condição de saúde que possa comprometer o desempenho das atividades laborais ou representar risco à minha integridade física e à de terceiros.",
+    "Estou ciente de que a omissão ou a falsidade de informações poderá ensejar responsabilidade civil, trabalhista e criminal, nos termos da legislação vigente."
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "{{empresa.cidade}}, {{data.dia}} de {{data.mes}} de {{data.ano}}."
+  },
+  {
+   "tipo": "espaco",
+   "altura": 18
+  },
+  {
+   "tipo": "assinatura",
+   "quem": "Empregado(a)",
+   "nome": "{{pessoa.nome}} — CPF {{pessoa.cpf}}"
+  },
+  {
+   "tipo": "assinatura",
+   "quem": "Empregador",
+   "nome": "{{empresa.razao_social}} — CNPJ {{empresa.cnpj}}"
+  }
+ ],
+ "campos_pendentes": [],
+ "ativo": true
+}

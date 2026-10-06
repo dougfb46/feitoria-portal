@@ -1,0 +1,67 @@
+{
+ "codigo": "09",
+ "titulo": "Declarac a o de Dependentes para Fins de Imposto de Renda",
+ "blocos": [
+  {
+   "tipo": "titulo",
+   "texto": "DECLARAÇÃO DE DEPENDENTES PARA FINS DE IMPOSTO DE RENDA"
+  },
+  {
+   "tipo": "campos",
+   "itens": [
+    {
+     "rotulo": "Empregador",
+     "valor": "{{empresa.razao_social}} — CNPJ {{empresa.cnpj}}"
+    },
+    {
+     "rotulo": "Endereço",
+     "valor": "{{empresa.endereco}}, {{empresa.cidade}}/{{empresa.estado}}"
+    },
+    {
+     "rotulo": "Empregado(a)",
+     "valor": "{{pessoa.nome}}"
+    },
+    {
+     "rotulo": "CPF",
+     "valor": "{{pessoa.cpf}}"
+    },
+    {
+     "rotulo": "Nacionalidade / estado civil",
+     "valor": "{{pessoa.nacionalidade}}, {{pessoa.estado_civil}}"
+    },
+    {
+     "rotulo": "Cargo / função",
+     "valor": "{{contrato.funcao}}"
+    }
+   ]
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Declaração De Responsabilidade"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Declaro, sob as penas da lei, que as informações prestadas são verdadeiras e que os dependentes indicados nesta declaração não constam em outra declaração de IRRF como dependentes de terceiros. Estou ciente de que a prestação de informações falsas poderá ensejar penalidades administrativas e legais, bem como a responsabilização civil e criminal cabível."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "{{empresa.cidade}}, {{data.dia}} de {{data.mes}} de {{data.ano}}."
+  },
+  {
+   "tipo": "espaco",
+   "altura": 18
+  },
+  {
+   "tipo": "assinatura",
+   "quem": "Empregado(a)",
+   "nome": "{{pessoa.nome}} — CPF {{pessoa.cpf}}"
+  },
+  {
+   "tipo": "assinatura",
+   "quem": "Empregador",
+   "nome": "{{empresa.razao_social}} — CNPJ {{empresa.cnpj}}"
+  }
+ ],
+ "campos_pendentes": [],
+ "ativo": true
+}

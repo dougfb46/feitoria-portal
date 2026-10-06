@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Feitoria · Checklist</title>
+<style>
+:root{
+  color-scheme: light dark;
+  --bg:light-dark(#f5f4ee,#171f1b); --paper:light-dark(#fffefa,#232e27);
+  --ink:light-dark(#24352b,#eef3e9); --muted:light-dark(#626d64,#b6c3b8);
+  --line:light-dark(#dde2d8,#3e4b42); --verde:light-dark(#234f3b,#c1dbbf);
+  --sobre-verde:light-dark(#fffefa,#1b3324); --soft:light-dark(#eaf0e5,#334133);
+  --ambar:light-dark(#785015,#f0c876); --ambar-bg:light-dark(#fbefcf,#413720);
+  --erro:light-dark(#8d2f1a,#f3b3a2); --erro-bg:light-dark(#fbe6e0,#45251f);
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink)}
+body{font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;padding-bottom:90px}
+.topo{background:var(--paper);border-bottom:1px solid var(--line);padding:14px 16px;
+      display:flex;align-items:center;gap:11px;position:sticky;top:0;z-index:5}
+.marca{width:34px;height:34px;border-radius:50%;background:var(--verde);color:var(--sobre-verde);
+       font:24px Georgia,serif;display:grid;place-items:center;flex:0 0 auto}
+.nome{font-weight:750;letter-spacing:.14em;font-size:15px}
+.sub{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+main{max-width:720px;margin:0 auto;padding:18px 16px}
+h1{font-size:24px;line-height:1.18;font-weight:650;letter-spacing:-.03em;margin:0 0 4px}
+h2{font-size:15px;font-weight:650;margin:22px 0 8px}
+.chapeu{font-size:11px;font-weight:650;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.legenda{color:var(--muted);font-size:13px;margin:0 0 16px}
+.painel{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px}
+.item{border-top:1px solid var(--line);padding:13px 0}
+.item:first-child{border-top:none}
+.item .txt{font-size:15px;display:flex;gap:7px;align-items:flex-start;overflow-wrap:anywhere}
+.item .txt b{flex:0 0 auto;font-size:10px;letter-spacing:.06em;text-transform:uppercase;
+  background:var(--erro-bg);color:var(--erro);padding:2px 6px;border-radius:5px;margin-top:3px}
+.escolhas{display:flex;gap:8px;margin-top:9px;flex-wrap:wrap}
+.escolhas button{flex:1;min-width:92px;min-height:46px;border:1px solid var(--line);border-radius:10px;
+  background:var(--paper);color:var(--ink);font:600 14px inherit;cursor:pointer}
+.escolhas button[aria-pressed="true"]{background:var(--verde);color:var(--sobre-verde);border-color:var(--verde)}
+.escolhas button.ruim[aria-pressed="true"]{background:var(--erro);color:#fff;border-color:var(--erro)}
+input,select,textarea{width:100%;font-family:inherit;font-size:16px;line-height:1.4;color:inherit;
+  background:var(--paper);border:1px solid var(--line);border-radius:9px;padding:11px 13px;margin-top:9px}
+textarea{min-height:70px;resize:vertical}
+.linha-num{display:flex;gap:8px;align-items:center;margin-top:9px}
+.linha-num input{margin-top:0;flex:1;width:auto;min-width:0}
+.linha-num span{flex:0 0 auto;color:var(--muted);font-size:13px}
+.aviso{background:var(--ambar-bg);color:var(--ambar);border-radius:9px;padding:10px 12px;font-size:13px;margin:9px 0}
+.erro{background:var(--erro-bg);color:var(--erro);border-radius:9px;padding:10px 12px;font-size:13px;margin:9px 0}
+.ok{background:var(--soft);color:var(--verde);border-radius:9px;padding:12px 14px;font-size:14px;margin:10px 0}
+.vazio{color:var(--muted);font-size:14px}
+.botao{width:100%;min-height:48px;border:none;border-radius:10px;background:var(--verde);
+  color:var(--sobre-verde);font:650 15px inherit;cursor:pointer;margin-top:14px}
+.botao.secundaria{background:var(--paper);color:var(--verde);border:1.5px solid var(--verde)}
+.botao[disabled]{opacity:.5;cursor:default}
+.rodape{position:fixed;left:0;right:0;bottom:0;background:var(--paper);border-top:1px solid var(--line);
+  padding:10px 16px calc(10px + env(safe-area-inset-bottom));z-index:6}
+.rodape .conta{font-size:12px;color:var(--muted);margin-bottom:6px}
+.rodape .botao{margin-top:0}
+.cartao{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:10px;
+  display:flex;gap:12px;align-items:center;cursor:pointer}
+.cartao b{display:block;font-size:15px}
+.cartao span{font-size:12px;color:var(--muted)}
+.selo{margin-left:auto;font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;background:var(--soft);color:var(--verde)}
+:focus-visible{outline:3px solid var(--ambar);outline-offset:3px}
+</style>
+</head>
+<body>
+<header class="topo">
+  <div class="marca"><span>f</span></div>
+  <div><div class="nome">FEITORIA</div><div class="sub" id="unidade">Checklist</div></div>
+</header>
+<main id="tela"><p class="vazio">Carregando…</p></main>
+<div class="rodape" id="rodape" hidden></div>
+
+<script>
+// Tela de execução de checklist. Fala só com a Edge Function `checklists`.
+//
+// Desenho que vale explicar: cada resposta é gravada NA HORA, uma chamada por
+// item. Não existe "salvar tudo no fim". Numa cozinha, o celular cai, a pessoa
+// é chamada, o turno vira — e um formulário que só grava no fim perde a hora
+// em que a coisa foi conferida, que é justamente o que dá valor ao registro.
+// Como a tabela é append-only, gravar cedo não impede corrigir depois.
+//
+// Tudo que vem do servidor entra por textContent.
+const FUNCAO = "https://kujelbcbrcmkitzyswbh.supabase.co/functions/v1/checklists";
+const P = new URLSearchParams(location.search);
+const TOKEN = P.get("u") || "";
+const tela = document.getElementById("tela");
+const rodape = document.getElementById("rodape");
+
+let pin = "", execucao = null, modelo = null, respostas = new Map();
+let contarRespostas = () => {};   // a tela de itens substitui isto
+
+function el(tag, texto, classe){
+  const n = document.createElement(tag);
+  if(texto !== undefined && texto !== null) n.textContent = texto;
+  if(classe) n.className = classe;
+  return n;
+}
+async function chamar(payload){
+  const r = await fetch(FUNCAO, { method:"POST", headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({ unit_token: TOKEN, ...payload }) });
+  const d = await r.json().catch(() => ({ error:"Resposta inválida do servidor." }));
+  if(!r.ok){ const e = new Error(d.error || "Não foi possível completar."); e.dados = d; throw e; }
+  return d;
+}
+const semRede = (e) => e.message === "Failed to fetch"
+  ? "Sem conexão agora. Confira o Wi-Fi e tente de novo — o que você respondeu até aqui já está gravado."
+  : e.message;
+
+/* ---------- lista ---------- */
+async function telaLista(aviso){
+  rodape.hidden = true;
+  contarRespostas = () => {};
+  tela.replaceChildren(el("p", "Carregando…", "vazio"));
+  try {
+    const d = await chamar({ action:"modelos" });
+    document.getElementById("unidade").textContent = d.unidade.nome;
+    tela.replaceChildren();
+    if(aviso) tela.append(el("div", aviso, "ok"));
+    tela.append(el("p", "Hoje · " + d.dia_operacional.split("-").reverse().join("/"), "chapeu"),
+                el("h1",null,"Checklists do turno"),
+                el("p", "Toque no que você vai fazer agora. Cada resposta é gravada na hora.", "legenda"));
+    if(!d.modelos.length){
+      tela.append(el("p", "Nenhum checklist publicado ainda. A gestão importa os modelos na tela dela.", "vazio"));
+      return;
+    }
+    d.modelos.forEach(m => {
+      const c = el("div", null, "cartao");
+      const txt = el("div");
+      txt.append(el("b", m.titulo), el("span", [m.codigo, m.quando].filter(Boolean).join(" · ")));
+      c.append(txt);
+      if(m.feito_hoje) c.append(el("span", "feito hoje", "selo"));
+      c.onclick = () => telaPin(m.codigo, m.titulo);
+      tela.append(c);
+    });
+  } catch(e){ tela.replaceChildren(el("div", semRede(e), "erro")); }
+}
+
+/* ---------- PIN ---------- */
+function telaPin(codigo, titulo){
+  rodape.hidden = true;
+  tela.replaceChildren();
+  tela.append(el("p", codigo, "chapeu"), el("h1",null,titulo),
+    el("p", "Digite seu PIN. É ele que assina o que você responder.", "legenda"));
+  const campo = el("input");
+  campo.type = "password"; campo.inputMode = "numeric"; campo.maxLength = 6;
+  campo.placeholder = "••••"; campo.autocomplete = "off";
+  campo.style.cssText = "font-size:26px;text-align:center;letter-spacing:10px";
+  const erro = el("div");
+  const ok = el("button", "Começar", "botao");
+  const voltar = el("button", "Voltar", "botao secundaria");
+  voltar.onclick = () => telaLista();
+  ok.onclick = async () => {
+    erro.replaceChildren();
+    ok.disabled = true; ok.textContent = "Abrindo…";
+    try {
+      pin = campo.value.trim();
+      const d = await chamar({ action:"iniciar", pin, codigo, turno: P.get("t") || "noite" });
+      execucao = d.execucao_id; modelo = d.modelo;
+      respostas = new Map((d.respostas || []).map(r => [r.linha ? r.item_id+"|"+r.linha : r.item_id, r]));
+      telaItens(d.retomada, d.colaborador.nome);
+    } catch(e){
+      ok.disabled = false; ok.textContent = "Começar";
+      erro.replaceChildren(el("div", semRede(e), "erro"));
+    }
+  };
+  tela.append(campo, erro, ok, voltar);
+  campo.focus();
+}
+
+/* ---------- itens ---------- */
+function desenharItem(item){
+  const caixa = el("div", null, "item");
+  const linha = el("div", null, "txt");
+  if(item.criticidade === "critica") linha.append(el("b", "crítico"));
+  linha.append(el("span", item.texto));
+  caixa.append(linha);
+
+  const chave = item.id;
+  const jaTem = respostas.get(chave);
+  const feedback = el("div");
+
+  const gravar = async (valor, extra = {}) => {
+    feedback.replaceChildren(el("div", "gravando…", "vazio"));
+    try {
+      const anterior = respostas.get(chave);
+      const corpo = { action:"responder", pin, execucao_id: execucao, item_id: item.id, valor, ...extra };
+      if(anterior && anterior.id){
+        corpo.corrige = anterior.id;
+        corpo.motivo = extra.motivo || "corrigido na hora";
+      }
+      const r = await chamar(corpo);
+      respostas.set(chave, { id:r.id, valor, ...extra });
+      contarRespostas();
+      feedback.replaceChildren();
+      if(r.fora_do_limite){
+        feedback.append(el("div", "Fora do limite do padrão. Isso vai para a gestão resolver.", "aviso"));
+      } else if(r.sem_limite_cadastrado){
+        feedback.append(el("div", "Este item ainda não tem limite cadastrado. Ficou registrado assim mesmo.", "aviso"));
+      } else {
+        feedback.append(el("div", "gravado", "vazio"));
+      }
+    } catch(e){ feedback.replaceChildren(el("div", semRede(e), "erro")); }
+  };
+
+  if(item.resposta === "conforme_nao_conforme"){
+    const grupo = el("div", null, "escolhas");
+    const opcoes = [["Conforme", { conforme:true }, false], ["Não conforme", { conforme:false }, true]];
+    if(item.permite_nao_aplicavel !== false && item.criticidade !== "critica"){
+      opcoes.push(["Não se aplica", { conforme:null }, false]);
+    }
+    const botoes = opcoes.map(([rotulo, valor, ruim]) => {
+      const b = el("button", rotulo);
+      b.type = "button";
+      if(ruim) b.className = "ruim";
+      const marcado = jaTem && JSON.stringify(jaTem.valor) === JSON.stringify(valor);
+      b.setAttribute("aria-pressed", String(Boolean(marcado)));
+      b.onclick = () => {
+        botoes.forEach(x => x.setAttribute("aria-pressed","false"));
+        b.setAttribute("aria-pressed","true");
+        gravar(valor, valor.conforme === null ? { nao_aplicavel:true } : {});
+      };
+      grupo.append(b);
+      return b;
+    });
+    caixa.append(grupo);
+  } else if(item.resposta === "numero"){
+    const l = el("div", null, "linha-num");
+    const campo = el("input");
+    campo.type = "number"; campo.step = "any"; campo.inputMode = "decimal";
+    if(jaTem) campo.value = jaTem.valor?.numero ?? "";
+    campo.placeholder = item.limites
+      ? `entre ${item.limites.minimo ?? "—"} e ${item.limites.maximo ?? "—"}`
+      : "digite o valor";
+    campo.onchange = () => campo.value !== "" && gravar({ numero: Number(campo.value) });
+    l.append(campo);
+    if(item.unidade_medida) l.append(el("span", item.unidade_medida));
+    caixa.append(l);
+    if(!item.limites && item.exige_cadastro){
+      caixa.append(el("div", "Sem limite cadastrado — a gestão ainda precisa aprovar o padrão deste item.", "aviso"));
+    }
+  } else if(item.resposta === "escolha"){
+    const sel = el("select");
+    sel.append(el("option","— escolha —"));
+    (item.opcoes || []).forEach(o => { const op = el("option", o); op.value = o; sel.append(op); });
+    if(jaTem) sel.value = jaTem.valor?.escolha ?? "";
+    sel.onchange = () => sel.value && gravar({ escolha: sel.value });
+    caixa.append(sel);
+  } else {
+    const ta = el("textarea");
+    ta.placeholder = "Escreva aqui";
+    if(jaTem) ta.value = jaTem.valor?.texto ?? "";
+    ta.onchange = () => ta.value.trim() && gravar({ texto: ta.value.trim() });
+    caixa.append(ta);
+  }
+
+  if(item.evidencia === "foto_obrigatoria" || item.evidencia === "foto_se_nao_conforme"){
+    const foto = el("input");
+    foto.type = "file"; foto.accept = "image/*"; foto.capture = "environment";
+    foto.onchange = async () => {
+      const arq = foto.files[0];
+      if(!arq) return;
+      const leitor = new FileReader();
+      leitor.onload = () => gravar(respostas.get(chave)?.valor ?? { conforme:true }, { foto: leitor.result });
+      leitor.readAsDataURL(arq);
+    };
+    caixa.append(el("div", item.evidencia === "foto_obrigatoria" ? "Foto obrigatória" : "Foto se estiver não conforme", "vazio"), foto);
+  }
+
+  caixa.append(feedback);
+  return caixa;
+}
+
+function telaItens(retomada, nome){
+  tela.replaceChildren();
+  if(retomada) tela.append(el("div", "Você já tinha começado este checklist hoje. Continuando de onde parou.", "aviso"));
+  tela.append(el("p", modelo.codigo + " · versão " + modelo.versao, "chapeu"),
+              el("h1",null,modelo.titulo),
+              el("p", (modelo.quando ? modelo.quando + " · " : "") + nome, "legenda"));
+
+  (modelo.corpo.grupos || []).forEach(g => {
+    tela.append(el("h2", null, g.titulo));
+    if(g.dica) tela.append(el("p", g.dica, "vazio"));
+    const p = el("div", null, "painel");
+    (g.itens || []).forEach(i => p.append(desenharItem(i)));
+    tela.append(p);
+  });
+
+  const fim = el("div", null, "painel");
+  if(modelo.nota_final?.usa){
+    fim.append(el("h2", null, "Nota do bloco"));
+    const n = el("input"); n.type = "number"; n.min = 0; n.max = 10; n.step = "0.5"; n.id = "nota";
+    n.placeholder = "de 0 a 10";
+    fim.append(n);
+    const j = el("textarea"); j.id = "justificativa";
+    j.placeholder = modelo.nota_final.justifica_abaixo_de
+      ? `Abaixo de ${modelo.nota_final.justifica_abaixo_de} é obrigatório escrever o porquê`
+      : "Justificativa";
+    fim.append(j);
+  }
+  if(modelo.observacoes_livres){
+    fim.append(el("h2", null, "Observações"));
+    const o = el("textarea"); o.id = "observacoes"; o.placeholder = "Algo que a gestão precisa saber";
+    fim.append(o);
+  }
+  tela.append(fim);
+
+  rodape.hidden = false;
+  rodape.replaceChildren();
+  const conta = el("div", "", "conta");
+  const atualizar = () => {
+    const total = (modelo.corpo.grupos || []).reduce((s,g) => s + (g.itens || []).length, 0);
+    conta.textContent = `${respostas.size} de ${total} respondidos`;
+  };
+  contarRespostas = atualizar;
+  atualizar();
+  const fechar = el("button", "Concluir checklist", "botao");
+  fechar.onclick = async () => {
+    atualizar();
+    fechar.disabled = true; fechar.textContent = "Fechando…";
+    try {
+      const d = await chamar({ action:"concluir", pin, execucao_id: execucao,
+        nota: Number(document.getElementById("nota")?.value) || undefined,
+        justificativa: document.getElementById("justificativa")?.value || undefined,
+        observacoes: document.getElementById("observacoes")?.value || undefined });
+      execucao = null;
+      telaLista(d.mensagem);
+    } catch(e){
+      fechar.disabled = false; fechar.textContent = "Concluir checklist";
+      const caixa = el("div", null, "erro");
+      caixa.append(el("div", e.message));
+      (e.dados?.faltando || []).forEach(f => caixa.append(el("div", "• " + f)));
+      tela.prepend(caixa);
+      window.scrollTo({ top:0, behavior:"smooth" });
+    }
+  };
+  rodape.append(conta, fechar);
+}
+
+if(!TOKEN){
+  tela.replaceChildren(el("div", "Link sem identificação da unidade. Peça o endereço certo para a gestão.", "erro"));
+} else {
+  telaLista();
+}
+</script>
+</body>
+</html>

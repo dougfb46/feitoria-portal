@@ -1,0 +1,125 @@
+{
+ "codigo": "11",
+ "titulo": "Termo de Responsabilidade pelo Uso de Equipamentos",
+ "blocos": [
+  {
+   "tipo": "titulo",
+   "texto": "TERMO DE RESPONSABILIDADE PELO USO DE EQUIPAMENTOS"
+  },
+  {
+   "tipo": "campos",
+   "itens": [
+    {
+     "rotulo": "Empregador",
+     "valor": "{{empresa.razao_social}} — CNPJ {{empresa.cnpj}}"
+    },
+    {
+     "rotulo": "Endereço",
+     "valor": "{{empresa.endereco}}, {{empresa.cidade}}/{{empresa.estado}}"
+    },
+    {
+     "rotulo": "Empregado(a)",
+     "valor": "{{pessoa.nome}}"
+    },
+    {
+     "rotulo": "CPF",
+     "valor": "{{pessoa.cpf}}"
+    },
+    {
+     "rotulo": "Nacionalidade / estado civil",
+     "valor": "{{pessoa.nacionalidade}}, {{pessoa.estado_civil}}"
+    },
+    {
+     "rotulo": "Cargo / função",
+     "valor": "{{contrato.funcao}}"
+    }
+   ]
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "O(A) EMPREGADO(A) declara ter recebido da empresa os equipamentos abaixo descritos,"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "destinados exclusivamente ao desempenho de suas atividades profissionais: Item/Equipamento Marca/Modelo N. Série Estado de Conservação"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "O(A) EMPREGADO(A) compromete-se a:"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "i. zelar pela guarda, conservação e bom uso dos equipamentos recebidos; ii. não emprestar, repassar ou utilizar os equipamentos para fins pessoais; iii. comunicar imediatamente ao setor responsável qualquer defeito, dano ou perda."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "O(A) EMPREGADO(A) reconhece que todos os equipamentos fornecidos são de propriedade"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "exclusiva da empresa, devendo devolvê-los em perfeito estado de conservação ao término do contrato de trabalho ou quando solicitado."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "O(A) EMPREGADO(A) será responsabilizado(a) por perdas ou danos decorrentes de mau uso,"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "negligência ou dolo, autorizando desde já o desconto em folha de pagamento, nos termos do art. 462, §1º, da CLT, quando comprovada sua culpa ou dolo."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "O(A) EMPREGADO(A) declarara que utilizará o equipamento durante todo o período que a"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "atividade exigir, conforme orientações do(a) EMPRGADOR(A) podendo ser dispensado por justa causa na hipótese de omissão."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "O(A) EMPREGADO(A) compromete-se a utilizar os equipamentos observando as políticas de"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "confidencialidade e segurança da informação da empresa, sendo vedada a instalação de softwares não autorizados."
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "O(A) EMPREGADO(A) declara estar ciente das obrigações aqui descritas, assinando o presente"
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Termo em duas vias de igual teor e forma. {{empresa.cidade}}, {{data.dia}} de {{data.mes}} de {{data.ano}}. Assinaturas:"
+  },
+  {
+   "tipo": "espaco",
+   "altura": 18
+  },
+  {
+   "tipo": "assinatura",
+   "quem": "Empregado(a)",
+   "nome": "{{pessoa.nome}} — CPF {{pessoa.cpf}}"
+  },
+  {
+   "tipo": "assinatura",
+   "quem": "Empregador",
+   "nome": "{{empresa.razao_social}} — CNPJ {{empresa.cnpj}}"
+  }
+ ],
+ "campos_pendentes": [],
+ "ativo": true
+}

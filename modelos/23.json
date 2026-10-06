@@ -1,0 +1,91 @@
+{
+ "codigo": "23",
+ "titulo": "Comprovante de Entrega de Documentos para Admissa o",
+ "blocos": [
+  {
+   "tipo": "titulo",
+   "texto": "COMPROVANTE DE ENTREGA DE DOCUMENTOS PARA ADMISSÃO"
+  },
+  {
+   "tipo": "campos",
+   "itens": [
+    {
+     "rotulo": "Empregador",
+     "valor": "{{empresa.razao_social}} — CNPJ {{empresa.cnpj}}"
+    },
+    {
+     "rotulo": "Endereço",
+     "valor": "{{empresa.endereco}}, {{empresa.cidade}}/{{empresa.estado}}"
+    },
+    {
+     "rotulo": "Empregado(a)",
+     "valor": "{{pessoa.nome}}"
+    },
+    {
+     "rotulo": "CPF",
+     "valor": "{{pessoa.cpf}}"
+    },
+    {
+     "rotulo": "Nacionalidade / estado civil",
+     "valor": "{{pessoa.nacionalidade}}, {{pessoa.estado_civil}}"
+    },
+    {
+     "rotulo": "Cargo / função",
+     "valor": "{{contrato.funcao}}"
+    }
+   ]
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "1.​ Objetivo:"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "O presente termo tem como finalidade comprovar que o(a) candidato(a) acima identificado(a) entregou à Empresa todos os documentos necessários para análise e efetivação de seu processo de admissão, em conformidade com a legislação trabalhista vigente e com a política interna de proteção de dados pessoais."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "2.​ Documentos Entregues"
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "3.​ Proteção De Dados E Confidencialidade"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "O(a) candidato(a) declara estar ciente de que os documentos entregues contêm dados pessoais e sensíveis, os quais serão tratados pela Empresa exclusivamente para fins de cumprimento de obrigações legais, contratuais e administrativas, nos termos da Lei nº 13.709/2018 – Lei Geral de Proteção de Dados (LGPD). A Empresa compromete-se a manter o sigilo e a confidencialidade das informações recebidas, adotando medidas técnicas e organizacionais adequadas para garantir sua segurança, restringindo o acesso apenas a profissionais devidamente autorizados."
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "4.​ Ciência E Assinatura"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Declaro, para todos os fins, que recebi os documentos acima relacionados e que estou ciente das condições estabelecidas neste termo."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "{{empresa.cidade}}, {{data.dia}} de {{data.mes}} de {{data.ano}}."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Representante do Empregador​ {{pessoa.nome}}​ {{contrato.funcao}}"
+  },
+  {
+   "tipo": "espaco",
+   "altura": 18
+  },
+  {
+   "tipo": "assinatura",
+   "quem": "Empregado(a)",
+   "nome": "{{pessoa.nome}} — CPF {{pessoa.cpf}}"
+  },
+  {
+   "tipo": "assinatura",
+   "quem": "Empregador",
+   "nome": "{{empresa.razao_social}} — CNPJ {{empresa.cnpj}}"
+  }
+ ],
+ "campos_pendentes": [],
+ "ativo": true
+}

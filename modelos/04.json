@@ -1,0 +1,79 @@
+{
+ "codigo": "04",
+ "titulo": "Declarac a o de Veracidade de Informac o es",
+ "blocos": [
+  {
+   "tipo": "titulo",
+   "texto": "DECLARAÇÃO DE VERACIDADE DAS INFORMAÇÕES"
+  },
+  {
+   "tipo": "campos",
+   "itens": [
+    {
+     "rotulo": "Empregador",
+     "valor": "{{empresa.razao_social}} — CNPJ {{empresa.cnpj}}"
+    },
+    {
+     "rotulo": "Endereço",
+     "valor": "{{empresa.endereco}}, {{empresa.cidade}}/{{empresa.estado}}"
+    },
+    {
+     "rotulo": "Empregado(a)",
+     "valor": "{{pessoa.nome}}"
+    },
+    {
+     "rotulo": "CPF",
+     "valor": "{{pessoa.cpf}}"
+    },
+    {
+     "rotulo": "Nacionalidade / estado civil",
+     "valor": "{{pessoa.nacionalidade}}, {{pessoa.estado_civil}}"
+    },
+    {
+     "rotulo": "Cargo / função",
+     "valor": "{{contrato.funcao}}"
+    }
+   ]
+  },
+  {
+   "tipo": "subtitulo",
+   "texto": "Declaração"
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Eu, acima qualificado(a), declaro para os devidos fins que:"
+  },
+  {
+   "tipo": "lista",
+   "itens": [
+    "Todas as informações prestadas por mim no processo seletivo, bem como os documentos apresentados, são verdadeiros e autênticos, correspondendo à minha real situação pessoal, profissional e acadêmica.",
+    "Estou ciente de que a apresentação de informações ou documentos falsos ou inexatos poderá ensejar a imediata desclassificação do processo seletivo ou, em caso de contratação, a rescisão contratual por justa causa, nos termos da legislação trabalhista vigente (art. 482 da CLT).",
+    "Comprometo-me a atualizar e/ou retificar qualquer informação, caso venha a sofrer alterações relevantes durante o processo seletivo ou após eventual contratação."
+   ]
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "Por ser expressão da verdade, firmo a presente."
+  },
+  {
+   "tipo": "paragrafo",
+   "texto": "{{empresa.cidade}}, {{data.dia}} de {{data.mes}} de {{data.ano}}."
+  },
+  {
+   "tipo": "espaco",
+   "altura": 18
+  },
+  {
+   "tipo": "assinatura",
+   "quem": "Empregado(a)",
+   "nome": "{{pessoa.nome}} — CPF {{pessoa.cpf}}"
+  },
+  {
+   "tipo": "assinatura",
+   "quem": "Empregador",
+   "nome": "{{empresa.razao_social}} — CNPJ {{empresa.cnpj}}"
+  }
+ ],
+ "campos_pendentes": [],
+ "ativo": true
+}

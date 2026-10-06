@@ -1,0 +1,2611 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gestão — Feitoria</title>
+<style>
+  :root{--verde:#1f4d3a;--ambar:#c8871f;--fundo:#f4f2ed;--carta:#fff;--texto:#23261f;
+        --suave:#6b7169;--erro:#a3341f;--ok:#1f6b3f;--borda:#e2ded4}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--fundo);
+       color:var(--texto);padding:16px}
+  .app{max-width:860px;margin:0 auto}
+  .carta{background:var(--carta);border:1px solid var(--borda);border-radius:16px;padding:20px;margin-bottom:16px}
+  h1{font-size:20px;margin:0 0 4px}
+  h2{font-size:16px;margin:0 0 12px}
+  .sub{color:var(--suave);font-size:14px;margin:0 0 16px}
+  label{display:block;font-size:13px;color:var(--suave);margin:10px 0 4px}
+  input,select,textarea{width:100%;padding:11px;border:1px solid var(--borda);border-radius:9px;
+               font:inherit;background:#fff;color:var(--texto)}
+  textarea{resize:vertical;line-height:1.5}
+  button{font:inherit;cursor:pointer;border:none;border-radius:9px;padding:11px 16px;
+         background:var(--verde);color:#fff;font-weight:600}
+  button.secundaria{background:#fff;color:var(--verde);border:1.5px solid var(--verde)}
+  button.discreto{background:none;color:var(--suave);font-weight:500;padding:8px 10px}
+  button[disabled]{opacity:.5;cursor:default}
+  .linha{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end}
+  .linha>*{flex:1;min-width:140px}
+  .linha button{flex:0 0 auto}
+  .abas{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+  .abas button{background:#eceae4;color:var(--texto)}
+  .abas button.ativa{background:var(--verde);color:#fff}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th,td{text-align:left;padding:9px 6px;border-bottom:1px solid var(--borda);vertical-align:middle}
+  th{font-size:12px;color:var(--suave);text-transform:uppercase;letter-spacing:.04em}
+  td.hora{font-variant-numeric:tabular-nums;font-weight:600}
+  .etiqueta{display:inline-block;font-size:11px;padding:2px 7px;border-radius:99px;
+            background:#eceae4;color:var(--suave)}
+  .etiqueta.ponto{background:#e6efe9;color:var(--ok)}
+  .etiqueta.grave{background:#fdf3f1;color:var(--erro)}
+  .etiqueta.atencao{background:#fdf3e6;color:var(--ambar)}
+  .etiqueta.aviso{background:#eceae4;color:var(--suave)}
+  .selo{display:inline-block;min-width:18px;margin-left:6px;padding:1px 6px;border-radius:99px;
+        background:var(--erro);color:#fff;font-size:11px;font-weight:700}
+  .abas button.ativa .selo{background:#fff;color:var(--erro)}
+  .etiqueta.correcao{background:#fdf3e6;color:var(--ambar)}
+  .etiqueta.substituida{background:#f3eceb;color:var(--erro);text-decoration:line-through}
+  .aviso{background:#fdf3f1;color:var(--erro);border-radius:9px;padding:11px;font-size:14px;margin:10px 0}
+  .ok{background:#eef3ef;color:var(--ok);border-radius:9px;padding:11px;font-size:14px;margin:10px 0}
+  .vazio{color:var(--suave);font-size:14px}
+  dialog{border:none;border-radius:16px;padding:22px;max-width:420px;width:92%;
+         box-shadow:0 10px 40px rgba(0,0,0,.25)}
+  dialog::backdrop{background:rgba(0,0,0,.45)}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+
+<script type="module">
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
+// Chave publica (anon). Nao e segredo: o que protege sao as policies e o papel
+// exigido pela Edge Function. A chave da Takeat nunca chega aqui.
+const URL_SB = "https://kujelbcbrcmkitzyswbh.supabase.co";
+const ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt1amVsYmNicmNta2l0enlzd2JoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg2NDg0MzAsImV4cCI6MjEwNDIyNDQzMH0.uDwckXtywDBZGU_i4J8S9BdO2fUtRwXCOaLJbSiWzdQ";
+const sb = createClient(URL_SB, ANON);
+
+const app = document.getElementById("app");
+
+/* A07 da revisão: nada do servidor entra como HTML.
+   esc()   — texto e valor de atributo. Um nome com < ou " deixa de virar marcação.
+   guarde()— payload de botão. Antes ia JSON cru dentro de atributo com apóstrofo:
+             um nome com ' quebrava o atributo. Agora o atributo leva só o índice,
+             e o objeto fica em CARGA, na memória da página. CARGA cresce a cada
+             desenho da tela e é descartada quando a página recarrega — são poucos
+             objetos pequenos, não vale um controle de ciclo de vida. */
+const esc = (v) => String(v ?? "").replace(/[&<>"']/g, (ch) =>
+  ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[ch]));
+const CARGA = [];
+const guarde = (o) => CARGA.push(o) - 1;
+let unidades = [], unidade = null, aba = "equipe";
+let pendenciasAbertas = 0;   // aparece como selo na aba Pendências
+let recadosAbertos = 0;      // idem, na aba Operação
+let acoesVencidas = 0;       // idem, na aba NR-1: ação de risco com prazo passado
+let checklistsAbertos = 0;   // idem, na aba Checklists: ocorrência crítica aberta
+
+const hora = (iso) => new Date(iso).toLocaleTimeString("pt-BR",
+  { hour:"2-digit", minute:"2-digit", timeZone:"America/Sao_Paulo" });
+// A16 da revisão: o dia operacional era calculado no navegador, com o fuso do
+// aparelho. Um tablet configurado errado mudava a régua do relatório. Agora a
+// data vem do servidor (public.data_operacional), que é a mesma régua usada
+// pelo ponto, pela folha e pelo detector de pendências. O cálculo local fica
+// só como último recurso, e a tela avisa quando está nele.
+let diaOperacional = null;
+const hojeLocalAproximado = () => {
+  const d = new Date(Date.now() - 3600e3);
+  return new Date(d.toLocaleString("en-US", { timeZone:"America/Sao_Paulo" }))
+    .toISOString().slice(0,10);
+};
+const hojeLocal = () => diaOperacional || hojeLocalAproximado();
+
+const rotuloOrigem = (m) => {
+  if(m.por === "gestor") return "gestão";
+  return { totem:"tablet", celular:"celular" }[m.origem] || m.origem || "—";
+};
+
+async function chamar(payload){
+  const { data:{ session } } = await sb.auth.getSession();
+  if(!session) { telaLogin("Sua sessão expirou. Entre de novo."); throw new Error("sem sessão"); }
+  const r = await fetch(`${URL_SB}/functions/v1/gestao-equipe`, {
+    method:"POST",
+    headers:{ "Content-Type":"application/json", Authorization:`Bearer ${session.access_token}` },
+    body: JSON.stringify({ restaurant_id: unidade?.id, ...payload })
+  });
+  const d = await r.json().catch(()=>({error:"Resposta inválida."}));
+  if(!r.ok) throw new Error(d.error || "Não foi possível completar.");
+  return d;
+}
+
+/* ---------- login ---------- */
+function telaLogin(msg){
+  app.innerHTML = `
+    <div class="carta" style="max-width:380px;margin:60px auto">
+      <h1>Gestão da Feitoria</h1>
+      <p class="sub">Entre com seu e-mail e senha</p>
+      ${msg ? `<div class="aviso">${esc(msg)}</div>` : ""}
+      <label>E-mail</label><input type="email" id="email" autocomplete="username">
+      <label>Senha</label><input type="password" id="senha" autocomplete="current-password">
+      <button id="entrar" style="width:100%;margin-top:16px">Entrar</button>
+    </div>`;
+  const entrar = async () => {
+    const bt = document.getElementById("entrar");
+    bt.disabled = true; bt.textContent = "Entrando…";
+    const { error } = await sb.auth.signInWithPassword({
+      email: document.getElementById("email").value.trim(),
+      password: document.getElementById("senha").value
+    });
+    if(error) return telaLogin("E-mail ou senha incorretos.");
+    iniciar();
+  };
+  document.getElementById("entrar").onclick = entrar;
+  document.getElementById("senha").onkeydown = (e) => e.key === "Enter" && entrar();
+}
+
+/* ---------- moldura ---------- */
+async function iniciar(){
+  try {
+    const r = await chamar({ action:"unidades" });
+    unidades = r.unidades;
+    if(!unidades.length) return telaLogin("Seu usuário não administra nenhuma unidade.");
+    unidade = unidades.find(u => u.id === unidade?.id) || unidades[0];
+    diaOperacional = r.dia_operacional || null;
+    moldura(r.usuario);
+    atualizarSelo();
+  } catch(e){ telaLogin(e.message); }
+}
+
+function moldura(usuario){
+  app.innerHTML = `
+    <div class="carta">
+      <div class="linha">
+        <div>
+          <h1>Gestão da Feitoria</h1>
+          <p class="sub" style="margin:0">${esc(usuario)}</p>
+        </div>
+        <div style="flex:0 0 200px">
+          <label>Unidade</label>
+          <select id="unidade">${unidades.map(u =>
+            `<option value="${u.id}" ${u.id===unidade.id?"selected":""}>${esc(u.name)}</option>`).join("")}</select>
+        </div>
+        <button class="discreto" id="sair">Sair</button>
+      </div>
+    </div>
+    <div class="abas">
+      <button data-aba="equipe" class="${aba==="equipe"?"ativa":""}">Equipe</button>
+      <button data-aba="ponto"  class="${aba==="ponto" ?"ativa":""}">Ponto do dia</button>
+      <button data-aba="pend"   class="${aba==="pend"  ?"ativa":""}">Pendências${
+        pendenciasAbertas ? `<span class="selo">${pendenciasAbertas}</span>` : ""}</button>
+      <button data-aba="escala" class="${aba==="escala"?"ativa":""}">Escala</button>
+      <button data-aba="oper"   class="${aba==="oper"  ?"ativa":""}">Operação${
+        recadosAbertos ? `<span class="selo">${recadosAbertos}</span>` : ""}</button>
+      <button data-aba="chk"    class="${aba==="chk"   ?"ativa":""}">Checklists${
+        checklistsAbertos ? `<span class="selo">${checklistsAbertos}</span>` : ""}</button>
+      <button data-aba="nr1"    class="${aba==="nr1"   ?"ativa":""}">NR-1${
+        acoesVencidas ? `<span class="selo">${acoesVencidas}</span>` : ""}</button>
+      <button data-aba="docs"   class="${aba==="docs"  ?"ativa":""}">Documentos</button>
+      <button data-aba="folha"  class="${aba==="folha" ?"ativa":""}">Folha de ponto</button>
+    </div>
+    <div id="conteudo"></div>`;
+
+  document.getElementById("unidade").onchange = (e) => {
+    // A15 da revisão: antes só re-renderizava. Filtro de pessoa, período da
+    // folha, dia escolhido e o selo de pendências continuavam da unidade
+    // anterior — dados de uma casa aparecendo sob o nome da outra.
+    unidade = unidades.find(u => u.id === e.target.value);
+    filtroPessoa = "";
+    folhaFiltro = { employee_id:"", ...mesAtual() };
+    pendSituacao = "aberta";
+    diaEscolhido = null;
+    pendenciasAbertas = 0;
+    acoesVencidas = 0;
+    checklistsAbertos = 0;
+    moldura(usuario);
+    atualizarSelo();
+  };
+  document.getElementById("sair").onclick = async () => { await sb.auth.signOut(); telaLogin(); };
+  app.querySelectorAll("[data-aba]").forEach(b =>
+    b.onclick = () => { aba = b.dataset.aba; moldura(usuario); });
+  render();
+}
+const render = () => aba === "equipe" ? abaEquipe()
+  : aba === "ponto" ? abaPonto()
+  : aba === "pend" ? abaPendencias()
+  : aba === "escala" ? abaEscala()
+  : aba === "oper" ? abaOperacao()
+  : aba === "nr1" ? abaNr1()
+  : aba === "chk" ? abaChecklists()
+  : aba === "folha" ? abaFolha()
+  : abaDocs();
+const conteudo = () => document.getElementById("conteudo");
+
+async function chamarDocs(payload){
+  const { data:{ session } } = await sb.auth.getSession();
+  if(!session) { telaLogin("Sua sessão expirou. Entre de novo."); throw new Error("sem sessão"); }
+  const r = await fetch(`${URL_SB}/functions/v1/gestao-documentos`, {
+    method:"POST",
+    headers:{ "Content-Type":"application/json", Authorization:`Bearer ${session.access_token}` },
+    body: JSON.stringify({ restaurant_id: unidade?.id, ...payload })
+  });
+  const d = await r.json().catch(()=>({error:"Resposta inválida."}));
+  if(!r.ok) { const e = new Error(d.error || "Não foi possível completar."); e.dados = d; throw e; }
+  return d;
+}
+
+/* ---------- equipe ---------- */
+async function abaEquipe(){
+  conteudo().innerHTML = `<div class="carta"><p class="vazio">Carregando…</p></div>`;
+  try {
+    const r = await chamar({ action:"equipe" });
+    conteudo().innerHTML = `
+      <div class="carta">
+        <div class="linha" style="margin-bottom:14px">
+          <h2 style="margin:0">Equipe · ${esc(unidade.name)}</h2>
+          <button id="novo">Novo colaborador</button>
+        </div>
+        ${r.equipe.length ? `<table>
+          <tr><th>Nome</th><th>Função</th><th>Vínculo</th><th>Ponto</th><th>Portal</th><th>PIN</th><th></th></tr>
+          ${r.equipe.map(p => `<tr style="${p.ativo?"":"opacity:.5"}">
+            <td><b>${esc(p.nome)}</b>${p.ativo?"":" <span class='etiqueta'>inativo</span>"}</td>
+            <td>${esc(p.funcao || "—")}</td>
+            <td>${esc(rotuloTipo(p.tipo))}</td>
+            <td>${p.registra_ponto ? `<span class="etiqueta ponto">marca</span>` : "—"}</td>
+            <td>${p.perfil_portal === "completo" ? `<span class="etiqueta ponto">completo</span>`
+                 : p.perfil_portal === "treinamentos" ? `<span class="etiqueta atencao">treinamentos</span>`
+                 : "—"}</td>
+            <td>${p.tem_pin ? "definido" : `<span class="etiqueta">sem PIN</span>`}</td>
+            <td style="text-align:right;white-space:nowrap">
+              <button class="discreto" data-editar='${guarde(p)}'>editar</button>
+              <button class="discreto" data-pin="${esc(p.id)}" data-nome="${esc(p.nome)}">PIN</button>
+              <button class="discreto" data-ficha='${guarde({id:p.id,nome:p.nome})}'>ficha</button>
+            </td></tr>`).join("")}
+        </table>` : `<p class="vazio">Nenhum colaborador cadastrado ainda.</p>`}
+      </div>`;
+    document.getElementById("novo").onclick = () => formulario(null);
+    conteudo().querySelectorAll("[data-editar]").forEach(b =>
+      b.onclick = () => formulario(CARGA[b.dataset.editar]));
+    conteudo().querySelectorAll("[data-pin]").forEach(b =>
+      b.onclick = () => definirPin(b.dataset.pin, b.dataset.nome));
+    conteudo().querySelectorAll("[data-ficha]").forEach(b =>
+      b.onclick = () => abrirFicha(CARGA[b.dataset.ficha]));
+  } catch(e){ conteudo().innerHTML = `<div class="carta"><div class="aviso">${esc(e.message)}</div></div>`; }
+}
+
+const rotuloTipo = (t) => ({clt:"CLT", freela_fixo:"Freela fixo",
+  freela_variavel:"Freela variável", socio:"Sócio", pj:"PJ"})[t] || t;
+const rotuloPerfil = (v) => ({sem_acesso:"Sem acesso",
+  treinamentos:"Só treinamentos", completo:"Completo"})[v] || v;
+
+function formulario(p){
+  const d = document.createElement("dialog");
+  d.innerHTML = `
+    <h2>${p ? "Editar colaborador" : "Novo colaborador"}</h2>
+    <label>Nome completo</label><input id="f-nome" value="${esc(p?.nome || "")}">
+    <label>Função</label><input id="f-funcao" value="${esc(p?.funcao || "")}" placeholder="Atendente, cozinha…">
+    <label>Vínculo</label>
+    <select id="f-tipo">${["clt","freela_fixo","freela_variavel","socio","pj"].map(t =>
+      `<option value="${t}" ${p?.tipo===t?"selected":""}>${rotuloTipo(t)}</option>`).join("")}</select>
+    <label>Data de nascimento</label>
+    <input type="date" id="f-nascimento" value="${p?.nascimento || ""}">
+    <p class="sub" style="margin:4px 0 0;font-size:12px">
+      Confere junto com o PIN no portal do celular. São dois dados que a pessoa
+      sabe, não autenticação de dois fatores — sem ela a pessoa não acessa o
+      portal, e o tablet do ponto continua só com PIN.</p>
+    <label>Admissão</label><input type="date" id="f-admitido" value="${p?.admitido_em || ""}">
+    <label>Desligamento (deixe vazio se está ativo)</label>
+    <input type="date" id="f-desligado" value="${p?.desligado_em || ""}">
+    <label style="display:flex;gap:8px;align-items:center;margin-top:14px;color:var(--texto)">
+      <input type="checkbox" id="f-ponto" style="width:auto" ${p?.registra_ponto?"checked":""}>
+      Registra ponto
+    </label>
+    <p class="sub" style="margin:4px 0 0;font-size:12px">
+      Só CLT e sócio marcam ponto. Freela é escalado e pago por turno, na planilha.</p>
+    <label style="margin-top:14px">Acesso ao portal</label>
+    <select id="f-perfil">${["sem_acesso","treinamentos","completo"].map(v =>
+      `<option value="${v}" ${(p?.perfil_portal || "sem_acesso")===v?"selected":""}>${rotuloPerfil(v)}</option>`).join("")}</select>
+    <p class="sub" style="margin:4px 0 0;font-size:12px">
+      <b>Sem acesso</b> não entra no portal. <b>Só treinamentos</b> entra para fazer
+      treinamento, vê o certificado dele e o mural — não vê holerite, contrato nem
+      folha de ponto; é o caso do freela. <b>Completo</b> vê tudo o que é dele.</p>
+    <div id="f-erro"></div>
+    <div class="linha" style="margin-top:18px">
+      <button id="f-salvar">Salvar</button>
+      <button class="secundaria" id="f-cancelar">Cancelar</button>
+    </div>`;
+  document.body.appendChild(d); d.showModal();
+  d.querySelector("#f-cancelar").onclick = () => d.close();
+  d.addEventListener("close", () => d.remove());
+  d.querySelector("#f-salvar").onclick = async (ev) => {
+    ev.target.disabled = true;
+    try {
+      await chamar({ action:"salvar", id:p?.id,
+        nome: d.querySelector("#f-nome").value,
+        funcao: d.querySelector("#f-funcao").value,
+        tipo: d.querySelector("#f-tipo").value,
+        perfil_portal: d.querySelector("#f-perfil").value,
+        nascimento: d.querySelector("#f-nascimento").value || null,
+        admitido_em: d.querySelector("#f-admitido").value || null,
+        desligado_em: d.querySelector("#f-desligado").value || null,
+        registra_ponto: d.querySelector("#f-ponto").checked,
+        ativo: !d.querySelector("#f-desligado").value });
+      d.close(); abaEquipe();
+    } catch(e){
+      ev.target.disabled = false;
+      d.querySelector("#f-erro").innerHTML = `<div class="aviso">${esc(e.message)}</div>`;
+    }
+  };
+}
+
+function definirPin(id, nome){
+  const d = document.createElement("dialog");
+  d.innerHTML = `
+    <h2>PIN de ${esc(nome)}</h2>
+    <p class="sub">De 4 a 6 números. É com ele que a pessoa marca o ponto e etiqueta na cozinha.</p>
+    <input id="p-pin" inputmode="numeric" maxlength="6" placeholder="••••"
+           style="font-size:26px;text-align:center;letter-spacing:10px">
+    <div id="p-erro"></div>
+    <div class="linha" style="margin-top:18px">
+      <button id="p-salvar">Definir</button>
+      <button class="secundaria" id="p-cancelar">Cancelar</button>
+    </div>`;
+  document.body.appendChild(d); d.showModal();
+  d.querySelector("#p-cancelar").onclick = () => d.close();
+  d.addEventListener("close", () => d.remove());
+  d.querySelector("#p-salvar").onclick = async (ev) => {
+    ev.target.disabled = true;
+    try {
+      await chamar({ action:"pin", employee_id:id, pin: d.querySelector("#p-pin").value.trim() });
+      d.close(); abaEquipe();
+    } catch(e){
+      ev.target.disabled = false;
+      d.querySelector("#p-erro").innerHTML = `<div class="aviso">${esc(e.message)}</div>`;
+    }
+  };
+}
+
+async function chamarGerar(payload){
+  const { data:{ session } } = await sb.auth.getSession();
+  if(!session) { telaLogin("Sua sessão expirou. Entre de novo."); throw new Error("sem sessão"); }
+  const r = await fetch(`${URL_SB}/functions/v1/gestao-gerar`, {
+    method:"POST",
+    headers:{ "Content-Type":"application/json", Authorization:`Bearer ${session.access_token}` },
+    body: JSON.stringify({ restaurant_id: unidade?.id, ...payload })
+  });
+  const d = await r.json().catch(()=>({error:"Resposta inválida."}));
+  if(!r.ok) { const e = new Error(d.error || "Não foi possível completar."); e.dados = d; throw e; }
+  return d;
+}
+
+async function chamarFn(fn, payload){
+  const { data:{ session } } = await sb.auth.getSession();
+  if(!session) { telaLogin("Sua sessão expirou. Entre de novo."); throw new Error("sem sessão"); }
+  const r = await fetch(`${URL_SB}/functions/v1/${fn}`, {
+    method:"POST",
+    headers:{ "Content-Type":"application/json", Authorization:`Bearer ${session.access_token}` },
+    body: JSON.stringify({ restaurant_id: unidade?.id, ...payload })
+  });
+  const d = await r.json().catch(()=>({error:"Resposta inválida."}));
+  if(!r.ok) { const e = new Error(d.error || "Não foi possível completar."); e.dados = d; throw e; }
+  return d;
+}
+const chamarFolha   = (p) => chamarFn("gestao-folha", p);
+const chamarPend    = (p) => chamarFn("gestao-pendencias", p);
+async function chamarOper(payload){
+  const { data:{ session } } = await sb.auth.getSession();
+  if(!session) { telaLogin("Sua sessão expirou. Entre de novo."); throw new Error("sem sessão"); }
+  const r = await fetch(`${URL_SB}/functions/v1/operacao`, {
+    method:"POST",
+    headers:{ "Content-Type":"application/json", Authorization:`Bearer ${session.access_token}` },
+    body: JSON.stringify({ unit_token: unidade?.public_token, ...payload })
+  });
+  const d = await r.json().catch(()=>({error:"Resposta inválida."}));
+  if(!r.ok) throw new Error(d.error || "Não foi possível completar.");
+  return d;
+}
+const chamarModelos = (p) => chamarFn("gestao-modelos", p);
+
+/* ---------- ficha de registro ---------- */
+const CAMPOS_FICHA = [
+  ["Identificação", [
+    ["nome_completo","Nome completo","text"], ["nascimento_txt","Data de nascimento","aviso"],
+    ["sexo","Sexo","select:Masculino,Feminino,Outro"],
+    ["estado_civil","Estado civil","select:solteiro(a),casado(a),divorciado(a),viúvo(a),união estável"],
+    ["nacionalidade","Nacionalidade","text"],
+    ["nome_mae","Nome da mãe","text"], ["nome_pai","Nome do pai","text"],
+  ]],
+  ["Endereço e contato", [
+    ["endereco","Logradouro e número","text"], ["bairro","Bairro","text"],
+    ["cep","CEP","text"], ["cidade","Cidade","text"], ["estado","UF","text"],
+    ["telefone","Telefone","text"], ["email","E-mail","text"],
+  ]],
+  ["Documentos", [
+    ["cpf","CPF","text"], ["rg","RG","text"], ["rg_orgao","Órgão expedidor/UF","text"],
+    ["titulo_eleitor","Título de eleitor","text"], ["titulo_zona_secao","Zona/Seção","text"],
+    ["ctps","CTPS digital","text"], ["pis","PIS/PASEP","text"],
+    ["cnh","CNH","text"], ["cnh_categoria","Categoria","text"],
+    ["reservista","Certificado de reservista","text"],
+  ]],
+  ["Contrato", [
+    ["cargo","Cargo/função","text"], ["cbo","CBO","text"],
+    ["salario","Salário (R$)","number"],
+    ["tipo_contrato","Tipo de contrato","select:Prazo indeterminado,Prazo determinado,Experiência"],
+    ["data_termino","Data de término","date"],
+    ["jornada","Jornada de trabalho","text"],
+    ["local_prestacao","Local de prestação","text"],
+    ["exame_admissional","Data do exame admissional","date"],
+  ]],
+];
+
+async function abrirFicha(pessoa){
+  const { ficha, empresa } = await chamarGerar({ action:"ficha", employee_id: pessoa.id });
+  const v = (c) => (ficha?.[c] ?? "");
+  const d = document.createElement("dialog");
+  d.style.maxWidth = "560px";
+  d.innerHTML = `
+    <h2>Ficha de ${esc(pessoa.nome)}</h2>
+    <p class="sub">É daqui que saem os documentos. Campo vazio impede gerar o que depende dele.</p>
+    ${empresa ? "" : `<div class="aviso">Cadastre os dados da empresa antes.</div>`}
+    ${CAMPOS_FICHA.map(([grupo, campos]) => `
+      <h2 style="margin:18px 0 2px;font-size:14px">${grupo}</h2>
+      ${campos.map(([c, rotulo, tipo]) => {
+        if(tipo === "aviso") return `<p class="sub" style="margin:8px 0 0;font-size:12px">
+          A data de nascimento fica no cadastro do colaborador, na aba Equipe.</p>`;
+        if(tipo.startsWith("select:")) return `<label>${rotulo}</label>
+          <select id="fi-${c}">${["", ...tipo.slice(7).split(",")].map(o =>
+            `<option value="${o}" ${v(c)===o?"selected":""}>${o || "—"}</option>`).join("")}</select>`;
+        return `<label>${rotulo}</label>
+          <input type="${tipo}" id="fi-${c}" value="${esc(v(c))}">`;
+      }).join("")}`).join("")}
+    <div id="fi-erro"></div>
+    <div class="linha" style="margin-top:20px">
+      <button id="fi-salvar">Salvar ficha</button>
+      <button class="secundaria" id="fi-cancelar">Fechar</button>
+    </div>`;
+  document.body.appendChild(d); d.showModal();
+  d.querySelector("#fi-cancelar").onclick = () => d.close();
+  d.addEventListener("close", () => d.remove());
+  d.querySelector("#fi-salvar").onclick = async (ev) => {
+    ev.target.disabled = true;
+    const dados = { action:"salvar_ficha", employee_id: pessoa.id, company_id: empresa?.id };
+    for(const [, campos] of CAMPOS_FICHA)
+      for(const [c,, tipo] of campos){
+        if(tipo === "aviso") continue;
+        const el = d.querySelector(`#fi-${c}`);
+        if(el) dados[c] = el.value;
+      }
+    try { await chamarGerar(dados); d.close(); abaEquipe(); }
+    catch(e){ ev.target.disabled = false;
+      d.querySelector("#fi-erro").innerHTML = `<div class="aviso">${esc(e.message)}</div>`; }
+  };
+}
+
+/* ---------- gerar documento de modelo ---------- */
+async function formGerar(equipe){
+  const { modelos } = await chamarGerar({ action:"modelos" });
+  if(!modelos.length) return alert("Nenhum modelo ativo cadastrado ainda.");
+  const d = document.createElement("dialog");
+  d.innerHTML = `
+    <h2>Gerar documento</h2>
+    <p class="sub">O PDF é montado com os dados da ficha e entra na fila de assinatura.</p>
+    <label>Colaborador</label>
+    <select id="g-pessoa">${equipe.filter(p=>p.ativo).map(p =>
+      `<option value="${esc(p.id)}">${esc(p.nome)}</option>`).join("")}</select>
+    <label>Modelo</label>
+    <select id="g-modelo">${modelos.map(m =>
+      `<option value="${esc(m.id)}">${esc(m.codigo)} — ${esc(m.titulo)}</option>`).join("")}</select>
+    <label>Data do documento</label>
+    <input type="date" id="g-data" value="${hojeLocal()}">
+    <p class="sub" style="margin:4px 0 0;font-size:12px">
+      Pode ser retroativa, para regularizar quem já está admitido. A data da
+      <b>assinatura</b> é sempre a real — essa não se antedata.</p>
+    <label>Prazo para assinar (opcional)</label><input type="date" id="g-prazo">
+    <div id="g-erro"></div>
+    <div class="linha" style="margin-top:18px">
+      <button class="secundaria" id="g-previa">Conferir antes</button>
+      <button id="g-gerar">Gerar</button>
+      <button class="discreto" id="g-cancelar">Cancelar</button>
+    </div>`;
+  document.body.appendChild(d); d.showModal();
+  d.querySelector("#g-cancelar").onclick = () => d.close();
+  d.addEventListener("close", () => d.remove());
+
+  const payload = () => ({
+    employee_id: d.querySelector("#g-pessoa").value,
+    template_id: d.querySelector("#g-modelo").value,
+    data_documento: d.querySelector("#g-data").value,
+    prazo: d.querySelector("#g-prazo").value || null,
+  });
+  const erro = d.querySelector("#g-erro");
+
+  d.querySelector("#g-previa").onclick = async () => {
+    erro.innerHTML = `<p class="vazio">Conferindo…</p>`;
+    try {
+      const r = await chamarGerar({ action:"previa", ...payload() });
+      erro.innerHTML = r.pronto
+        ? `<div class="ok">Tudo preenchido. ${r.blocos.length} blocos.</div>`
+        : `<div class="aviso">Falta na ficha: ${esc((r.faltando||[]).join(", ") || "—")}
+           ${r.pendentes?.length ? "<br>Marcadores sem decisão: " + esc(r.pendentes.join(", ")) : ""}</div>`;
+    } catch(e){ erro.innerHTML = `<div class="aviso">${esc(e.message)}</div>`; }
+  };
+
+  d.querySelector("#g-gerar").onclick = async (ev) => {
+    ev.target.disabled = true; ev.target.textContent = "Gerando…";
+    try {
+      const r = await chamarGerar({ action:"gerar", ...payload() });
+      d.close();
+      alert(`"${esc(r.titulo)}" gerado.\nImpressão digital: ${esc(r.sha256_curto)}`);
+      abaDocs();
+    } catch(e){
+      ev.target.disabled = false; ev.target.textContent = "Gerar";
+      const f = e.dados?.faltando?.length ? "<br>Falta na ficha: " + esc(e.dados.faltando.join(", ")) : "";
+      erro.innerHTML = `<div class="aviso">${esc(e.message)}${f}</div>`;
+    }
+  };
+}
+
+/* ---------- documentos ---------- */
+let filtroPessoa = "";
+async function abaDocs(){
+  conteudo().innerHTML = `<div class="carta"><p class="vazio">Carregando…</p></div>`;
+  try {
+    const [{ equipe }, { tipos }, { documentos }, { pendentes }] = await Promise.all([
+      chamar({ action:"equipe" }),
+      chamarDocs({ action:"tipos" }),
+      chamarDocs({ action:"listar", employee_id: filtroPessoa || undefined }),
+      chamarDocs({ action:"pendencias" }),
+    ]);
+
+    conteudo().innerHTML = `
+      ${pendentes.length ? `<div class="carta">
+        <h2>Esperando assinatura</h2>
+        <table>
+          <tr><th>Colaborador</th><th>Documento</th><th>Prazo</th></tr>
+          ${pendentes.map(p => `<tr>
+            <td><b>${esc(p.colaborador)}</b></td>
+            <td>${esc(p.titulo)}</td>
+            <td>${p.prazo ? (p.atrasado
+                  ? `<span class="etiqueta substituida">${p.prazo.split("-").reverse().join("/")}</span>`
+                  : p.prazo.split("-").reverse().join("/")) : "—"}</td>
+          </tr>`).join("")}
+        </table>
+      </div>` : ""}
+
+      <div class="carta">
+        <div class="linha" style="margin-bottom:14px">
+          <div style="flex:1">
+            <label>Filtrar por colaborador</label>
+            <select id="filtro">
+              <option value="">Todos</option>
+              ${equipe.map(p => `<option value="${esc(p.id)}" ${filtroPessoa===p.id?"selected":""}>${esc(p.nome)}</option>`).join("")}
+            </select>
+          </div>
+          <button class="secundaria" id="gerar">Gerar de modelo</button>
+          <button class="discreto" id="importar">Importar modelos</button>
+          <button class="secundaria" id="folha-mes">Publicar folha do mês</button>
+          <button id="enviar">Enviar documento</button>
+        </div>
+        ${documentos.length ? `<table>
+          <tr><th>Documento</th><th>De quem</th><th>Assinatura</th><th>Arquivo</th><th></th></tr>
+          ${documentos.map(d => `<tr>
+            <td><b>${esc(d.titulo)}</b>
+                <div class="sub">${esc(d.tipo)}${esc(d.competencia ? " · "+d.competencia : "")}</div></td>
+            <td>${esc(d.colaborador)}</td>
+            <td>${d.exige_assinatura
+                  ? (d.assinaturas.length
+                      ? `<span class="etiqueta ponto">assinado</span>
+                         <div class="sub">${new Date(d.assinaturas[0].quando)
+                            .toLocaleString("pt-BR",{dateStyle:"short",timeStyle:"short",timeZone:"America/Sao_Paulo"})}</div>`
+                      : `<span class="etiqueta correcao">pendente</span>`)
+                  : "—"}</td>
+            <td><span class="sub" title="impressão digital do arquivo">${esc(d.sha256_curto)}</span></td>
+            <td style="text-align:right;white-space:nowrap">
+              <button class="discreto" data-abrir="${esc(d.id)}">abrir</button>
+              <button class="discreto" data-arquivar="${esc(d.id)}">arquivar</button>
+            </td></tr>`).join("")}
+        </table>` : `<p class="vazio">Nenhum documento ainda.</p>`}
+      </div>`;
+
+    document.getElementById("filtro").onchange = (e) => { filtroPessoa = e.target.value; abaDocs(); };
+    document.getElementById("importar").onclick = () => formModelos();
+    document.getElementById("enviar").onclick = () => formEnvio(equipe, tipos);
+    document.getElementById("folha-mes").onclick = () => formFolhaDoMes(equipe);
+    document.getElementById("gerar").onclick = () => formGerar(equipe);
+    conteudo().querySelectorAll("[data-abrir]").forEach(b => b.onclick = async () => {
+      try { const { url } = await chamarDocs({ action:"abrir", id:b.dataset.abrir });
+            window.open(url, "_blank", "noopener"); }
+      catch(e){ alert(e.message); }
+    });
+    conteudo().querySelectorAll("[data-arquivar]").forEach(b => b.onclick = async () => {
+      const motivo = prompt("Por que arquivar este documento?\nO registro e as assinaturas continuam guardados.");
+      if(!motivo) return;
+      try { await chamarDocs({ action:"arquivar", id:b.dataset.arquivar, motivo }); abaDocs(); }
+      catch(e){ alert(e.message); }
+    });
+  } catch(e){ conteudo().innerHTML = `<div class="carta"><div class="aviso">${esc(e.message)}</div></div>`; }
+}
+
+function formEnvio(equipe, tipos){
+  const d = document.createElement("dialog");
+  d.innerHTML = `
+    <h2>Enviar documento</h2>
+    <p class="sub">PDF de até 10 MB. O arquivo fica em área privada e só abre por link temporário.</p>
+    <label>Tipo</label>
+    <select id="e-tipo">${tipos.map(t => `<option value="${esc(t.id)}" data-assina="${t.assina}">${esc(t.nome)}</option>`).join("")}</select>
+    <label>Para quem</label>
+    <select id="e-pessoa">${equipe.filter(p=>p.ativo).map(p => `<option value="${esc(p.id)}">${esc(p.nome)}</option>`).join("")}</select>
+    <label>Título</label><input id="e-titulo" placeholder="Holerite de setembro">
+    <label>Competência (opcional)</label><input type="month" id="e-comp">
+    <label>Prazo para assinar (opcional)</label><input type="date" id="e-prazo">
+    <label style="display:flex;gap:8px;align-items:center;margin-top:14px;color:var(--texto)">
+      <input type="checkbox" id="e-assina" style="width:auto" checked> Exige assinatura
+    </label>
+    <label style="display:flex;gap:8px;align-items:center;color:var(--texto)">
+      <input type="checkbox" id="e-mural" style="width:auto"> É do mural (toda a equipe, sem assinatura)
+    </label>
+    <label>Arquivo PDF</label><input type="file" id="e-arquivo" accept="application/pdf">
+    <div id="e-erro"></div>
+    <div class="linha" style="margin-top:18px">
+      <button id="e-salvar">Enviar</button>
+      <button class="secundaria" id="e-cancelar">Cancelar</button>
+    </div>`;
+  document.body.appendChild(d); d.showModal();
+  d.querySelector("#e-cancelar").onclick = () => d.close();
+  d.addEventListener("close", () => d.remove());
+
+  const tipo = d.querySelector("#e-tipo");
+  tipo.onchange = () => {
+    d.querySelector("#e-assina").checked =
+      tipo.selectedOptions[0].dataset.assina === "true";
+  };
+  const mural = d.querySelector("#e-mural");
+  mural.onchange = () => {
+    d.querySelector("#e-pessoa").disabled = mural.checked;
+    if(mural.checked) d.querySelector("#e-assina").checked = false;
+  };
+
+  d.querySelector("#e-salvar").onclick = async (ev) => {
+    const erro = d.querySelector("#e-erro");
+    const arquivo = d.querySelector("#e-arquivo").files[0];
+    if(!arquivo) return erro.innerHTML = `<div class="aviso">Escolha o arquivo PDF.</div>`;
+    if(arquivo.size > 10*1024*1024) return erro.innerHTML = `<div class="aviso">O PDF passa de 10 MB.</div>`;
+
+    ev.target.disabled = true; ev.target.textContent = "Enviando…";
+    try {
+      const base64 = await new Promise((ok, falhou) => {
+        const fr = new FileReader();
+        fr.onload = () => ok(fr.result);
+        fr.onerror = () => falhou(new Error("Não consegui ler o arquivo."));
+        fr.readAsDataURL(arquivo);
+      });
+      const enviar = (confirmar) => chamarDocs({
+        action:"enviar", arquivo: base64,
+        tipo: tipo.value,
+        titulo: d.querySelector("#e-titulo").value,
+        competencia: d.querySelector("#e-comp").value || null,
+        prazo: d.querySelector("#e-prazo").value || null,
+        exige_assinatura: d.querySelector("#e-assina").checked,
+        visibilidade: mural.checked ? "mural" : "colaborador",
+        employee_id: mural.checked ? null : d.querySelector("#e-pessoa").value,
+        confirmar_duplicado: confirmar,
+      });
+      try { await enviar(false); }
+      catch(err){
+        // Arquivo idêntico já enviado: confirma em vez de duplicar em silêncio.
+        if(err.dados?.duplicado && confirm(err.message + "\nEnviar assim mesmo?")) await enviar(true);
+        else throw err;
+      }
+      d.close(); abaDocs();
+    } catch(e){
+      ev.target.disabled = false; ev.target.textContent = "Enviar";
+      erro.innerHTML = `<div class="aviso">${esc(e.message)}</div>`;
+    }
+  };
+}
+
+/* ---------- publicar a folha do mês (holerite e vale-transporte) ---------- */
+// A contabilidade manda um PDF só, com todo mundo junto. Esta tela separa por
+// pessoa e publica cada pedaço para assinatura no portal.
+//
+// Por que a separação acontece AQUI e não no servidor: o casamento entre o nome
+// impresso no PDF e o cadastro é a parte que erra. Separar no navegador deixa
+// você conferir a lista antes de publicar — e documento publicado no nome errado
+// é pior do que documento não publicado.
+//
+// Dois formatos, porque a contabilidade usa dois:
+//   Recibo de Pagamento        -> uma página por pessoa. Separa limpo.
+//   Recibo de Vale Transporte  -> vários recibos empilhados na mesma página.
+//
+// COMO O VALE-TRANSPORTE EMPILHADO É SEPARADO (01/10): recortar a página NÃO
+// serve. Testei os dois caminhos — mudar o MediaBox e usar embedPage com
+// bounding box — e nos dois o nome, o CPF e o valor da outra pessoa continuavam
+// dentro do arquivo: o recorte esconde, não apaga, e qualquer extrator de texto
+// traz de volta. Entregar assim seria dar o dado de um colega para o outro com
+// aparência de protegido.
+// A saída é desenhar de novo: a faixa do recibo é renderizada em imagem a 200
+// dpi e vira uma página nova. O que ficou fora não existe no arquivo, porque o
+// arquivo é feito só daquele pedaço. O preço é que o texto deixa de ser
+// selecionável — aceitável num recibo que vai ser lido e assinado, e o selo
+// SHA-256 da assinatura continua provando o conteúdo. Melhor ainda seria a
+// contabilidade mandar um recibo por página, como já faz no holerite.
+
+const semAcento = (s) => String(s ?? "").normalize("NFD").replace(/[̀-ͯ]/g, "");
+const chaveNome = (s) => semAcento(s).toUpperCase().replace(/[^A-Z ]/g, " ").replace(/\s+/g, " ").trim();
+const MESES_PT = ["janeiro","fevereiro","marco","abril","maio","junho",
+                  "julho","agosto","setembro","outubro","novembro","dezembro"];
+
+/** Agrupa os pedaços de texto do pdf.js em linhas, de cima para baixo.
+    Agrupa por proximidade, não por valor exato: numa mesma linha da tabela o
+    gerador do PDF varia meio ponto na altura, e arredondar partia a linha em
+    duas — foi o que fez a leitura dos campos falhar na primeira versão. */
+function linhasDaPagina(conteudoTexto){
+  const itens = conteudoTexto.items
+    .filter(i => i.str && i.str.trim())
+    .map(i => ({ y:i.transform[5], x:i.transform[4], txt:i.str }))
+    .sort((a,b) => b.y - a.y);
+
+  const linhas = [];
+  for(const it of itens){
+    const ultima = linhas[linhas.length - 1];
+    if(ultima && Math.abs(ultima.y - it.y) <= 2) ultima.partes.push(it);
+    else linhas.push({ y:it.y, partes:[it] });
+  }
+  return linhas.map(l => ({
+    y: l.y,
+    texto: l.partes.sort((a,b) => a.x - b.x).map(p => p.txt).join(" ").replace(/\s+/g, " ").trim(),
+  }));
+}
+
+function competenciaDeTexto(texto){
+  const m = /\b([A-Za-zç]+)\s+de\s+(\d{4})/.exec(semAcento(texto));
+  if(!m) return null;
+  const i = MESES_PT.indexOf(m[1].toLowerCase());
+  return i < 0 ? null : `${m[2]}-${String(i+1).padStart(2,"0")}`;
+}
+
+/** Lê o PDF consolidado e devolve um item por documento a publicar. */
+async function lerConsolidado(pdfjs, arquivo, especie, guardaPdf){
+  const bytes = new Uint8Array(await arquivo.arrayBuffer());
+  const pdf = await pdfjs.getDocument({ data: bytes }).promise;
+  if(guardaPdf) guardaPdf.set(arquivo, pdf);
+  const achados = [];
+
+  for(let p = 1; p <= pdf.numPages; p++){
+    const pagina = await pdf.getPage(p);
+    const linhas = linhasDaPagina(await pagina.getTextContent());
+
+    if(especie === "holerite"){
+      // "12 GIOVANA SANDOR CAMPOS JACINTO 513505 1 1"
+      let nome = null;
+      for(const l of linhas){
+        const m = /^(\d+)\s+([A-ZÀ-Ü][A-ZÀ-Ü\s.]{4,}?)\s+\d{6}\b/.exec(l.texto);
+        if(m){ nome = m[2].trim(); break; }
+      }
+      const comp = linhas.map(l => competenciaDeTexto(l.texto)).find(Boolean) || null;
+      achados.push({ pagina:p, nome, competencia:comp, dados:null, recorte:null });
+    } else {
+      // Cada "RECIBO DE VALE TRANSPORTE" abre um bloco. Agrupo as linhas de
+      // cada bloco e leio os campos: é com eles que o recibo individual é
+      // emitido, em vez de recortar a página alheia.
+      const topos = [];
+      for(const l of linhas){
+        if(/^RECIBO DE VALE TRANSPORTE/i.test(l.texto)) topos.push({ y:l.y, linhas:[] });
+        else if(topos.length) topos[topos.length-1].linhas.push(l.texto);
+      }
+      const juntos = topos.length > 1;
+      const [, , largura, altura] = pagina.view;
+      topos.forEach((t, k) => {
+        const dados = camposDoVale(t.linhas);
+        // Se a leitura dos campos falhar, cai no redesenho da faixa — pior,
+        // mas nunca entrega o recibo do colega junto.
+        const baixo = k + 1 < topos.length ? topos[k+1].y + 30 : 0;
+        const alto  = Math.min(altura, t.y + 30);
+        achados.push({
+          pagina: p, nome: dados?.nome ?? null, competencia: dados?.competencia ?? null,
+          dados: dados,
+          recorte: (juntos && !dados)
+            ? { x:0, baixo, largura, altura: alto - baixo, alturaPagina: altura } : null,
+        });
+      });
+    }
+  }
+  return achados;
+}
+
+/** Lê os campos de um recibo de vale-transporte. Devolve null se faltar o
+    essencial — melhor cair no redesenho do que emitir recibo com buraco. */
+function camposDoVale(linhas){
+  const txt = linhas.join("\n");
+  const d = {};
+
+  const mn = /Nome:\s*(\d+)\s*-\s*(.+?)\s+CPF:\s*([\d.\-]+)/.exec(txt);
+  if(!mn) return null;
+  d.codigo = mn[1]; d.nome = mn[2].trim(); d.cpf = mn[3].trim();
+
+  const mc = /Cargo:\s*(.+?)\s+Depto\.?:\s*(.+?)\s*$/m.exec(txt);
+  d.cargo = mc ? mc[1].trim() : "";
+  d.depto = mc ? mc[2].trim() : "";
+
+  // "250 MOGI DAS CRUZES R$ 5,50 48 x 5,50 R$ 264,00" — pode ter mais de uma
+  d.transportes = [];
+  for(const l of linhas){
+    const mt = /^(\d+)\s+(.+?)\s+R\$\s*([\d.,]+)\s+(.+?)\s+R\$\s*([\d.,]+)\s*$/.exec(l.trim());
+    if(mt) d.transportes.push({ codigo:mt[1], nome:mt[2].trim(), unitario:mt[3],
+                                quantidade:mt[4].trim(), total:mt[5] });
+  }
+  if(!d.transportes.length) return null;
+
+  const mtot = /Total do valor fornecido[.\s]*:?\s*R\$\s*([\d.,]+)/.exec(txt);
+  d.total = mtot ? mtot[1] : null;
+  if(!d.total) return null;
+
+  const me = /Recebi de\s+(.+?)\s+a quantidade/.exec(txt);
+  d.empresa = me ? me[1].trim() : "";
+
+  const mp = /per[ií]odo de\s+([A-Za-zç]+ de \d{4})/.exec(semAcento(txt).replace(/\n/g, " "));
+  d.periodo = mp ? mp[1] : "";
+  d.competencia = competenciaDeTexto(d.periodo);
+
+  const md = /^([A-ZÀ-Ü][A-ZÀ-Ü\s.]+),\s*(\d{1,2}\s+de\s+[A-Za-zç]+\s+de\s+\d{4})\s*$/m.exec(txt);
+  d.cidade = md ? md[1].trim() : "";
+  d.data   = md ? md[2].trim() : "";
+
+  return d;
+}
+
+/** Emite o recibo individual a partir dos campos lidos. Texto de verdade,
+    sem imagem e sem nenhum dado de outra pessoa — o arquivo é construído do
+    zero, não recortado. O original da contabilidade continua no e-mail, que é
+    de onde isto veio. */
+async function reciboDeVale(PDFDocument, StandardFonts, rgb, d){
+  const doc = await PDFDocument.create();
+  const L = 595.28, A = 300;
+  const pg = doc.addPage([L, A]);
+  const normal = await doc.embedFont(StandardFonts.Helvetica);
+  const forte  = await doc.embedFont(StandardFonts.HelveticaBold);
+  const preto = rgb(0, 0, 0);
+
+  const m = 40, dir = L - m;
+  const texto = (t, x, y, tam = 9, f = normal) =>
+    pg.drawText(String(t ?? ""), { x, y, size: tam, font: f, color: preto });
+  const direita = (t, x, y, tam = 9, f = normal) =>
+    texto(t, x - f.widthOfTextAtSize(String(t ?? ""), tam), y, tam, f);
+  const centro = (t, y, tam = 9, f = normal) =>
+    texto(t, (L - f.widthOfTextAtSize(String(t ?? ""), tam)) / 2, y, tam, f);
+  const linha = (y) =>
+    pg.drawLine({ start:{x:m,y}, end:{x:dir,y}, thickness:0.8, color:preto });
+
+  const baixoCaixa = 18, topoCaixa = A - 18;
+  pg.drawRectangle({ x:m, y:baixoCaixa, width:dir - m, height:topoCaixa - baixoCaixa,
+                     borderWidth:0.8, borderColor:preto });
+
+  let y = topoCaixa - 22;
+  centro("RECIBO DE VALE TRANSPORTE", y, 15, forte);
+  y -= 10; linha(y);
+
+  y -= 16;
+  texto("Nome:", m + 6, y, 9, forte);
+  texto(`${d.codigo} - ${d.nome}`, m + 44, y);
+  texto("CPF:", dir - 180, y, 9, forte);
+  texto(d.cpf, dir - 152, y);
+  y -= 14;
+  texto("Cargo:", m + 6, y, 9, forte);
+  texto(d.cargo, m + 44, y);
+  texto("Depto.:", dir - 180, y, 9, forte);
+  texto(d.depto, dir - 140, y);
+  y -= 10; linha(y);
+
+  const cols = [m, m + 42, m + 230, m + 320, m + 452, dir];
+  const cab = ["Cód.", "Transporte", "Valor Unitário", "Quantidade X Valor dos Passes do Mês", "Valor Total"];
+  y -= 14;
+  cab.forEach((c, i) => {
+    const meio = (cols[i] + cols[i+1]) / 2;
+    texto(c, meio - forte.widthOfTextAtSize(c, 7.5) / 2, y, 7.5, forte);
+  });
+  y -= 6; linha(y);
+  for(const t of d.transportes){
+    y -= 14;
+    direita(t.codigo, cols[1] - 6, y, 8);
+    texto(t.nome, cols[1] + 4, y, 8);
+    direita("R$ " + t.unitario, cols[3] - 6, y, 8);
+    texto(t.quantidade, (cols[3] + cols[4]) / 2 - normal.widthOfTextAtSize(t.quantidade, 8) / 2, y, 8);
+    direita("R$ " + t.total, dir - 6, y, 8);
+    y -= 5; linha(y);
+  }
+  y -= 14;
+  const rotulo = "Total do valor fornecido";
+  const alvo = dir - 120 - m - 12;
+  let pontos = "";
+  while(forte.widthOfTextAtSize(rotulo + pontos + ":", 8) < alvo) pontos += ".";
+  texto(rotulo + pontos + ":", m + 6, y, 8, forte);
+  direita("R$ " + d.total, dir - 6, y, 8, forte);
+  y -= 5; linha(y);
+
+  y -= 18;
+  const frase = `Recebi de ${d.empresa} a quantidade de Vales-Transportes acima `
+    + `discriminada para minha utilização no decorrer do período de ${d.periodo}`;
+  const largMax = dir - m - 24;
+  let atual = "";
+  for(const palavra of frase.split(" ")){
+    const tenta = atual ? atual + " " + palavra : palavra;
+    if(forte.widthOfTextAtSize(tenta, 8.5) > largMax){ texto(atual, m + 12, y, 8.5, forte); y -= 12; atual = palavra; }
+    else atual = tenta;
+  }
+  if(atual) texto(atual, m + 12, y, 8.5, forte);
+
+  y -= 16; linha(y);
+  y -= 18;
+  texto([d.cidade, d.data].filter(Boolean).join(", "), m + 6, y, 8.5);
+
+  y -= 48;
+  pg.drawLine({ start:{x:dir - 270, y}, end:{x:dir - 20, y}, thickness:0.8, color:preto });
+  y -= 12;
+  const meioAssinatura = dir - 145;
+  texto(d.nome, meioAssinatura - normal.widthOfTextAtSize(d.nome, 8.5) / 2, y, 8.5);
+
+  return doc;
+}
+
+/** Redesenha uma faixa da página em imagem. É isto que faz o pedaço do colega
+    deixar de existir no arquivo, em vez de só ficar fora da moldura. */
+async function faixaEmImagem(pdf, numeroPagina, r){
+  const pagina = await pdf.getPage(numeroPagina);
+  const escala = 200 / 72;                       // 200 dpi: legível e leve
+  const viewport = pagina.getViewport({ scale: escala });
+  const tela = document.createElement("canvas");
+  tela.width  = Math.ceil(r.largura * escala);
+  tela.height = Math.ceil(r.altura * escala);
+  const ctx = tela.getContext("2d");
+  ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, tela.width, tela.height);
+  // desloca a página para que o topo da faixa caia em 0,0 do canvas
+  const topo = r.baixo + r.altura;
+  await pagina.render({ canvasContext: ctx, viewport,
+    transform: [1, 0, 0, 1, -r.x * escala, -(r.alturaPagina - topo) * escala] }).promise;
+  const dataUrl = tela.toDataURL("image/png");
+  return Uint8Array.from(atob(dataUrl.split(",")[1]), c => c.charCodeAt(0));
+}
+
+function formFolhaDoMes(equipe){
+  const ativos = equipe.filter(p => p.ativo);
+  const d = document.createElement("dialog");
+  d.style.maxWidth = "640px";
+  d.innerHTML = `
+    <h2>Publicar a folha do mês</h2>
+    <p class="sub">Baixe do e-mail da contabilidade os PDFs com todo mundo junto e solte aqui.
+      Eu separo por pessoa; você confere a lista antes de publicar.</p>
+    <label>Recibo de Pagamento (holerite)</label>
+    <input type="file" id="fm-holerite" accept="application/pdf">
+    <label>Recibo de Vale Transporte</label>
+    <input type="file" id="fm-vt" accept="application/pdf">
+    <label>Prazo para assinar (opcional)</label>
+    <input type="date" id="fm-prazo">
+    <div id="fm-erro"></div>
+    <div id="fm-lista"></div>
+    <div class="linha" style="margin-top:18px">
+      <button id="fm-analisar">Analisar</button>
+      <button class="secundaria" id="fm-fechar">Fechar</button>
+    </div>`;
+  document.body.appendChild(d); d.showModal();
+  d.querySelector("#fm-fechar").onclick = () => d.close();
+  d.addEventListener("close", () => d.remove());
+
+  const erro = d.querySelector("#fm-erro");
+  const lista = d.querySelector("#fm-lista");
+  let achados = [];
+  const pdfsLidos = new Map();
+
+  const opcoesDeEquipe = (selecionado) =>
+    `<option value="">— escolha —</option>` + ativos.map(p =>
+      `<option value="${esc(p.id)}" ${p.id===selecionado?"selected":""}>${esc(p.nome)}</option>`).join("");
+
+  d.querySelector("#fm-analisar").onclick = async (ev) => {
+    ev.target.disabled = true; ev.target.textContent = "Lendo…";
+    erro.innerHTML = ""; lista.innerHTML = "";
+    try {
+      const pdfjs = await import("https://cdn.jsdelivr.net/npm/pdfjs-dist@4.6.82/+esm");
+      pdfjs.GlobalWorkerOptions.workerSrc =
+        "https://cdn.jsdelivr.net/npm/pdfjs-dist@4.6.82/build/pdf.worker.min.mjs";
+
+      const porChave = new Map(ativos.map(p => [chaveNome(p.nome), p.id]));
+      achados = [];
+      for(const [campo, especie, tipo, titulo] of [
+        ["#fm-holerite", "holerite", "holerite", "Holerite"],
+        ["#fm-vt", "vale_transporte", "vale_transporte", "Recibo de vale-transporte"],
+      ]){
+        const arq = d.querySelector(campo).files[0];
+        if(!arq) continue;
+        const itens = await lerConsolidado(pdfjs, arq, especie, pdfsLidos);
+        itens.forEach(i => achados.push({ ...i, arquivo:arq, especie, tipo, titulo,
+          employee_id: porChave.get(chaveNome(i.nome)) || "", situacao:"" }));
+      }
+
+      if(!achados.length){
+        erro.innerHTML = `<div class="aviso">Não encontrei nenhum recibo nesses arquivos.
+          Confira se são os PDFs da contabilidade.</div>`;
+        return;
+      }
+
+      lista.innerHTML = `
+        <h2 style="margin:18px 0 6px;font-size:15px">Confira antes de publicar</h2>
+        <p class="sub" style="margin:0 0 8px">Nome em branco ou errado? Escolha a pessoa na lista.
+          Quem ficar sem colaborador não é publicado.</p>
+        ${achados.some(a => a.dados) ? `<div class="sub" style="margin:0 0 8px">
+          Os recibos de vale-transporte vieram vários na mesma página. Em vez de recortar
+          — o que esconderia o do colega sem apagar —, a tela <b>lê os campos e emite o
+          recibo de cada um</b>, com o mesmo conteúdo e texto de verdade. O arquivo
+          original da contabilidade continua no e-mail, que é a fonte.</div>` : ""}
+        ${achados.some(a => a.recorte) ? `<div class="aviso">
+          Em algum recibo eu não consegui ler todos os campos, então esse vai
+          <b>redesenhado em imagem</b> — seguro, mas sem texto selecionável. Confira o
+          arquivo depois de publicar.</div>` : ""}
+        <table>
+          <tr><th>Documento</th><th>Nome no PDF</th><th>Colaborador</th><th>Competência</th><th></th></tr>
+          ${achados.map((a,i) => `<tr>
+            <td>${esc(a.titulo)}</td>
+            <td>${esc(a.nome || "não li o nome")}</td>
+            <td><select data-pessoa="${i}">${opcoesDeEquipe(a.employee_id)}</select></td>
+            <td><input data-comp="${i}" value="${esc(a.competencia || "")}"
+                  placeholder="AAAA-MM" style="width:95px"></td>
+            <td data-situacao="${i}">${a.dados
+              ? `<span class="sub" style="font-size:11px">recibo emitido aqui</span>`
+              : a.recorte ? `<span class="sub" style="font-size:11px">vai como imagem</span>` : ""}</td>
+          </tr>`).join("")}
+        </table>
+        <button id="fm-publicar" style="margin-top:14px">Publicar e pedir assinatura</button>`;
+
+      lista.querySelectorAll("[data-pessoa]").forEach(s =>
+        s.onchange = () => { achados[s.dataset.pessoa].employee_id = s.value; });
+      lista.querySelectorAll("[data-comp]").forEach(i =>
+        i.onchange = () => { achados[i.dataset.comp].competencia = i.value.trim(); });
+
+      lista.querySelector("#fm-publicar").onclick = (e2) => publicar(e2.target);
+    } catch(e){
+      erro.innerHTML = `<div class="aviso">${esc(e.message)}</div>`;
+    } finally {
+      ev.target.disabled = false; ev.target.textContent = "Analisar de novo";
+    }
+  };
+
+  async function publicar(botao){
+    botao.disabled = true;
+    const { PDFDocument, StandardFonts, rgb } =
+      await import("https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/+esm");
+    const prazo = d.querySelector("#fm-prazo").value || null;
+    const cache = new Map();
+    let publicados = 0, pulados = 0;
+
+    for(let i = 0; i < achados.length; i++){
+      const a = achados[i];
+      const celula = lista.querySelector(`[data-situacao="${i}"]`);
+      if(!a.employee_id){ celula.innerHTML = `<span class="etiqueta">sem colaborador</span>`; pulados++; continue; }
+      celula.innerHTML = `<span class="sub">publicando…</span>`;
+      try {
+        let saida;
+        if(a.dados){
+          saida = await reciboDeVale(PDFDocument, StandardFonts, rgb, a.dados);
+        } else if(a.recorte){
+          saida = await PDFDocument.create();
+          const png = await faixaEmImagem(pdfsLidos.get(a.arquivo), a.pagina, a.recorte);
+          const imagem = await saida.embedPng(png);
+          const pagina = saida.addPage([a.recorte.largura, a.recorte.altura]);
+          pagina.drawImage(imagem, { x:0, y:0, width:a.recorte.largura, height:a.recorte.altura });
+        } else {
+          saida = await PDFDocument.create();
+          if(!cache.has(a.arquivo)) cache.set(a.arquivo, await PDFDocument.load(await a.arquivo.arrayBuffer()));
+          const [pagina] = await saida.copyPages(cache.get(a.arquivo), [a.pagina - 1]);
+          saida.addPage(pagina);
+        }
+        const arquivo = await saida.saveAsBase64({ dataUri: true });
+
+        const nomePessoa = ativos.find(p => p.id === a.employee_id)?.nome || "";
+        await chamarDocs({ action:"enviar",
+          employee_id: a.employee_id,
+          tipo: a.tipo,
+          titulo: `${a.titulo} · ${a.competencia || "sem competência"}`,
+          competencia: /^\d{4}-\d{2}$/.test(a.competencia || "") ? a.competencia : undefined,
+          visibilidade: "colaborador",
+          exige_assinatura: true,
+          prazo,
+          arquivo });
+        celula.innerHTML = `<span class="etiqueta ponto">publicado</span>`;
+        publicados++;
+        if(nomePessoa && chaveNome(nomePessoa) !== chaveNome(a.nome || "")){
+          celula.innerHTML += `<div class="sub" style="font-size:11px">nome do PDF diferente do cadastro</div>`;
+        }
+      } catch(e){
+        const jaEstava = e.dados?.duplicado;
+        celula.innerHTML = jaEstava
+          ? `<span class="etiqueta">já estava no sistema</span>`
+          : `<span class="etiqueta grave">${esc(e.message)}</span>`;
+        pulados++;
+      }
+    }
+
+    erro.innerHTML = `<div class="${publicados ? "ok" : "aviso"}">${publicados} documento${
+      publicados===1?"":"s"} publicado${publicados===1?"":"s"}${
+      pulados ? ` · ${pulados} não ${pulados===1?"foi":"foram"}` : ""}. A pessoa assina no portal com o PIN.</div>`;
+    botao.disabled = false;
+    abaDocs();
+  }
+}
+
+/* ---------- ponto do dia ---------- */
+let diaEscolhido = null;
+async function abaPonto(){
+  diaEscolhido = diaEscolhido || hojeLocal();
+  conteudo().innerHTML = `<div class="carta"><p class="vazio">Carregando…</p></div>`;
+  try {
+    const r = await chamar({ action:"dia", dia: diaEscolhido });
+    const porPessoa = new Map();
+    for(const m of r.marcacoes){
+      // A02 da revisão: agrupar por nome juntava dois homônimos no mesmo bloco.
+      // A chave é o id; o nome é só rótulo.
+      const l = porPessoa.get(m.employee_id) || [];
+      l.push(m); porPessoa.set(m.employee_id, l);
+    }
+    conteudo().innerHTML = `
+      <div class="carta">
+        <div class="linha" style="margin-bottom:6px">
+          <div style="flex:0 0 180px">
+            <label>Dia operacional</label>
+            <input type="date" id="dia" value="${diaEscolhido}">
+          </div>
+          <button id="incluir">Incluir marcação</button>
+        </div>
+        <p class="sub" style="margin:10px 0 16px">
+          O dia fecha às 01:00 — marcação depois da meia-noite pertence ao dia anterior.</p>
+        ${porPessoa.size ? [...porPessoa.entries()].map(([, lista]) => `
+          <h2 style="margin:18px 0 6px">${esc(lista[0].nome)}</h2>
+          <table>
+            <tr><th>Coluna</th><th>Marcação</th><th>Hora</th><th>Origem</th><th></th></tr>
+            ${lista.map(m => `<tr>
+              <td>${esc(m.coluna)}</td>
+              <td>${esc(m.rotulo)}
+                  ${m.e_correcao ? `<span class="etiqueta correcao">correção</span>` : ""}
+                  ${m.foi_corrigida ? `<span class="etiqueta substituida">substituída</span>` : ""}
+                  ${m.motivo ? `<div class="sub" style="margin:2px 0 0">${esc(m.motivo)}</div>` : ""}</td>
+              <td class="hora">${hora(m.occurred_at)}</td>
+              <td>${esc(rotuloOrigem(m))}${m.tem_foto ? " · foto" : ""}</td>
+              <td style="text-align:right">
+                <button class="discreto" data-corrigir='${guarde(
+                  {id:m.id, employee_id:m.employee_id, nome:m.nome, kind:m.kind})}'>corrigir</button>
+              </td></tr>`).join("")}
+          </table>`).join("") : `<p class="vazio">Nenhuma marcação neste dia.</p>`}
+      </div>`;
+    document.getElementById("dia").onchange = (e) => { diaEscolhido = e.target.value; abaPonto(); };
+    document.getElementById("incluir").onclick = () => formCorrecao(null);
+    conteudo().querySelectorAll("[data-corrigir]").forEach(b =>
+      b.onclick = () => formCorrecao(CARGA[b.dataset.corrigir]));
+  } catch(e){ conteudo().innerHTML = `<div class="carta"><div class="aviso">${esc(e.message)}</div></div>`; }
+}
+
+async function formCorrecao(alvo){
+  const { equipe } = await chamar({ action:"equipe" });
+  const marcam = equipe.filter(p => p.registra_ponto && p.ativo);
+  const d = document.createElement("dialog");
+  d.innerHTML = `
+    <h2>${alvo?.id ? "Corrigir marcação" : "Incluir marcação"}</h2>
+    <p class="sub">${alvo?.id
+      ? "A marcação original continua no histórico. Esta entra como correção."
+      : "Use para batida esquecida. Fica registrada como lançamento da gestão."}</p>
+    <label>Colaborador</label>
+    <select id="c-pessoa" ${alvo?.employee_id?"disabled":""}>
+      ${marcam.map(p => `<option value="${esc(p.id)}" ${alvo?.employee_id===p.id?"selected":""}>${esc(p.nome)}</option>`).join("")}
+    </select>
+    <label>Marcação</label>
+    <select id="c-kind">
+      ${[["entrada","Entrada (1ª Entrada)"],["intervalo_inicio","Saída para o intervalo (1ª Saída)"],
+         ["intervalo_fim","Volta do intervalo (2ª Entrada)"],["saida","Saída (2ª Saída)"]]
+        .map(([k,r]) => `<option value="${k}" ${alvo?.kind===k?"selected":""}>${r}</option>`).join("")}
+    </select>
+    <label>Data e hora que valem</label>
+    <input type="datetime-local" id="c-quando" value="${alvo?.dia || diaEscolhido || hojeLocal()}T12:00">
+    <label>Motivo (fica registrado)</label>
+    <input id="c-motivo" placeholder="Esqueceu de bater na saída">
+    <div id="c-erro"></div>
+    <div class="linha" style="margin-top:18px">
+      <button id="c-salvar">Registrar</button>
+      <button class="secundaria" id="c-cancelar">Cancelar</button>
+    </div>`;
+  document.body.appendChild(d); d.showModal();
+  d.querySelector("#c-cancelar").onclick = () => d.close();
+  d.addEventListener("close", () => d.remove());
+  d.querySelector("#c-salvar").onclick = async (ev) => {
+    ev.target.disabled = true;
+    try {
+      await chamar({ action:"corrigir",
+        employee_id: alvo?.employee_id || d.querySelector("#c-pessoa").value,
+        kind: d.querySelector("#c-kind").value,
+        occurred_at: new Date(d.querySelector("#c-quando").value).toISOString(),
+        motivo: d.querySelector("#c-motivo").value,
+        corrige_id: alvo?.id || null });
+      d.close();
+      // Lançou o ponto que faltava: roda o detector naquele dia para a
+      // pendência fechar na hora, em vez de esperar a passada da madrugada.
+      const dia = alvo?.dia || diaEscolhido;
+      if(aba === "pend"){
+        try { await chamarPend({ action:"rodar", inicio:dia, fim:dia }); } catch {}
+        await atualizarSelo(); abaPendencias();
+      } else {
+        atualizarSelo(); abaPonto();
+      }
+    } catch(e){
+      ev.target.disabled = false;
+      d.querySelector("#c-erro").innerHTML = `<div class="aviso">${esc(e.message)}</div>`;
+    }
+  };
+}
+
+/* ---------- pendências de ponto ---------- */
+// O número no alto da aba é o que faz a inconsistência ser vista sem ninguém
+// procurar. Atualiza sozinho depois de cada ação.
+async function atualizarSelo(){
+  try {
+    const { abertas } = await chamarPend({ action:"contar" });
+    pendenciasAbertas = abertas;
+    const botao = document.querySelector('[data-aba="pend"]');
+    if(botao) botao.innerHTML = `Pendências${abertas ? `<span class="selo">${abertas}</span>` : ""}`;
+  } catch { /* selo é enfeite: não atrapalha a tela se falhar */ }
+}
+
+let pendSituacao = "aberta";
+async function abaPendencias(){
+  conteudo().innerHTML = `<div class="carta"><p class="vazio">Carregando…</p></div>`;
+  try {
+    const desde = (() => { const d = new Date(Date.now() - 45*864e5); return d.toISOString().slice(0,10); })();
+    const { pendencias } = await chamarPend({ action:"listar", situacao: pendSituacao, desde });
+
+    conteudo().innerHTML = `
+      <div class="carta">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+          <h2 style="margin:0">Pendências de ponto</h2>
+          <div style="display:flex;gap:8px;align-items:center">
+            <select id="pd-situacao" style="width:auto">
+              <option value="aberta" ${pendSituacao==="aberta"?"selected":""}>Em aberto</option>
+              <option value="resolvida" ${pendSituacao==="resolvida"?"selected":""}>Resolvidas</option>
+              <option value="ignorada" ${pendSituacao==="ignorada"?"selected":""}>Ignoradas</option>
+              <option value="todas" ${pendSituacao==="todas"?"selected":""}>Todas</option>
+            </select>
+            <button class="secundaria" id="pd-checar">Checar agora</button>
+          </div>
+        </div>
+        <p class="sub">A checagem roda sozinha todo dia às 02:10, depois que o dia operacional fecha.
+          Cada dia corrigido no ponto fecha a pendência na próxima passada.</p>
+        ${pendencias.length ? `<table>
+          <tr><th>Dia</th><th>Quem</th><th>O que aconteceu</th><th></th></tr>
+          ${pendencias.map(p => `<tr>
+            <td class="hora">${p.dia.slice(8)}/${p.dia.slice(5,7)}</td>
+            <td>${esc(p.nome)}</td>
+            <td>
+              <span class="etiqueta ${esc(p.gravidade)}">${esc(p.tipo.replace(/_/g," "))}</span>
+              <div style="font-size:13px;margin-top:3px">${esc(p.detalhe)}</div>
+              ${p.situacao!=="aberta" ? `<div style="font-size:12px;color:#7a7568">
+                ${p.situacao === "ignorada" ? "ignorada" : "resolvida"}: ${esc(p.motivo ?? "")}</div>` : ""}
+            </td>
+            <td style="white-space:nowrap">
+              ${p.situacao==="aberta" ? `
+                <button class="discreto" data-marcar='${guarde(
+                  {employee_id:p.employee_id, nome:p.nome, dia:p.dia})}'>lançar ponto</button>
+                <button class="discreto" data-tratar='${guarde(
+                  {id:p.id, nome:p.nome, detalhe:p.detalhe})}'>tratar</button>` : ""}
+            </td></tr>`).join("")}
+        </table>` : `<p class="vazio">Nada em aberto por aqui.</p>`}
+      </div>`;
+
+    document.getElementById("pd-situacao").onchange = (e) => {
+      pendSituacao = e.target.value; abaPendencias();
+    };
+    document.getElementById("pd-checar").onclick = async (ev) => {
+      ev.target.disabled = true; ev.target.textContent = "Checando…";
+      try {
+        const fim = hojeLocal();
+        const inicio = new Date(new Date(fim).getTime() - 30*864e5).toISOString().slice(0,10);
+        await chamarPend({ action:"rodar", inicio, fim });
+        await atualizarSelo(); abaPendencias();
+      } catch(e){
+        ev.target.disabled = false; ev.target.textContent = "Checar agora";
+        conteudo().insertAdjacentHTML("afterbegin", `<div class="aviso">${esc(e.message)}</div>`);
+      }
+    };
+    conteudo().querySelectorAll("[data-marcar]").forEach(b =>
+      b.onclick = () => formCorrecao(CARGA[b.dataset.marcar]));
+    conteudo().querySelectorAll("[data-tratar]").forEach(b =>
+      b.onclick = () => formTratar(CARGA[b.dataset.tratar]));
+  } catch(e){
+    conteudo().innerHTML = `<div class="carta"><div class="aviso">${esc(e.message)}</div></div>`;
+  }
+}
+
+// Tratar é o caminho para o que não se resolve batendo ponto: atestado, acordo
+// verbal, folga trocada. O motivo é obrigatório — é ele que vira prova depois.
+function formTratar(p){
+  const d = document.createElement("dialog");
+  d.innerHTML = `
+    <form method="dialog">
+      <h2 style="margin-top:0">Tratar pendência</h2>
+      <p class="sub">${esc(p.nome)} — ${esc(p.detalhe)}</p>
+      <label>O que foi feito</label>
+      <select id="tr-situacao">
+        <option value="resolvida">Resolvida — tratei por fora (atestado, acordo, folga trocada)</option>
+        <option value="ignorada">Ignorar — não há o que fazer, não quero ver de novo</option>
+      </select>
+      <label>Motivo (fica registrado)</label>
+      <input id="tr-motivo" placeholder="ex.: atestado médico entregue em 24/09">
+      <div style="display:flex;gap:8px;margin-top:16px">
+        <button id="tr-salvar" type="button">Registrar</button>
+        <button class="secundaria" id="tr-cancelar" type="button">Cancelar</button>
+      </div>
+      <div id="tr-erro"></div>
+    </form>`;
+  document.body.appendChild(d); d.showModal();
+  d.querySelector("#tr-cancelar").onclick = () => { d.close(); d.remove(); };
+  d.querySelector("#tr-salvar").onclick = async (ev) => {
+    ev.target.disabled = true;
+    try {
+      await chamarPend({ action:"resolver", id:p.id,
+        situacao: d.querySelector("#tr-situacao").value,
+        motivo: d.querySelector("#tr-motivo").value.trim() });
+      d.close(); d.remove(); await atualizarSelo(); abaPendencias();
+    } catch(e){
+      ev.target.disabled = false;
+      d.querySelector("#tr-erro").innerHTML = `<div class="aviso">${esc(e.message)}</div>`;
+    }
+  };
+}
+
+/* ---------- escala, folgas e feriados ---------- */
+const DIAS_SEMANA = ["Domingo","Segunda","Terça","Quarta","Quinta","Sexta","Sábado"];
+
+async function abaEscala(){
+  conteudo().innerHTML = `<div class="carta"><p class="vazio">Carregando…</p></div>`;
+  try {
+    const [{ equipe }, { escala, excecoes }, { feriados }, { unidade:uni }] = await Promise.all([
+      chamar({ action:"equipe" }),
+      chamarPend({ action:"escala_listar" }),
+      chamarPend({ action:"feriados_listar", desde: hojeLocal() }),
+      chamarPend({ action:"unidade_ler" }),
+    ]);
+    const gente = equipe.filter(p => p.registra_ponto);
+    const porPessoa = new Map();
+    escala.forEach(e => {
+      const l = porPessoa.get(e.employee_id) ?? [];
+      l.push(e); porPessoa.set(e.employee_id, l);
+    });
+
+    conteudo().innerHTML = `
+      <div class="carta">
+        <h2 style="margin-top:0">Escala da semana</h2>
+        <p class="sub">É a escala que diz ao sistema o que é falta e o que é folga.
+          Sem ela, dia sem marcação passa em branco.</p>
+        ${gente.length ? `<table>
+          <tr><th>Quem</th>${DIAS_SEMANA.map(d => `<th>${d.slice(0,3)}</th>`).join("")}<th></th></tr>
+          ${gente.map(p => {
+            const linhas = porPessoa.get(p.id) ?? [];
+            return `<tr>
+              <td>${esc(p.nome)}</td>
+              ${DIAS_SEMANA.map((_,i) => {
+                const e = linhas.find(l => l.dia_semana === i);
+                return `<td style="font-size:12px">${
+                  !e ? `<span style="color:#b9b4a8">—</span>`
+                  : e.folga ? `<span class="etiqueta">folga</span>`
+                  : `${e.entrada.slice(0,5)}<br>${e.saida.slice(0,5)}`}</td>`;
+              }).join("")}
+              <td><button class="discreto" data-semana='${guarde(
+                {id:p.id, nome:p.nome})}'>editar</button></td></tr>`;
+          }).join("")}
+        </table>` : `<p class="vazio">Ninguém registra ponto nesta unidade.</p>`}
+      </div>
+
+      <div class="carta">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+          <h2 style="margin:0">Exceções de um dia</h2>
+          <button class="secundaria" id="es-excecao">Lançar exceção</button>
+        </div>
+        <p class="sub">Folga trocada, dia extra, horário diferente. A exceção vence a escala da semana.</p>
+        ${excecoes.length ? `<table>
+          <tr><th>Dia</th><th>Quem</th><th>O que é</th><th></th></tr>
+          ${excecoes.map(e => `<tr>
+            <td class="hora">${e.data.slice(8)}/${e.data.slice(5,7)}</td>
+            <td>${esc(e.nome)}</td>
+            <td>${e.folga ? `<span class="etiqueta">folga</span>`
+                 : `${e.entrada.slice(0,5)} às ${e.saida.slice(0,5)}`}
+                ${e.observacao ? `<div style="font-size:12px;color:#7a7568">${esc(e.observacao)}</div>` : ""}</td>
+            <td><button class="discreto" data-apagar="${esc(e.id)}">apagar</button></td></tr>`).join("")}
+        </table>` : `<p class="vazio">Nenhuma exceção daqui para frente.</p>`}
+      </div>
+
+      <div class="carta">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+          <h2 style="margin:0">Feriados</h2>
+          <button class="secundaria" id="es-feriado">Incluir feriado</button>
+        </div>
+        <p class="sub">Marque "fecha" nos feriados em que o pub não abre — nesses dias ninguém é
+          cobrado por falta, e quem trabalhar entra como pendência para você conferir o pagamento.</p>
+        ${feriados.length ? `<table>
+          <tr><th>Dia</th><th>Feriado</th><th>Tipo</th><th>Pub</th></tr>
+          ${feriados.slice(0,14).map(f => `<tr>
+            <td class="hora">${f.data.slice(8)}/${f.data.slice(5,7)}</td>
+            <td>${esc(f.nome)}${f.observacao ? `<div style="font-size:12px;color:#7a7568">${esc(f.observacao)}</div>` : ""}</td>
+            <td style="font-size:12px">${esc(f.tipo)}</td>
+            <td><button class="discreto" data-abre='${guarde(f)}'>${
+              f.abre ? "abre" : "fecha"}</button></td></tr>`).join("")}
+        </table>` : `<p class="vazio">Nenhum feriado cadastrado.</p>`}
+      </div>
+
+      <div class="carta">
+        <h2 style="margin-top:0">Ponto pelo celular</h2>
+        <p class="sub">Enquanto estiver desligado, o ponto só é batido no tablet do salão.
+          Ligando, a marcação pelo celular só é aceita dentro do raio marcado — e a distância
+          fica registrada em toda marcação, dentro ou fora.</p>
+        <div class="linha">
+          <div><label>Latitude</label><input id="ce-lat" value="${uni?.latitude ?? ""}" placeholder="—"></div>
+          <div><label>Longitude</label><input id="ce-lon" value="${uni?.longitude ?? ""}" placeholder="—"></div>
+          <div><label>Raio (metros)</label><input type="number" id="ce-raio" value="${uni?.raio_ponto_m ?? 150}"></div>
+          <button class="secundaria" id="ce-aqui">Usar onde estou</button>
+        </div>
+        <label style="display:flex;gap:8px;align-items:center;margin-top:10px">
+          <input type="checkbox" id="ce-liberar" style="width:auto" ${uni?.ponto_celular ? "checked" : ""}>
+          Liberar o ponto pelo celular nesta unidade</label>
+        <div style="margin-top:12px"><button id="ce-salvar">Salvar</button></div>
+        <div id="ce-erro"></div>
+      </div>`;
+
+    conteudo().querySelectorAll("[data-semana]").forEach(b =>
+      b.onclick = () => formSemana(CARGA[b.dataset.semana], porPessoa.get(CARGA[b.dataset.semana].id) ?? []));
+    conteudo().querySelectorAll("[data-apagar]").forEach(b =>
+      b.onclick = async () => {
+        try { await chamarPend({ action:"escala_apagar", id:b.dataset.apagar }); abaEscala(); }
+        catch(e){ alert(e.message); }
+      });
+    conteudo().querySelectorAll("[data-abre]").forEach(b =>
+      b.onclick = async () => {
+        const f = CARGA[b.dataset.abre];
+        try { await chamarPend({ action:"feriado_salvar", ...f, abre: !f.abre }); abaEscala(); }
+        catch(e){ alert(e.message); }
+      });
+    document.getElementById("es-excecao").onclick = () => formExcecao(gente);
+    document.getElementById("es-feriado").onclick = () => formFeriado();
+
+    document.getElementById("ce-aqui").onclick = (ev) => {
+      if(!navigator.geolocation) return alert("Este navegador não informa a localização.");
+      ev.target.disabled = true; ev.target.textContent = "Lendo…";
+      navigator.geolocation.getCurrentPosition(pos => {
+        document.getElementById("ce-lat").value = pos.coords.latitude.toFixed(6);
+        document.getElementById("ce-lon").value = pos.coords.longitude.toFixed(6);
+        ev.target.disabled = false; ev.target.textContent = "Usar onde estou";
+      }, () => {
+        ev.target.disabled = false; ev.target.textContent = "Usar onde estou";
+        document.getElementById("ce-erro").innerHTML =
+          `<div class="aviso">Não conseguimos ler a localização. Faça isso no celular, dentro do pub.</div>`;
+      }, { enableHighAccuracy:true, timeout:12000 });
+    };
+    document.getElementById("ce-salvar").onclick = async (ev) => {
+      ev.target.disabled = true;
+      try {
+        await chamarPend({ action:"unidade_salvar",
+          latitude: document.getElementById("ce-lat").value.trim(),
+          longitude: document.getElementById("ce-lon").value.trim(),
+          raio_ponto_m: document.getElementById("ce-raio").value,
+          ponto_celular: document.getElementById("ce-liberar").checked });
+        abaEscala();
+      } catch(e){
+        ev.target.disabled = false;
+        document.getElementById("ce-erro").innerHTML = `<div class="aviso">${esc(e.message)}</div>`;
+      }
+    };
+  } catch(e){
+    conteudo().innerHTML = `<div class="carta"><div class="aviso">${esc(e.message)}</div></div>`;
+  }
+}
+
+function formSemana(pessoa, atual){
+  const d = document.createElement("dialog");
+  d.style.maxWidth = "560px";
+  d.innerHTML = `
+    <form method="dialog">
+      <h2 style="margin-top:0">Escala de ${esc(pessoa.nome)}</h2>
+      <p class="sub">A escala anterior não é apagada: ganha data de fim. Assim, apurar um mês
+        passado continua usando a escala daquele mês.</p>
+      <label>Vale a partir de</label>
+      <input type="date" id="sm-vigencia" value="${hojeLocal()}">
+      <table style="margin-top:12px">
+        <tr><th>Dia</th><th>Folga</th><th>Entrada</th><th>Saída</th></tr>
+        ${DIAS_SEMANA.map((nome,i) => {
+          const e = atual.find(l => l.dia_semana === i);
+          return `<tr>
+            <td>${nome}</td>
+            <td><input type="checkbox" data-folga="${i}" style="width:auto" ${
+              e?.folga || !e ? "checked" : ""}></td>
+            <td><input type="time" data-entrada="${i}" value="${e?.entrada?.slice(0,5) ?? "17:00"}"></td>
+            <td><input type="time" data-saida="${i}" value="${e?.saida?.slice(0,5) ?? "23:00"}"></td>
+          </tr>`;
+        }).join("")}
+      </table>
+      <div style="display:flex;gap:8px;margin-top:16px">
+        <button id="sm-salvar" type="button">Salvar escala</button>
+        <button class="secundaria" id="sm-cancelar" type="button">Cancelar</button>
+      </div>
+      <div id="sm-erro"></div>
+    </form>`;
+  document.body.appendChild(d); d.showModal();
+  d.querySelector("#sm-cancelar").onclick = () => { d.close(); d.remove(); };
+  d.querySelector("#sm-salvar").onclick = async (ev) => {
+    ev.target.disabled = true;
+    const dias = DIAS_SEMANA.map((_,i) => ({
+      dia_semana: i,
+      folga: d.querySelector(`[data-folga="${i}"]`).checked,
+      entrada: d.querySelector(`[data-entrada="${i}"]`).value,
+      saida: d.querySelector(`[data-saida="${i}"]`).value,
+    }));
+    try {
+      await chamarPend({ action:"escala_semana", employee_id: pessoa.id, dias,
+        vigencia_inicio: d.querySelector("#sm-vigencia").value });
+      d.close(); d.remove(); abaEscala();
+    } catch(e){
+      ev.target.disabled = false;
+      d.querySelector("#sm-erro").innerHTML = `<div class="aviso">${esc(e.message)}</div>`;
+    }
+  };
+}
+
+function formExcecao(gente){
+  const d = document.createElement("dialog");
+  d.innerHTML = `
+    <form method="dialog">
+      <h2 style="margin-top:0">Exceção de um dia</h2>
+      <label>Quem</label>
+      <select id="ex-pessoa">${gente.map(p => `<option value="${esc(p.id)}">${esc(p.nome)}</option>`).join("")}</select>
+      <label>Dia</label><input type="date" id="ex-data" value="${hojeLocal()}">
+      <label style="display:flex;gap:8px;align-items:center;margin-top:10px">
+        <input type="checkbox" id="ex-folga" style="width:auto" checked> É folga</label>
+      <div class="linha" id="ex-horas" style="display:none">
+        <div><label>Entrada</label><input type="time" id="ex-entrada" value="17:00"></div>
+        <div><label>Saída</label><input type="time" id="ex-saida" value="23:00"></div>
+      </div>
+      <label>Observação</label>
+      <input id="ex-obs" placeholder="ex.: folga trocada com a Giovana">
+      <div style="display:flex;gap:8px;margin-top:16px">
+        <button id="ex-salvar" type="button">Salvar</button>
+        <button class="secundaria" id="ex-cancelar" type="button">Cancelar</button>
+      </div>
+      <div id="ex-erro"></div>
+    </form>`;
+  document.body.appendChild(d); d.showModal();
+  d.querySelector("#ex-cancelar").onclick = () => { d.close(); d.remove(); };
+  d.querySelector("#ex-folga").onchange = (e) => {
+    d.querySelector("#ex-horas").style.display = e.target.checked ? "none" : "flex";
+  };
+  d.querySelector("#ex-salvar").onclick = async (ev) => {
+    ev.target.disabled = true;
+    try {
+      await chamarPend({ action:"escala_excecao",
+        employee_id: d.querySelector("#ex-pessoa").value,
+        data: d.querySelector("#ex-data").value,
+        folga: d.querySelector("#ex-folga").checked,
+        entrada: d.querySelector("#ex-entrada").value,
+        saida: d.querySelector("#ex-saida").value,
+        observacao: d.querySelector("#ex-obs").value.trim() || null });
+      d.close(); d.remove(); abaEscala();
+    } catch(e){
+      ev.target.disabled = false;
+      d.querySelector("#ex-erro").innerHTML = `<div class="aviso">${esc(e.message)}</div>`;
+    }
+  };
+}
+
+function formFeriado(){
+  const d = document.createElement("dialog");
+  d.innerHTML = `
+    <form method="dialog">
+      <h2 style="margin-top:0">Incluir feriado</h2>
+      <label>Data</label><input type="date" id="fe-data" value="${hojeLocal()}">
+      <label>Nome</label><input id="fe-nome" placeholder="ex.: Padroeira da cidade">
+      <label>Tipo</label>
+      <select id="fe-tipo">
+        <option value="municipal">Municipal</option>
+        <option value="estadual">Estadual</option>
+        <option value="nacional">Nacional</option>
+        <option value="facultativo">Facultativo</option>
+        <option value="fechado">Fechamento nosso (não é feriado)</option>
+      </select>
+      <label style="display:flex;gap:8px;align-items:center;margin-top:10px">
+        <input type="checkbox" id="fe-abre" style="width:auto" checked> O pub abre neste dia</label>
+      <div style="display:flex;gap:8px;margin-top:16px">
+        <button id="fe-salvar" type="button">Salvar</button>
+        <button class="secundaria" id="fe-cancelar" type="button">Cancelar</button>
+      </div>
+      <div id="fe-erro"></div>
+    </form>`;
+  document.body.appendChild(d); d.showModal();
+  d.querySelector("#fe-cancelar").onclick = () => { d.close(); d.remove(); };
+  d.querySelector("#fe-salvar").onclick = async (ev) => {
+    ev.target.disabled = true;
+    try {
+      await chamarPend({ action:"feriado_salvar",
+        data: d.querySelector("#fe-data").value,
+        nome: d.querySelector("#fe-nome").value.trim(),
+        tipo: d.querySelector("#fe-tipo").value,
+        abre: d.querySelector("#fe-abre").checked });
+      d.close(); d.remove(); abaEscala();
+    } catch(e){
+      ev.target.disabled = false;
+      d.querySelector("#fe-erro").innerHTML = `<div class="aviso">${esc(e.message)}</div>`;
+    }
+  };
+}
+
+/* ---------- operação: recados, posições e escala publicada ---------- */
+const ASSUNTO_ROTULO = { problema:"Problema", falta_de_material:"Falta de material",
+  equipamento:"Equipamento", sugestao:"Sugestão", elogio:"Elogio", outro:"Outro",
+  sobrecarga_ou_pressao:"Sobrecarga ou pressão", assedio_ou_conduta:"Assédio ou conduta" };
+const TIPO_ESCALA = { equipe:"Equipe", freelas:"Freelas", musicos:"Música", eventos:"Eventos" };
+let recadoSituacao = "aberto";
+
+async function abaOperacao(){
+  conteudo().innerHTML = `<div class="carta"><p class="vazio">Carregando…</p></div>`;
+  try {
+    const [{ recados, abertos }, pos, { escalas }] = await Promise.all([
+      chamarOper({ action:"recados", situacao: recadoSituacao }),
+      chamarOper({ action:"posicoes" }),
+      chamarOper({ action:"escalas" }),
+    ]);
+    recadosAbertos = abertos;
+    const selo = document.querySelector('[data-aba="oper"]');
+    if(selo) selo.innerHTML = `Operação${abertos ? `<span class="selo">${abertos}</span>` : ""}`;
+
+    const porPosicao = new Map((pos.posicoes || []).map(p => [p.posicao, p]));
+
+    conteudo().innerHTML = `
+      <div class="carta">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+          <h2 style="margin:0">Recados da equipe</h2>
+          <select id="rc-situacao" style="width:auto">
+            <option value="aberto" ${recadoSituacao==="aberto"?"selected":""}>Abertos</option>
+            <option value="em_tratamento" ${recadoSituacao==="em_tratamento"?"selected":""}>Em tratamento</option>
+            <option value="resolvido" ${recadoSituacao==="resolvido"?"selected":""}>Resolvidos</option>
+            <option value="todos" ${recadoSituacao==="todos"?"selected":""}>Todos</option>
+          </select>
+        </div>
+        <p class="sub">Recado anônimo não tem autor guardado em lugar nenhum — nem para você.
+          Responder só é possível nos assinados.</p>
+        ${recados.length ? recados.map(r => `
+          <div style="border-top:1px solid var(--borda);padding:12px 0">
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+              <span class="etiqueta ${r.assunto==="elogio"?"ponto":r.assunto==="sugestao"?"":"atencao"}">${esc(
+                ASSUNTO_ROTULO[r.assunto] || r.assunto)}</span>
+              <span class="etiqueta ${r.anonimo?"":"ponto"}">${esc(r.anonimo ? "anônimo" : r.employee_nome || "assinado")}</span>
+              ${r.onde ? `<span class="sub" style="font-size:12px">${esc(r.onde)}</span>` : ""}
+              <span class="sub" style="font-size:12px;margin-left:auto">${
+                new Date(r.created_at).toLocaleString("pt-BR",{timeZone:"America/Sao_Paulo",
+                  day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"})}</span>
+            </div>
+            <p style="margin:8px 0 6px;white-space:pre-wrap">${esc(r.texto)}</p>
+            ${r.resposta ? `<p class="sub" style="margin:0 0 6px"><b>Resposta:</b> ${esc(r.resposta)}</p>` : ""}
+            <div style="display:flex;gap:6px;flex-wrap:wrap">
+              ${r.situacao !== "em_tratamento" ? `<button class="discreto" data-rc='${guarde({id:r.id,s:"em_tratamento"})}'>em tratamento</button>` : ""}
+              ${r.situacao !== "resolvido" ? `<button class="discreto" data-rc='${guarde({id:r.id,s:"resolvido"})}'>resolvido</button>` : ""}
+              ${!r.anonimo ? `<button class="discreto" data-resp='${guarde({id:r.id,nome:r.employee_nome})}'>responder</button>` : ""}
+              <button class="discreto" data-rc='${guarde({id:r.id,s:"arquivado"})}'>arquivar</button>
+            </div>
+          </div>`).join("") : `<p class="vazio">Nenhum recado nesta situação.</p>`}
+      </div>
+
+      <div class="carta">
+        <h2 style="margin-top:0">Posições do turno</h2>
+        <p class="sub">As sete marcações do mapa de mesas. A equipe vê na tela de operação,
+          em ${pos.dia.split("-").reverse().join("/")} · ${pos.turno === "almoco" ? "almoço" : "noite"}.</p>
+        <div class="linha" style="margin-bottom:10px">
+          <div style="flex:0 0 150px"><label>Turno</label>
+            <select id="po-turno">
+              <option value="noite" ${pos.turno==="noite"?"selected":""}>Noite</option>
+              <option value="almoco" ${pos.turno==="almoco"?"selected":""}>Almoço</option>
+            </select></div>
+        </div>
+        ${["A","B","C","D","E","F","G"].map(letra => `
+          <div class="linha" style="margin-bottom:8px">
+            <div style="flex:0 0 34px"><span class="etiqueta atencao">${letra}</span></div>
+            <div style="flex:2"><input id="po-${letra}" placeholder="quem está aqui"
+              value="${esc(porPosicao.get(letra)?.nome || "")}"></div>
+            <div style="flex:2"><input id="ob-${letra}" placeholder="observação"
+              value="${esc(porPosicao.get(letra)?.observacao || "")}"></div>
+          </div>`).join("")}
+        <div style="margin-top:12px"><button id="po-salvar">Salvar posições</button></div>
+        <div id="po-erro"></div>
+      </div>
+
+      <div class="carta">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+          <h2 style="margin:0">Escala publicada</h2>
+          <button class="secundaria" id="es-publicar">Publicar escala</button>
+        </div>
+        <p class="sub">A montagem continua na planilha. Aqui fica a versão que a equipe consulta.</p>
+        ${escalas.length ? `<table>
+          <tr><th>Tipo</th><th>Período</th><th>Publicada</th><th></th></tr>
+          ${escalas.map(e => `<tr style="${e.ativo?"":"opacity:.5"}">
+            <td>${esc(TIPO_ESCALA[e.tipo] || e.tipo)}</td>
+            <td class="hora">${e.periodo_inicio.split("-").reverse().slice(0,2).join("/")} a ${
+              e.periodo_fim.split("-").reverse().slice(0,2).join("/")}</td>
+            <td class="sub" style="font-size:12px">${new Date(e.publicado_em).toLocaleDateString("pt-BR")}</td>
+            <td>${e.ativo ? `<span class="etiqueta ponto">no ar</span>` : `<span class="etiqueta">antiga</span>`}</td>
+          </tr>`).join("")}
+        </table>` : `<p class="vazio">Nada publicado ainda.</p>`}
+      </div>`;
+
+    document.getElementById("rc-situacao").onchange = (e) => {
+      recadoSituacao = e.target.value; abaOperacao();
+    };
+    conteudo().querySelectorAll("[data-rc]").forEach(b => b.onclick = async () => {
+      const { id, s } = CARGA[b.dataset.rc];
+      b.disabled = true;
+      try { await chamarOper({ action:"tratar", id, situacao:s }); abaOperacao(); }
+      catch(e){ b.disabled = false; alert(e.message); }
+    });
+    conteudo().querySelectorAll("[data-resp]").forEach(b =>
+      b.onclick = () => formResposta(CARGA[b.dataset.resp]));
+
+    document.getElementById("po-salvar").onclick = async (ev) => {
+      ev.target.disabled = true;
+      try {
+        await chamarOper({ action:"posicoes",
+          turno: document.getElementById("po-turno").value,
+          posicoes: ["A","B","C","D","E","F","G"].map(l => ({
+            posicao: l,
+            nome: document.getElementById("po-"+l).value.trim(),
+            observacao: document.getElementById("ob-"+l).value.trim(),
+          })) });
+        abaOperacao();
+      } catch(e){
+        ev.target.disabled = false;
+        document.getElementById("po-erro").innerHTML = `<div class="aviso">${esc(e.message)}</div>`;
+      }
+    };
+    document.getElementById("po-turno").onchange = () => abaOperacao();
+    document.getElementById("es-publicar").onclick = () => formPublicar();
+  } catch(e){
+    conteudo().innerHTML = `<div class="carta"><div class="aviso">${esc(e.message)}</div></div>`;
+  }
+}
+
+function formResposta(r){
+  const d = document.createElement("dialog");
+  d.innerHTML = `
+    <form method="dialog">
+      <h2 style="margin-top:0">Responder ${esc(r.nome || "")}</h2>
+      <p class="sub">A resposta fica junto do recado. Quem escreveu vê quando abrir o portal.</p>
+      <label>Resposta</label><textarea id="rp-texto" rows="4"></textarea>
+      <div style="display:flex;gap:8px;margin-top:16px">
+        <button id="rp-salvar" type="button">Responder e marcar resolvido</button>
+        <button class="secundaria" id="rp-cancelar" type="button">Cancelar</button>
+      </div>
+      <div id="rp-erro"></div>
+    </form>`;
+  document.body.appendChild(d); d.showModal();
+  d.querySelector("#rp-cancelar").onclick = () => { d.close(); d.remove(); };
+  d.querySelector("#rp-salvar").onclick = async (ev) => {
+    ev.target.disabled = true;
+    try {
+      await chamarOper({ action:"tratar", id:r.id, situacao:"resolvido",
+        resposta: d.querySelector("#rp-texto").value.trim() });
+      d.close(); d.remove(); abaOperacao();
+    } catch(e){
+      ev.target.disabled = false;
+      d.querySelector("#rp-erro").innerHTML = `<div class="aviso">${esc(e.message)}</div>`;
+    }
+  };
+}
+
+/* Converte a aba FUNÇÃO da planilha de escala no texto que a equipe lê.
+   A planilha chega colada como TSV: a primeira linha traz os dias de três em
+   três colunas, a segunda os rótulos, e o resto são as pessoas. Nada é
+   inventado — célula vazia some, e pessoa sem horário aparece com "horário a
+   definir", para o buraco ficar visível em vez de passar batido. */
+function escalaDaPlanilha(bruto){
+  const linhas = String(bruto).replace(/\r/g, "").split("\n").map(l => l.split("\t"));
+  if(linhas.length < 3) return "";
+
+  const dias = linhas[0].map((c, i) => [String(c).trim(), i]).filter(([c]) => c);
+  if(!dias.length) return "";
+
+  const corpo = /pessoa/i.test((linhas[1] || []).join(" ")) ? linhas.slice(2) : linhas.slice(1);
+
+  const blocos = [];
+  for(const [titulo, col] of dias){
+    const gente = [];
+    for(const l of corpo){
+      const nome = String(l[col] ?? "").trim();
+      if(!nome) continue;
+      gente.push({ nome, hora: String(l[col+1] ?? "").trim(), funcao: String(l[col+2] ?? "").trim() });
+    }
+    if(gente.length) blocos.push({ titulo, gente });
+  }
+  if(!blocos.length) return "";
+
+  return blocos.map(b => {
+    const larg = Math.max(...b.gente.map(g => g.nome.length));
+    return b.titulo + "\n" + b.gente.map(g => {
+      let linha = "  " + g.nome.padEnd(larg) + "  " + (g.hora || "horário a definir");
+      if(g.funcao) linha += "  ·  " + g.funcao;
+      return linha;
+    }).join("\n");
+  }).join("\n\n");
+}
+
+function formPublicar(){
+  const hoje = hojeLocal();
+  const d = document.createElement("dialog");
+  d.style.maxWidth = "560px";
+  d.innerHTML = `
+    <form method="dialog">
+      <h2 style="margin-top:0">Publicar escala</h2>
+      <p class="sub">Publicar de novo o mesmo tipo tira a anterior do ar, sem apagar.</p>
+      <label>Tipo</label>
+      <select id="pb-tipo">
+        <option value="equipe">Equipe</option>
+        <option value="freelas">Freelas</option>
+        <option value="musicos">Música</option>
+        <option value="eventos">Eventos</option>
+      </select>
+      <div class="linha">
+        <div><label>De</label><input type="date" id="pb-ini" value="${hoje}"></div>
+        <div><label>Até</label><input type="date" id="pb-fim" value="${hoje}"></div>
+      </div>
+      <label>Conteúdo</label>
+      <p class="sub" style="margin:0 0 6px;font-size:12px">
+        Vem da planilha? Abra a aba <b>FUNÇÃO</b>, selecione o bloco inteiro
+        (da linha dos dias até a última pessoa), copie e use
+        <button class="discreto" id="pb-colar" type="button"
+          style="padding:2px 6px">colar da planilha</button>.</p>
+      <textarea id="pb-texto" rows="9" placeholder="Cole aqui a escala da semana, como a equipe precisa ler.
+Ex.:
+Sexta 03/10 — 18h
+Salão: Ana, Kennedy
+Bar: Josué
+Música: trio de blues, 21h"></textarea>
+      <div style="display:flex;gap:8px;margin-top:16px">
+        <button id="pb-salvar" type="button">Publicar</button>
+        <button class="secundaria" id="pb-cancelar" type="button">Cancelar</button>
+      </div>
+      <div id="pb-erro"></div>
+    </form>`;
+  document.body.appendChild(d); d.showModal();
+  d.querySelector("#pb-cancelar").onclick = () => { d.close(); d.remove(); };
+  d.querySelector("#pb-colar").onclick = async () => {
+    const erro = d.querySelector("#pb-erro");
+    erro.innerHTML = "";
+    let bruto = "";
+    try { bruto = await navigator.clipboard.readText(); }
+    catch {
+      erro.innerHTML = `<div class="aviso">O navegador não deixou ler a área de
+        transferência. Cole direto no campo abaixo com Ctrl+V — funciona igual,
+        só sem a arrumação automática.</div>`;
+      return;
+    }
+    const texto = escalaDaPlanilha(bruto);
+    if(!texto){
+      erro.innerHTML = `<div class="aviso">Não reconheci o formato. Copie a aba FUNÇÃO
+        inteira, com a linha dos dias e a linha Pessoa / Horário / Função.</div>`;
+      return;
+    }
+    d.querySelector("#pb-texto").value = texto;
+    erro.innerHTML = `<div class="ok">Escala arrumada. Confira antes de publicar.</div>`;
+  };
+  d.querySelector("#pb-salvar").onclick = async (ev) => {
+    ev.target.disabled = true;
+    try {
+      await chamarOper({ action:"publicar",
+        tipo: d.querySelector("#pb-tipo").value,
+        periodo_inicio: d.querySelector("#pb-ini").value,
+        periodo_fim: d.querySelector("#pb-fim").value,
+        conteudo: d.querySelector("#pb-texto").value });
+      d.close(); d.remove(); abaOperacao();
+    } catch(e){
+      ev.target.disabled = false;
+      d.querySelector("#pb-erro").innerHTML = `<div class="aviso">${esc(e.message)}</div>`;
+    }
+  };
+}
+
+/* ---------- checklists: painel, ocorrências e importação ---------- */
+// O painel responde, nesta ordem: o que está não conforme agora, o que não foi
+// feito, e o que repete. Nota ao longo do tempo só depois que houver histórico —
+// antes disso é gráfico bonito sem conteúdo.
+const SITUACAO_EXEC = { em_andamento:"em andamento", concluida:"concluído",
+  em_revisao:"esperando revisão", aprovada:"aprovado", reprovada:"reprovado" };
+
+async function chamarChk(payload){
+  const { data:{ session } } = await sb.auth.getSession();
+  if(!session) { telaLogin("Sua sessão expirou. Entre de novo."); throw new Error("sem sessão"); }
+  const r = await fetch(`${URL_SB}/functions/v1/checklists`, {
+    method:"POST",
+    headers:{ "Content-Type":"application/json", Authorization:`Bearer ${session.access_token}` },
+    body: JSON.stringify({ unit_token: unidade?.public_token, ...payload })
+  });
+  const d = await r.json().catch(()=>({error:"Resposta inválida."}));
+  if(!r.ok) { const e = new Error(d.error || "Não foi possível completar."); e.dados = d; throw e; }
+  return d;
+}
+
+async function abaChecklists(){
+  conteudo().innerHTML = `<div class="carta"><p class="vazio">Carregando…</p></div>`;
+  try {
+    const d = await chamarChk({ action:"painel" });
+    checklistsAbertos = d.ocorrencias.filter(o => o.criticidade === "critica").length;
+    const selo = document.querySelector('[data-aba="chk"]');
+    if(selo) selo.innerHTML = `Checklists${checklistsAbertos ? `<span class="selo">${checklistsAbertos}</span>` : ""}`;
+
+    const hoje = hojeLocal();
+    const atrasadas = d.ocorrencias.filter(o => o.prazo && o.prazo < hoje).length;
+    const porItem = new Map();
+    d.execucoes.forEach(e => porItem.set(e.id, e));
+
+    conteudo().innerHTML = `
+      <div class="carta">
+        <div class="linha" style="margin-bottom:12px">
+          <h2 style="margin:0">Checklists</h2>
+          <button class="secundaria" id="chk-importar">Importar modelo</button>
+        </div>
+        <div class="linha">
+          <div><span class="etiqueta ${d.hoje.feitos >= d.hoje.previstos && d.hoje.previstos ? "ponto" : "atencao"}">${
+            d.hoje.feitos} de ${d.hoje.previstos} feitos hoje</span></div>
+          <div><span class="etiqueta ${d.ocorrencias.length ? "grave" : "ponto"}">${
+            d.ocorrencias.length} ocorrência${d.ocorrencias.length===1?"":"s"} aberta${d.ocorrencias.length===1?"":"s"}</span></div>
+          <div><span class="etiqueta ${atrasadas ? "grave" : ""}">${atrasadas} com prazo vencido</span></div>
+          <div><span class="etiqueta ${d.esperando_revisao ? "atencao" : ""}">${d.esperando_revisao} esperando revisão</span></div>
+        </div>
+        <p class="sub" style="margin:12px 0 0">Modelos publicados: ${
+          d.modelos.length ? d.modelos.map(m => esc(`${m.codigo} v${m.versao}`)).join(" · ") : "nenhum ainda"}.</p>
+      </div>
+
+      <div class="carta">
+        <h2 style="margin-top:0">O que não está conforme</h2>
+        ${d.ocorrencias.length ? `<table>
+          <tr><th>Item</th><th>Quando</th><th>Responsável</th><th>Prazo</th><th></th></tr>
+          ${d.ocorrencias.map(o => {
+            const e = porItem.get(o.execucao_id);
+            const venceu = o.prazo && o.prazo < hoje;
+            return `<tr>
+              <td><b>${esc(o.texto)}</b>
+                ${o.criticidade === "critica" ? `<span class="etiqueta grave">crítico</span>` : ""}
+                <div class="sub" style="font-size:12px">${esc(o.item_id)}</div></td>
+              <td>${e ? esc(`${e.codigo} · ${e.business_date.split("-").reverse().slice(0,2).join("/")}`) : "—"}
+                <div class="sub" style="font-size:12px">${esc(e?.employee_nome || "")}</div></td>
+              <td>${esc(o.responsavel || "—")}</td>
+              <td>${o.prazo
+                ? `<span class="${venceu ? "etiqueta grave" : ""}">${o.prazo.split("-").reverse().join("/")}</span>`
+                : "—"}</td>
+              <td style="text-align:right;white-space:nowrap">
+                <button class="discreto" data-oco='${guarde(o)}'>tratar</button></td>
+            </tr>`;
+          }).join("")}
+        </table>` : `<p class="vazio">Nada aberto. Quando um item crítico for reprovado, ele aparece aqui com responsável e prazo.</p>`}
+      </div>
+
+      ${d.repetem.length ? `<div class="carta">
+        <h2 style="margin-top:0">O que repete</h2>
+        <p class="sub">Item que falha toda semana é problema de processo, não de pessoa.</p>
+        <table>
+          <tr><th>Item</th><th>Vezes nos últimos 30 dias</th></tr>
+          ${d.repetem.map(r => `<tr><td>${esc(r.item_id)}</td><td><b>${r.vezes}</b></td></tr>`).join("")}
+        </table>
+      </div>` : ""}
+
+      <div class="carta">
+        <h2 style="margin-top:0">Execuções recentes</h2>
+        ${d.execucoes.length ? `<table>
+          <tr><th>Dia</th><th>Checklist</th><th>Quem</th><th>Nota</th><th>Situação</th><th></th></tr>
+          ${d.execucoes.slice(0, 40).map(e => `<tr>
+            <td class="hora">${e.business_date.split("-").reverse().slice(0,2).join("/")}
+              <div class="sub" style="font-size:11px">${esc(e.turno || "")}</div></td>
+            <td>${esc(e.codigo)} <span class="sub">v${e.versao}</span></td>
+            <td>${esc(e.employee_nome || "—")}</td>
+            <td>${e.nota ?? "—"}</td>
+            <td><span class="etiqueta ${
+              e.situacao === "aprovada" ? "ponto" : e.situacao === "reprovada" ? "grave"
+              : e.situacao === "em_revisao" ? "atencao" : ""}">${esc(SITUACAO_EXEC[e.situacao] || e.situacao)}</span></td>
+            <td style="text-align:right;white-space:nowrap">${e.situacao === "em_revisao"
+              ? `<button class="discreto" data-rev='${guarde({id:e.id, codigo:e.codigo, nome:e.employee_nome})}'>revisar</button>`
+              : ""}</td>
+          </tr>`).join("")}
+        </table>` : `<p class="vazio">Nenhuma execução ainda. A equipe abre pelo link do checklist, com o PIN.</p>`}
+      </div>`;
+
+    document.getElementById("chk-importar").onclick = () => formImportarChecklist();
+    conteudo().querySelectorAll("[data-oco]").forEach(b =>
+      b.onclick = () => formOcorrencia(CARGA[b.dataset.oco]));
+    conteudo().querySelectorAll("[data-rev]").forEach(b =>
+      b.onclick = () => formRevisar(CARGA[b.dataset.rev]));
+  } catch(e){
+    conteudo().innerHTML = `<div class="carta"><div class="aviso">${esc(e.message)}</div></div>`;
+  }
+}
+
+function formImportarChecklist(){
+  const d = document.createElement("dialog");
+  d.style.maxWidth = "520px";
+  d.innerHTML = `
+    <h2>Importar modelo de checklist</h2>
+    <p class="sub">O arquivo .json gerado a partir do contrato. Importar de novo o mesmo código
+      cria uma <b>versão nova</b> e tira a anterior do ar — o que já foi executado continua
+      apontando para a versão que foi usada.</p>
+    <input type="file" id="ck-arq" accept="application/json,.json" multiple>
+    <div id="ck-erro"></div>
+    <div class="linha" style="margin-top:18px">
+      <button id="ck-ok">Importar</button>
+      <button class="secundaria" id="ck-cancelar">Cancelar</button>
+    </div>`;
+  document.body.appendChild(d); d.showModal();
+  d.querySelector("#ck-cancelar").onclick = () => d.close();
+  d.addEventListener("close", () => d.remove());
+  d.querySelector("#ck-ok").onclick = async (ev) => {
+    const erro = d.querySelector("#ck-erro");
+    const arquivos = [...d.querySelector("#ck-arq").files];
+    if(!arquivos.length) return erro.innerHTML = `<div class="aviso">Escolha pelo menos um arquivo.</div>`;
+    ev.target.disabled = true; ev.target.textContent = "Importando…";
+    const linhas = [];
+    for(const a of arquivos){
+      try {
+        const modelo = JSON.parse(await a.text());
+        const r = await chamarChk({ action:"importar", modelo });
+        linhas.push(`<div class="ok">${esc(r.codigo)} importado como versão ${r.versao}.${
+          r.exigem_cadastro.length
+            ? ` ${r.exigem_cadastro.length} item(ns) sem limite cadastrado: ${esc(r.exigem_cadastro.join("; "))}`
+            : ""}</div>`);
+      } catch(e){
+        linhas.push(`<div class="aviso">${esc(a.name)}: ${esc(e.message)}</div>`);
+      }
+    }
+    erro.innerHTML = linhas.join("");
+    ev.target.disabled = false; ev.target.textContent = "Importar";
+    abaChecklists();
+  };
+}
+
+function formOcorrencia(o){
+  const d = document.createElement("dialog");
+  d.innerHTML = `
+    <h2>Tratar ocorrência</h2>
+    <p class="sub">${esc(o.texto)}</p>
+    <label>Responsável</label>
+    <input id="oc-resp" value="${esc(o.responsavel || "")}" placeholder="quem vai resolver">
+    <label>Prazo</label>
+    <input type="date" id="oc-prazo" value="${o.prazo || ""}">
+    <label>Situação</label>
+    <select id="oc-sit">
+      <option value="aberta" ${o.situacao==="aberta"?"selected":""}>Aberta</option>
+      <option value="em_tratamento" ${o.situacao==="em_tratamento"?"selected":""}>Em tratamento</option>
+      <option value="resolvida">Resolvida</option>
+      <option value="ignorada">Ignorada</option>
+    </select>
+    <label>O que foi feito</label>
+    <textarea id="oc-res" rows="3" placeholder="Fica registrado junto com a ocorrência"></textarea>
+    <div id="oc-erro"></div>
+    <div class="linha" style="margin-top:18px">
+      <button id="oc-salvar">Salvar</button>
+      <button class="secundaria" id="oc-cancelar">Cancelar</button>
+    </div>`;
+  document.body.appendChild(d); d.showModal();
+  d.querySelector("#oc-cancelar").onclick = () => d.close();
+  d.addEventListener("close", () => d.remove());
+  d.querySelector("#oc-salvar").onclick = async (ev) => {
+    ev.target.disabled = true;
+    try {
+      await chamarChk({ action:"ocorrencia", id:o.id,
+        situacao: d.querySelector("#oc-sit").value,
+        responsavel: d.querySelector("#oc-resp").value || null,
+        prazo: d.querySelector("#oc-prazo").value || null,
+        resolucao: d.querySelector("#oc-res").value || undefined });
+      d.close(); abaChecklists();
+    } catch(e){
+      ev.target.disabled = false;
+      d.querySelector("#oc-erro").innerHTML = `<div class="aviso">${esc(e.message)}</div>`;
+    }
+  };
+}
+
+function formRevisar(e){
+  const d = document.createElement("dialog");
+  d.innerHTML = `
+    <h2>Revisar ${esc(e.codigo)}</h2>
+    <p class="sub">Executado por ${esc(e.nome || "—")}. Aprovar vale como conferência da liderança;
+      reprovar devolve para ser refeito, sem apagar o que foi respondido.</p>
+    <label>Observação</label>
+    <textarea id="rv-motivo" rows="3" placeholder="O que você viu"></textarea>
+    <div id="rv-erro"></div>
+    <div class="linha" style="margin-top:18px">
+      <button id="rv-ok">Aprovar</button>
+      <button class="secundaria" id="rv-nao">Reprovar</button>
+      <button class="discreto" id="rv-cancelar">Cancelar</button>
+    </div>`;
+  document.body.appendChild(d); d.showModal();
+  d.querySelector("#rv-cancelar").onclick = () => d.close();
+  d.addEventListener("close", () => d.remove());
+  const decidir = async (aprovar, botao) => {
+    botao.disabled = true;
+    try {
+      await chamarChk({ action:"revisar", id:e.id, aprovar,
+        motivo: d.querySelector("#rv-motivo").value });
+      d.close(); abaChecklists();
+    } catch(err){
+      botao.disabled = false;
+      d.querySelector("#rv-erro").innerHTML = `<div class="aviso">${esc(err.message)}</div>`;
+    }
+  };
+  d.querySelector("#rv-ok").onclick = (ev) => decidir(true, ev.target);
+  d.querySelector("#rv-nao").onclick = (ev) => decidir(false, ev.target);
+}
+
+/* ---------- NR-1: riscos psicossociais e informativos ---------- */
+// A norma pede três coisas: inventário de risco com plano, prova de que a
+// equipe foi informada, e canal de relato. O canal é o de recados — os dois
+// assuntos psicossociais já entram por lá. Aqui ficam o inventário e o texto
+// que a equipe lê na tela pública.
+//
+// Risco não é editado por cima: corrigir gera versão nova apontando para a
+// anterior, e o banco recusa UPDATE. É o que sustenta, um ano depois, mostrar
+// o que a casa sabia em cada data.
+const SITUACAO_RISCO = { planejada:"A fazer", em_andamento:"Em andamento",
+  concluida:"Feito", descartada:"Descartada" };
+
+async function abaNr1(){
+  conteudo().innerHTML = `<div class="carta"><p class="vazio">Carregando…</p></div>`;
+  try {
+    const d = await chamarOper({ action:"nr1_painel" });
+    acoesVencidas = d.acoes_vencidas;
+    const selo = document.querySelector('[data-aba="nr1"]');
+    if(selo) selo.innerHTML = `NR-1${acoesVencidas ? `<span class="selo">${acoesVencidas}</span>` : ""}`;
+
+    const hoje = hojeLocal();
+    const vivos = d.riscos.filter(r => r.situacao !== "descartada");
+    const link = `${location.origin}${location.pathname.replace(/[^/]*$/,"")}nr1.html?u=${
+      encodeURIComponent(unidade?.public_token || "")}`;
+
+    conteudo().innerHTML = `
+      <div class="carta">
+        <h2 style="margin-top:0">NR-1 · riscos psicossociais</h2>
+        <p class="sub">Desde 26/05/2026 a NR-1 cobra da empresa o mesmo cuidado com risco
+          psicossocial que já cobrava com risco físico, sem dispensa por tamanho de empresa.
+          A <b>multa</b> está suspensa por decisão do STF (ADPF 1.316) — prorrogada em
+          24/09/2026 por mais 90 dias —, mas a <b>obrigação de gerir</b> continua de pé, e
+          reclamação trabalhista não depende dessa suspensão. Isto aqui é o registro: o que a
+          casa reconhece, o que vai fazer, e a prova de que a equipe foi informada.</p>
+        <div class="linha" style="margin:14px 0 0">
+          <div><span class="etiqueta ${vivos.length?"ponto":"aviso"}">${vivos.length} risco${
+            vivos.length===1?"":"s"} no inventário</span></div>
+          <div><span class="etiqueta ${acoesVencidas?"grave":"ponto"}">${acoesVencidas} ação${
+            acoesVencidas===1?"":"ões"} com prazo vencido</span></div>
+          <div><span class="etiqueta">${d.relatos_psicossociais} relato${
+            d.relatos_psicossociais===1?"":"s"} pelo canal</span></div>
+        </div>
+        <label style="margin-top:16px">Link público para a equipe</label>
+        <input id="nr-link" readonly value="${esc(link)}">
+        <p class="sub" style="margin:6px 0 0;font-size:12px">Não pede senha, de propósito:
+          esconder informação de segurança atrás de login derrota o objetivo da norma.
+          Imprima como QR no quadro de avisos e no vestiário.</p>
+      </div>
+
+      <div class="carta">
+        <div class="linha" style="margin-bottom:12px">
+          <h2 style="margin:0">Inventário</h2>
+          <button id="nr-novo">Novo risco</button>
+        </div>
+        ${vivos.length ? `<table>
+          <tr><th>Fator</th><th>Onde</th><th>Nível</th><th>Prazo</th><th>Situação</th><th></th></tr>
+          ${vivos.map(r => {
+            const vencido = r.prazo && r.prazo < hoje && r.situacao !== "concluida";
+            return `<tr>
+              <td><b>${esc(r.fator)}</b>
+                <div class="sub" style="margin:2px 0 0">${esc(r.medidas)}</div>
+                ${r.responsavel ? `<div class="sub" style="font-size:12px">com ${esc(r.responsavel)}</div>` : ""}
+                ${r.mostrar_na_tela ? "" : `<span class="etiqueta">fora da tela da equipe</span>`}</td>
+              <td>${esc(r.onde || "—")}${r.quem ? `<div class="sub" style="font-size:12px">${esc(r.quem)}</div>` : ""}</td>
+              <td><span class="etiqueta ${r.nivel>=15?"grave":r.nivel>=8?"atencao":""}">${r.nivel}</span>
+                <div class="sub" style="font-size:11px">${r.severidade}×${r.probabilidade}</div></td>
+              <td>${r.prazo
+                ? `<span class="${vencido?"etiqueta grave":""}">${r.prazo.split("-").reverse().join("/")}</span>`
+                : "—"}</td>
+              <td><span class="etiqueta ${r.situacao==="concluida"?"ponto":"atencao"}">${
+                esc(SITUACAO_RISCO[r.situacao] || r.situacao)}</span></td>
+              <td style="text-align:right;white-space:nowrap">
+                <button class="discreto" data-risco='${guarde(r)}'>revisar</button></td>
+            </tr>`;
+          }).join("")}
+        </table>` : `<p class="vazio">Nada no inventário ainda. Comece pelo que você já sabe
+          que aperta: noite de pico com pouca gente, cliente alterado, jornada que termina
+          de madrugada.</p>`}
+        ${d.riscos.filter(r => r.situacao === "descartada").length ? `
+          <details style="margin-top:14px">
+            <summary class="sub" style="cursor:pointer">Descartados (${
+              d.riscos.filter(r => r.situacao === "descartada").length})</summary>
+            ${d.riscos.filter(r => r.situacao === "descartada").map(r => `
+              <div class="linha" style="margin-top:8px">
+                <span style="flex:1">${esc(r.fator)}</span>
+                <button class="discreto" data-risco='${guarde(r)}'>trazer de volta</button>
+              </div>`).join("")}
+            <p class="sub" style="margin:8px 0 0;font-size:12px">Descartar não apaga: o item
+              continua no histórico e pode voltar como revisão.</p>
+          </details>` : ""}
+      </div>
+
+      <div class="carta">
+        <div class="linha" style="margin-bottom:12px">
+          <h2 style="margin:0">Informativos da tela pública</h2>
+          <button id="nr-texto-novo" class="secundaria">Novo texto</button>
+        </div>
+        <p class="sub">O que a equipe lê. Use **duas estrelas** em volta da palavra para
+          destacar. Linha vazia separa parágrafo.</p>
+        ${d.informativos.length ? d.informativos.map(i => `
+          <div style="border-top:1px solid var(--borda);padding:10px 0">
+            <div class="linha">
+              <b style="flex:1">${esc(i.titulo)}</b>
+              <span class="etiqueta ${i.publicado?"ponto":"aviso"}">${i.publicado?"no ar":"fora do ar"}</span>
+              <button class="discreto" data-texto='${guarde(i)}'>editar</button>
+            </div>
+            <p class="sub" style="margin:4px 0 0;white-space:pre-wrap">${esc(
+              i.corpo.length > 220 ? i.corpo.slice(0,220)+"…" : i.corpo)}</p>
+          </div>`).join("") : `<p class="vazio">Nenhum texto publicado.</p>`}
+      </div>`;
+
+    document.getElementById("nr-link").onclick = (e) => e.target.select();
+    document.getElementById("nr-novo").onclick = () => formRisco(null);
+    document.getElementById("nr-texto-novo").onclick = () => formInformativo(null);
+    conteudo().querySelectorAll("[data-risco]").forEach(b =>
+      b.onclick = () => formRisco(CARGA[b.dataset.risco]));
+    conteudo().querySelectorAll("[data-texto]").forEach(b =>
+      b.onclick = () => formInformativo(CARGA[b.dataset.texto]));
+  } catch(e){
+    conteudo().innerHTML = `<div class="carta"><div class="aviso">${esc(e.message)}</div></div>`;
+  }
+}
+
+function formRisco(r){
+  const d = document.createElement("dialog");
+  d.style.maxWidth = "520px";
+  d.innerHTML = `
+    <h2>${r ? "Revisar risco" : "Novo risco"}</h2>
+    <p class="sub">${r
+      ? "A versão atual continua no histórico. Esta entra como revisão, com a data de hoje."
+      : "Escreva com as palavras da casa, não com as da norma. Quem vai ler é a equipe."}</p>
+    <label>O que aperta</label>
+    <input id="nr-fator" value="${esc(r?.fator || "")}"
+      placeholder="Dois no salão em noite de pico">
+    <div class="linha">
+      <div><label>Onde</label><input id="nr-onde" value="${esc(r?.onde || "")}" placeholder="Salão externo"></div>
+      <div><label>Quem sente</label><input id="nr-quem" value="${esc(r?.quem || "")}" placeholder="Atendimento"></div>
+    </div>
+    <div class="linha">
+      <div><label>Gravidade (1 a 5)</label>
+        <select id="nr-sev">${[1,2,3,4,5].map(n =>
+          `<option value="${n}" ${Number(r?.severidade || 3)===n?"selected":""}>${n}</option>`).join("")}</select></div>
+      <div><label>Chance de acontecer (1 a 5)</label>
+        <select id="nr-prob">${[1,2,3,4,5].map(n =>
+          `<option value="${n}" ${Number(r?.probabilidade || 3)===n?"selected":""}>${n}</option>`).join("")}</select></div>
+    </div>
+    <p class="sub" style="margin:4px 0 0;font-size:12px">Os dois números se multiplicam e dão
+      o nível. Servem para ordenar a fila, não para virar laudo: 15 ou mais pede ação com data.</p>
+    <label>O que a casa vai fazer</label>
+    <textarea id="nr-medidas" rows="3"
+      placeholder="Terceiro freela fixo na sexta e no sábado">${esc(r?.medidas || "")}</textarea>
+    <div class="linha">
+      <div><label>Responsável</label><input id="nr-resp" value="${esc(r?.responsavel || "")}"></div>
+      <div><label>Até quando</label><input type="date" id="nr-prazo" value="${r?.prazo || ""}"></div>
+    </div>
+    <label>Situação</label>
+    <select id="nr-sit">${Object.entries(SITUACAO_RISCO).map(([v,rot]) =>
+      `<option value="${v}" ${(r?.situacao || "planejada")===v?"selected":""}>${esc(rot)}</option>`).join("")}</select>
+    <label>De onde veio</label>
+    <input id="nr-fonte" value="${esc(r?.fonte || "")}"
+      placeholder="Recado da equipe, conversa de turno, observação da gestão">
+    <label style="display:flex;gap:8px;align-items:center;margin-top:14px;color:var(--texto)">
+      <input type="checkbox" id="nr-mostrar" style="width:auto" ${
+        r?.mostrar_na_tela === false ? "" : "checked"}>
+      Mostrar na tela pública da equipe
+    </label>
+    <p class="sub" style="margin:4px 0 0;font-size:12px">Deixe marcado como regra. Desmarque
+      só quando o texto do risco expõe uma pessoa — nesse caso reescreva o fator sem nomes
+      e volte a mostrar.</p>
+    <div id="nr-erro"></div>
+    <div class="linha" style="margin-top:18px">
+      <button id="nr-salvar">${r ? "Registrar revisão" : "Registrar"}</button>
+      <button class="secundaria" id="nr-cancelar">Cancelar</button>
+    </div>`;
+  document.body.appendChild(d); d.showModal();
+  d.querySelector("#nr-cancelar").onclick = () => d.close();
+  d.addEventListener("close", () => d.remove());
+  d.querySelector("#nr-salvar").onclick = async (ev) => {
+    ev.target.disabled = true;
+    try {
+      await chamarOper({ action:"nr1_risco",
+        substitui: r?.id || null,
+        fator: d.querySelector("#nr-fator").value,
+        onde: d.querySelector("#nr-onde").value || null,
+        quem: d.querySelector("#nr-quem").value || null,
+        severidade: Number(d.querySelector("#nr-sev").value),
+        probabilidade: Number(d.querySelector("#nr-prob").value),
+        medidas: d.querySelector("#nr-medidas").value,
+        responsavel: d.querySelector("#nr-resp").value || null,
+        prazo: d.querySelector("#nr-prazo").value || null,
+        situacao: d.querySelector("#nr-sit").value,
+        fonte: d.querySelector("#nr-fonte").value || null,
+        mostrar_na_tela: d.querySelector("#nr-mostrar").checked });
+      d.close(); abaNr1();
+    } catch(e){
+      ev.target.disabled = false;
+      d.querySelector("#nr-erro").innerHTML = `<div class="aviso">${esc(e.message)}</div>`;
+    }
+  };
+}
+
+function formInformativo(i){
+  const d = document.createElement("dialog");
+  d.style.maxWidth = "520px";
+  d.innerHTML = `
+    <h2>${i ? "Editar informativo" : "Novo informativo"}</h2>
+    <p class="sub">Isto a equipe lê sem senha. Escreva curto e direto.</p>
+    <label>Título</label>
+    <input id="in-titulo" value="${esc(i?.titulo || "")}">
+    <label>Texto</label>
+    <textarea id="in-corpo" rows="8">${esc(i?.corpo || "")}</textarea>
+    <div class="linha">
+      <div style="flex:0 0 120px"><label>Ordem</label>
+        <input type="number" id="in-ordem" value="${Number(i?.ordem ?? 100)}"></div>
+      <div><label style="display:flex;gap:8px;align-items:center;margin-top:24px;color:var(--texto)">
+        <input type="checkbox" id="in-pub" style="width:auto" ${i?.publicado === false ? "" : "checked"}>
+        No ar</label></div>
+    </div>
+    <div id="in-erro"></div>
+    <div class="linha" style="margin-top:18px">
+      <button id="in-salvar">Salvar</button>
+      <button class="secundaria" id="in-cancelar">Cancelar</button>
+    </div>`;
+  document.body.appendChild(d); d.showModal();
+  d.querySelector("#in-cancelar").onclick = () => d.close();
+  d.addEventListener("close", () => d.remove());
+  d.querySelector("#in-salvar").onclick = async (ev) => {
+    ev.target.disabled = true;
+    try {
+      await chamarOper({ action:"nr1_informativo",
+        id: i?.id || null,
+        titulo: d.querySelector("#in-titulo").value,
+        corpo: d.querySelector("#in-corpo").value,
+        ordem: Number(d.querySelector("#in-ordem").value) || 100,
+        publicado: d.querySelector("#in-pub").checked });
+      d.close(); abaNr1();
+    } catch(e){
+      ev.target.disabled = false;
+      d.querySelector("#in-erro").innerHTML = `<div class="aviso">${esc(e.message)}</div>`;
+    }
+  };
+}
+
+/* ---------- folha de ponto ---------- */
+// Mes fechado por padrao: do dia 1 ao ultimo dia do mes corrente.
+function mesAtual(){
+  const hoje = hojeLocal();
+  const [a,m] = hoje.split("-").map(Number);
+  const ultimo = new Date(Date.UTC(a, m, 0)).getUTCDate();
+  return { inicio:`${hoje.slice(0,7)}-01`, fim:`${hoje.slice(0,7)}-${String(ultimo).padStart(2,"0")}` };
+}
+let folhaFiltro = { employee_id:"", ...mesAtual() };
+
+async function abaFolha(){
+  conteudo().innerHTML = `<div class="carta"><p class="vazio">Carregando…</p></div>`;
+  try {
+    const { equipe } = await chamar({ action:"equipe" });
+    const gente = equipe.filter(p => p.registra_ponto);
+    if(!folhaFiltro.employee_id && gente.length) folhaFiltro.employee_id = gente[0].id;
+
+    conteudo().innerHTML = `
+      <div class="carta">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+          <h2 style="margin:0">Folha de ponto</h2>
+          <button class="discreto" id="parametros">Percentuais e tolerância</button>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin:14px 0">
+          <div style="flex:2;min-width:200px">
+            <label>Colaborador</label>
+            <select id="fp-pessoa">${gente.map(p =>
+              `<option value="${esc(p.id)}" ${p.id===folhaFiltro.employee_id?"selected":""}>${esc(p.nome)}</option>`).join("")}</select>
+          </div>
+          <div style="flex:1;min-width:130px">
+            <label>De</label><input type="date" id="fp-inicio" value="${folhaFiltro.inicio}">
+          </div>
+          <div style="flex:1;min-width:130px">
+            <label>Até</label><input type="date" id="fp-fim" value="${folhaFiltro.fim}">
+          </div>
+          <div style="display:flex;align-items:flex-end"><button id="fp-ver">Ver</button></div>
+        </div>
+        <div id="fp-saida">${gente.length ? `<p class="vazio">Escolha o período e clique em Ver.</p>`
+          : `<p class="vazio">Ninguém registra ponto nesta unidade.</p>`}</div>
+      </div>`;
+
+    document.getElementById("parametros").onclick = () => formParametros();
+    document.getElementById("fp-ver").onclick = async (ev) => {
+      folhaFiltro = {
+        employee_id: document.getElementById("fp-pessoa").value,
+        inicio: document.getElementById("fp-inicio").value,
+        fim: document.getElementById("fp-fim").value,
+      };
+      ev.target.disabled = true;
+      const saida = document.getElementById("fp-saida");
+      saida.innerHTML = `<p class="vazio">Apurando…</p>`;
+      try { desenharFolha(await chamarFolha({ action:"folha", ...folhaFiltro })); }
+      catch(e){ saida.innerHTML = `<div class="aviso">${esc(e.message)}</div>`; }
+      finally { ev.target.disabled = false; }
+    };
+  } catch(e){
+    conteudo().innerHTML = `<div class="carta"><div class="aviso">${esc(e.message)}</div></div>`;
+  }
+}
+
+function desenharFolha(r){
+  const { dias, resumo, jornada, colaborador } = r;
+  const aviso = resumo.parametros_confirmados ? "" :
+    `<div class="aviso" style="margin-bottom:12px">Os percentuais ainda não foram confirmados pela
+     contabilidade. A apuração usa ${resumo.he_percentual}% de hora extra e
+     ${resumo.noturno_percentual}% de adicional noturno — dá para trocar em “Percentuais e tolerância”
+     e gerar de novo.</div>`;
+
+  document.getElementById("fp-saida").innerHTML = `
+    ${aviso}
+    <p class="sub" style="margin-top:0">${esc(colaborador.nome)}${esc(colaborador.cargo ? " — "+colaborador.cargo : "")}
+      · jornada de ${jornada.semanais}h em ${jornada.dias_semana} dias (${jornada.esperado_dia} por dia)</p>
+    <div style="overflow-x:auto">
+    <table>
+      <tr><th>Data</th><th>1ª Ent.</th><th>1ª Saí.</th><th>2ª Ent.</th><th>2ª Saí.</th>
+          <th>Interv.</th><th>Trabalhado</th><th>Extras</th><th>Débito</th><th>Noturno</th><th>Observação</th></tr>
+      ${dias.map(d => `<tr style="${d.observacao.includes("conferir") ? "background:#fdf4ec" : ""}">
+        <td>${esc(d.rotulo)}</td>
+        <td class="hora">${d.e1}</td><td class="hora">${d.s1}</td>
+        <td class="hora">${d.e2}</td><td class="hora">${d.s2}</td>
+        <td class="hora">${d.intervalo}</td><td class="hora">${d.trabalhado}</td>
+        <td class="hora">${d.extra}</td><td class="hora">${d.debito}</td><td class="hora">${d.noturno}</td>
+        <td style="font-size:12px;color:#7a7568">${esc(d.observacao)}</td></tr>`).join("")}
+      <tr style="font-weight:700;background:#f2f1ec">
+        <td>Totais</td><td colspan="4"></td>
+        <td class="hora">${resumo.intervalo}</td><td class="hora">${resumo.trabalhado}</td>
+        <td class="hora">${resumo.extras}</td><td class="hora">${resumo.debito}</td>
+        <td class="hora">${resumo.noturno}</td><td></td></tr>
+    </table>
+    </div>
+    ${resumo.hora_noturna_reduzida && resumo.noturno !== "0:00"
+      ? `<p class="sub">Com a hora noturna reduzida (art. 73 § 1º da CLT), ${resumo.noturno} de relógio
+         valem ${resumo.noturno_reduzido} para pagamento.</p>` : ""}
+    <div style="margin-top:14px"><button id="fp-pdf">Gerar PDF e enviar para assinatura</button></div>
+    <div id="fp-resultado"></div>`;
+
+  document.getElementById("fp-pdf").onclick = async (ev) => {
+    ev.target.disabled = true;
+    const caixa = document.getElementById("fp-resultado");
+    caixa.innerHTML = `<p class="vazio">Gerando…</p>`;
+    try {
+      const g = await chamarFolha({ action:"folha_pdf", ...folhaFiltro });
+      caixa.innerHTML = `<p class="sub">Folha gerada e publicada para assinatura no portal do
+        colaborador. Selo do arquivo: <code>${esc(g.sha256_curto)}</code>. Ela aparece na aba Documentos.</p>`;
+    } catch(e){
+      caixa.innerHTML = `<div class="aviso">${esc(e.message)}</div>`;
+      ev.target.disabled = false;
+    }
+  };
+}
+
+function formParametros(){
+  const d = document.createElement("dialog");
+  d.innerHTML = `
+    <form method="dialog" style="min-width:min(520px,92vw)">
+      <h2 style="margin-top:0">Percentuais e tolerância</h2>
+      <p class="sub">Salvar cria uma vigência nova. As folhas já geradas continuam com os
+        percentuais da época — não são reescritas.</p>
+      <div id="pa-corpo"><p class="vazio">Carregando…</p></div>
+      <div style="display:flex;gap:8px;margin-top:16px">
+        <button id="pa-salvar" type="button">Salvar</button>
+        <button class="secundaria" id="pa-fechar" type="button">Fechar</button>
+      </div>
+      <div id="pa-erro"></div>
+    </form>`;
+  document.body.appendChild(d); d.showModal();
+  d.querySelector("#pa-fechar").onclick = () => { d.close(); d.remove(); };
+
+  chamarFolha({ action:"parametros" }).then(({ parametros:p }) => {
+    d.querySelector("#pa-corpo").innerHTML = `
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <div style="flex:1;min-width:150px"><label>Hora extra (%)</label>
+          <input type="number" step="1" id="pa-he" value="${p?.he_percentual ?? 50}"></div>
+        <div style="flex:1;min-width:150px"><label>Hora extra 2ª faixa (%)</label>
+          <input type="number" step="1" id="pa-he2" value="${p?.he_percentual_2 ?? ""}" placeholder="opcional"></div>
+        <div style="flex:1;min-width:150px"><label>Adicional noturno (%)</label>
+          <input type="number" step="1" id="pa-not" value="${p?.noturno_percentual ?? 20}"></div>
+        <div style="flex:1;min-width:150px"><label>Noturno começa às</label>
+          <input type="time" id="pa-notini" value="${(p?.noturno_inicio ?? "22:00").slice(0,5)}"></div>
+        <div style="flex:1;min-width:150px"><label>Tolerância por dia (min)</label>
+          <input type="number" step="1" id="pa-tol" value="${p?.tolerancia_dia_min ?? 10}"></div>
+        <div style="flex:1;min-width:150px"><label>Vigência a partir de</label>
+          <input type="date" id="pa-vig" value="${hojeLocal()}"></div>
+      </div>
+      <label style="display:flex;gap:8px;align-items:center;margin-top:10px">
+        <input type="checkbox" id="pa-red" ${p?.hora_noturna_reduzida === false ? "" : "checked"}>
+        Hora noturna reduzida (52min30 contam como 1h)</label>
+      <label>Convenção aplicada</label>
+      <input id="pa-conv" value="${esc(p?.convencao ?? "")}" placeholder="ex.: CCT SINTHORESP x SINDRESBAR 2025/2027">
+      <label>Observação</label>
+      <input id="pa-obs" value="${esc(p?.observacao ?? "")}" placeholder="de onde veio esse número">`;
+
+    d.querySelector("#pa-salvar").onclick = async (ev) => {
+      ev.target.disabled = true;
+      try {
+        await chamarFolha({ action:"salvar_parametros",
+          vigencia_inicio: d.querySelector("#pa-vig").value,
+          he_percentual: d.querySelector("#pa-he").value,
+          he_percentual_2: d.querySelector("#pa-he2").value || null,
+          noturno_percentual: d.querySelector("#pa-not").value,
+          noturno_inicio: d.querySelector("#pa-notini").value,
+          hora_noturna_reduzida: d.querySelector("#pa-red").checked,
+          tolerancia_dia_min: d.querySelector("#pa-tol").value,
+          convencao: d.querySelector("#pa-conv").value.trim() || null,
+          observacao: d.querySelector("#pa-obs").value.trim() || null });
+        d.close(); d.remove(); abaFolha();
+      } catch(e){
+        ev.target.disabled = false;
+        d.querySelector("#pa-erro").innerHTML = `<div class="aviso">${esc(e.message)}</div>`;
+      }
+    };
+  }).catch(e => {
+    d.querySelector("#pa-corpo").innerHTML = `<div class="aviso">${esc(e.message)}</div>`;
+  });
+}
+
+/* ---------- importar modelos de documento ---------- */
+// Os arquivos .json ficam na pasta modelos/ do repositorio. Sobem daqui, do
+// navegador, para nao empurrar centenas de KB por outro caminho.
+function formModelos(){
+  const d = document.createElement("dialog");
+  d.innerHTML = `
+    <form method="dialog" style="min-width:min(560px,92vw)">
+      <h2 style="margin-top:0">Importar modelos</h2>
+      <p class="sub">Escolha os arquivos <code>.json</code> da pasta <code>modelos/</code>.
+        Cada importação cria uma versão nova e desativa a anterior. Modelo com campo
+        <code>[[pendente]]</code> entra desativado até você revisar.</p>
+      <input type="file" id="mo-arquivos" accept=".json,application/json" multiple>
+      <div id="mo-lista"></div>
+      <div style="display:flex;gap:8px;margin-top:16px">
+        <button id="mo-enviar" type="button">Importar</button>
+        <button class="secundaria" id="mo-fechar" type="button">Fechar</button>
+      </div>
+      <div id="mo-erro"></div>
+    </form>`;
+  document.body.appendChild(d); d.showModal();
+  d.querySelector("#mo-fechar").onclick = () => { d.close(); d.remove(); };
+
+  d.querySelector("#mo-enviar").onclick = async (ev) => {
+    const arquivos = [...(d.querySelector("#mo-arquivos").files || [])];
+    const erro = d.querySelector("#mo-erro");
+    if(!arquivos.length){ erro.innerHTML = `<div class="aviso">Escolha ao menos um arquivo.</div>`; return; }
+    ev.target.disabled = true; erro.innerHTML = "";
+    d.querySelector("#mo-lista").innerHTML = `<p class="vazio">Lendo ${arquivos.length} arquivo(s)…</p>`;
+    try {
+      const modelos = [];
+      for(const a of arquivos){
+        try { modelos.push(JSON.parse(await a.text())); }
+        catch { throw new Error(`O arquivo ${esc(a.name)} não é um JSON válido.`); }
+      }
+      const r = await chamarModelos({ action:"importar", modelos });
+      d.querySelector("#mo-lista").innerHTML = `
+        <p class="sub" style="margin-bottom:6px">${r.importados} importado(s), ${r.ativos} ativo(s).</p>
+        <table style="margin-top:4px">
+          <tr><th>Código</th><th>Título</th><th>Versão</th><th>Situação</th></tr>
+          ${(r.relatorio || []).map(m => `<tr>
+            <td>${esc(m.codigo)}</td><td>${esc(m.titulo ?? "")}</td><td>${esc(m.versao ?? "")}</td>
+            <td>${esc(m.situacao)}${m.motivo ? ` — ${esc(m.motivo)}` : ""}</td></tr>`).join("")}
+        </table>`;
+      ev.target.disabled = false;
+    } catch(e){
+      d.querySelector("#mo-lista").innerHTML = "";
+      erro.innerHTML = `<div class="aviso">${esc(e.message)}</div>`;
+      ev.target.disabled = false;
+    }
+  };
+}
+
+const { data:{ session } } = await sb.auth.getSession();
+session ? iniciar() : telaLogin();
+</script>
+</body>
+</html>
