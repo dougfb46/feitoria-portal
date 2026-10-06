@@ -582,6 +582,7 @@ async function abaDocs(){
           <button class="secundaria" id="gerar">Gerar de modelo</button>
           <button class="discreto" id="importar">Importar modelos</button>
           <button class="secundaria" id="folha-mes">Publicar folha do mês</button>
+          <button class="secundaria" id="drive">Drive</button>
           <button id="enviar">Enviar documento</button>
         </div>
         ${documentos.length ? `<table>
@@ -608,6 +609,7 @@ async function abaDocs(){
     document.getElementById("filtro").onchange = (e) => { filtroPessoa = e.target.value; abaDocs(); };
     document.getElementById("importar").onclick = () => formModelos();
     document.getElementById("enviar").onclick = () => formEnvio(equipe, tipos);
+    document.getElementById("drive").onclick = () => telaDrive(equipe, tipos);
     document.getElementById("folha-mes").onclick = () => formFolhaDoMes(equipe);
     document.getElementById("gerar").onclick = () => formGerar(equipe);
     conteudo().querySelectorAll("[data-abrir]").forEach(b => b.onclick = async () => {
@@ -622,6 +624,74 @@ async function abaDocs(){
       catch(e){ alert(e.message); }
     });
   } catch(e){ conteudo().innerHTML = `<div class="carta"><div class="aviso">${esc(e.message)}</div></div>`; }
+}
+
+async function chamarDrive(payload){
+ const {data:{session}}=await sb.auth.getSession();
+ if(!session)throw new Error("Entre novamente.");
+ const r=await fetch(URL_SB+"/functions/v1/drive-documents",{method:"POST",
+ headers:{"Content-Type":"application/json",Authorization:"Bearer "+session.access_token},
+ body:JSON.stringify({restaurant_id:unidade?.id,...payload})});
+ const d=await r.json();if(!r.ok)throw new Error(d.error||"Não foi possível concluir.");return d;
+}
+async function telaDrive(equipe,tipos){
+ const d=document.createElement("dialog");d.style.maxWidth="760px";
+ document.body.appendChild(d);d.showModal();d.addEventListener("close",()=>d.remove());
+ async function load(){
+  d.innerHTML='<h2>Documentos do Drive</h2><p>Carregando…</p>';
+  try{
+   const data=await chamarDrive({action:"list"});
+   d.innerHTML=`<h2>Documentos do Drive</h2><p class="sub">Só o dono aprova. O documento vai para a pessoa escolhida após a confirmação.</p>
+    <p>${data.pending.length} pendência(s) · ${data.verified_backups} cópia(s) de backup verificadas</p>
+    <p class="sub">${data.backup_enabled?"Backup autorizado.":"Backup automático aguardando autorização do dono."}</p>
+    <div class="linha"><button id="drive-sync">Buscar novos arquivos</button><button class="secundaria" id="drive-close">Fechar</button></div>
+    <div id="drive-error" role="status"></div>
+    ${data.pending.length?'<table><tr><th>Arquivo</th><th>Ação</th></tr>'+data.pending.map(p=>`<tr>
+    <td>${esc(p.name)}<div class="sub">Versão ${esc(p.version)} · ${Math.round(p.size_bytes/1024)} KB</div></td>
+    <td><button data-drive-approve="${esc(p.id)}">Revisar</button> <button class="discreto" data-drive-ignore="${esc(p.id)}">Dispensar</button></td></tr>`).join("")+'</table>':'<p class="vazio">Nenhum PDF esperando aprovação.</p>'}
+    <h2 style="margin-top:20px">Últimas operações</h2>
+    ${data.events.map(e=>`<p class="sub">${esc(new Date(e.created_at).toLocaleString("pt-BR",{timeZone:"America/Sao_Paulo"}))} ·
+    ${esc(({approved:"Documento aprovado",ignored:"Pendência dispensada",backup_verified:"Backup verificado",backup_failed:"Falha de backup",worker_completed:"Consulta concluída"})[e.action]||"Operação")}
+    ${e.detail?.reason?' · '+esc(e.detail.reason):''}</p>`).join("")}`;
+   d.querySelector("#drive-close").onclick=()=>d.close();
+   d.querySelector("#drive-sync").onclick=async(e)=>{
+    e.target.disabled=true;
+    try{await chamarDrive({action:"sync",scan_only:true});await load();}
+    catch(err){d.querySelector("#drive-error").textContent=err.message;e.target.disabled=false;}
+   };
+   d.querySelectorAll("[data-drive-ignore]").forEach(b=>b.onclick=async()=>{
+    const reason=prompt("Motivo para dispensar este arquivo (mínimo 5 caracteres):");
+    if(!reason)return;b.disabled=true;
+    try{await chamarDrive({action:"ignore",id:b.dataset.driveIgnore,reason});await load();}
+    catch(err){d.querySelector("#drive-error").textContent=err.message;b.disabled=false;}
+   });
+   d.querySelectorAll("[data-drive-approve]").forEach(b=>b.onclick=()=>{
+    const p=data.pending.find(x=>x.id===b.dataset.driveApprove);review(p);
+   });
+  }catch(err){d.innerHTML=`<h2>Drive</h2><p class="aviso">${esc(err.message)}</p><button id="drive-close">Fechar</button>`;d.querySelector("#drive-close").onclick=()=>d.close();}
+ }
+ function review(p){
+  d.innerHTML=`<h2>Revisar documento</h2><p>${esc(p.name)}</p><p class="sub">Unidade: ${esc(unidade.name)}. Confira o PDF original na pasta “Para publicar” antes de aprovar.</p>
+   <form id="drive-form"><label>Colaborador</label><select name="employee_id" required><option value="">Escolha</option>
+   ${equipe.filter(p=>p.ativo).map(p=>`<option value="${esc(p.id)}">${esc(p.nome)}</option>`).join("")}</select>
+   <label>Tipo</label><select name="tipo">${tipos.map(t=>`<option value="${esc(t.id)}">${esc(t.nome)}</option>`).join("")}</select>
+   <label>Título</label><input name="titulo" required minlength="3" maxlength="200" value="${esc(p.name.replace(/\.pdf$/i,""))}">
+   <label>Competência (opcional)</label><input name="competencia" type="month">
+   <label>Prazo (opcional)</label><input name="prazo" type="date">
+   <label><input name="exige_assinatura" type="checkbox" checked style="width:auto"> Exige assinatura</label>
+   <p class="sub">A aprovação guarda uma cópia fixa no portal. Alterações futuras no Drive entram como outra pendência.</p>
+   <div id="drive-error" role="status"></div><div class="linha"><button type="submit">Aprovar e publicar para esta pessoa</button>
+   <button type="button" class="secundaria" id="drive-back">Voltar</button></div></form>`;
+  d.querySelector("#drive-back").onclick=load;
+  const f=d.querySelector("#drive-form");
+  f.onsubmit=async(e)=>{
+   e.preventDefault();const submit=f.querySelector('[type="submit"]');submit.disabled=true;
+   try{const data=Object.fromEntries(new FormData(f));await chamarDrive({...data,action:"approve",id:p.id,exige_assinatura:f.elements.exige_assinatura.checked});
+    await load();abaDocs();}
+   catch(err){d.querySelector("#drive-error").textContent=err.message;submit.disabled=false;}
+  };
+ }
+ await load();
 }
 
 function formEnvio(equipe, tipos){
