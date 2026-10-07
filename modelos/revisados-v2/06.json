@@ -1,0 +1,132 @@
+{
+  "codigo": "06",
+  "titulo": "Contrato de prestação de serviços — contratação específica",
+  "blocos": [
+    {
+      "tipo": "titulo",
+      "texto": "Contrato de prestação de serviços — contratação específica"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "MINUTA V2 — CONFERIR PENDÊNCIAS ANTES DE ENVIAR OU USAR."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "1. Partes e representação"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "CONTRATANTE: {{empresa.razao_social}}, CNPJ {{empresa.cnpj}}, endereço {{empresa.endereco}}, {{empresa.cidade}}/{{empresa.estado}}, representada por [[nome e qualificação do representante autorizado da contratante]]. CONTRATADO: [[nome ou razão social, CPF ou CNPJ, endereço e contato do prestador; identificação e poderes do representante se pessoa jurídica]]. Selecionar apenas a qualificação correspondente à pessoa física ou jurídica contratada."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "2. Objeto e execução"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Serviço contratado: [[descrição específica do serviço, entregas e unidade atendida]]. Datas e condições de execução: [[datas, janelas de acesso e duração]]. A contratação deve corresponder à prática real. Este instrumento não declara ausência de vínculo independentemente dos fatos; prestação pessoal recorrente sob direção da casa deve ser avaliada antes de usar contrato civil."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "3. Organização e segurança"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Responsabilidades, materiais e equipamentos de cada parte: [[discriminar o que a casa e o prestador fornecem]]. Devem ser observados requisitos de higiene, segurança e acesso da unidade. Nenhuma atividade de risco será realizada sem condições e orientação adequadas. Substituição ou equipe própria, quando compatível com o serviço: [[condições efetivamente acordadas]]."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "4. Preço e comprovação"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Preço: [[valor e forma de cálculo por serviço, entrega ou turno efetivamente contratado]]. Pagamento: [[prazo, periodicidade e documento fiscal ou recibo adequado]]. Tributos e retenções serão tratados conforme a situação real e a orientação contábil. Dados bancários e Pix ficam no cadastro restrito, fora do contrato e dos relatórios operacionais."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "5. Acesso e registros"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "O prestador utiliza somente os acessos necessários ao serviço. Identificação para checklist, treinamento ou assinatura de documento não equivale a ponto. A Feitoria não inclui freelas no registro de jornada dos CLT. Esta diferenciação administrativa não determina, sozinha, a natureza jurídica da relação."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "6. Sigilo e dados"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "As partes protegerão os dados pessoais e informações comerciais não públicas conhecidos durante o serviço. Não divulgarão documentos da equipe, credenciais, fichas técnicas ou dados de clientes sem finalidade e autorização cabíveis. O dever não restringe denúncia de boa-fé, defesa de direitos ou entrega a autoridade competente."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "7. Alterações e encerramento"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Alterações do serviço, valores e datas serão acordadas e registradas. Encerramento e aviso: [[condições e prazo compatíveis com o serviço]]. Serviços efetivamente executados e aceitos serão apurados para pagamento. Descumprimentos e danos serão examinados com provas e oportunidade de esclarecimento, sem multa ou retenção automática."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "8. Solução de divergências"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "As partes buscarão resolver divergências pelos contatos indicados. Não há renúncia à competência legal, aos direitos aplicáveis ou ao exame da relação efetiva. Eventual cláusula de multa ou foro somente será inserida após análise jurídica específica."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "9. Assinatura"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Cada parte receberá cópia integral do contrato e anexos. A assinatura deve identificar quem efetivamente representa cada parte. Não assinar documentos com objeto, preço, qualificação ou datas em branco."
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "{{empresa.cidade}}, {{data.completa}}."
+    },
+    {
+      "tipo": "assinatura",
+      "quem": "Contratado ou representante autorizado",
+      "nome": "[[nome, CPF e qualidade de quem assina pelo prestador]]"
+    },
+    {
+      "tipo": "assinatura",
+      "quem": "Representante da contratante",
+      "nome": "[[nome, CPF e poderes do representante da empresa]]"
+    }
+  ],
+  "campos_pendentes": [
+    "nome e qualificação do representante autorizado da contratante",
+    "nome ou razão social, CPF ou CNPJ, endereço e contato do prestador; identificação e poderes do representante se pessoa jurídica",
+    "descrição específica do serviço, entregas e unidade atendida",
+    "datas, janelas de acesso e duração",
+    "discriminar o que a casa e o prestador fornecem",
+    "condições efetivamente acordadas",
+    "valor e forma de cálculo por serviço, entrega ou turno efetivamente contratado",
+    "prazo, periodicidade e documento fiscal ou recibo adequado",
+    "condições e prazo compatíveis com o serviço",
+    "nome, CPF e qualidade de quem assina pelo prestador",
+    "nome, CPF e poderes do representante da empresa"
+  ],
+  "ativo": false,
+  "versao": "2.0-revisao-2026-10-07",
+  "status_revisao": "minuta_nao_publicada",
+  "publico": [
+    "prestador"
+  ],
+  "uso": "prestacao",
+  "pendencias_validacao": [
+    "natureza real da relação e revisão jurídica",
+    "qualificação do prestador e representante da empresa",
+    "objeto, duração e execução",
+    "preço, retenções e documento fiscal",
+    "encerramento e responsabilidades"
+  ],
+  "origem": {
+    "arquivo": "modelos/06.json",
+    "sha256": "f7d199abd3baf11ac20810cb4a89317522b8e5a934a49916f70bc4820a55a7df"
+  },
+  "motivo_inativo": "Nova versão em revisão; não importada, não aprovada para assinatura."
+}

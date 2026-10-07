@@ -1,0 +1,97 @@
+{
+  "codigo": "09",
+  "titulo": "Declaração de dependentes para desconto de IRRF",
+  "blocos": [
+    {
+      "tipo": "titulo",
+      "texto": "Declaração de dependentes para desconto de IRRF"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "MINUTA V2 — CONFERIR PENDÊNCIAS ANTES DE ENVIAR OU USAR."
+    },
+    {
+      "tipo": "campos",
+      "itens": [
+        {
+          "rotulo": "Empresa responsável",
+          "valor": "{{empresa.razao_social}} — CNPJ {{empresa.cnpj}}"
+        },
+        {
+          "rotulo": "Endereço",
+          "valor": "{{empresa.endereco}}, {{empresa.cidade}}/{{empresa.estado}}"
+        },
+        {
+          "rotulo": "Pessoa",
+          "valor": "{{pessoa.nome}}"
+        },
+        {
+          "rotulo": "CPF — acesso restrito",
+          "valor": "{{pessoa.cpf}}"
+        },
+        {
+          "rotulo": "Função / atividade",
+          "valor": "{{contrato.funcao}}"
+        }
+      ]
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Relação de dependentes"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Declaro os dependentes cuja inclusão solicito para IRRF: [[para cada dependente: nome, CPF, data de nascimento, relação e condição de elegibilidade; ou declarar sem dependentes]]. Documentos serão encaminhados à contabilidade em canal restrito."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Responsabilidade e atualização"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "As informações correspondem à situação conhecida nesta data. Comunicarei alteração relevante ou inclusão indevida para ajuste do cálculo. A contabilidade verificará os requisitos e eventuais impedimentos aplicáveis, inclusive duplicidade. Esta declaração não substitui análise tributária."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Uso dos dados"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Os dados serão utilizados para as obrigações fiscais e de folha pertinentes, com acesso restrito. Não serão publicados no portal de operação ou compartilhados com a equipe."
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "{{empresa.cidade}}, {{data.completa}}."
+    },
+    {
+      "tipo": "assinatura",
+      "quem": "Pessoa identificada",
+      "nome": "{{pessoa.nome}} — CPF {{pessoa.cpf}}"
+    },
+    {
+      "tipo": "assinatura",
+      "quem": "Responsável pela empresa",
+      "nome": "[[nome e função de quem efetivamente representa a empresa neste ato]]"
+    }
+  ],
+  "campos_pendentes": [
+    "para cada dependente: nome, CPF, data de nascimento, relação e condição de elegibilidade; ou declarar sem dependentes",
+    "nome e função de quem efetivamente representa a empresa neste ato"
+  ],
+  "ativo": false,
+  "versao": "2.0-revisao-2026-10-07",
+  "status_revisao": "minuta_nao_publicada",
+  "publico": [
+    "clt"
+  ],
+  "uso": "individual",
+  "pendencias_validacao": [
+    "dependentes e documentos comprobatórios",
+    "validação tributária pela contabilidade"
+  ],
+  "origem": {
+    "arquivo": "modelos/09.json",
+    "sha256": "a45a805b8fe2edacc9593b60b77681de59b1aa9808e128e0325dab3f64069172"
+  },
+  "motivo_inativo": "Nova versão em revisão; não importada, não aprovada para assinatura."
+}

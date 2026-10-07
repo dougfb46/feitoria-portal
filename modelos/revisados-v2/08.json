@@ -1,0 +1,105 @@
+{
+  "codigo": "08",
+  "titulo": "Ficha de registro e conferência cadastral do empregado",
+  "blocos": [
+    {
+      "tipo": "titulo",
+      "texto": "Ficha de registro e conferência cadastral do empregado"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "MINUTA V2 — CONFERIR PENDÊNCIAS ANTES DE ENVIAR OU USAR."
+    },
+    {
+      "tipo": "campos",
+      "itens": [
+        {
+          "rotulo": "Empresa responsável",
+          "valor": "{{empresa.razao_social}} — CNPJ {{empresa.cnpj}}"
+        },
+        {
+          "rotulo": "Endereço",
+          "valor": "{{empresa.endereco}}, {{empresa.cidade}}/{{empresa.estado}}"
+        },
+        {
+          "rotulo": "Pessoa",
+          "valor": "{{pessoa.nome}}"
+        },
+        {
+          "rotulo": "CPF — acesso restrito",
+          "valor": "{{pessoa.cpf}}"
+        },
+        {
+          "rotulo": "Função / atividade",
+          "valor": "{{contrato.funcao}}"
+        }
+      ]
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Dados da relação"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Admissão: {{contrato.admissao}}. Cargo: {{contrato.funcao}}. CBO: {{contrato.cbo}}. Local: {{contrato.local_prestacao}}. [[tipo de contrato, salário, jornada, intervalos e descanso semanal]]."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Identificação e contato"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Nome: {{pessoa.nome}}. CPF: {{pessoa.cpf}}. Endereço: {{pessoa.endereco}}. [[data de nascimento e contato necessários ao cadastro]]. Outros dados serão solicitados apenas quando necessários às obrigações de registro."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Conferência"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "A pessoa confirma os dados efetivamente preenchidos e pode solicitar correção. Atualizações serão registradas com data e responsável. Esta ficha é instrumento de conferência e não substitui os registros oficiais obrigatórios, CTPS Digital ou eSocial."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Dados restritos"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Dados bancários, Pix, documentos de saúde e credenciais são tratados em canais restritos. Não incluir PIN, senha, prontuário clínico ou diagnóstico nesta ficha. Não divulgar a ficha em mural ou tela de operação."
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "{{empresa.cidade}}, {{data.completa}}."
+    },
+    {
+      "tipo": "assinatura",
+      "quem": "Pessoa identificada",
+      "nome": "{{pessoa.nome}} — CPF {{pessoa.cpf}}"
+    },
+    {
+      "tipo": "assinatura",
+      "quem": "Responsável pela empresa",
+      "nome": "[[nome e função de quem efetivamente representa a empresa neste ato]]"
+    }
+  ],
+  "campos_pendentes": [
+    "tipo de contrato, salário, jornada, intervalos e descanso semanal",
+    "data de nascimento e contato necessários ao cadastro",
+    "nome e função de quem efetivamente representa a empresa neste ato"
+  ],
+  "ativo": false,
+  "versao": "2.0-revisao-2026-10-07",
+  "status_revisao": "minuta_nao_publicada",
+  "publico": [
+    "clt"
+  ],
+  "uso": "individual",
+  "pendencias_validacao": [
+    "cadastro completo e conferência contábil"
+  ],
+  "origem": {
+    "arquivo": "modelos/08.json",
+    "sha256": "5516c98f4c9d67d870e8e45766fcd65e83e222931e486549acd80dea71cf755d"
+  },
+  "motivo_inativo": "Nova versão em revisão; não importada, não aprovada para assinatura."
+}

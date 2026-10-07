@@ -1,0 +1,57 @@
+{
+  "codigo": "15",
+  "titulo": "Premiação — minuta reservada para programa específico",
+  "blocos": [
+    {
+      "tipo": "titulo",
+      "texto": "Premiação — minuta reservada para programa específico"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "MINUTA V2 — CONFERIR PENDÊNCIAS ANTES DE ENVIAR OU USAR."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Situação"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Não há programa definido nesta versão. Nenhuma meta, prêmio, exclusão salarial ou obrigação é criada por este documento."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Definição prévia"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Eventual programa deve especificar [[objetivo, critérios objetivos, período, elegibilidade, valor, aferição, fonte dos resultados e recurso]]. Metas não devem incentivar omissão de ponto, jornada insegura, subnotificação de acidentes, desrespeito a clientes ou manipulação de registros."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Tratamento e comunicação"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Remuneração, comissão, gorjeta e prêmio não são intercambiáveis. A classificação e os efeitos serão validados pela contabilidade e assessoria jurídica conforme o programa real. Os critérios devem ser comunicados antes do período de avaliação."
+    }
+  ],
+  "campos_pendentes": [
+    "objetivo, critérios objetivos, período, elegibilidade, valor, aferição, fonte dos resultados e recurso"
+  ],
+  "ativo": false,
+  "versao": "2.0-revisao-2026-10-07",
+  "status_revisao": "minuta_nao_publicada",
+  "publico": [
+    "clt"
+  ],
+  "uso": "reserva",
+  "pendencias_validacao": [
+    "programa e valores definidos",
+    "validação trabalhista e tributária"
+  ],
+  "origem": {
+    "arquivo": "modelos/15.json",
+    "sha256": "279fbb6e1b29bbae6102823ddcdf8a410197e68a7b7a8bebbe9474fe4397545e"
+  },
+  "motivo_inativo": "Fora do pacote operacional atual; não institui nova política."
+}

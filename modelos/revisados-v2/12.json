@@ -1,0 +1,109 @@
+{
+  "codigo": "12",
+  "titulo": "Entrega de uniformes, EPI e orientação sobre acesso individual",
+  "blocos": [
+    {
+      "tipo": "titulo",
+      "texto": "Entrega de uniformes, EPI e orientação sobre acesso individual"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "MINUTA V2 — CONFERIR PENDÊNCIAS ANTES DE ENVIAR OU USAR."
+    },
+    {
+      "tipo": "campos",
+      "itens": [
+        {
+          "rotulo": "Empresa responsável",
+          "valor": "{{empresa.razao_social}} — CNPJ {{empresa.cnpj}}"
+        },
+        {
+          "rotulo": "Endereço",
+          "valor": "{{empresa.endereco}}, {{empresa.cidade}}/{{empresa.estado}}"
+        },
+        {
+          "rotulo": "Pessoa",
+          "valor": "{{pessoa.nome}}"
+        },
+        {
+          "rotulo": "CPF — acesso restrito",
+          "valor": "{{pessoa.cpf}}"
+        },
+        {
+          "rotulo": "Função / atividade",
+          "valor": "{{contrato.funcao}}"
+        }
+      ]
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Uniformes e EPI entregues"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Registrar separadamente uniformes e EPI: [[item, quantidade, tamanho, identificação, estado, data, e CA quando se tratar de EPI]]. A identificação dos riscos e seleção do EPI cabem ao responsável técnico competente. Uniforme comum não é automaticamente EPI."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Orientação e fornecimento"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "A empresa fornece sem custo os EPI necessários aos empregados, com orientação de uso, conservação e substituição. Orientação realizada: [[conteúdo, data e responsável]]. Comunicarei defeito, desconforto ou necessidade de troca e usarei os equipamentos indicados para a atividade."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Acessos"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Acesso habilitado: [[sistema, perfil autorizado e data, sem incluir credenciais]]. PIN e senha são individuais, não serão registrados neste termo e não devem ser compartilhados. Dificuldades de acesso devem ser comunicadas à gestão."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Reposição e devolução"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Reposições, devoluções e novos treinamentos terão registros próprios. Desgaste regular e reposição necessária não geram desconto automático. Ocorrências serão examinadas individualmente, sem declaração antecipada de justa causa."
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "{{empresa.cidade}}, {{data.completa}}."
+    },
+    {
+      "tipo": "assinatura",
+      "quem": "Pessoa identificada",
+      "nome": "{{pessoa.nome}} — CPF {{pessoa.cpf}}"
+    },
+    {
+      "tipo": "assinatura",
+      "quem": "Responsável pela empresa",
+      "nome": "[[nome e função de quem efetivamente representa a empresa neste ato]]"
+    }
+  ],
+  "campos_pendentes": [
+    "item, quantidade, tamanho, identificação, estado, data, e CA quando se tratar de EPI",
+    "conteúdo, data e responsável",
+    "sistema, perfil autorizado e data, sem incluir credenciais",
+    "nome e função de quem efetivamente representa a empresa neste ato"
+  ],
+  "ativo": false,
+  "versao": "2.0-revisao-2026-10-07",
+  "status_revisao": "minuta_nao_publicada",
+  "publico": [
+    "clt",
+    "prestador"
+  ],
+  "uso": "individual",
+  "pendencias_validacao": [
+    "itens e CA aplicáveis",
+    "orientação efetivamente realizada",
+    "acessos necessários e responsável técnico"
+  ],
+  "origem": {
+    "arquivo": "modelos/12.json",
+    "sha256": "847f34765dbbf464bbfa03a3afccc9690dbd73bbab6032442ad79bb6fe34bc15"
+  },
+  "motivo_inativo": "Nova versão em revisão; não importada, não aprovada para assinatura."
+}

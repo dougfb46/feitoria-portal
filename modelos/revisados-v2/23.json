@@ -1,0 +1,109 @@
+{
+  "codigo": "23",
+  "titulo": "Protocolo de recebimento de documentos para cadastro",
+  "blocos": [
+    {
+      "tipo": "titulo",
+      "texto": "Protocolo de recebimento de documentos para cadastro"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "MINUTA V2 — CONFERIR PENDÊNCIAS ANTES DE ENVIAR OU USAR."
+    },
+    {
+      "tipo": "campos",
+      "itens": [
+        {
+          "rotulo": "Empresa responsável",
+          "valor": "{{empresa.razao_social}} — CNPJ {{empresa.cnpj}}"
+        },
+        {
+          "rotulo": "Endereço",
+          "valor": "{{empresa.endereco}}, {{empresa.cidade}}/{{empresa.estado}}"
+        },
+        {
+          "rotulo": "Pessoa",
+          "valor": "{{pessoa.nome}}"
+        },
+        {
+          "rotulo": "CPF — acesso restrito",
+          "valor": "{{pessoa.cpf}}"
+        },
+        {
+          "rotulo": "Função / atividade",
+          "valor": "{{contrato.funcao}}"
+        }
+      ]
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Recebimento"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "A gestão recebeu da pessoa identificada os documentos efetivamente relacionados: [[nome de cada documento, data, finalidade, cópia ou conferência; não anexar dados além do necessário]]. Pendências: [[documentos necessários ainda não recebidos ou nenhuma]]."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Conferência"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "O recebimento não afirma autenticidade, regularidade fiscal, conclusão da admissão ou aptidão médica. A conferência será realizada pelo responsável adequado. Originais apresentados para conferência serão devolvidos; não reter documentos pessoais indevidamente."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Proteção"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "As cópias terão acesso restrito e finalidade definida. Dados clínicos e bancários seguem canais próprios. Não registrar PIN e senha. Não compartilhar o protocolo com a equipe ou clientes."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Responsável pelo recebimento"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Recebido por: [[nome e função da pessoa que efetivamente recebeu os documentos]], em [[data real do recebimento]]. O campo não será preenchido com o nome do empregado por engano. A pessoa receberá comprovante da entrega e das pendências."
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "{{empresa.cidade}}, {{data.completa}}."
+    },
+    {
+      "tipo": "assinatura",
+      "quem": "Pessoa que entregou os documentos",
+      "nome": "{{pessoa.nome}} — CPF {{pessoa.cpf}}"
+    },
+    {
+      "tipo": "assinatura",
+      "quem": "Responsável pela empresa",
+      "nome": "[[nome e função de quem efetivamente representa a empresa neste ato]]"
+    }
+  ],
+  "campos_pendentes": [
+    "nome de cada documento, data, finalidade, cópia ou conferência; não anexar dados além do necessário",
+    "documentos necessários ainda não recebidos ou nenhuma",
+    "nome e função da pessoa que efetivamente recebeu os documentos",
+    "data real do recebimento",
+    "nome e função de quem efetivamente representa a empresa neste ato"
+  ],
+  "ativo": false,
+  "versao": "2.0-revisao-2026-10-07",
+  "status_revisao": "minuta_nao_publicada",
+  "publico": [
+    "clt",
+    "prestador"
+  ],
+  "uso": "protocolo",
+  "pendencias_validacao": [
+    "relação real de documentos",
+    "recebedor e data"
+  ],
+  "origem": {
+    "arquivo": "modelos/23.json",
+    "sha256": "de65c4c6c5719640d4f55a9070655334047a018aab6d83c0eb64c265d254cb8e"
+  },
+  "motivo_inativo": "Nova versão em revisão; não importada, não aprovada para assinatura."
+}
