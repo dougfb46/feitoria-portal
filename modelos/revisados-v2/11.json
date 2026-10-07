@@ -1,0 +1,105 @@
+{
+  "codigo": "11",
+  "titulo": "Entrega e responsabilidade pelo uso de equipamentos",
+  "blocos": [
+    {
+      "tipo": "titulo",
+      "texto": "Entrega e responsabilidade pelo uso de equipamentos"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "MINUTA V2 — CONFERIR PENDÊNCIAS ANTES DE ENVIAR OU USAR."
+    },
+    {
+      "tipo": "campos",
+      "itens": [
+        {
+          "rotulo": "Empresa responsável",
+          "valor": "{{empresa.razao_social}} — CNPJ {{empresa.cnpj}}"
+        },
+        {
+          "rotulo": "Endereço",
+          "valor": "{{empresa.endereco}}, {{empresa.cidade}}/{{empresa.estado}}"
+        },
+        {
+          "rotulo": "Pessoa",
+          "valor": "{{pessoa.nome}}"
+        },
+        {
+          "rotulo": "CPF — acesso restrito",
+          "valor": "{{pessoa.cpf}}"
+        },
+        {
+          "rotulo": "Função / atividade",
+          "valor": "{{contrato.funcao}}"
+        }
+      ]
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Entrega real"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Itens efetivamente entregues: [[descrição, marca/modelo, identificação, quantidade, estado e data; responsável pela entrega]]. Exemplos possíveis, somente se entregues: tablet, impressora de etiquetas, utensílios ou equipamento de trabalho. Não assinar recebimento de item ainda não fornecido."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Uso e suporte"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Usarei os itens segundo as orientações e treinamento recebidos, comunicando defeito, perda ou condição insegura. Não farei reparos, instalação de software ou operação para a qual não haja orientação e autorização. Equipamentos com defeito ou risco serão encaminhados à gestão."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Devolução e desgaste"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "A devolução será registrada com o estado real, considerando o desgaste normal. Não há exigência de estado novo após uso regular. A empresa assegurará manutenção e reposição necessárias."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Apuração"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Perdas e danos serão apurados com identificação do fato, provas e esclarecimentos. Este termo não autoriza desconto automático ou penalidade automática. Para empregado, qualquer desconto depende dos requisitos da legislação e norma coletiva; para prestador, observar o contrato e a legislação aplicável."
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "{{empresa.cidade}}, {{data.completa}}."
+    },
+    {
+      "tipo": "assinatura",
+      "quem": "Pessoa identificada",
+      "nome": "{{pessoa.nome}} — CPF {{pessoa.cpf}}"
+    },
+    {
+      "tipo": "assinatura",
+      "quem": "Responsável pela empresa",
+      "nome": "[[nome e função de quem efetivamente representa a empresa neste ato]]"
+    }
+  ],
+  "campos_pendentes": [
+    "descrição, marca/modelo, identificação, quantidade, estado e data; responsável pela entrega",
+    "nome e função de quem efetivamente representa a empresa neste ato"
+  ],
+  "ativo": false,
+  "versao": "2.0-revisao-2026-10-07",
+  "status_revisao": "minuta_nao_publicada",
+  "publico": [
+    "clt",
+    "prestador"
+  ],
+  "uso": "individual",
+  "pendencias_validacao": [
+    "inventário real e entrega comprovada"
+  ],
+  "origem": {
+    "arquivo": "modelos/11.json",
+    "sha256": "01622abb4eafc7c5fe619fcc11a62959b3f37ab429e610d51602fa8195b76499"
+  },
+  "motivo_inativo": "Nova versão em revisão; não importada, não aprovada para assinatura."
+}

@@ -1,0 +1,140 @@
+{
+  "codigo": "20",
+  "titulo": "Aviso de privacidade e compromisso de proteção de dados da equipe",
+  "blocos": [
+    {
+      "tipo": "titulo",
+      "texto": "Aviso de privacidade e compromisso de proteção de dados da equipe"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "MINUTA V2 — CONFERIR PENDÊNCIAS ANTES DE ENVIAR OU USAR."
+    },
+    {
+      "tipo": "campos",
+      "itens": [
+        {
+          "rotulo": "Empresa responsável",
+          "valor": "{{empresa.razao_social}} — CNPJ {{empresa.cnpj}}"
+        },
+        {
+          "rotulo": "Endereço",
+          "valor": "{{empresa.endereco}}, {{empresa.cidade}}/{{empresa.estado}}"
+        },
+        {
+          "rotulo": "Pessoa",
+          "valor": "{{pessoa.nome}}"
+        },
+        {
+          "rotulo": "CPF — acesso restrito",
+          "valor": "{{pessoa.cpf}}"
+        },
+        {
+          "rotulo": "Função / atividade",
+          "valor": "{{contrato.funcao}}"
+        }
+      ]
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "1. Responsável e contato"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "A controladora da relação é a empresa identificada no cabeçalho, vinculada à unidade da contratação. Contato para dúvidas e direitos: feitoria.mogi@gmail.com. Esta ciência não substitui a identificação da razão social e do CNPJ corretos."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "2. Dados e finalidades"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "A gestão utiliza dados necessários a cadastro, contratação, obrigações trabalhistas e fiscais, pagamento, saúde e segurança, acesso, treinamento, documentos e defesa de direitos. Cada tratamento deve ter finalidade e hipótese legal adequadas. Este termo não pede consentimento genérico para tudo nem autorização para publicidade."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "3. Registros no portal"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Conforme o perfil habilitado, podem existir identificação, eventos de ponto com foto e dados técnicos necessários à origem e localização da marcação, checklist, treinamento e assinatura com identificação e horário. A foto da marcação é evidência; o portal não usa reconhecimento facial. Não há rastreamento contínuo por este aviso. Prestadores não são incluídos no ponto dos CLT."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "4. Proteções específicas"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Dados bancários e Pix ficam em cadastro restrito. Informações clínicas têm tratamento separado; não serão incluídas em telas operacionais. O PIN não deve ser publicado, compartilhado ou escrito em documentos. Assinaturas e registros de evidência preservam histórico de correções."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "5. Acesso e fornecedores"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Acesso depende de função e necessidade. Contabilidade, prestadores necessários, órgãos públicos e assessoria podem receber dados nos limites de suas finalidades. O portal usa Supabase para banco e arquivos e Google Drive para cópias privadas de documentos e evidências. A interface é hospedada no GitHub Pages; isso não torna públicos documentos pessoais ou credenciais. Serviços em nuvem podem envolver tratamento fora do Brasil, sujeito às regras aplicáveis."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "6. Retenção e direitos"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "A empresa conservará registros enquanto necessários às finalidades e obrigações, inclusive defesa de direitos, com avaliação de acesso e prazo por categoria: [[definir tabela de retenção e rotina de revisão]]. Não há prazo único nem promessa de eliminação de tudo após desligamento. Pedidos de acesso, correção e outros direitos serão analisados com verificação de identidade e proteção de terceiros, informando fundamento de eventual limitação."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "7. Deveres de quem acessa"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Quem acessa dados por sua função seguirá instruções, sigilo e necessidade de acesso e comunicará incidentes à gestão. Empregado que atua sob direção da empresa não é classificado automaticamente como operador independente. O papel de prestador externo será avaliado conforme o serviço real."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "8. Recados e ciência"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "O canal de recados da operação permite opção anônima: nesse modo, o portal não vincula autor, aparelho ou IP ao relato. O próprio texto pode revelar identidade se a pessoa se identificar. A assinatura deste aviso confirma recebimento e oportunidade de esclarecimento, sem renúncia a direitos ou transferência automática das obrigações e multas da empresa ao trabalhador."
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "{{empresa.cidade}}, {{data.completa}}."
+    },
+    {
+      "tipo": "assinatura",
+      "quem": "Pessoa identificada",
+      "nome": "{{pessoa.nome}} — CPF {{pessoa.cpf}}"
+    },
+    {
+      "tipo": "assinatura",
+      "quem": "Responsável pela empresa",
+      "nome": "[[nome e função de quem efetivamente representa a empresa neste ato]]"
+    }
+  ],
+  "campos_pendentes": [
+    "definir tabela de retenção e rotina de revisão",
+    "nome e função de quem efetivamente representa a empresa neste ato"
+  ],
+  "ativo": false,
+  "versao": "2.0-revisao-2026-10-07",
+  "status_revisao": "minuta_nao_publicada",
+  "publico": [
+    "clt",
+    "prestador"
+  ],
+  "uso": "individual",
+  "pendencias_validacao": [
+    "razão social e unidade corretas",
+    "tabela de retenção e fluxo de pedidos",
+    "avaliação das bases legais e fornecedores",
+    "revisão de privacidade"
+  ],
+  "origem": {
+    "arquivo": "modelos/20.json",
+    "sha256": "9d90bc2cebbedc32ab8ca3cec0d830797d732d1282686fcedbc1bd691d3abebd"
+  },
+  "motivo_inativo": "Nova versão em revisão; não importada, não aprovada para assinatura."
+}

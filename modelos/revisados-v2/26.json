@@ -1,0 +1,78 @@
+{
+  "codigo": "26",
+  "titulo": "Procedimento interno para contratação de prestadores",
+  "blocos": [
+    {
+      "tipo": "titulo",
+      "texto": "Procedimento interno para contratação de prestadores"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "MINUTA V2 — CONFERIR PENDÊNCIAS ANTES DE ENVIAR OU USAR."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "1. Avaliar a necessidade"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Descrever serviço, duração e forma real de execução. Antes de classificar a pessoa como autônoma, freela ou empresa, avaliar pessoalidade, habitualidade, direção do trabalho e organização efetiva. CNPJ ou nome do contrato não resolve sozinho o enquadramento. Caso duvidoso será encaminhado à assessoria."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "2. Conferir partes"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Identificar a empresa da Feitoria que contrata e o prestador. Para pessoa jurídica, conferir CNPJ, atividade compatível e poderes de representação; para pessoa física, identificação e dados necessários ao serviço. Solicitar documentos proporcionais, sem exigência automática de certidões irrelevantes ou exclusão genérica de MEI."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "3. Ajustar condições"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Registrar objeto, entregas ou turnos específicos, datas, preço, documento fiscal ou recibo, retenções, materiais, acessos, segurança e encerramento. Confirmar com a contabilidade as obrigações aplicáveis. Não criar rotina fictícia de autonomia para mascarar a prática."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "4. Formalizar e orientar"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Utilizar a versão revisada do modelo 06 quando adequada ao caso; preencher todas as pendências e obter aprovação antes de enviar. Assinar pela pessoa com poderes, disponibilizar cópia integral e registrar versão e data reais. Assinatura eletrônica deve preservar autoria, integridade e acesso ao documento; não presumir garantia jurídica por simples clique."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "5. Operação e evidências"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Prestadores recebem somente acessos necessários. Não incluir freelas no ponto dos CLT. Orientações de segurança e treinamentos realizados terão registro próprio; pagamento se baseará no serviço efetivamente apurado e acordado."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "6. Arquivo e encerramento"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Arquivar contrato, documentos necessários e comprovações em acesso restrito, mantendo versões e correções. Dados bancários e Pix ficam em cadastro separado. Registrar encerramento, pagamentos apurados e revogação de acessos. Não publicar documentos individuais ou realizar exclusão indiscriminada de evidências."
+    }
+  ],
+  "campos_pendentes": [],
+  "ativo": false,
+  "versao": "2.0-revisao-2026-10-07",
+  "status_revisao": "minuta_nao_publicada",
+  "publico": [
+    "gestao"
+  ],
+  "uso": "interno",
+  "pendencias_validacao": [
+    "validação jurídica e contábil do procedimento"
+  ],
+  "origem": {
+    "arquivo": "modelos/26.json",
+    "sha256": "16de564ac27bd8e2eb3397042c33158c6a14fa231862488514ba293476b3ff58"
+  },
+  "motivo_inativo": "Nova versão em revisão; não importada, não aprovada para assinatura."
+}

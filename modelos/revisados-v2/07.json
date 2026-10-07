@@ -1,0 +1,109 @@
+{
+  "codigo": "07",
+  "titulo": "Ciência de monitoramento por câmeras de segurança",
+  "blocos": [
+    {
+      "tipo": "titulo",
+      "texto": "Ciência de monitoramento por câmeras de segurança"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "MINUTA V2 — CONFERIR PENDÊNCIAS ANTES DE ENVIAR OU USAR."
+    },
+    {
+      "tipo": "campos",
+      "itens": [
+        {
+          "rotulo": "Empresa responsável",
+          "valor": "{{empresa.razao_social}} — CNPJ {{empresa.cnpj}}"
+        },
+        {
+          "rotulo": "Endereço",
+          "valor": "{{empresa.endereco}}, {{empresa.cidade}}/{{empresa.estado}}"
+        },
+        {
+          "rotulo": "Pessoa",
+          "valor": "{{pessoa.nome}}"
+        },
+        {
+          "rotulo": "CPF — acesso restrito",
+          "valor": "{{pessoa.cpf}}"
+        },
+        {
+          "rotulo": "Função / atividade",
+          "valor": "{{contrato.funcao}}"
+        }
+      ]
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Finalidade e alcance"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Quando houver câmeras na unidade, seu uso deve estar identificado e limitado à segurança das pessoas e do patrimônio e à apuração de incidentes. Este documento não autoriza vigilância de intimidade, produtividade individual permanente ou divulgação promocional."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Informações concretas"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Unidade e áreas monitoradas: [[identificar unidade e locais reais das câmeras]]. Gravação de áudio: [[informar se existe; avaliar necessidade e legalidade antes de adotar]]. Retenção e responsáveis autorizados: [[prazo efetivo, critérios de preservação e responsáveis]]. Não instalar câmeras em banheiros, vestiários ou outros espaços de intimidade."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Acesso e proteção"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "As imagens terão acesso restrito conforme necessidade e finalidade. Compartilhamento com autoridades ou uso para defesa de direitos será documentado nos limites cabíveis. Pedidos do titular serão analisados, protegendo a imagem de outras pessoas; não se exige ordem judicial para todo pedido de acesso."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Ciência"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "A assinatura comprova recebimento da informação, sem substituir a definição da base legal, a análise de necessidade ou a obrigação de transparência. Não é consentimento genérico nem renúncia à privacidade. Dúvidas e solicitações: feitoria.mogi@gmail.com."
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "{{empresa.cidade}}, {{data.completa}}."
+    },
+    {
+      "tipo": "assinatura",
+      "quem": "Pessoa identificada",
+      "nome": "{{pessoa.nome}} — CPF {{pessoa.cpf}}"
+    },
+    {
+      "tipo": "assinatura",
+      "quem": "Responsável pela empresa",
+      "nome": "[[nome e função de quem efetivamente representa a empresa neste ato]]"
+    }
+  ],
+  "campos_pendentes": [
+    "identificar unidade e locais reais das câmeras",
+    "informar se existe; avaliar necessidade e legalidade antes de adotar",
+    "prazo efetivo, critérios de preservação e responsáveis",
+    "nome e função de quem efetivamente representa a empresa neste ato"
+  ],
+  "ativo": false,
+  "versao": "2.0-revisao-2026-10-07",
+  "status_revisao": "minuta_nao_publicada",
+  "publico": [
+    "clt",
+    "prestador"
+  ],
+  "uso": "individual",
+  "pendencias_validacao": [
+    "câmeras existentes e áreas",
+    "áudio, retenção e responsáveis",
+    "base legal e revisão de privacidade"
+  ],
+  "origem": {
+    "arquivo": "modelos/07.json",
+    "sha256": "88ccbf5832e4cf6681b430f1f04d21937bff6e174c0967ad0676303ae3774710"
+  },
+  "motivo_inativo": "Nova versão em revisão; não importada, não aprovada para assinatura."
+}

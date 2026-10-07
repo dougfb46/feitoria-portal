@@ -1,0 +1,110 @@
+{
+  "codigo": "19",
+  "titulo": "Termo de confidencialidade — informações da operação",
+  "blocos": [
+    {
+      "tipo": "titulo",
+      "texto": "Termo de confidencialidade — informações da operação"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "MINUTA V2 — CONFERIR PENDÊNCIAS ANTES DE ENVIAR OU USAR."
+    },
+    {
+      "tipo": "campos",
+      "itens": [
+        {
+          "rotulo": "Empresa responsável",
+          "valor": "{{empresa.razao_social}} — CNPJ {{empresa.cnpj}}"
+        },
+        {
+          "rotulo": "Endereço",
+          "valor": "{{empresa.endereco}}, {{empresa.cidade}}/{{empresa.estado}}"
+        },
+        {
+          "rotulo": "Pessoa",
+          "valor": "{{pessoa.nome}}"
+        },
+        {
+          "rotulo": "CPF — acesso restrito",
+          "valor": "{{pessoa.cpf}}"
+        },
+        {
+          "rotulo": "Função / atividade",
+          "valor": "{{contrato.funcao}}"
+        }
+      ]
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Informações protegidas"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Proteger dados pessoais não públicos de clientes e equipe, acessos, fichas técnicas e receitas não divulgadas, condições comerciais de fornecedores, custos e informações financeiras conhecidas em razão das atividades. Menus, preços divulgados, informações públicas e experiência profissional geral não passam a ser segredo por este termo."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Uso adequado"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Utilizar somente o necessário à atividade e pelos canais autorizados. Não publicar fotografias de documentos, exportar cadastro da equipe, compartilhar credenciais ou guardar informação restrita em conta pessoal sem autorização cabível."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Exceções e direitos"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "O dever de sigilo não impede comunicação com autoridades, advogado, sindicato ou profissional de saúde, produção de prova lícita, denúncia de boa-fé ou exercício de direitos. Não se exige autorização prévia da empresa para isso. Revelar somente o necessário, preservando terceiros quando cabível."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Após o encerramento"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Devolver equipamentos e documentos da empresa e encerrar acessos pelo procedimento da gestão. O sigilo subsiste enquanto a informação permanecer legitimamente confidencial. Cópias necessárias à defesa de direitos e cumprimento de obrigações serão tratadas nos limites legais. Não há proibição de trabalhar em outro bar ou restaurante."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Ocorrências"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Incidentes devem ser comunicados assim que percebidos. Responsabilidade dependerá dos fatos, provas e legislação; este termo não cria multa, indenização prefixada, desconto automático ou penalidade disciplinar para prestador civil."
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "{{empresa.cidade}}, {{data.completa}}."
+    },
+    {
+      "tipo": "assinatura",
+      "quem": "Pessoa identificada",
+      "nome": "{{pessoa.nome}} — CPF {{pessoa.cpf}}"
+    },
+    {
+      "tipo": "assinatura",
+      "quem": "Responsável pela empresa",
+      "nome": "[[nome e função de quem efetivamente representa a empresa neste ato]]"
+    }
+  ],
+  "campos_pendentes": [
+    "nome e função de quem efetivamente representa a empresa neste ato"
+  ],
+  "ativo": false,
+  "versao": "2.0-revisao-2026-10-07",
+  "status_revisao": "minuta_nao_publicada",
+  "publico": [
+    "clt",
+    "prestador"
+  ],
+  "uso": "individual",
+  "pendencias_validacao": [],
+  "origem": {
+    "arquivo": "modelos/19.json",
+    "sha256": "8383e3d234d420c75ca2e078d27e32bfdca452d4c84f9c98587fca0e7c912cfc"
+  },
+  "motivo_inativo": "Nova versão em revisão; não importada, não aprovada para assinatura."
+}

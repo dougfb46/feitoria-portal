@@ -1,0 +1,121 @@
+{
+  "codigo": "13",
+  "titulo": "Política de uso do portal, celular e ferramentas de trabalho",
+  "blocos": [
+    {
+      "tipo": "titulo",
+      "texto": "Política de uso do portal, celular e ferramentas de trabalho"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "MINUTA V2 — CONFERIR PENDÊNCIAS ANTES DE ENVIAR OU USAR."
+    },
+    {
+      "tipo": "campos",
+      "itens": [
+        {
+          "rotulo": "Empresa responsável",
+          "valor": "{{empresa.razao_social}} — CNPJ {{empresa.cnpj}}"
+        },
+        {
+          "rotulo": "Endereço",
+          "valor": "{{empresa.endereco}}, {{empresa.cidade}}/{{empresa.estado}}"
+        },
+        {
+          "rotulo": "Pessoa",
+          "valor": "{{pessoa.nome}}"
+        },
+        {
+          "rotulo": "CPF — acesso restrito",
+          "valor": "{{pessoa.cpf}}"
+        },
+        {
+          "rotulo": "Função / atividade",
+          "valor": "{{contrato.funcao}}"
+        }
+      ]
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Uso na operação"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "O portal apoia ponto dos empregados habilitados, consulta, checklists, treinamento e assinatura. O celular pode ser usado nessas tarefas em local e momento seguros, respeitando a higiene dos alimentos e o atendimento. Em área de manipulação, observar o procedimento de higiene definido para o aparelho e as mãos."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Uso pessoal"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "O uso pessoal deve evitar interferência no atendimento, preparo e segurança. Situações urgentes podem ser comunicadas à liderança. A empresa não exige acesso a mensagens, fotografias ou contas pessoais por este termo."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Acessos e integridade"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Usar apenas o acesso próprio. Não compartilhar PIN ou senha, registrar ação por colega, divulgar documentos da equipe ou inserir informação sabidamente incorreta. Erros devem ser comunicados e corrigidos pelo procedimento com histórico."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Ferramentas corporativas"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Ferramentas fornecidas e regras específicas: [[identificar apenas sistemas e contas corporativas realmente fornecidos]]. Auditoria deve limitar-se ao necessário, ser informada e respeitar dados pessoais e os acessos autorizados. Não há renúncia genérica à privacidade nem autorização para inspeção de aparelho pessoal."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Mensagens e jornada"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Para empregados, mensagens rotineiras e treinamentos devem ser organizados dentro da jornada. Este termo não impõe disponibilidade permanente ou resposta fora do horário. Demanda extraordinária de trabalho deve ser registrada e tratada segundo as regras aplicáveis."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Incidentes e conduta"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Conteúdo ofensivo, discriminatório, assédio e divulgação indevida são vedados. Perda de aparelho, suspeita de acesso indevido ou vazamento deve ser comunicada à gestão assim que percebida. Medidas corretivas dependerão de apuração e proporcionalidade."
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "{{empresa.cidade}}, {{data.completa}}."
+    },
+    {
+      "tipo": "assinatura",
+      "quem": "Pessoa identificada",
+      "nome": "{{pessoa.nome}} — CPF {{pessoa.cpf}}"
+    },
+    {
+      "tipo": "assinatura",
+      "quem": "Responsável pela empresa",
+      "nome": "[[nome e função de quem efetivamente representa a empresa neste ato]]"
+    }
+  ],
+  "campos_pendentes": [
+    "identificar apenas sistemas e contas corporativas realmente fornecidos",
+    "nome e função de quem efetivamente representa a empresa neste ato"
+  ],
+  "ativo": false,
+  "versao": "2.0-revisao-2026-10-07",
+  "status_revisao": "minuta_nao_publicada",
+  "publico": [
+    "clt",
+    "prestador"
+  ],
+  "uso": "individual",
+  "pendencias_validacao": [
+    "lista real de ferramentas e orientação de higiene"
+  ],
+  "origem": {
+    "arquivo": "modelos/13.json",
+    "sha256": "5b32020507a7fbccc819f386e0ab31b63c536b5e3f1af85965f24b97cbc35170"
+  },
+  "motivo_inativo": "Nova versão em revisão; não importada, não aprovada para assinatura."
+}

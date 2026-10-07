@@ -1,0 +1,97 @@
+{
+  "codigo": "10",
+  "titulo": "Ciência de encaminhamento à saúde ocupacional",
+  "blocos": [
+    {
+      "tipo": "titulo",
+      "texto": "Ciência de encaminhamento à saúde ocupacional"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "MINUTA V2 — CONFERIR PENDÊNCIAS ANTES DE ENVIAR OU USAR."
+    },
+    {
+      "tipo": "campos",
+      "itens": [
+        {
+          "rotulo": "Empresa responsável",
+          "valor": "{{empresa.razao_social}} — CNPJ {{empresa.cnpj}}"
+        },
+        {
+          "rotulo": "Endereço",
+          "valor": "{{empresa.endereco}}, {{empresa.cidade}}/{{empresa.estado}}"
+        },
+        {
+          "rotulo": "Pessoa",
+          "valor": "{{pessoa.nome}}"
+        },
+        {
+          "rotulo": "CPF — acesso restrito",
+          "valor": "{{pessoa.cpf}}"
+        },
+        {
+          "rotulo": "Função / atividade",
+          "valor": "{{contrato.funcao}}"
+        }
+      ]
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Atendimento"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Fui informado sobre o encaminhamento para o exame ocupacional: [[tipo, data, clínica e orientação de comparecimento]]. Quando já realizado, registrar apenas a realização comprovada: {{contrato.exame_admissional}}."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Limites deste documento"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Este termo não é ASO, não declara aptidão, não substitui exame nem exonera a empresa de suas obrigações de saúde e segurança. O ASO deve ser emitido pelo profissional responsável."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Privacidade e orientação"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Histórico de saúde e informações clínicas serão fornecidos ao profissional de saúde responsável, e não à equipe operacional. Comunicarei necessidade de adaptação ou risco à saúde pelo canal adequado, sem obrigação de revelar diagnósticos em formulário geral. A empresa receberá o necessário para cumprir obrigações e organizar condições de trabalho."
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "{{empresa.cidade}}, {{data.completa}}."
+    },
+    {
+      "tipo": "assinatura",
+      "quem": "Pessoa identificada",
+      "nome": "{{pessoa.nome}} — CPF {{pessoa.cpf}}"
+    },
+    {
+      "tipo": "assinatura",
+      "quem": "Responsável pela empresa",
+      "nome": "[[nome e função de quem efetivamente representa a empresa neste ato]]"
+    }
+  ],
+  "campos_pendentes": [
+    "tipo, data, clínica e orientação de comparecimento",
+    "nome e função de quem efetivamente representa a empresa neste ato"
+  ],
+  "ativo": false,
+  "versao": "2.0-revisao-2026-10-07",
+  "status_revisao": "minuta_nao_publicada",
+  "publico": [
+    "clt"
+  ],
+  "uso": "individual",
+  "pendencias_validacao": [
+    "exame e orientação da clínica responsável",
+    "validação pelo responsável pelo PCMSO"
+  ],
+  "origem": {
+    "arquivo": "modelos/10.json",
+    "sha256": "ab99ac56c3c54a1db8ea7c047155eb1b74f0c2b61702b76c25c856347bdcffc0"
+  },
+  "motivo_inativo": "Nova versão em revisão; não importada, não aprovada para assinatura."
+}

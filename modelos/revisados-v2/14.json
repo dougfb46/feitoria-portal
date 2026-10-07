@@ -1,0 +1,56 @@
+{
+  "codigo": "14",
+  "titulo": "Banco de horas — minuta reservada, não adotada",
+  "blocos": [
+    {
+      "tipo": "titulo",
+      "texto": "Banco de horas — minuta reservada, não adotada"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "MINUTA V2 — CONFERIR PENDÊNCIAS ANTES DE ENVIAR OU USAR."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Situação da Feitoria"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "A operação atualmente remunera horas extras conforme as regras aplicáveis e não adota banco de horas. Este documento não constitui acordo e não será enviado à equipe para adesão."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Condição para nova política"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Se a empresa decidir adotar compensação, deverá definir instrumento válido, norma coletiva aplicável, prazo de compensação, limites, comunicação de folgas, extratos e tratamento do encerramento contratual antes da implantação."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Limites"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Não presumir que acordo individual autoriza banco anual. Não transformar folga concedida pela empresa ou ausência legal em dívida de horas. Não autorizar desconto automático de saldo negativo. Eventual adoção exige redação e avaliação próprias."
+    }
+  ],
+  "campos_pendentes": [],
+  "ativo": false,
+  "versao": "2.0-revisao-2026-10-07",
+  "status_revisao": "minuta_nao_publicada",
+  "publico": [
+    "clt"
+  ],
+  "uso": "reserva",
+  "pendencias_validacao": [
+    "decisão de mudar a política",
+    "instrumento e norma coletiva",
+    "revisão jurídica"
+  ],
+  "origem": {
+    "arquivo": "modelos/14.json",
+    "sha256": "8b55ffd664122a54ba265df7a504306c8a8c0584266b0b50f57096b6c1cc1edb"
+  },
+  "motivo_inativo": "Fora do pacote operacional atual; não institui nova política."
+}

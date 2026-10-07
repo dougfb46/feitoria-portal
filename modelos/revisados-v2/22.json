@@ -1,0 +1,108 @@
+{
+  "codigo": "22",
+  "titulo": "Registro de participação e ciência de treinamento",
+  "blocos": [
+    {
+      "tipo": "titulo",
+      "texto": "Registro de participação e ciência de treinamento"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "MINUTA V2 — CONFERIR PENDÊNCIAS ANTES DE ENVIAR OU USAR."
+    },
+    {
+      "tipo": "campos",
+      "itens": [
+        {
+          "rotulo": "Empresa responsável",
+          "valor": "{{empresa.razao_social}} — CNPJ {{empresa.cnpj}}"
+        },
+        {
+          "rotulo": "Endereço",
+          "valor": "{{empresa.endereco}}, {{empresa.cidade}}/{{empresa.estado}}"
+        },
+        {
+          "rotulo": "Pessoa",
+          "valor": "{{pessoa.nome}}"
+        },
+        {
+          "rotulo": "CPF — acesso restrito",
+          "valor": "{{pessoa.cpf}}"
+        },
+        {
+          "rotulo": "Função / atividade",
+          "valor": "{{contrato.funcao}}"
+        }
+      ]
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Treinamento realizado"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Tema e versão do conteúdo: [[identificar treinamento e conteúdo]]. Data, horário, duração, unidade, modalidade e responsável: [[preencher dados reais]]. Participação: [[concluída, parcial ou reagendada, conforme evidência]]. A assinatura não antecipa comparecimento nem comprova atividade ainda não realizada."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Conteúdo e dúvidas"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Recebi a orientação efetivamente registrada e tive oportunidade de perguntar. Necessidades de apoio, dúvidas ou avaliação prática pendente: [[registrar ou informar nenhuma pendência identificada]]. Ciência de conteúdo não é garantia de domínio; atividades que exigem prática ou habilitação precisam de avaliação própria."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Aplicação"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Aplicarei as orientações de higiene, conservação, segurança, atendimento e uso dos sistemas pertinentes à minha atividade e comunicarei dificuldades. Para empregados, treinamento obrigatório será organizado e registrado como tempo de trabalho conforme as regras aplicáveis."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Limites"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Não se cria obrigação de reembolso, multa por saída ou disponibilidade fora da jornada. Para prestador, este registro demonstra orientação necessária ao serviço e não altera sozinho a natureza contratual."
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "{{empresa.cidade}}, {{data.completa}}."
+    },
+    {
+      "tipo": "assinatura",
+      "quem": "Pessoa identificada",
+      "nome": "{{pessoa.nome}} — CPF {{pessoa.cpf}}"
+    },
+    {
+      "tipo": "assinatura",
+      "quem": "Responsável pela empresa",
+      "nome": "[[nome e função de quem efetivamente representa a empresa neste ato]]"
+    }
+  ],
+  "campos_pendentes": [
+    "identificar treinamento e conteúdo",
+    "preencher dados reais",
+    "concluída, parcial ou reagendada, conforme evidência",
+    "registrar ou informar nenhuma pendência identificada",
+    "nome e função de quem efetivamente representa a empresa neste ato"
+  ],
+  "ativo": false,
+  "versao": "2.0-revisao-2026-10-07",
+  "status_revisao": "minuta_nao_publicada",
+  "publico": [
+    "clt",
+    "prestador"
+  ],
+  "uso": "individual",
+  "pendencias_validacao": [
+    "treinamento efetivamente realizado e evidências"
+  ],
+  "origem": {
+    "arquivo": "modelos/22.json",
+    "sha256": "dfa1afb94038e68c196ea65d4678c8a94f219b21fbc8327237885362fe834024"
+  },
+  "motivo_inativo": "Nova versão em revisão; não importada, não aprovada para assinatura."
+}

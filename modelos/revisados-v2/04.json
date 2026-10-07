@@ -1,0 +1,94 @@
+{
+  "codigo": "04",
+  "titulo": "Declaração de veracidade e atualização de informações",
+  "blocos": [
+    {
+      "tipo": "titulo",
+      "texto": "Declaração de veracidade e atualização de informações"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "MINUTA V2 — CONFERIR PENDÊNCIAS ANTES DE ENVIAR OU USAR."
+    },
+    {
+      "tipo": "campos",
+      "itens": [
+        {
+          "rotulo": "Empresa responsável",
+          "valor": "{{empresa.razao_social}} — CNPJ {{empresa.cnpj}}"
+        },
+        {
+          "rotulo": "Endereço",
+          "valor": "{{empresa.endereco}}, {{empresa.cidade}}/{{empresa.estado}}"
+        },
+        {
+          "rotulo": "Pessoa",
+          "valor": "{{pessoa.nome}}"
+        },
+        {
+          "rotulo": "CPF — acesso restrito",
+          "valor": "{{pessoa.cpf}}"
+        },
+        {
+          "rotulo": "Função / atividade",
+          "valor": "{{contrato.funcao}}"
+        }
+      ]
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Declaração"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Declaro que as informações e os documentos que forneci à gestão da Feitoria correspondem ao meu conhecimento e à minha situação real. Se identificar erro, documento desatualizado ou alteração relevante, solicitarei a correção pelos canais da gestão."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Conferência"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "A gestão poderá solicitar esclarecimentos e verificar documentos necessários à relação de trabalho ou prestação de serviços. Divergências serão apuradas, com oportunidade de esclarecimento; esta declaração não estabelece penalidade automática nem autoriza coleta de dados desnecessários."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Registro de correções"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Correções de informações cadastrais e de registros serão documentadas, preservando-se o histórico necessário. A assinatura confirma a declaração prestada, não renúncia a direitos."
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "{{empresa.cidade}}, {{data.completa}}."
+    },
+    {
+      "tipo": "assinatura",
+      "quem": "Pessoa identificada",
+      "nome": "{{pessoa.nome}} — CPF {{pessoa.cpf}}"
+    },
+    {
+      "tipo": "assinatura",
+      "quem": "Responsável pela empresa",
+      "nome": "[[nome e função de quem efetivamente representa a empresa neste ato]]"
+    }
+  ],
+  "campos_pendentes": [
+    "nome e função de quem efetivamente representa a empresa neste ato"
+  ],
+  "ativo": false,
+  "versao": "2.0-revisao-2026-10-07",
+  "status_revisao": "minuta_nao_publicada",
+  "publico": [
+    "clt",
+    "prestador"
+  ],
+  "uso": "individual",
+  "pendencias_validacao": [],
+  "origem": {
+    "arquivo": "modelos/04.json",
+    "sha256": "ced91d3aac1f25f950563f9cc99af771148452edcefeaca5107c4c4f335eb9ec"
+  },
+  "motivo_inativo": "Nova versão em revisão; não importada, não aprovada para assinatura."
+}

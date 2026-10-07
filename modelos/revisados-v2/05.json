@@ -1,0 +1,186 @@
+{
+  "codigo": "05",
+  "titulo": "Contrato individual de trabalho — operação presencial",
+  "blocos": [
+    {
+      "tipo": "titulo",
+      "texto": "Contrato individual de trabalho — operação presencial"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "MINUTA V2 — CONFERIR PENDÊNCIAS ANTES DE ENVIAR OU USAR."
+    },
+    {
+      "tipo": "campos",
+      "itens": [
+        {
+          "rotulo": "Empresa responsável",
+          "valor": "{{empresa.razao_social}} — CNPJ {{empresa.cnpj}}"
+        },
+        {
+          "rotulo": "Endereço",
+          "valor": "{{empresa.endereco}}, {{empresa.cidade}}/{{empresa.estado}}"
+        },
+        {
+          "rotulo": "Pessoa",
+          "valor": "{{pessoa.nome}}"
+        },
+        {
+          "rotulo": "CPF — acesso restrito",
+          "valor": "{{pessoa.cpf}}"
+        },
+        {
+          "rotulo": "Função / atividade",
+          "valor": "{{contrato.funcao}}"
+        }
+      ]
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "1. Contratação"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "A empresa acima identificada contrata a pessoa indicada para a função de {{contrato.funcao}}, CBO {{contrato.cbo}}, com admissão em {{contrato.admissao}}, na unidade e endereço {{contrato.local_prestacao}}. Modalidade e duração: [[tipo de contrato e duração; experiência somente quando cabível à admissão]]. Não se inicia novo período de experiência nem se altera a admissão de empregado já contratado pela assinatura deste documento."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "2. Atividades"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Atividades efetivamente atribuídas ao cargo: [[descrever atividades da pessoa na cozinha, bar, salão, caixa ou apoio]]. Conforme a função, podem abranger preparo e conservação de alimentos, serviço de bebidas, atendimento, registro de pedidos, recebimento, higienização e organização. A lista deve refletir o cargo real; não autoriza acumular funções distintas, trabalho inseguro ou atividades para as quais faltem treinamento e habilitação."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "3. Local e alterações"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "O trabalho é presencial na unidade identificada. Mudança de unidade, cargo, jornada ou condições será avaliada e documentada conforme a legislação e a norma coletiva aplicável, sem autorização genérica para transferência ou redução de direitos."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "4. Remuneração"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Salário-base mensal: [[salário-base em reais e por extenso]]. Benefícios, gorjetas, adicionais e demais parcelas: [[discriminar parcelas e regras aplicáveis, inclusive gorjetas quando houver]]. O pagamento será feito no prazo legal ou convencional aplicável. A natureza de cada parcela será definida conforme sua realidade e a legislação, sem exclusão genérica da remuneração. Dados bancários serão fornecidos em cadastro restrito, não neste documento."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "5. Jornada e descansos"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Dias, horários, intervalos e descanso semanal: [[jornada contratada e escala efetiva]]. A escala respeitará os limites legais e coletivos. Horas extraordinárias, trabalho noturno, domingos e feriados serão apurados e remunerados conforme a norma aplicável: [[identificar CCT vigente, enquadramento e adicionais confirmados pela contabilidade]]. A Feitoria atualmente não adota banco de horas; este contrato não institui compensação automática."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "6. Registro da jornada"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "As marcações devem corresponder aos horários efetivos de entrada, intervalo, retorno e saída. PIN e acessos individuais não devem ser compartilhados. Falha de aparelho, marcação ausente ou divergência deve ser comunicada; a correção é registrada com motivo, sem apagar o histórico. A identificação do dia operacional no sistema não modifica limites de jornada, intervalos ou direitos trabalhistas."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "7. Ausências e saúde"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Ausências devem ser comunicadas assim que possível. Atestados e justificativas serão analisados segundo as regras aplicáveis e as circunstâncias, sem recusa automática por prazo padronizado. Informações clínicas devem ser direcionadas ao profissional de saúde responsável; a gestão receberá apenas o necessário para obrigações, afastamentos e adaptações."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "8. Segurança e higiene"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "A empresa fornecerá orientação, condições seguras e os equipamentos de proteção necessários, conforme avaliação dos riscos. O empregado deve observar boas práticas de manipulação, conservação, limpeza e atendimento, comunicar riscos e usar os equipamentos indicados. Uniformes e EPI serão registrados separadamente, com fornecimento de EPI sem custo ao trabalhador."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "9. Ferramentas digitais"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "É permitido usar o celular para as tarefas do portal e outras atividades autorizadas, em momento e local seguros e respeitando higiene e atendimento. Uso pessoal deve ser compatível com o trabalho; urgências podem ser comunicadas à liderança. Não se exige acesso da empresa a contas pessoais, nem atendimento rotineiro fora da jornada por este contrato."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "10. Conduta e proteção de informações"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Devem ser respeitados colegas, clientes, prestadores e fornecedores. Assédio, discriminação e violência não são tolerados. Dados pessoais, receitas e fichas técnicas não públicas, credenciais e informações financeiras devem ser protegidos. O dever de sigilo não impede denúncias de boa-fé, exercício de direitos ou comunicação com autoridades e representantes legais."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "11. Imagem e privacidade"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "A assinatura não autoriza uso publicitário da imagem. Eventual divulgação em redes sociais ou campanha dependerá de autorização específica e facultativa, separada. O aviso de privacidade explica os registros do portal e suas finalidades. Informação sobre câmeras, quando existentes, será prestada em documento próprio."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "12. Apuração e descontos"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Ocorrências serão apuradas individualmente. Não há desconto automático por perdas, quebras, reclamações de clientes ou extravio. Descontos e medidas disciplinares dependem dos requisitos legais e convencionais, das provas e da análise das circunstâncias; este contrato não concede autorização genérica para desconto ou justa causa."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "13. Formalização"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "As condições serão conferidas com os registros de admissão, folha e norma coletiva. Cada parte receberá cópia do documento concluído. A assinatura e o carimbo de tempo devem corresponder ao ato real; a admissão anterior, quando existente, é indicada em campo próprio."
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "{{empresa.cidade}}, {{data.completa}}."
+    },
+    {
+      "tipo": "assinatura",
+      "quem": "Pessoa identificada",
+      "nome": "{{pessoa.nome}} — CPF {{pessoa.cpf}}"
+    },
+    {
+      "tipo": "assinatura",
+      "quem": "Responsável pela empresa",
+      "nome": "[[nome e função de quem efetivamente representa a empresa neste ato]]"
+    }
+  ],
+  "campos_pendentes": [
+    "tipo de contrato e duração; experiência somente quando cabível à admissão",
+    "descrever atividades da pessoa na cozinha, bar, salão, caixa ou apoio",
+    "salário-base em reais e por extenso",
+    "discriminar parcelas e regras aplicáveis, inclusive gorjetas quando houver",
+    "jornada contratada e escala efetiva",
+    "identificar CCT vigente, enquadramento e adicionais confirmados pela contabilidade",
+    "nome e função de quem efetivamente representa a empresa neste ato"
+  ],
+  "ativo": false,
+  "versao": "2.0-revisao-2026-10-07",
+  "status_revisao": "minuta_nao_publicada",
+  "publico": [
+    "clt"
+  ],
+  "uso": "individual",
+  "pendencias_validacao": [
+    "jornada e intervalos reais",
+    "salário, benefícios e gorjetas",
+    "CCT, enquadramento e adicionais",
+    "modalidade contratual e admissão",
+    "atribuições do cargo",
+    "revisão jurídica trabalhista"
+  ],
+  "origem": {
+    "arquivo": "modelos/05.json",
+    "sha256": "605d1c4cb270ea1b4e915632cdfa7b050292673904d26d5df08fbf0d3c0adc30"
+  },
+  "motivo_inativo": "Nova versão em revisão; não importada, não aprovada para assinatura."
+}

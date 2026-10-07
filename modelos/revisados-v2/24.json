@@ -1,0 +1,140 @@
+{
+  "codigo": "24",
+  "titulo": "Política de prevenção ao assédio e tratamento de relatos",
+  "blocos": [
+    {
+      "tipo": "titulo",
+      "texto": "Política de prevenção ao assédio e tratamento de relatos"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "MINUTA V2 — CONFERIR PENDÊNCIAS ANTES DE ENVIAR OU USAR."
+    },
+    {
+      "tipo": "campos",
+      "itens": [
+        {
+          "rotulo": "Empresa responsável",
+          "valor": "{{empresa.razao_social}} — CNPJ {{empresa.cnpj}}"
+        },
+        {
+          "rotulo": "Endereço",
+          "valor": "{{empresa.endereco}}, {{empresa.cidade}}/{{empresa.estado}}"
+        },
+        {
+          "rotulo": "Pessoa",
+          "valor": "{{pessoa.nome}}"
+        },
+        {
+          "rotulo": "CPF — acesso restrito",
+          "valor": "{{pessoa.cpf}}"
+        },
+        {
+          "rotulo": "Função / atividade",
+          "valor": "{{contrato.funcao}}"
+        }
+      ]
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "1. Alcance"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Aplica-se às relações na operação da Feitoria: empregados, gestores, sócios, prestadores, clientes e fornecedores, incluindo comunicações de trabalho e situações relacionadas ao serviço. A casa não tolera humilhação, discriminação, ameaça, violência ou conduta sexual indesejada."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "2. Orientação"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Exemplos incluem comentários discriminatórios, exposição vexatória, ameaça de retaliação, toques ou propostas sexuais indesejadas e pressão por favorecimento. Conduta isolada também pode ser grave, mesmo quando não configura assédio moral repetido. Gestão e equipe devem agir para prevenir e interromper situações inseguras."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "3. Canais disponíveis"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "O portal de operação recebe recados no assunto assédio ou conduta, assinados ou anônimos. No modo anônimo não vincula autor, aparelho ou IP ao registro; o relato não deve conter identificação se a pessoa não desejar revelá-la. Também é possível procurar a gestão. Canal alternativo quando o relato envolver a própria gestão: [[definir pessoa ou canal independente e informar à equipe antes da publicação]]. Ninguém é obrigado a usar apenas canal interno."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "4. Segurança imediata"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Em situação de risco imediato, priorizar segurança e acionar atendimento ou autoridade competente. A liderança deve apoiar quem sofre conduta de cliente ou terceiro, sem exigir que suporte agressão para preservar atendimento. Medidas concretas de proteção serão definidas conforme o caso."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "5. Apuração"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Relatos serão acolhidos e registrados com acesso limitado às pessoas necessárias. A apuração deve ser imparcial, evitar conflitos de interesse, preservar evidências e permitir esclarecimentos. Acesso restrito não é promessa de sigilo absoluto diante de obrigação legal. Não prometer prazo de resposta ainda não definido."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "6. Não retaliação"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Denunciar de boa-fé, testemunhar, pedir ajuda ou cooperar não deve gerar punição, alteração prejudicial de escala ou constrangimento. Relato não comprovado não equivale a denúncia falsa. Pessoas citadas também devem ter tratamento respeitoso durante a apuração."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "7. Encaminhamento"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Medidas de proteção, orientação, disciplina ou encerramento de relação serão tomadas segundo fatos, gravidade e legislação. Não há justa causa automática nem obrigação de renunciar a denúncia externa. Procedimento responsável e contato: [[definir responsável sem conflito de interesse e fluxo de encaminhamento]]."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "8. Ciência"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "A pessoa confirma recebimento da política e oportunidade de esclarecimento. Esta ciência não afirma que já houve treinamento específico; treinamento realizado terá registro próprio."
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "{{empresa.cidade}}, {{data.completa}}."
+    },
+    {
+      "tipo": "assinatura",
+      "quem": "Pessoa identificada",
+      "nome": "{{pessoa.nome}} — CPF {{pessoa.cpf}}"
+    },
+    {
+      "tipo": "assinatura",
+      "quem": "Responsável pela empresa",
+      "nome": "[[nome e função de quem efetivamente representa a empresa neste ato]]"
+    }
+  ],
+  "campos_pendentes": [
+    "definir pessoa ou canal independente e informar à equipe antes da publicação",
+    "definir responsável sem conflito de interesse e fluxo de encaminhamento",
+    "nome e função de quem efetivamente representa a empresa neste ato"
+  ],
+  "ativo": false,
+  "versao": "2.0-revisao-2026-10-07",
+  "status_revisao": "minuta_nao_publicada",
+  "publico": [
+    "clt",
+    "prestador"
+  ],
+  "uso": "individual",
+  "pendencias_validacao": [
+    "canal alternativo independente",
+    "responsáveis, apuração e proteção",
+    "revisão do procedimento"
+  ],
+  "origem": {
+    "arquivo": "modelos/24.json",
+    "sha256": "deb0c53331ecc4aada0692c5349592504c7adaf5b31384bcbe5661666e9f8702"
+  },
+  "motivo_inativo": "Nova versão em revisão; não importada, não aprovada para assinatura."
+}
