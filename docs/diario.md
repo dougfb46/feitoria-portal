@@ -1,3 +1,8 @@
+## 2026-10-07 · Codex — portal integrado do colaborador
+Fiz: integrei navegação de documentos, treinamentos/certificados, ponto, checklists, escala/avisos e saúde/segurança na página portal.html. Ponto no celular usa a regra atual de localização; totem continua com seu endereço e PIN próprios, sem identificação automática do portal.
+Aberto: K01, fundo de troco, cadastros e jornada; validação de turno com usuários reais. Treinamentos listam documentos disponíveis, não certificam conclusão automaticamente; escala/avisos mostram a consulta coletiva publicada, não uma escala individual nova.
+Cuidado: backend parte da versão viva 8, devolve permissão de ponto e tipos de treinamento após a autenticação existente. PIN permanece em memória, não em URL/armazenamento; documentos mantêm confirmação individual. Identificação entre páginas só na mesma origem, janela e unidade; totem não aceita essa passagem. Sessão do portal encerra após 5 minutos sem interação.
+Próximo passo: publicar e conferir as telas; configurar pessoas e permissões e acompanhar o primeiro uso. Testes locais de origem, unidade, identificação única, totem e fotos passaram; navegação conferida no navegador com dados fictícios e API local, sem gravação real.
 ## 2026-10-07 · Codex — checklist e acessos
 Fiz: corrigi foto que assumia conforme; respostas sem evidência ou com erro ficam pendentes e não permitem fechar pela tela. Criei web/acessos.html e aba Acessos na gestão, por unidade.
 Aberto: modelo K01 e fundo de troco ainda pendentes; cadastros/PINs aguardam Douglas. Teste de turno real não realizado.

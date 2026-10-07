@@ -329,6 +329,16 @@ async function telaEspelho(){
 ["click","touchstart","keydown"].forEach(ev =>
   document.addEventListener(ev, () => { if(sessao) adiarSaida(); }, { passive:true }));
 
+let identificacaoPortalRecebida = false, ultimoAvisoPortal = 0;
+window.addEventListener("message",e=>{
+  if(window.parent===window || TOKEN_TOTEM || e.source!==window.parent || e.origin!==location.origin || identificacaoPortalRecebida) return;
+  const d=e.data;
+  if(d?.tipo!=="feitoria-identificar" || d.unidade!==TOKEN_UNIDADE || !/^[0-9]{4,6}$/.test(d.pin)) return;
+  identificacaoPortalRecebida=true;pin=d.pin;entrar();
+});
+["click","keydown","touchstart"].forEach(tipo=>document.addEventListener(tipo,()=>{
+  if(window.parent!==window && Date.now()-ultimoAvisoPortal>15000){ultimoAvisoPortal=Date.now();window.parent.postMessage({tipo:"feitoria-atividade"},location.origin);}
+},{passive:true}));
 telaPin();
 </script>
 </body>
