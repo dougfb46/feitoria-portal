@@ -121,7 +121,7 @@ async function telaLista(aviso){
     tela.replaceChildren();
     if(aviso) tela.append(el("div", aviso, "ok"));
     tela.append(el("p", "Hoje · " + d.dia_operacional.split("-").reverse().join("/"), "chapeu"),
-                el("h1",null,"Checklists do turno"),
+                el("h1","Checklists do turno"),
                 el("p", "Toque no que você vai fazer agora. Cada resposta é gravada na hora.", "legenda"));
     if(!d.modelos.length){
       tela.append(el("p", "Nenhum checklist publicado ainda. A gestão importa os modelos na tela dela.", "vazio"));
@@ -143,11 +143,12 @@ async function telaLista(aviso){
 function telaPin(codigo, titulo){
   rodape.hidden = true;
   tela.replaceChildren();
-  tela.append(el("p", codigo, "chapeu"), el("h1",null,titulo),
+  tela.append(el("p", codigo, "chapeu"), el("h1",titulo),
     el("p", "Digite seu PIN. É ele que assina o que você responder.", "legenda"));
   const campo = el("input");
   campo.type = "password"; campo.inputMode = "numeric"; campo.maxLength = 6;
   campo.placeholder = "••••"; campo.autocomplete = "off";
+  campo.value = pin;
   campo.style.cssText = "font-size:26px;text-align:center;letter-spacing:10px";
   const erro = el("div");
   const ok = el("button", "Começar", "botao");
@@ -296,12 +297,23 @@ function desenharItem(item){
   return caixa;
 }
 
+let identificacaoRecebida = false, ultimoAvisoPortal = 0;
+window.addEventListener("message",e=>{
+  if(window.parent===window || e.source!==window.parent || e.origin!==location.origin || identificacaoRecebida) return;
+  const d=e.data;
+  if(d?.tipo!=="feitoria-identificar" || d.unidade!==TOKEN || !/^[0-9]{4,6}$/.test(d.pin))return;
+  identificacaoRecebida=true;pin=d.pin;
+});
+["click","keydown","touchstart"].forEach(tipo=>document.addEventListener(tipo,()=>{
+  if(window.parent!==window && Date.now()-ultimoAvisoPortal>15000){ultimoAvisoPortal=Date.now();window.parent.postMessage({tipo:"feitoria-atividade"},location.origin);}
+},{passive:true}));
+
 function telaItens(retomada, nome){
   pendentes.clear();
   tela.replaceChildren();
   if(retomada) tela.append(el("div", "Você já tinha começado este checklist hoje. Continuando de onde parou.", "aviso"));
   tela.append(el("p", modelo.codigo + " · versão " + modelo.versao, "chapeu"),
-              el("h1",null,modelo.titulo),
+              el("h1",modelo.titulo),
               el("p", (modelo.quando ? modelo.quando + " · " : "") + nome, "legenda"));
 
   (modelo.corpo.grupos || []).forEach(g => {

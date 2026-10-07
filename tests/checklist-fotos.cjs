@@ -1,11 +1,11 @@
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict'),path=require('node:path');
 const root=path.resolve(__dirname,'..');
-for(const name of ['gestao','checklist','acessos']){
+for(const name of ['gestao','checklist','acessos','portal','ponto']){
  const html=fs.readFileSync(path.join(root,'web',name+'.html'),'utf8');
  for(const match of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g))if(match[1].trim())new vm.Script('(async function(){'+match[1].replace(/^import .*;$/gm,'')+'})');
 }
 const html=fs.readFileSync(path.join(root,'web/checklist.html'),'utf8');
-const code=html.slice(html.indexOf('function desenharItem('),html.indexOf('function telaItens('));
+const code=html.slice(html.indexOf('function desenharItem('),html.indexOf('let identificacaoRecebida'));
 function element(tag,text){return{tag,text,children:[],append(...x){this.children.push(...x)},replaceChildren(...x){this.children=x},setAttribute(){},querySelectorAll(){return []}};}
 function setup(item,fail=false){
  const requests=[],context={el:element,respostas:new Map(),pendentes:new Set(),pin:'fixture',execucao:'fixture',contarRespostas(){},semRede:e=>e.message,chamar:async body=>{requests.push(body);if(fail)throw Error('sem rede');return{id:1,evidencia_path:body.foto?'fixture.jpg':null}},FileReader:class{readAsDataURL(){this.result='data:image/png;base64,Zml4dHVyZQ==';this.onload()}}};

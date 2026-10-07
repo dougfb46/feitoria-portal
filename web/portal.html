@@ -57,6 +57,16 @@ const esc = (v) => String(v ?? "").replace(/[&<>"']/g, (ch) =>
   ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[ch]));
 
 let pin = "", nascimento = "", sessao = null;
+let secao = "inicio", tempoSessao = null, frameAtivo = null;
+function encerrarPortal(){ clearTimeout(tempoSessao); sessao=null; pin=""; nascimento=""; secao="inicio"; telaEntrar(); }
+function manterSessao(){
+  clearTimeout(tempoSessao);
+  if(sessao) tempoSessao=setTimeout(encerrarPortal, 5*60*1000);
+}
+window.addEventListener("message",e=>{
+  if(e.origin===location.origin && e.source===frameAtivo?.contentWindow && e.data?.tipo==="feitoria-atividade")manterSessao();
+});
+["click","keydown","touchstart"].forEach(tipo=>document.addEventListener(tipo,manterSessao,{passive:true}));
 
 // Identificador do aparelho: gerado aqui, guardado aqui. Não é dado do celular,
 // é um número aleatório — serve só para reconhecer que é o mesmo aparelho.
@@ -126,15 +136,22 @@ async function entrar(){
 
 /* ---------- início ---------- */
 function telaInicio(msg){
-  const docs = sessao.documentos;
+  manterSessao();
+  const tipos = new Set(sessao.tipos_treinamento || []);
+  const docs = sessao.documentos.filter(d => secao === "treinamentos" ? tipos.has(d.tipo) : secao === "documentos" ? !tipos.has(d.tipo) : true);
+  const menu = [["inicio","Início"],["documentos","Documentos"],["treinamentos","Treinamentos"],
+    ["checklists","Checklists"],["operacao","Escala e avisos"],["seguranca","Saúde e segurança"]];
+  if(sessao.registra_ponto) menu.splice(3,0,["ponto","Ponto"]);
   app.innerHTML = `
     <div class="carta">
       <h1>Olá, ${esc(sessao.colaborador.nome.split(" ")[0])}</h1>
       <p class="sub" style="margin:0">${esc(sessao.colaborador.funcao || "")} · ${esc(sessao.unidade.nome)}</p>
     </div>
+    <nav aria-label="Meu portal" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">${menu.map(([id,nome])=>
+      `<button class="${secao===id?"":"secundaria"}" style="width:auto;padding:11px" data-secao="${id}" aria-current="${secao===id?"page":"false"}">${nome}</button>`).join("")}</nav>
     ${msg ? `<div class="carta"><div class="aviso">${esc(msg)}</div></div>` : ""}
     <div class="carta">
-      <h2>Meus documentos</h2>
+      <h2>${secao==="treinamentos"?"Treinamentos e certificados":"Meus documentos"}</h2>
       ${sessao.pendentes ? `<div class="faixa">
         ${sessao.pendentes} documento${sessao.pendentes>1?"s":""} esperando sua assinatura</div>` : ""}
       ${docs.length ? docs.map(d => `
@@ -152,6 +169,34 @@ function telaInicio(msg){
 
   app.querySelectorAll("[data-abrir]").forEach(b => b.onclick = () => abrir(b.dataset.abrir));
   document.getElementById("sair").onclick = () => { sessao=null; pin=""; telaEntrar(); };
+  document.getElementById("sair").onclick = encerrarPortal;
+  app.querySelectorAll("[data-secao]").forEach(b=>b.onclick=()=>{secao=b.dataset.secao; telaInicio();});
+  if(secao === "inicio"){
+    const card=document.createElement("div"); card.className="carta";
+    card.innerHTML=`<h2>Seu portal na Feitoria</h2><p class="sub">Use as opções acima para suas atividades. Os documentos abaixo são os disponíveis para você; assinar continua pedindo sua confirmação individual.</p>${sessao.registra_ponto?`<p class="sub">Você pode registrar o ponto no celular ou no totem da unidade. No celular, a marcação segue a regra de localização da casa. No totem, use o aparelho fixo e seu próprio PIN.</p>`:""}`;
+    app.insertBefore(card,app.querySelector("nav").nextSibling);
+  }
+  const paginas={checklists:"checklist.html",operacao:"operacao.html",seguranca:"nr1.html"};
+  if(secao==="ponto" && sessao.registra_ponto) paginas.ponto="ponto.html";
+  if(paginas[secao]){
+    const card=app.querySelectorAll(".carta")[1];
+    card.replaceChildren();
+    if(secao==="ponto"){
+      const aviso=document.createElement("p");aviso.className="sub";
+      aviso.textContent="Ponto no celular abaixo. Para usar o totem, vá ao aparelho fixo da unidade e digite seu PIN. Não é necessário marcar nos dois aparelhos.";
+      card.append(aviso);
+    }
+    const frame=document.createElement("iframe");
+    const url=new URL(paginas[secao],location.href);url.searchParams.set("u",TOKEN_UNIDADE);
+    frame.src=url.href;frame.title=menu.find(([id])=>id===secao)?.[1] || "Atividade";
+    frame.style="width:100%;height:75dvh;min-height:500px;border:0";
+    if(secao==="ponto") frame.allow="camera 'self'; geolocation 'self'";
+    if(secao==="checklists") frame.allow="camera 'self'";
+    frame.onload=()=>{
+      if(sessao && ["ponto","checklists"].includes(secao))frame.contentWindow.postMessage({tipo:"feitoria-identificar",unidade:TOKEN_UNIDADE,pin},location.origin);
+    };
+    frameAtivo=frame;card.append(frame);
+  }
 }
 
 /* ---------- abrir e assinar ---------- */
