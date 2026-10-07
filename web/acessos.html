@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Feitoria · Acessos da equipe</title>
+<style>body{font:17px system-ui;background:#f4f5f1;color:#172b20;margin:0}main{max-width:620px;margin:40px auto;padding:24px}a{display:block;background:white;border:1px solid #cbd8cc;border-radius:12px;padding:20px;margin:14px 0;color:#174c2c;text-decoration:none}small{display:block;color:#536459;margin-top:6px}p{line-height:1.6}</style>
+<main><h1>Feitoria · Equipe</h1><p>Escolha o que precisa fazer. Use apenas seu próprio acesso.</p><div id="links"></div><p id="aviso"></p><a href="gestao.html">Gestão<small>Acesso por conta autorizada. PIN da equipe não dá acesso à gestão.</small></a><a href="privacidade.html">Privacidade</a></main>
+<script>
+const u=new URLSearchParams(location.search).get('u');
+const lista=document.getElementById('links');
+if(u && /^[a-f0-9-]{36}$/i.test(u)){
+ const itens=[['ponto.html','Registrar ponto','Para empregados habilitados; use os horários reais.'],['portal.html','Meus documentos','Consultar e assinar documentos; PIN e data de nascimento.'],['checklist.html','Checklists','Realizar as verificações atribuídas ao turno.'],['operacao.html','Consulta da operação','Informações do turno e canal de recados.'],['nr1.html','Saúde e segurança','Orientações de saúde e segurança no trabalho.']];
+ for(const [pagina,titulo,dica] of itens){const a=document.createElement('a');a.href=pagina+'?u='+encodeURIComponent(u);a.textContent=titulo;const s=document.createElement('small');s.textContent=dica;a.append(s);lista.append(a);}
+}else document.getElementById('aviso').textContent='Peça à gestão o link da sua unidade. Ele identifica qual casa você está acessando.';
+</script></html>

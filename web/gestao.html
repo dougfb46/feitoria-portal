@@ -186,6 +186,7 @@ function moldura(usuario){
         acoesVencidas ? `<span class="selo">${acoesVencidas}</span>` : ""}</button>
       <button data-aba="docs"   class="${aba==="docs"  ?"ativa":""}">Documentos</button>
       <button data-aba="folha"  class="${aba==="folha" ?"ativa":""}">Folha de ponto</button>
+      <button data-aba="acessos" class="${aba==="acessos"?"ativa":""}">Acessos</button>
     </div>
     <div id="conteudo"></div>`;
 
@@ -209,7 +210,7 @@ function moldura(usuario){
     b.onclick = () => { aba = b.dataset.aba; moldura(usuario); });
   render();
 }
-const render = () => aba === "equipe" ? abaEquipe()
+const render = () => aba === "acessos" ? abaAcessos() : aba === "equipe" ? abaEquipe()
   : aba === "ponto" ? abaPonto()
   : aba === "pend" ? abaPendencias()
   : aba === "escala" ? abaEscala()
@@ -219,6 +220,21 @@ const render = () => aba === "equipe" ? abaEquipe()
   : aba === "folha" ? abaFolha()
   : abaDocs();
 const conteudo = () => document.getElementById("conteudo");
+
+function abaAcessos(){
+  const base = new URL(".", location.href);
+  const equipe = new URL("acessos.html", base);
+  equipe.searchParams.set("u", unidade?.public_token || "");
+  const gestao = new URL("gestao.html", base);
+  conteudo().innerHTML = `<div class="carta"><h2>Acessos · ${esc(unidade.name)}</h2>
+    <p>Envie este link à equipe da unidade ou transforme-o em QR Code para o quadro de avisos. Cada pessoa usa seu próprio PIN nas ações que exigem identificação.</p>
+    <p><a href="${esc(equipe.href)}" target="_blank" rel="noopener">Abrir acessos da equipe</a></p>
+    <label>Link da equipe<input readonly value="${esc(equipe.href)}" aria-label="Link da equipe"></label>
+    <p>Gestores entram com conta e papel autorizado. O link sozinho não concede acesso.</p>
+    <label>Link da gestão<input readonly value="${esc(gestao.href)}" aria-label="Link da gestão"></label>
+    <p>O tablet de ponto tem endereço próprio, configurado pela gestão. Não distribua seu link exclusivo no grupo da equipe. Freelas não marcam ponto; recebem somente os acessos necessários.</p>
+    <p>Antes do uso: conferir cadastro, perfil, PIN individual e vínculo com a unidade. Documentos serão publicados por pessoa depois de preenchidos e revisados.</p></div>`;
+}
 
 async function chamarDocs(payload){
   const { data:{ session } } = await sb.auth.getSession();
