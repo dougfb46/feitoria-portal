@@ -3,6 +3,13 @@ Fiz: corrigi foto que assumia conforme; respostas sem evidência ou com erro fic
 Aberto: modelo K01 e fundo de troco ainda pendentes; cadastros/PINs aguardam Douglas. Teste de turno real não realizado.
 Cuidado: backend checklists parte da versão viva 4, preserva evidência de correção somente do mesmo item/linha e verifica foto condicional na gravação e na conclusão. Sem resposta/execução fictícia. Endereço do totem não entra nos links da equipe.
 Próximo passo: confirmar publicação das telas; configurar usuários e permissões pela gestão; revisar/importar K01 e realizar o piloto real.
+
+## 2026-10-07 · Codex — revisão dos documentos de RH
+Fiz: criei 23 novas versões 04–26 em modelos/revisados-v2, com leitura completa, aplicação por público, fontes e pendências. Corrigidos resíduos de construção civil, identificação, prestação, descontos, imagem, privacidade e evidências.
+Aberto: dados individuais, CCT/adicionais, câmeras/retenção, canal independente contra assédio e validação jurídica/contábil e de saúde ocupacional. Push bloqueado pela revisão automática: políticas internas de RH em repositório público exigem autorização específica; pacote permanece local.
+Cuidado: todos os V2 estão inativos e não importados. Originais e documentos emitidos/assinados não foram alterados. Banco de horas já era inativo; 14/15/16/21 fora da operação atual. Sem PIN, Pix, salário ou dado real da equipe.
+Próximo passo: revisar o pacote; resolver as pendências reais e registrar aprovação antes de importar novas versões e emitir documentos por pessoa.
+
 # Diário de sessão
 
 Quem trabalhou no projeto escreve aqui **antes de encerrar**. Entrada nova vai

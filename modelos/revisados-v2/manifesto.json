@@ -1,0 +1,337 @@
+[
+  {
+    "codigo": "04",
+    "titulo": "Declaração de veracidade e atualização de informações",
+    "uso": "individual",
+    "publico": [
+      "clt",
+      "prestador"
+    ],
+    "ativo_original": true,
+    "pendencias": [],
+    "marcadores": 1
+  },
+  {
+    "codigo": "05",
+    "titulo": "Contrato individual de trabalho — operação presencial",
+    "uso": "individual",
+    "publico": [
+      "clt"
+    ],
+    "ativo_original": true,
+    "pendencias": [
+      "jornada e intervalos reais",
+      "salário, benefícios e gorjetas",
+      "CCT, enquadramento e adicionais",
+      "modalidade contratual e admissão",
+      "atribuições do cargo",
+      "revisão jurídica trabalhista"
+    ],
+    "marcadores": 7
+  },
+  {
+    "codigo": "06",
+    "titulo": "Contrato de prestação de serviços — contratação específica",
+    "uso": "prestacao",
+    "publico": [
+      "prestador"
+    ],
+    "ativo_original": true,
+    "pendencias": [
+      "natureza real da relação e revisão jurídica",
+      "qualificação do prestador e representante da empresa",
+      "objeto, duração e execução",
+      "preço, retenções e documento fiscal",
+      "encerramento e responsabilidades"
+    ],
+    "marcadores": 11
+  },
+  {
+    "codigo": "07",
+    "titulo": "Ciência de monitoramento por câmeras de segurança",
+    "uso": "individual",
+    "publico": [
+      "clt",
+      "prestador"
+    ],
+    "ativo_original": true,
+    "pendencias": [
+      "câmeras existentes e áreas",
+      "áudio, retenção e responsáveis",
+      "base legal e revisão de privacidade"
+    ],
+    "marcadores": 4
+  },
+  {
+    "codigo": "08",
+    "titulo": "Ficha de registro e conferência cadastral do empregado",
+    "uso": "individual",
+    "publico": [
+      "clt"
+    ],
+    "ativo_original": true,
+    "pendencias": [
+      "cadastro completo e conferência contábil"
+    ],
+    "marcadores": 3
+  },
+  {
+    "codigo": "09",
+    "titulo": "Declaração de dependentes para desconto de IRRF",
+    "uso": "individual",
+    "publico": [
+      "clt"
+    ],
+    "ativo_original": true,
+    "pendencias": [
+      "dependentes e documentos comprobatórios",
+      "validação tributária pela contabilidade"
+    ],
+    "marcadores": 2
+  },
+  {
+    "codigo": "10",
+    "titulo": "Ciência de encaminhamento à saúde ocupacional",
+    "uso": "individual",
+    "publico": [
+      "clt"
+    ],
+    "ativo_original": true,
+    "pendencias": [
+      "exame e orientação da clínica responsável",
+      "validação pelo responsável pelo PCMSO"
+    ],
+    "marcadores": 2
+  },
+  {
+    "codigo": "11",
+    "titulo": "Entrega e responsabilidade pelo uso de equipamentos",
+    "uso": "individual",
+    "publico": [
+      "clt",
+      "prestador"
+    ],
+    "ativo_original": true,
+    "pendencias": [
+      "inventário real e entrega comprovada"
+    ],
+    "marcadores": 2
+  },
+  {
+    "codigo": "12",
+    "titulo": "Entrega de uniformes, EPI e orientação sobre acesso individual",
+    "uso": "individual",
+    "publico": [
+      "clt",
+      "prestador"
+    ],
+    "ativo_original": true,
+    "pendencias": [
+      "itens e CA aplicáveis",
+      "orientação efetivamente realizada",
+      "acessos necessários e responsável técnico"
+    ],
+    "marcadores": 4
+  },
+  {
+    "codigo": "13",
+    "titulo": "Política de uso do portal, celular e ferramentas de trabalho",
+    "uso": "individual",
+    "publico": [
+      "clt",
+      "prestador"
+    ],
+    "ativo_original": true,
+    "pendencias": [
+      "lista real de ferramentas e orientação de higiene"
+    ],
+    "marcadores": 2
+  },
+  {
+    "codigo": "14",
+    "titulo": "Banco de horas — minuta reservada, não adotada",
+    "uso": "reserva",
+    "publico": [
+      "clt"
+    ],
+    "ativo_original": false,
+    "pendencias": [
+      "decisão de mudar a política",
+      "instrumento e norma coletiva",
+      "revisão jurídica"
+    ],
+    "marcadores": 0
+  },
+  {
+    "codigo": "15",
+    "titulo": "Premiação — minuta reservada para programa específico",
+    "uso": "reserva",
+    "publico": [
+      "clt"
+    ],
+    "ativo_original": false,
+    "pendencias": [
+      "programa e valores definidos",
+      "validação trabalhista e tributária"
+    ],
+    "marcadores": 1
+  },
+  {
+    "codigo": "16",
+    "titulo": "Teletrabalho — modelo fora da operação atual",
+    "uso": "reserva",
+    "publico": [
+      "clt"
+    ],
+    "ativo_original": false,
+    "pendencias": [
+      "existência de função compatível",
+      "instrumento específico e revisão jurídica"
+    ],
+    "marcadores": 0
+  },
+  {
+    "codigo": "17",
+    "titulo": "Designação de responsabilidades de liderança",
+    "uso": "individual",
+    "publico": [
+      "clt"
+    ],
+    "ativo_original": true,
+    "pendencias": [
+      "responsabilidades e alçadas reais",
+      "data e condições",
+      "revisão se houver intenção de enquadramento no art. 62"
+    ],
+    "marcadores": 5
+  },
+  {
+    "codigo": "18",
+    "titulo": "Aditivo de função, responsabilidades e remuneração",
+    "uso": "individual",
+    "publico": [
+      "clt"
+    ],
+    "ativo_original": true,
+    "pendencias": [
+      "contrato original e alterações",
+      "poderes reais, salário e gratificação",
+      "jornada e revisão jurídica"
+    ],
+    "marcadores": 9
+  },
+  {
+    "codigo": "19",
+    "titulo": "Termo de confidencialidade — informações da operação",
+    "uso": "individual",
+    "publico": [
+      "clt",
+      "prestador"
+    ],
+    "ativo_original": true,
+    "pendencias": [],
+    "marcadores": 1
+  },
+  {
+    "codigo": "20",
+    "titulo": "Aviso de privacidade e compromisso de proteção de dados da equipe",
+    "uso": "individual",
+    "publico": [
+      "clt",
+      "prestador"
+    ],
+    "ativo_original": true,
+    "pendencias": [
+      "razão social e unidade corretas",
+      "tabela de retenção e fluxo de pedidos",
+      "avaliação das bases legais e fornecedores",
+      "revisão de privacidade"
+    ],
+    "marcadores": 2
+  },
+  {
+    "codigo": "21",
+    "titulo": "Não concorrência — modelo fora do pacote operacional",
+    "uso": "reserva",
+    "publico": [
+      "clt",
+      "prestador"
+    ],
+    "ativo_original": false,
+    "pendencias": [
+      "necessidade excepcional e instrumento jurídico específico"
+    ],
+    "marcadores": 0
+  },
+  {
+    "codigo": "22",
+    "titulo": "Registro de participação e ciência de treinamento",
+    "uso": "individual",
+    "publico": [
+      "clt",
+      "prestador"
+    ],
+    "ativo_original": true,
+    "pendencias": [
+      "treinamento efetivamente realizado e evidências"
+    ],
+    "marcadores": 5
+  },
+  {
+    "codigo": "23",
+    "titulo": "Protocolo de recebimento de documentos para cadastro",
+    "uso": "protocolo",
+    "publico": [
+      "clt",
+      "prestador"
+    ],
+    "ativo_original": true,
+    "pendencias": [
+      "relação real de documentos",
+      "recebedor e data"
+    ],
+    "marcadores": 5
+  },
+  {
+    "codigo": "24",
+    "titulo": "Política de prevenção ao assédio e tratamento de relatos",
+    "uso": "individual",
+    "publico": [
+      "clt",
+      "prestador"
+    ],
+    "ativo_original": true,
+    "pendencias": [
+      "canal alternativo independente",
+      "responsáveis, apuração e proteção",
+      "revisão do procedimento"
+    ],
+    "marcadores": 3
+  },
+  {
+    "codigo": "25",
+    "titulo": "Comunicado de boas-vindas à equipe",
+    "uso": "comunicado",
+    "publico": [
+      "equipe"
+    ],
+    "ativo_original": true,
+    "pendencias": [
+      "nome de uso, área, referência e data"
+    ],
+    "marcadores": 3
+  },
+  {
+    "codigo": "26",
+    "titulo": "Procedimento interno para contratação de prestadores",
+    "uso": "interno",
+    "publico": [
+      "gestao"
+    ],
+    "ativo_original": true,
+    "pendencias": [
+      "validação jurídica e contábil do procedimento"
+    ],
+    "marcadores": 0
+  }
+]

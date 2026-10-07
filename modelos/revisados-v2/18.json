@@ -1,0 +1,113 @@
+{
+  "codigo": "18",
+  "titulo": "Aditivo de função, responsabilidades e remuneração",
+  "blocos": [
+    {
+      "tipo": "titulo",
+      "texto": "Aditivo de função, responsabilidades e remuneração"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "MINUTA V2 — CONFERIR PENDÊNCIAS ANTES DE ENVIAR OU USAR."
+    },
+    {
+      "tipo": "campos",
+      "itens": [
+        {
+          "rotulo": "Empresa responsável",
+          "valor": "{{empresa.razao_social}} — CNPJ {{empresa.cnpj}}"
+        },
+        {
+          "rotulo": "Endereço",
+          "valor": "{{empresa.endereco}}, {{empresa.cidade}}/{{empresa.estado}}"
+        },
+        {
+          "rotulo": "Pessoa",
+          "valor": "{{pessoa.nome}}"
+        },
+        {
+          "rotulo": "CPF — acesso restrito",
+          "valor": "{{pessoa.cpf}}"
+        },
+        {
+          "rotulo": "Função / atividade",
+          "valor": "{{contrato.funcao}}"
+        }
+      ]
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Alteração pactuada"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Contrato de origem: [[data e referência]]. Alteração a partir de [[data real de início]]: função [[função]], unidade [[unidade]], atribuições [[tarefas e alçadas reais]]. As condições serão avaliadas sem prejuízo contratual indevido."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Remuneração"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Salário-base anterior e novo: [[valores]]. Gratificação de função, quando efetivamente pactuada: [[valor, natureza e condições]]. Jornada e descansos: [[condições que permanecem ou alteração válida]]. Não presumir incorporação definitiva nem supressão livre da parcela sem análise aplicável."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Controle de jornada"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "O registro de jornada permanece até que haja fundamento jurídico específico para tratamento diferente. Para eventual cargo de gestão do art. 62, II, conferir cumulativamente os poderes efetivos e o requisito remuneratório, além da norma coletiva. Este aditivo não afirma esse enquadramento por si só."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Demais condições"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Permanecem as demais condições válidas do contrato original. A pessoa receberá cópia e poderá esclarecer dúvidas. Não se aplica este aditivo a prestadores independentes."
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "{{empresa.cidade}}, {{data.completa}}."
+    },
+    {
+      "tipo": "assinatura",
+      "quem": "Pessoa identificada",
+      "nome": "{{pessoa.nome}} — CPF {{pessoa.cpf}}"
+    },
+    {
+      "tipo": "assinatura",
+      "quem": "Responsável pela empresa",
+      "nome": "[[nome e função de quem efetivamente representa a empresa neste ato]]"
+    }
+  ],
+  "campos_pendentes": [
+    "data e referência",
+    "data real de início",
+    "função",
+    "unidade",
+    "tarefas e alçadas reais",
+    "valores",
+    "valor, natureza e condições",
+    "condições que permanecem ou alteração válida",
+    "nome e função de quem efetivamente representa a empresa neste ato"
+  ],
+  "ativo": false,
+  "versao": "2.0-revisao-2026-10-07",
+  "status_revisao": "minuta_nao_publicada",
+  "publico": [
+    "clt"
+  ],
+  "uso": "individual",
+  "pendencias_validacao": [
+    "contrato original e alterações",
+    "poderes reais, salário e gratificação",
+    "jornada e revisão jurídica"
+  ],
+  "origem": {
+    "arquivo": "modelos/18.json",
+    "sha256": "96f8638b65130734fc94c3dfd9044184074f5aa361fc9d7baa4eedae2767d11d"
+  },
+  "motivo_inativo": "Nova versão em revisão; não importada, não aprovada para assinatura."
+}

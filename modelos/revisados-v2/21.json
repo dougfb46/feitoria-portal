@@ -1,0 +1,47 @@
+{
+  "codigo": "21",
+  "titulo": "Não concorrência — modelo fora do pacote operacional",
+  "blocos": [
+    {
+      "tipo": "titulo",
+      "texto": "Não concorrência — modelo fora do pacote operacional"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "MINUTA V2 — CONFERIR PENDÊNCIAS ANTES DE ENVIAR OU USAR."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Não adoção"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "A Feitoria não institui restrição de trabalho em outros bares e restaurantes por este modelo. A proteção de informações não públicas é tratada pelo termo de confidencialidade."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Eventual avaliação específica"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Qualquer necessidade excepcional de restrição pós-contratual exige análise individual, proporcionalidade, delimitação e compensação adequadas ao caso. Não aplicar cláusula genérica às funções operacionais nem presumir valor mínimo uniforme de compensação. Este documento não é acordo de não concorrência."
+    }
+  ],
+  "campos_pendentes": [],
+  "ativo": false,
+  "versao": "2.0-revisao-2026-10-07",
+  "status_revisao": "minuta_nao_publicada",
+  "publico": [
+    "clt",
+    "prestador"
+  ],
+  "uso": "reserva",
+  "pendencias_validacao": [
+    "necessidade excepcional e instrumento jurídico específico"
+  ],
+  "origem": {
+    "arquivo": "modelos/21.json",
+    "sha256": "81e49d3dc5328241c2c924686c8341b641f94e59412333a8d65a06e2d6d5847a"
+  },
+  "motivo_inativo": "Fora do pacote operacional atual; não institui nova política."
+}

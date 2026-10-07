@@ -1,0 +1,66 @@
+{
+  "codigo": "25",
+  "titulo": "Comunicado de boas-vindas à equipe",
+  "blocos": [
+    {
+      "tipo": "titulo",
+      "texto": "Comunicado de boas-vindas à equipe"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "MINUTA V2 — CONFERIR PENDÊNCIAS ANTES DE ENVIAR OU USAR."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Boas-vindas"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Damos boas-vindas a {{pessoa.nome}}, que passa a integrar a operação da Feitoria em [[data de início a comunicar]], na função de {{contrato.funcao}}, na unidade [[unidade e área]]."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Integração"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Pedimos à equipe que apoie a apresentação das rotinas, higiene, segurança, atendimento e ferramentas necessárias. Pessoa de referência para a integração: [[nome e função de quem acompanhará]]."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Privacidade"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Divulgar apenas nome de uso, função, unidade e informação profissional necessária. Não publicar CPF, endereço, nascimento, salário, telefone pessoal, dados de saúde ou documentos. Fotografia ou divulgação externa depende de autorização específica e facultativa."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Emissão"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Comunicado pela gestão de {{empresa.razao_social}} em {{data.completa}}. É material de comunicação interna, não documento de adesão ou confirmação de treinamento."
+    }
+  ],
+  "campos_pendentes": [
+    "data de início a comunicar",
+    "unidade e área",
+    "nome e função de quem acompanhará"
+  ],
+  "ativo": false,
+  "versao": "2.0-revisao-2026-10-07",
+  "status_revisao": "minuta_nao_publicada",
+  "publico": [
+    "equipe"
+  ],
+  "uso": "comunicado",
+  "pendencias_validacao": [
+    "nome de uso, área, referência e data"
+  ],
+  "origem": {
+    "arquivo": "modelos/25.json",
+    "sha256": "c1c89ff2c9ae28aca55a6bf928c0edbd4715a25915225339577dbb290e88b3fd"
+  },
+  "motivo_inativo": "Nova versão em revisão; não importada, não aprovada para assinatura."
+}

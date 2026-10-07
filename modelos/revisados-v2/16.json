@@ -1,0 +1,47 @@
+{
+  "codigo": "16",
+  "titulo": "Teletrabalho — modelo fora da operação atual",
+  "blocos": [
+    {
+      "tipo": "titulo",
+      "texto": "Teletrabalho — modelo fora da operação atual"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "MINUTA V2 — CONFERIR PENDÊNCIAS ANTES DE ENVIAR OU USAR."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Não aplicabilidade"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "As atividades atuais da Feitoria no salão, bar e cozinha são presenciais. Este documento não institui teletrabalho nem será enviado a esses trabalhadores."
+    },
+    {
+      "tipo": "subtitulo",
+      "texto": "Avaliação futura"
+    },
+    {
+      "tipo": "paragrafo",
+      "texto": "Se surgir função compatível, elaborar instrumento próprio com tarefas, regime efetivo, local, jornada quando aplicável, equipamentos, despesas, segurança, privacidade e condições de alteração. Não excluir automaticamente controle de jornada por realizar atividade remota."
+    }
+  ],
+  "campos_pendentes": [],
+  "ativo": false,
+  "versao": "2.0-revisao-2026-10-07",
+  "status_revisao": "minuta_nao_publicada",
+  "publico": [
+    "clt"
+  ],
+  "uso": "reserva",
+  "pendencias_validacao": [
+    "existência de função compatível",
+    "instrumento específico e revisão jurídica"
+  ],
+  "origem": {
+    "arquivo": "modelos/16.json",
+    "sha256": "c6ac739d9d47846fafbccd02372b1f536bfbfafa9725909f3c59b1ea48fcbfa9"
+  },
+  "motivo_inativo": "Fora do pacote operacional atual; não institui nova política."
+}
