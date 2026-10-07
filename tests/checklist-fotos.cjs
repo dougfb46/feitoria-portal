@@ -25,4 +25,3 @@ async function tick(){await new Promise(resolve=>setImmediate(resolve));}
  s=setup(item,true);s.nodes.find(x=>x.text==='Conforme').onclick();await tick();assert.equal(s.context.respostas.size,0);assert.equal(s.context.pendentes.size,1,'falha não conta como gravado');
  console.log('OK: sintaxe das 3 telas; foto não responde; não conforme aguarda foto; foto obrigatória; conforme sem foto condicional; falha de rede permanece pendente. Sem API real.');
 })().catch(e=>{console.error(e);process.exitCode=1});
-
