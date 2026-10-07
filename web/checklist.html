@@ -90,6 +90,7 @@ const tela = document.getElementById("tela");
 const rodape = document.getElementById("rodape");
 
 let pin = "", execucao = null, modelo = null, respostas = new Map();
+const pendentes = new Set();
 let contarRespostas = () => {};   // a tela de itens substitui isto
 
 function el(tag, texto, classe){
@@ -181,18 +182,38 @@ function desenharItem(item){
   const chave = item.id;
   const jaTem = respostas.get(chave);
   const feedback = el("div");
+  let escolhido = jaTem?.valor ?? null;
+  let detalhes = jaTem?.nao_aplicavel ? { nao_aplicavel:true } : {};
+  let fotoEscolhida = null;
+  let gravando = false;
 
   const gravar = async (valor, extra = {}) => {
+    if(gravando) return;
+    escolhido = valor; detalhes = extra;
+    pendentes.add(chave);
+    if(!valor){
+      feedback.replaceChildren(el("div", "Escolha a resposta do item. A foto não responde por você.", "aviso")); return;
+    }
+    const precisaFoto = !extra.nao_aplicavel && (item.evidencia === "foto_obrigatoria" ||
+      (item.evidencia === "foto_se_nao_conforme" && valor.conforme === false));
+    if(precisaFoto && !fotoEscolhida && !respostas.get(chave)?.evidencia_path){
+      feedback.replaceChildren(el("div", "Resposta pendente: anexe a foto para gravar.", "aviso")); return;
+    }
+    gravando = true;
+    const controles = [...caixa.querySelectorAll("input,button,select,textarea")];
+    controles.forEach(c => c.disabled = true);
     feedback.replaceChildren(el("div", "gravando…", "vazio"));
     try {
       const anterior = respostas.get(chave);
       const corpo = { action:"responder", pin, execucao_id: execucao, item_id: item.id, valor, ...extra };
+      if(fotoEscolhida) corpo.foto = fotoEscolhida;
       if(anterior && anterior.id){
         corpo.corrige = anterior.id;
         corpo.motivo = extra.motivo || "corrigido na hora";
       }
       const r = await chamar(corpo);
-      respostas.set(chave, { id:r.id, valor, ...extra });
+      respostas.set(chave, { id:r.id, valor, ...extra, evidencia_path:r.evidencia_path });
+      pendentes.delete(chave);
       contarRespostas();
       feedback.replaceChildren();
       if(r.fora_do_limite){
@@ -202,7 +223,8 @@ function desenharItem(item){
       } else {
         feedback.append(el("div", "gravado", "vazio"));
       }
-    } catch(e){ feedback.replaceChildren(el("div", semRede(e), "erro")); }
+    } catch(e){ feedback.replaceChildren(el("div", semRede(e) + " Resposta ainda não gravada; tente novamente.", "erro")); }
+    finally { gravando = false; controles.forEach(c => c.disabled = false); }
   };
 
   if(item.resposta === "conforme_nao_conforme"){
@@ -263,7 +285,8 @@ function desenharItem(item){
       const arq = foto.files[0];
       if(!arq) return;
       const leitor = new FileReader();
-      leitor.onload = () => gravar(respostas.get(chave)?.valor ?? { conforme:true }, { foto: leitor.result });
+      leitor.onload = () => { fotoEscolhida = leitor.result; gravar(escolhido, detalhes); };
+      leitor.onerror = () => { pendentes.add(chave); feedback.replaceChildren(el("div", "Não foi possível ler a foto. Selecione novamente.", "erro")); };
       leitor.readAsDataURL(arq);
     };
     caixa.append(el("div", item.evidencia === "foto_obrigatoria" ? "Foto obrigatória" : "Foto se estiver não conforme", "vazio"), foto);
@@ -274,6 +297,7 @@ function desenharItem(item){
 }
 
 function telaItens(retomada, nome){
+  pendentes.clear();
   tela.replaceChildren();
   if(retomada) tela.append(el("div", "Você já tinha começado este checklist hoje. Continuando de onde parou.", "aviso"));
   tela.append(el("p", modelo.codigo + " · versão " + modelo.versao, "chapeu"),
@@ -318,6 +342,9 @@ function telaItens(retomada, nome){
   atualizar();
   const fechar = el("button", "Concluir checklist", "botao");
   fechar.onclick = async () => {
+    if(pendentes.size){
+      alert("Há respostas ou fotos ainda não gravadas. Confira os avisos antes de concluir."); return;
+    }
     atualizar();
     fechar.disabled = true; fechar.textContent = "Fechando…";
     try {

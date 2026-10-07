@@ -1,3 +1,8 @@
+## 2026-10-07 · Codex — checklist e acessos
+Fiz: corrigi foto que assumia conforme; respostas sem evidência ou com erro ficam pendentes e não permitem fechar pela tela. Criei web/acessos.html e aba Acessos na gestão, por unidade.
+Aberto: modelo K01 e fundo de troco ainda pendentes; cadastros/PINs aguardam Douglas. Teste de turno real não realizado.
+Cuidado: backend checklists parte da versão viva 4, preserva evidência de correção somente do mesmo item/linha e verifica foto condicional na gravação e na conclusão. Sem resposta/execução fictícia. Endereço do totem não entra nos links da equipe.
+Próximo passo: confirmar publicação das telas; configurar usuários e permissões pela gestão; revisar/importar K01 e realizar o piloto real.
 # Diário de sessão
 
 Quem trabalhou no projeto escreve aqui **antes de encerrar**. Entrada nova vai
@@ -61,4 +66,3 @@ Descreve uso real do Drive, escopo amplo, pastas limitadas no código, backup de
 Contato feitoria.mogi@gmail.com, informações de revogação, pedidos e fornecedores.
 Publicação autorizada por Douglas com 'execute tudo', para completar Branding e sair de Testando.
 Conferidas sintaxe/links e apresentação local; sem scripts, credenciais ou dados de pessoas na página.
-
