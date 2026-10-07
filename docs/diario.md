@@ -1,6 +1,6 @@
 ## 2026-10-07 · Codex — revisão dos documentos de RH
 Fiz: criei 23 novas versões 04–26 em modelos/revisados-v2, com leitura completa, aplicação por público, fontes e pendências. Corrigidos resíduos de construção civil, identificação, prestação, descontos, imagem, privacidade e evidências.
-Aberto: dados individuais, CCT/adicionais, câmeras/retenção, canal independente contra assédio e validação jurídica/contábil e de saúde ocupacional.
+Aberto: dados individuais, CCT/adicionais, câmeras/retenção, canal independente contra assédio e validação jurídica/contábil e de saúde ocupacional. Push bloqueado pela revisão automática: políticas internas de RH em repositório público exigem autorização específica; pacote permanece local.
 Cuidado: todos os V2 estão inativos e não importados. Originais e documentos emitidos/assinados não foram alterados. Banco de horas já era inativo; 14/15/16/21 fora da operação atual. Sem PIN, Pix, salário ou dado real da equipe.
 Próximo passo: revisar o pacote; resolver as pendências reais e registrar aprovação antes de importar novas versões e emitir documentos por pessoa.
 # Diário de sessão
