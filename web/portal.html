@@ -121,7 +121,7 @@ function telaEntrar(msg){
         Seu PIN é pessoal. Não empreste: o que for feito com ele fica no seu nome.</p>
     </div>`;
   document.getElementById("entrar").onclick = entrar;
-  document.getElementById("nasc").onkeydown = (e) => e.key === "Enter" && entrar();
+  document.getElementById("nasc").onkeydown = (e) => { if(e.key === "Enter") { e.preventDefault(); entrar(); } };
 }
 
 async function entrar(){

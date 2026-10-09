@@ -140,7 +140,12 @@ function telaLogin(msg){
     iniciar();
   };
   document.getElementById("entrar").onclick = entrar;
-  document.getElementById("senha").onkeydown = (e) => e.key === "Enter" && entrar();
+  document.getElementById("senha").onkeydown = (e) => {
+    if(e.key === "Enter") {
+      e.preventDefault();
+      entrar();
+    }
+  };
 }
 
 /* ---------- moldura ---------- */
