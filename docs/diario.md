@@ -78,3 +78,10 @@ Descreve uso real do Drive, escopo amplo, pastas limitadas no código, backup de
 Contato feitoria.mogi@gmail.com, informações de revogação, pedidos e fornecedores.
 Publicação autorizada por Douglas com 'execute tudo', para completar Branding e sair de Testando.
 Conferidas sintaxe/links e apresentação local; sem scripts, credenciais ou dados de pessoas na página.
+
+## 09/10/2026 - Digitacao no login
+- Corrigido o handler de Enter que retornava false para outras teclas e bloqueava digitacao.
+- Aplicado no login da gestao e data de nascimento do colaborador, em web e copias da raiz.
+- Colar funcionava porque nao dependia do evento keydown.
+- Verificacao: teclas comuns nao cancelam o evento; Enter continua acionando login.
+- Sem alteracao de senhas, permissoes ou dados pessoais.
