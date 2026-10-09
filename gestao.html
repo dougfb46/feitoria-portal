@@ -147,7 +147,7 @@ async function iniciar(){
     const r = await chamar({ action:"unidades" });
     unidades = r.unidades;
     if(!unidades.length) return telaLogin("Seu usuário não administra nenhuma unidade.");
-    unidade = unidades.find(u => u.id === unidade?.id) || unidades[0];
+    unidade = unidades.find(u => u.id === unidade?.id) || unidades.find(u => u.id === "ba705d74-ae0a-40ef-9150-f183bfdc6aee") || unidades[0];
     diaOperacional = r.dia_operacional || null;
     moldura(r.usuario);
     atualizarSelo();
