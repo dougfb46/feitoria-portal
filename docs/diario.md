@@ -85,3 +85,10 @@ Conferidas sintaxe/links e apresentação local; sem scripts, credenciais ou dad
 - Colar funcionava porque nao dependia do evento keydown.
 - Verificacao: teclas comuns nao cancelam o evento; Enter continua acionando login.
 - Sem alteracao de senhas, permissoes ou dados pessoais.
+
+## 09/10/2026 - PUB como unidade padrao
+- Gestao inicia no PUB Mogi quando esta unidade esta autorizada para o usuario.
+- Selecao manual continua preservada durante a sessao.
+- Usuario sem acesso ao PUB continua na primeira unidade autorizada.
+- Aplicado em web/gestao.html e copia da raiz.
+- Conferida a identidade da unidade no banco; sem mudanca de permissoes.
