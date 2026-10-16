@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Feitoria · Saúde no trabalho</title>
+<style>
+/* Mesma paleta das outras telas, para a casa falar uma língua só. */
+:root{
+  color-scheme: light dark;
+  --bg:       light-dark(#f5f4ee, #171f1b);
+  --paper:    light-dark(#fffefa, #232e27);
+  --ink:      light-dark(#24352b, #eef3e9);
+  --muted:    light-dark(#626d64, #b6c3b8);
+  --line:     light-dark(#dde2d8, #3e4b42);
+  --verde:    light-dark(#234f3b, #c1dbbf);
+  --sobre-verde: light-dark(#fffefa, #1b3324);
+  --soft:     light-dark(#eaf0e5, #334133);
+  --ambar:    light-dark(#785015, #f0c876);
+  --ambar-bg: light-dark(#fbefcf, #413720);
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink)}
+body{font:15px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif}
+.topo{background:var(--paper);border-bottom:1px solid var(--line);padding:14px 16px;
+      display:flex;align-items:center;gap:11px}
+.marca{width:34px;height:34px;border-radius:50%;background:var(--verde);color:var(--sobre-verde);
+       font:24px Georgia,serif;display:grid;place-items:center;flex:0 0 auto}
+.marca span{transform:translateY(-1px)}
+.nome{font-weight:750;letter-spacing:.14em;font-size:15px}
+.sub{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+main{max-width:720px;margin:0 auto;padding:20px 16px 64px}
+h1{font-size:26px;line-height:1.15;font-weight:650;letter-spacing:-.035em;margin:0 0 6px}
+h2{font-size:17px;font-weight:650;margin:0 0 6px}
+.chapeu{font-size:11px;font-weight:650;letter-spacing:.11em;text-transform:uppercase;
+        color:var(--muted);margin-bottom:6px}
+.legenda{color:var(--muted);font-size:13px;margin:0 0 20px}
+section{background:var(--paper);border:1px solid var(--line);border-radius:14px;
+        padding:16px;margin-bottom:14px}
+section p{margin:0}
+.risco{border-bottom:1px solid var(--line);padding:11px 0}
+.risco:first-of-type{padding-top:0}
+.risco:last-child{border-bottom:none;padding-bottom:0}
+.risco b{display:block;font-size:15px;font-weight:650}
+.risco .onde{font-size:12px;color:var(--muted)}
+.risco .medida{font-size:14px;margin-top:4px}
+.pino{display:inline-block;font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;
+      background:var(--soft);color:var(--verde);margin-top:6px}
+.pino.ambar{background:var(--ambar-bg);color:var(--ambar)}
+label{display:block;font-size:13px;font-weight:600;margin:14px 0 5px}
+select,textarea,input[type=text],input[type=password]{width:100%;font-family:inherit;font-size:16px;
+  line-height:1.4;color:inherit;background:var(--paper);
+  border:1px solid var(--line);border-radius:9px;padding:11px 13px}
+textarea{min-height:130px;resize:vertical}
+.botao{width:100%;min-height:46px;border:none;border-radius:10px;background:var(--verde);
+  color:var(--sobre-verde);font:650 15px inherit;cursor:pointer;margin-top:16px}
+.botao[disabled]{opacity:.5;cursor:default}
+.modos{display:flex;gap:8px;margin:6px 0 2px}
+.modos button{flex:1;min-height:46px;border:1px solid var(--line);border-radius:10px;
+  background:var(--paper);color:var(--ink);font:600 14px inherit;cursor:pointer;padding:8px}
+.modos button[aria-pressed="true"]{background:var(--verde);color:var(--sobre-verde);border-color:var(--verde)}
+.modos small{display:block;font-weight:400;font-size:11px;opacity:.85;margin-top:2px}
+.aviso{background:var(--ambar-bg);color:var(--ambar);border-radius:9px;padding:11px 13px;font-size:13px;margin:10px 0}
+.ok{background:var(--soft);color:var(--verde);border-radius:9px;padding:12px 14px;font-size:14px;margin:10px 0}
+.vazio{color:var(--muted);font-size:14px}
+.socorro{font-size:14px}
+.socorro b{font-size:17px;letter-spacing:.02em}
+:focus-visible{outline:3px solid var(--ambar);outline-offset:3px}
+</style>
+</head>
+<body>
+
+<header class="topo">
+  <div class="marca"><span>f</span></div>
+  <div>
+    <div class="nome">FEITORIA</div>
+    <div class="sub" id="unidade">Saúde no trabalho</div>
+  </div>
+</header>
+
+<main>
+  <p class="chapeu">NR-1 · Riscos psicossociais</p>
+  <h1>Trabalhar aqui sem adoecer por causa disso</h1>
+  <p class="legenda">Esta página é pública e não pede senha. O que a casa reconhece,
+    o que está fazendo, e como você fala quando algo aperta.</p>
+
+  <div id="corpo"><p class="vazio">Carregando…</p></div>
+</main>
+
+<script>
+// Tela publica de NR-1. Fala so com a Edge Function `operacao`, acoes `nr1` e
+// `recado`. Nao guarda nada no aparelho e nao pede identificacao para ler.
+//
+// Tudo o que vem do servidor entra por textContent. Nesta tela isso nao e
+// paranoia de seguranca e sim de conteudo: o informativo e texto escrito pela
+// gestao, e um "<" no meio de uma frase nao pode virar marcacao.
+const FUNCAO = "https://kujelbcbrcmkitzyswbh.supabase.co/functions/v1/operacao";
+const TOKEN = new URLSearchParams(location.search).get("u") || "";
+const corpo = document.getElementById("corpo");
+
+const ASSUNTO_ROTULO = {
+  sobrecarga_ou_pressao: "Sobrecarga ou pressão",
+  assedio_ou_conduta: "Assédio ou conduta de alguém",
+  problema: "Um problema no trabalho",
+  sugestao: "Uma sugestão",
+  falta_de_material: "Falta de material",
+  equipamento: "Equipamento com defeito",
+  elogio: "Um elogio",
+  outro: "Outro assunto",
+};
+// A ordem importa: quem abre esta pagina normalmente vem por um destes dois.
+const ORDEM_ASSUNTO = ["sobrecarga_ou_pressao", "assedio_ou_conduta", "problema",
+  "sugestao", "falta_de_material", "equipamento", "elogio", "outro"];
+
+const SITUACAO_ROTULO = {
+  planejada: "a fazer",
+  em_andamento: "em andamento",
+  concluida: "feito",
+};
+
+function el(tag, texto, classe){
+  const n = document.createElement(tag);
+  if(texto !== undefined && texto !== null) n.textContent = texto;
+  if(classe) n.className = classe;
+  return n;
+}
+
+async function chamar(payload){
+  const r = await fetch(FUNCAO, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ unit_token: TOKEN, ...payload }),
+  });
+  const d = await r.json().catch(() => ({ error: "Resposta inválida do servidor." }));
+  if(!r.ok) throw new Error(d.error || "Não foi possível completar.");
+  return d;
+}
+
+/* ---------- informativos ---------- */
+// O corpo do informativo aceita **negrito** porque a gestao escreve na mao e
+// destacar uma palavra ajuda a ler. E o unico enfeite permitido, e ele e
+// montado com nos, nunca com innerHTML.
+function paragrafo(texto){
+  const p = el("p");
+  texto.split(/\*\*/).forEach((parte, i) => {
+    p.appendChild(i % 2 ? el("strong", parte) : document.createTextNode(parte));
+  });
+  return p;
+}
+
+function desenharInformativo(info){
+  const s = el("section");
+  s.appendChild(el("h2", info.titulo));
+  String(info.corpo).split(/\n\s*\n/).forEach((bloco, i) => {
+    const p = paragrafo(bloco.trim());
+    if(i) p.style.marginTop = "10px";
+    s.appendChild(p);
+  });
+  return s;
+}
+
+/* ---------- riscos ---------- */
+function desenharRiscos(riscos){
+  const s = el("section");
+  s.appendChild(el("h2", "O que a casa já reconhece"));
+  if(!riscos.length){
+    s.appendChild(el("p", "Nada listado ainda. Se você vê algo que aperta no dia a dia, "
+      + "escreva no campo abaixo — é daí que esta lista cresce.", "vazio"));
+    return s;
+  }
+  s.appendChild(el("p", "Cada item traz o que a casa vai fazer. Se faltar algo aqui, "
+    + "avise no campo abaixo.", "vazio"));
+  riscos.forEach(r => {
+    const d = el("div", null, "risco");
+    d.appendChild(el("b", r.fator));
+    if(r.onde) d.appendChild(el("div", r.onde, "onde"));
+    d.appendChild(el("div", r.medidas, "medida"));
+    const rotulo = SITUACAO_ROTULO[r.situacao] || r.situacao;
+    const pino = el("span", r.prazo
+      ? rotulo + " · até " + r.prazo.split("-").reverse().join("/")
+      : rotulo, "pino" + (r.situacao === "concluida" ? "" : " ambar"));
+    d.appendChild(pino);
+    s.appendChild(d);
+  });
+  return s;
+}
+
+/* ---------- canal ---------- */
+function desenharCanal(assuntos){
+  const s = el("section");
+  s.appendChild(el("h2", "Falar com a gestão"));
+  s.appendChild(el("p", "Escolha o assunto, escreva, e decida se quer assinar. "
+    + "Nos dois casos o texto chega igual.", "vazio"));
+
+  const lblAssunto = el("label", "Sobre o que é");
+  const sel = el("select");
+  sel.id = "assunto";
+  const usaveis = ORDEM_ASSUNTO.filter(a => assuntos.includes(a));
+  usaveis.forEach(a => {
+    const o = el("option", ASSUNTO_ROTULO[a] || a);
+    o.value = a;
+    sel.appendChild(o);
+  });
+  s.appendChild(lblAssunto); s.appendChild(sel);
+
+  const lblTexto = el("label", "O que aconteceu");
+  const ta = el("textarea");
+  ta.id = "texto";
+  ta.placeholder = "Conte com as suas palavras. Dia, turno e quem estava ajudam a resolver.";
+  ta.maxLength = 2000;
+  s.appendChild(lblTexto); s.appendChild(ta);
+
+  s.appendChild(el("label", "Como você quer mandar"));
+  const modos = el("div", null, "modos");
+  const bAssinado = el("button");
+  bAssinado.type = "button"; bAssinado.setAttribute("aria-pressed", "false");
+  bAssinado.appendChild(el("span", "Assinado"));
+  bAssinado.appendChild(el("small", "a gestão pode te responder"));
+  const bAnonimo = el("button");
+  bAnonimo.type = "button"; bAnonimo.setAttribute("aria-pressed", "false");
+  bAnonimo.appendChild(el("span", "Anônimo"));
+  bAnonimo.appendChild(el("small", "ninguém sabe quem escreveu"));
+  modos.appendChild(bAssinado); modos.appendChild(bAnonimo);
+  s.appendChild(modos);
+
+  const caixaPin = el("div");
+  caixaPin.style.display = "none";
+  const lblPin = el("label", "Seu PIN");
+  const pin = el("input");
+  pin.type = "password"; pin.inputMode = "numeric"; pin.maxLength = 6;
+  pin.autocomplete = "off"; pin.placeholder = "••••"; pin.id = "pin";
+  caixaPin.appendChild(lblPin); caixaPin.appendChild(pin);
+  s.appendChild(caixaPin);
+
+  const nota = el("p", "", "vazio");
+  nota.style.marginTop = "10px";
+  s.appendChild(nota);
+
+  const saida = el("div");
+  s.appendChild(saida);
+
+  const enviar = el("button", "Enviar", "botao");
+  enviar.type = "button"; enviar.disabled = true;
+  s.appendChild(enviar);
+
+  let modo = null;
+  const escolher = (qual) => {
+    modo = qual;
+    bAssinado.setAttribute("aria-pressed", String(qual === "assinado"));
+    bAnonimo.setAttribute("aria-pressed", String(qual === "anonimo"));
+    caixaPin.style.display = qual === "assinado" ? "" : "none";
+    nota.textContent = qual === "assinado"
+      ? "Seu nome vai junto. A gestão pode te procurar para resolver o seu caso."
+      : "Não guardamos nome, aparelho nem endereço de internet. Por isso mesmo "
+        + "ninguém consegue te dar retorno: se você quer resposta, assine.";
+    enviar.disabled = false;
+  };
+  bAssinado.onclick = () => escolher("assinado");
+  bAnonimo.onclick = () => escolher("anonimo");
+
+  enviar.onclick = async () => {
+    saida.textContent = "";
+    const texto = ta.value.trim();
+    if(texto.length < 5){
+      saida.appendChild(el("div", "Escreva um pouco mais para a gente entender.", "aviso"));
+      return;
+    }
+    enviar.disabled = true; enviar.textContent = "Enviando…";
+    try {
+      const r = await chamar({
+        action: "recado",
+        assunto: sel.value,
+        texto,
+        anonimo: modo === "anonimo",
+        pin: modo === "assinado" ? pin.value.trim() : undefined,
+      });
+      s.textContent = "";
+      s.appendChild(el("h2", "Recebido"));
+      s.appendChild(el("div", r.mensagem, "ok"));
+      s.appendChild(el("p", modo === "anonimo"
+        ? "Se depois você quiser retorno sobre isso, mande de novo assinado."
+        : "Se for urgente, não espere a resposta: fale com quem está coordenando o turno.",
+        "vazio"));
+    } catch(e){
+      enviar.disabled = false; enviar.textContent = "Enviar";
+      saida.appendChild(el("div",
+        e.message === "Failed to fetch"
+          ? "Sem conexão agora. Confira o Wi-Fi e tente de novo — o que você escreveu continua aqui."
+          : e.message, "aviso"));
+    }
+  };
+
+  return s;
+}
+
+function desenharSocorro(){
+  const s = el("section", null, "socorro");
+  s.appendChild(el("h2", "Se é agora"));
+  s.appendChild(el("p", "Este canal serve para o que pode esperar algumas horas. "
+    + "Se é agora, fale com quem está coordenando o turno ou ligue:", "vazio"));
+  const ul = el("div");
+  ul.style.marginTop = "8px";
+  [["SAMU", "192", "emergência de saúde"],
+   ["Polícia", "190", "risco à segurança de alguém"],
+   ["CVV", "188", "quando a cabeça não está dando conta — 24 h, ligação gratuita"]]
+   .forEach(([nome, numero, quando]) => {
+     const linha = el("p");
+     linha.style.margin = "6px 0";
+     linha.appendChild(el("b", numero));
+     linha.appendChild(document.createTextNode(" · " + nome + " — " + quando));
+     ul.appendChild(linha);
+   });
+  s.appendChild(ul);
+  return s;
+}
+
+/* ---------- montagem ---------- */
+async function iniciar(){
+  if(!TOKEN){
+    corpo.textContent = "";
+    corpo.appendChild(el("div", "Link sem identificação da unidade. "
+      + "Peça o endereço certo para a gestão.", "aviso"));
+    return;
+  }
+  try {
+    const d = await chamar({ action: "nr1" });
+    document.getElementById("unidade").textContent = d.unidade.nome;
+    corpo.textContent = "";
+    (d.informativos || []).forEach(i => corpo.appendChild(desenharInformativo(i)));
+    corpo.appendChild(desenharRiscos(d.riscos || []));
+    corpo.appendChild(desenharCanal(d.assuntos || []));
+    corpo.appendChild(desenharSocorro());
+  } catch(e){
+    corpo.textContent = "";
+    corpo.appendChild(el("div",
+      e.message === "Failed to fetch"
+        ? "Sem conexão agora. Confira o Wi-Fi e recarregue a página."
+        : e.message, "aviso"));
+    corpo.appendChild(desenharSocorro());
+  }
+}
+
+iniciar();
+</script>
+</body>
+</html>

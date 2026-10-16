@@ -1,0 +1,355 @@
+{
+ "_leia": [
+  "Descritivo das cervejas da Feitoria, convertido do documento 'Atualização",
+  "descritivo das cervejas 18-04-2026.docx'.",
+  "São 37 estilos. O documento de origem tem erros de digitação (ABV escrito",
+  "como IBU, 'hamonização' sem o r) que foram tolerados na leitura, não",
+  "corrigidos por adivinhação.",
+  "O campo 'conferir' lista o que o documento não respondia. Onde ele está",
+  "vazio, o dado veio do documento como está.",
+  "Estas são as cervejas do CATÁLOGO. Quais estão nas 12 torneiras hoje é",
+  "outra coisa, que muda a cada troca de barril."
+ ],
+ "origem": "Atualização descritivo das cervejas · 18/04/2026",
+ "total": 37,
+ "cervejas": [
+  {
+   "nome": "Pilsen",
+   "descricao": "A pilsen é a cerveja mais consumida e mais tradicional do mundo com um corpo leve, baixo álcool e amargor, Cerveja clara, leve e refrescante, com aroma levemente floral dos lúpulos alemães e perfil doce dos cereais provinientes do malte de cevada presente da receita. É uma cerveja de iniciação e não é amarga nem muito alcoólica.",
+   "abv": "4,8%",
+   "ibu": "18",
+   "harmonizacao": "Quibe com queijo, isca de peixe, tábua de frios, coxinha sem massa",
+   "servida_em": "tulipa, caneca e martelo",
+   "conferir": []
+  },
+  {
+   "nome": "Weizenbier",
+   "descricao": "É uma cerveja alemã produzida com trigo maltado, espuma densa e consistente com notas frutadas e dulçor característico de cravo e banana, proveniente da fermentação e do trigo. É uma cerveja de iniciação e não é amarga nem muito alcoólica. Não filtrada, por isso a aparência mais turva.",
+   "abv": "5%",
+   "ibu": "10",
+   "harmonizacao": "Isca de peixe, salsichão alemão, isca de frango, pastel de pernil, tabua frios",
+   "servida_em": "tulipa, caneca e martelo",
+   "conferir": []
+  },
+  {
+   "nome": "Witbier",
+   "descricao": "Cerveja de trigo que leva em sua composição raspas de casca de laranja e leve toque de coetro, o que a difera da Weizenbier, tornando-a extremamente aromática (cítrico e condimentos) e refrescante, ideal para dias de calor. Indicada para quem gosta de cervejas mais leves",
+   "abv": "4,8%",
+   "ibu": "12",
+   "harmonizacao": "Isca de peixe, salsichão alemão, tabua de frios",
+   "servida_em": "tulipa, caneca e martelo",
+   "conferir": []
+  },
+  {
+   "nome": "Belgian Pale Ale",
+   "descricao": "Equilíbrio perfeito entre corpo e sabor. Com amargor moderado e toques maltados que remetem a mel, tem leve aroma de pêssego e perfil condimentado, bem presente na escola belga. É uma cerveja fácil de beber e que vai bem a qualquer hora.  É uma cerveja de iniciação e não é amarga nem muito alcoólica",
+   "abv": "5,5%",
+   "ibu": "22",
+   "harmonizacao": "Isca de frango, pastel de pernil, dadinho de tapioca, tabua de frios de salame Italiano e o copa lombo. coxinha sem massa",
+   "servida_em": "tulipa, caneca e martelo",
+   "conferir": []
+  },
+  {
+   "nome": "Belgian Golden Ale",
+   "descricao": "Com toques frutados e maltados que remetem a cereais e biscoito, tem um aroma de pêssego, raspas de laranja, cravo, cardamomo e alcaçuz, características específicas da escola belga. É uma cerveja de alto drinkability que vai te surpreender.  É uma cerveja de iniciação e não é amarga nem muito alcoólica",
+   "abv": "5,8%",
+   "ibu": "22",
+   "harmonizacao": "Isca de frango, pastel de pernil, dadinho de tapioca, tabua de frios de salame Italiano e o copa lombo. coxinha sem massa",
+   "servida_em": "tulipa, caneca e martelo",
+   "conferir": []
+  },
+  {
+   "nome": "American Wheat",
+   "descricao": "Gosta do aroma do lúpulo mas não é muito fã do amargor? Essa é a sua cerveja! Elaborada com trigo, que traz um toque macio ao paladar, é clara e com alta carbonatação, que somado ao frescor do lúpulo americano utilizado em maior quantidade, confere refrescância e aromas cítricos e florais.",
+   "abv": "5%",
+   "ibu": "20",
+   "harmonizacao": "Quibe com queijo, isca de peixe, tábua de frios, coxinha sem massa",
+   "servida_em": "halfpint, pint e martelo",
+   "conferir": []
+  },
+  {
+   "nome": "APA (American Pale Ale)",
+   "descricao": "Uma versão clássica deste estilo americano. Esta cerveja tem presença marcante de lúpulos americanos que trazem um amargor suave, mas presente, com sabor que lembra frutas amarelas, cítricas e aromas herbais. Cerveja bem equilibrada, amargor moderado e corpo médio. Presença marcante de lúpulos americanos tradicionais. Cerveja para quem gosta de cervejas pouco mais amargas",
+   "abv": "6%",
+   "ibu": "35",
+   "harmonizacao": "Pastel de carne, tiras de alcatra, mini-hamburguer",
+   "servida_em": "half-pint, pint e martelo",
+   "conferir": []
+  },
+  {
+   "nome": "Session Ipa",
+   "descricao": "É uma versão mais leve, menos amarga e menos alcoólica das IPAs, mas preservando o aroma e sabor do lúpulo, marcante no estilo. Nossa Session IPA é uma cerveja clara, com espuma branca de excelente formação que traz e preserva aromas de frutas tropicais provenientes de lúpulos Americanos combinados com lúpulos Alemães. Aromas de Melão, tangerina, damasco e maracujá podem ser lembrados.",
+   "abv": "5,5%",
+   "ibu": "45",
+   "harmonizacao": "Pastel de carne, tiras de alcatra, mini-hamburguer",
+   "servida_em": "half-pint, pint e martelo",
+   "conferir": []
+  },
+  {
+   "nome": "Red Ale",
+   "descricao": "Cerveja escura e encorpada, com notas de caramelo, toffee e biscoito. Uma cerveja menos lupulada, onde o amargor é balanceado pela adição dos maltes caramelizados.",
+   "abv": "5,5%",
+   "ibu": "25",
+   "harmonizacao": "Pastel de pernil,bolinho de costela, costelinha barbecue, coxinha de cabutia",
+   "servida_em": "half-pint, pint e martelo",
+   "conferir": []
+  },
+  {
+   "nome": "New England Ipa",
+   "descricao": "Cerveja muito turva e amarelada, nada tradicional. Apresenta um intenso sabor lupulado. No aroma tem-se frutas amarelas como manga, maracujá e caju. Possui o corpo mais denso e aroma mais acentuado do que o amargor. Mais leve que as IPA’s clássicas, porém ainda continua amarga. Cerveja apara quem gosta de cervejas pouco mais amargas",
+   "abv": "5,5%",
+   "ibu": "48",
+   "harmonizacao": "Pastel de pernil, pastel de carne com gorgonzola, provolone a milanesa, pastel de alho poró",
+   "servida_em": "half-pint, pint e martelo",
+   "conferir": []
+  },
+  {
+   "nome": "Munich Dunkel",
+   "descricao": "É uma cerveja com maltes caramelos que remetem ao dulçor de frutas passas, sabor suave e bem maltado, com leves notas tostadas. No aroma temos dulçor do malte e assemelha-se ao pão australiano e ameixa . Cerveja para quem gosta de cervejas mais doces",
+   "abv": "5,5%",
+   "ibu": "18",
+   "harmonizacao": "pastel de pernil, costelinha barbecue, provolone a milanesa",
+   "servida_em": "half-pint, pint e martelo",
+   "conferir": []
+  },
+  {
+   "nome": "Belgian Tripel",
+   "descricao": "Sem dúvidas a cerveja mais complexa produzida por nós. Esta Tripel vai surpreender. Ingredientes como rapadura (muita rapadura), raspas de laranja, especiarias e pimenta branca foram utilizadas na produção. Conseguimos reproduzir uma cerveja de excelente qualidade, que vai lembrar cervejas belgas consagradas.",
+   "abv": "9,5%",
+   "ibu": "25",
+   "harmonizacao": "tabua de frios (salame Italiano e copa lombo), costelinha barbecue, provolone a milanesa",
+   "servida_em": "taça",
+   "conferir": []
+  },
+  {
+   "nome": "Indonesian Ipa",
+   "descricao": "A queridinha da Feitoria. O nome Indonesian não é um estilo de cerveja especifico, é apenas o nome que foi sugerido por um cliente. Esta beleza tem cor âmbar avermelhada, com amargor bem marcado e com leve picância, que equilibra muito bem com dulçor presente do malte, deixando um toque de caramelo ao final. Aroma de maracujá com goiaba madura, proveniente dos lúpulos que predominam, Simcoe e Amarillo. Cerveja para quem gosta de amargor",
+   "abv": "7,2%",
+   "ibu": "70",
+   "harmonizacao": "pastel de carne com gorgonzola, costelinha barbecue, porção de queijo gorgonzola",
+   "servida_em": "half-pint, pint e martelo",
+   "conferir": []
+  },
+  {
+   "nome": "Feitor Ipa",
+   "descricao": "1º IPA a ser produzida na Feitoria. Amargor pronunciado, explosão de aromas que lembram maracujá e tangerina. Final seco.",
+   "abv": "7%",
+   "ibu": "70",
+   "harmonizacao": "pastel de carne com gorgonzola, costelinha barbecue, porção de queijo gorgonzola",
+   "servida_em": "half-pint, pint e martelo",
+   "conferir": []
+  },
+  {
+   "nome": "Avelã Lager",
+   "descricao": "Com base de maltes tostados e adição de avelã e baunilha, o sabor surpreende e lembra chocolate com castanhas. No aroma, remete-se ao doce do malte e à avelã. Cerveja que vem ganhando espaço e agradando a muitos(as). É nossa cerveja mais doce Cerveja para quem gosta de cervejas mais leves e doces",
+   "abv": "5,5%",
+   "ibu": "18",
+   "harmonizacao": "Pastel de chocolate",
+   "servida_em": "half-pint, pint e martelo",
+   "conferir": []
+  },
+  {
+   "nome": "Imperial Stout",
+   "descricao": "Cerveja de personalidade forte, produzida com grande volume de maltes tostados e torrados, que conferem à cerveja aromas e sabores de chocolate, toffee, caramelo e café. Cerveja preta com espuma densa, muito encorpada (licor). Seus 9,5% de álcool equilibram muito bem com o amargor de 55 IBU,  deixando a cerveja agradável, aveludada e com sabor residual levemente doce, com notas de chocolate e café. Cerveja para quem gosta de cervejas pretas, chocolate amargo e café espresso",
+   "abv": "9,5%",
+   "ibu": "55",
+   "harmonizacao": "Pastel de chocolate",
+   "servida_em": "taça",
+   "conferir": []
+  },
+  {
+   "nome": "Sour",
+   "descricao": "Cerveja marcante por sua acidez acentuada, corpo leve, com adição de frutas da época e suas sazonalidades, trazendo perfil de cada uma delas presente em sua composição. Baixo amargor e baixo teor alcóolico.",
+   "abv": "4,25%",
+   "ibu": "7",
+   "harmonizacao": "isca de tilápia, tábua de frios (salame italiano, copa lombo e salsichinha)",
+   "servida_em": "taça",
+   "conferir": []
+  },
+  {
+   "nome": "Milk shake ipa goiabada",
+   "descricao": "Cerveja inusitada, que leva em sua composição: goiabada e lactose, com a potência de uma IPA, com amargor acentuado, alto teor alcóolico, mas equilibrada com o perfil adocicado e um toque aveluado trazendo uma textura diferente do que encontrado em outros estilos.",
+   "abv": "8,3%",
+   "ibu": "50",
+   "harmonizacao": "Pastel romeu e julieta",
+   "servida_em": "taça",
+   "conferir": []
+  },
+  {
+   "nome": "Double Ipa",
+   "descricao": "Esta cerveja tem cor âmbar avermelhada, com amargor bem marcante e com leve picância, que equilibra muito bem com dulçor presente do malte, deixando um toque de caramelo ao final. Aroma de maracuja e manga, proveniente dos lúpulos que predominam, seguindo os primórdios da escola americana, com perfil resinoso e de lúpulo verde. Cerveja para quem gosta de amargor",
+   "abv": "9%",
+   "ibu": "80",
+   "harmonizacao": "pastel de carne com gorgonzola, costelinha barbecue, porção de queijo gorgonzola",
+   "servida_em": "taça",
+   "conferir": []
+  },
+  {
+   "nome": "Baunilha toffe",
+   "descricao": "Com base de maltes tostados e adição de baunilha e bala de café, o sabor surpreende e lembra café expresso com caramel, perfil toffe. No aroma, remete-se ao doce do malte e da baulilha junto com o café caramelado. Cerveja que vem ganhando espaço e agradando a muitos(as). É nossa cerveja mais doce. Cerveja para quem gosta de cervejas mais leves e doces",
+   "abv": "5,5%",
+   "ibu": "18",
+   "harmonizacao": "Pastel de chocolate",
+   "servida_em": "taça",
+   "conferir": []
+  },
+  {
+   "nome": "Peach larger",
+   "descricao": "Elaborada com pêssego em calda, que traz um toque macio ao paladar e adocicado, é clara e com alta carbonatação, que somado ao perfil do malte, confere refrescância e aroma específico de pêssego.",
+   "abv": "5%",
+   "ibu": "12",
+   "harmonizacao": "Quibe com queijo, isca de peixe, tábua de frios, coxinha sem massa",
+   "servida_em": "tulipa, caneca e martelo",
+   "conferir": []
+  },
+  {
+   "nome": "Black ipa",
+   "descricao": "Esta cerveja tem cor escura proviniente do malte tostado, que não sobresai ao perfil caracteristíco da IPA, tornando-a um cerveja bem equilibrada, com amargor bem marcante e com leve picância. Aroma de maracuja e leve tostado, proveniente dos lúpulos e do malte utilizados.",
+   "abv": "7,2%",
+   "ibu": "70",
+   "harmonizacao": "pastel de carne com gorgonzola, costelinha barbecue, porção de queijo gorgonzola",
+   "servida_em": "half-pint, pint e martelo",
+   "conferir": []
+  },
+  {
+   "nome": "New zeland",
+   "descricao": "Estilo conteporâneo de corpo leve, baixo álcool e amargor, Cerveja clara, leve e refrescante, com aroma floral e frutado dos lúpulos neozelandêses e perfil doce dos cereais provinientes do malte de cevada presente da receita. É uma cerveja de iniciação e não é amarga nem muito alcoólica.",
+   "abv": "5%",
+   "ibu": "22",
+   "harmonizacao": "isca de peixe, coxinha sem massa, tiras de alcatra, mini-hamburguer",
+   "servida_em": "tulipa, caneca e martelo",
+   "conferir": []
+  },
+  {
+   "nome": "Imperial Punch IPA",
+   "descricao": "É uma cerveja de coloração laranja acobreada, com amargor potente no after tasting e um calor alcoólico bem equilibrado ao dulçor do malte que aparece em primeiro plano, apresentando uma experiencia que vai do doce e caramelo maltado até o amargor persistente no final do gole que se acentua ao longo da degustação. Aroma floral, frutas amarelas, caramelo, frutas doces que são proveniente dos lúpulos escolhidos, com alto drinkability e sabores e aromas remetendo as cervejas do inicio da escola Americana. Cerveja para quem gosta de amargor e alto teor alcoólico.",
+   "abv": "8,8%",
+   "ibu": "85",
+   "harmonizacao": "pastel de carne com gorgonzola, batata presidente, porção de queijo gorgonzola",
+   "servida_em": "taça",
+   "conferir": []
+  },
+  {
+   "nome": "English Pale Ale",
+   "descricao": "Estilo clássico inglês com nosso toque conteporâneo, de corpo leve, com o sabor pronunciado do malte e do lúpulo, trazendo um dulçor no primeiro contato e a pegada do lúpulo em seguida, uma cerveja de tom avermelhado, leve e refrescante, com aroma floral, terroso e frutado dos lúpulos ingleses e perfil doce dos cereais provenientes do malte de cevada levemente tostado. Cerveja de iniciação com presença de todos os sabores que apresentam uma boa cerveja.",
+   "abv": "5,5%",
+   "ibu": "25",
+   "harmonizacao": "isca de peixe, coxinha sem massa, tiras de alcatra, mini-hamburguer",
+   "servida_em": "half-pint, pint e martelo",
+   "conferir": []
+  },
+  {
+   "nome": "Hop Lager c/ raspa de tangerina",
+   "descricao": "Apresenta baixo teor alcoólico e baixo amargor, cerveja clara, leve e refrescante, com aroma floral e frutado remetendo a lúpulos do novo mundo com o toque das raspas de tangerina, trazendo frescor e realçando aromas tropicais e o perfil doce dos lúpulos utilizados. Corpo baixo e media carbonatação. Excelente para dias quentes e para longas conversas. É uma cerveja de iniciação e não é amarga nem muito alcoólica.",
+   "abv": "5%",
+   "ibu": "25",
+   "harmonizacao": "isca de peixe, coxinha de carne seca, tiras de alcatra, mini-hamburguer",
+   "servida_em": "tulipa, caneca e martelo",
+   "conferir": []
+  },
+  {
+   "nome": "West Coast",
+   "descricao": "Uma cerveja ímpar, com amargor acentuado e uma presença leve dos maltes caramelo, que apresentam uma ótima base para equilibrar os perfis de sabor e aroma. Com lúpulos norte-americanos, essa receita traz um drinkability muito alto. Com final seco, amargor em evidência e perfil aromático remetendo a tons herbais, florais, terroso e frutado levemente cítrico, essa cerveja encanta o paladar de todo bebedor de IPA, com um intensidade em todos os perfis e ainda assim equilibrada.",
+   "abv": "7%",
+   "ibu": "60",
+   "harmonizacao": "pastel de carne com gorgonzola, costelinha barbecue, porção de queijo gorgonzola",
+   "servida_em": "half-pint, pint e martelo",
+   "conferir": []
+  },
+  {
+   "nome": "Galaxy IPA",
+   "descricao": "Essa cerveja foi pensada para trazer uma complexidade entre todos os perfis de aroma e sabor, apresentando notas maltadas de biscoito, caramelo, cereal e leve dulçor, com a presença do lúpulo Stratta e Tallus, trazendo notas herbais, dank, cítrico, frutas tropicais e uma boa intensidade de amargor. Pensada para beber o dia todo, com teor alcoólico mais baixo e um retrogosto amargo é uma ótima opção para todo momento.",
+   "abv": "6,7%",
+   "ibu": "60",
+   "harmonizacao": "pastel de carne com gorgonzola, costelinha barbecue, porção de queijo gorgonzola",
+   "servida_em": "half-pint, pint e martelo",
+   "conferir": []
+  },
+  {
+   "nome": "Imperial Stout com coco queimado",
+   "descricao": "Cerveja de personalidade forte, produzida com grande volume de maltes tostados e torrados, que conferem à cerveja aromas e sabores de chocolate, toffee, caramelo e café, contando também com a adição de chips de coco queimado que conferem um corpo aveludado, textura macia e um sabor levemente doce, de alta complexidade. Ideal para dias frios e uma boa companhia. Cerveja preta com espuma densa, muito encorpada (licor). Seus 9,5% de álcool equilibram muito bem com o amargor de 55 IBU,  deixando a cerveja agradável, aveludada e com sabor residual levemente doce, com notas de chocolate, café e coco queimado. Cerveja para quem gosta de cervejas pretas, chocolate amargo e café espresso",
+   "abv": "9,5%",
+   "ibu": "55",
+   "harmonizacao": "Pastel de chocolate",
+   "servida_em": "taça",
+   "conferir": []
+  },
+  {
+   "nome": "Imperial Stout envelhecida em Carvalho francês",
+   "descricao": "Cerveja de personalidade forte, produzida com grande volume de maltes tostados e torrados, que conferem à cerveja aromas e sabores de chocolate, toffee, caramelo e café, envelhecida em Carvalho francês, trazendo notas amadeiradas e doces que remetem a canela e baunilha. Com uma complexidade ímpar, essa cerveja de coloração preta e com espuma densa, nos surpreende com seus 9,5% de álcool que equilibram muito bem com o amargor de 55 IBU,  deixando a cerveja agradável, aveludada e com sabor residual levemente doce, com notas de chocolate, Carvalho e café. Cerveja para quem gosta de cervejas pretas, chocolate amargo e café espresso",
+   "abv": "9,5%",
+   "ibu": "55",
+   "harmonizacao": "Pastel de chocolate",
+   "servida_em": "taça",
+   "conferir": []
+  },
+  {
+   "nome": "X-mas Ale 2025",
+   "descricao": "Estilo exclusivo para o ano de 2025 com nosso toque conteporâneo, de corpo médio, com o sabor pronunciado do malte e aromas frutados da fermentação, trazendo um dulçor no primeiro contato e a presença de um perfil leve de caramelo, notas de frutas doces e um toque amadeirado do carvalho francês utilizado na produção, uma cerveja de tom acobreado, com a junção dos seguintes tons: amadeirado, doce, terroso e frutado. É uma experiência única, então aproveite o gole. Cerveja de iniciação com presença de todos os sabores que apresentam uma boa cerveja.",
+   "abv": "7%",
+   "ibu": "20",
+   "harmonizacao": "coxinha sem massa, quibe, coxinha de cabotiá e bolinho de costela",
+   "servida_em": "half-pint, pint e martelo",
+   "conferir": []
+  },
+  {
+   "nome": "Barley Wine",
+   "descricao": "Uma das cervejas mais complexas produzidas pela Feitoria da Cerveja, tem corpo alto, com alto teor alcoólico de 9,2%, cor âmbar, intenso dulçor de malte, notas de caramelo e frutas secas, com leve presença dos lúpulos ingleses, trazendo uma nova experiência a cada gole é com certeza uma ótima pedida para qualquer momento.",
+   "abv": "9,2%",
+   "ibu": "40",
+   "harmonizacao": "táboa de frios, coxinha de cabotiá e bolinho de costela",
+   "servida_em": "taça",
+   "conferir": []
+  },
+  {
+   "nome": "Dark Mild",
+   "descricao": "Do fundo do baú da escola inglesa, tiramos a Dark Mild, uma das originais Session Beers. Tem baixo teor alcoólico, com presença do malte em evidência, mas também com aromas e sabores terrosos dos lúpulos ingleses, trazendo nos seus perfis maltados as notas de caramelo, casca de pão, tostado, frutas passas e chocolate. Sua coloração condizente com os perfis maltados, apresenta um vermelho escuro a marrom, e apesar da descrição anterior, é uma cerveja extremamente leve e de altíssimo drinkability, sendo considerada uma cerveja de verão na Inglaterra. Foi uma cerveja que atendeu pro muito tempo a classe trabalhadora inglesa e hoje é servida na Feitoria da Cerveja, seguindo a risca o estilo e trazendo essa história dentro de cada copo.",
+   "abv": "4,2%",
+   "ibu": "18",
+   "harmonizacao": "Quibe com queijo, tábua de frios, coxinha sem massa, coxinha de cabotiá e bolinho de costela",
+   "servida_em": "pint, half pint e martelo",
+   "conferir": []
+  },
+  {
+   "nome": "Juicy Ipa (Manga e Maracujá)",
+   "descricao": "A Juicy IPA é uma variação da clássica India Pale Ale (IPA) que recebe adição de maracujá e manga. Ela une o amargor e o aroma intenso dos lúpulos ao dulçor e frescor das frutas, criando uma cerveja complexa, tropical e muito equilibrada. Ela possui coloração amarelo-alaranjado, corpo médio, textura aveludada  e alta turbidez, com um amargor presente e persistente, acompanhado de uma explosão de sabores tropicais, remetendo a um verdadeiro suco lupulado.",
+   "abv": "6,5%",
+   "ibu": "45",
+   "harmonizacao": "pastel de carne com gorgonzola, costelinha barbecue, porção de queijo gorgonzola",
+   "servida_em": "half-pint e pint",
+   "conferir": []
+  },
+  {
+   "nome": "APA Comet",
+   "descricao": "Uma American Pale Ale que valoriza o potencial do lúpulo *Comet 100% brasileiro*. De coloração dourado claro e amargor equilibrado, entrega um conjunto aromático marcante, com notas cítricas de toranja e tangerina, acompanhadas por um herbal fresco e um delicado toque resinoso. A base de malte traz leve dulçor e excelente equilíbrio, deixando o lúpulo brilhar do início ao fim. Uma cerveja refrescante, aromática e muito fácil de beber, perfeita para quem busca conhecer a expressão de um lúpulo cultivado no Brasil.",
+   "abv": "6,0%",
+   "ibu": "32",
+   "harmonizacao": "pastel de carne com gorgonzola, costelinha barbecue, porção de queijo gorgonzola",
+   "servida_em": null,
+   "conferir": [
+    "falta 'servida em'"
+   ]
+  },
+  {
+   "nome": "Ginger Ale",
+   "descricao": "Com toques frutados e maltados que remetem a cereais e biscoito, tem um aroma de Gengibre evidente pela adição direta e cravo, proveniente da fermentação, características específicas da escola belga com nosso toque de gengibre. É uma cerveja de alto drinkability que vai te surpreender.  É uma cerveja de iniciação e não é amarga nem muito alcoólica",
+   "abv": "5,8%",
+   "ibu": "22",
+   "harmonizacao": "Isca de frango, pastel de pernil, dadinho de tapioca, tabua de frios de salame Italiano e o copa lombo. coxinha sem massa",
+   "servida_em": "tulipa, caneca e martelo",
+   "conferir": []
+  },
+  {
+   "nome": "Chope de Vinho",
+   "descricao": "",
+   "abv": "5%",
+   "ibu": null,
+   "harmonizacao": "tábua de frios, todas as pizzas, batata frita com queijo e bacon, pastel de queijo, e coxinha sem massa",
+   "servida_em": "taça",
+   "conferir": [
+    "falta descrição",
+    "IBU não consta no documento"
+   ]
+  }
+ ]
+}

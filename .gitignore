@@ -1,0 +1,13 @@
+*.pdf
+*.xlsx
+*.xls
+*.csv
+*.zip
+.env
+.env.*
+supabase/
+modelos/
+contratos/
+drive-integration-private/
+node_modules/
+*.log
