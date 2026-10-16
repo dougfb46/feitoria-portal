@@ -1,0 +1,14 @@
+name: Publicacao segura
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  verificar:
+    name: verificar-publicacao
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Conferir arquivos publicos
+        run: python3 scripts/verificar_publicacao.py
