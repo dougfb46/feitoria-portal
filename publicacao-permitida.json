@@ -18,6 +18,7 @@
   "scripts/verificar_publicacao.py",
   "web/acessos.html",
   "web/checklist.html",
+  "web/financeiro.html",
   "web/gestao.html",
   "web/img/mapa-mesas.png",
   "web/img/mapa-mesas.webp",
