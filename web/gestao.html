@@ -178,6 +178,7 @@ function moldura(usuario){
       </div>
     </div>
     <div class="abas">
+      <button data-aba="vendas" class="${aba==="vendas"?"ativa":""}">Vendas e horários</button>
       <button data-aba="equipe" class="${aba==="equipe"?"ativa":""}">Equipe</button>
       <button data-aba="ponto"  class="${aba==="ponto" ?"ativa":""}">Ponto do dia</button>
       <button data-aba="pend"   class="${aba==="pend"  ?"ativa":""}">Pendências${
@@ -218,6 +219,7 @@ function moldura(usuario){
   render();
 }
 const render = () => aba === "acessos" ? abaAcessos() : aba === "equipe" ? abaEquipe()
+  : aba === "vendas" ? abaVendas()
   : aba === "ponto" ? abaPonto()
   : aba === "pend" ? abaPendencias()
   : aba === "escala" ? abaEscala()
@@ -229,6 +231,14 @@ const render = () => aba === "acessos" ? abaAcessos() : aba === "equipe" ? abaEq
   : aba === "folha" ? abaFolha()
   : abaDocs();
 const conteudo = () => document.getElementById("conteudo");
+
+function abaVendas(){
+  const url = new URL("web/vendas.html", new URL("../", location.href));
+  if(location.pathname.includes("/web/")) url.pathname=location.pathname.replace(/[^/]+$/, "vendas.html");
+  else url.pathname=location.pathname.replace(/[^/]+$/, "web/vendas.html");
+  url.searchParams.set("restaurant_id",unidade.id);
+  conteudo().innerHTML = `<iframe title="Vendas e horários" src="${esc(url.href)}" style="width:100%;height:1600px;border:0;border-radius:12px"></iframe>`;
+}
 
 function abaAcessos(){
   const base = new URL(".", location.href);
