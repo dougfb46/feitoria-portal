@@ -253,7 +253,7 @@ function abaResultados(){
   if(location.pathname.includes("/web/")) url.pathname=location.pathname.replace(/[^/]+$/, "resultados.html");
   else url.pathname=location.pathname.replace(/[^/]+$/, "web/resultados.html");
   url.searchParams.set("restaurant_id",unidade.id);
-  url.searchParams.set("v","20261017-resultados1");
+  url.searchParams.set("v","20261017-custos2");
   conteudo().innerHTML = `<iframe title="Resultados e metas" src="${esc(url.href)}" style="width:100%;height:1600px;border:0;border-radius:12px"></iframe>`;
 }
 
