@@ -10,3 +10,6 @@ O desenvolvimento completo e o histórico anterior ficam no repositório privado
 Alterações entram por branch e pull request. A verificação de publicação restringe
 os arquivos permitidos; ela complementa a revisão humana e não comprova ausência
 de todo tipo de dado pessoal. Segredos permanecem no Supabase.
+
+
+A aba **Boletim do dono** reúne análise do agente e indicadores de gestão após autenticação. Conteúdo dos boletins e dados de negócio permanecem no serviço privado; este repositório contém apenas a interface.

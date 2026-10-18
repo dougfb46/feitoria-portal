@@ -79,7 +79,7 @@ const esc = (v) => String(v ?? "").replace(/[&<>"']/g, (ch) =>
   ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[ch]));
 const CARGA = [];
 const guarde = (o) => CARGA.push(o) - 1;
-let unidades = [], unidade = null, aba = "equipe";
+let unidades = [], unidade = null, aba = new URLSearchParams(location.search).has("boletim") ? "boletim" : "equipe";
 let pendenciasAbertas = 0;   // aparece como selo na aba Pendências
 let recadosAbertos = 0;      // idem, na aba Operação
 let acoesVencidas = 0;       // idem, na aba NR-1: ação de risco com prazo passado
@@ -178,6 +178,7 @@ function moldura(usuario){
       </div>
     </div>
     <div class="abas">
+      <button data-aba="boletim" class="${aba==="boletim"?"ativa":""}">Boletim do dono</button>
       <button data-aba="resultados" class="${aba==="resultados"?"ativa":""}">Resultados e metas</button>
       <button data-aba="notas" class="${aba==="notas"?"ativa":""}">Notas fiscais</button>
       <button data-aba="financeiro" class="${aba==="financeiro"?"ativa":""}">Financeiro</button>
@@ -222,6 +223,7 @@ function moldura(usuario){
   render();
 }
 const render = () => aba === "acessos" ? abaAcessos() : aba === "equipe" ? abaEquipe()
+  : aba === "boletim" ? abaBoletim()
   : aba === "resultados" ? abaResultados()
   : aba === "notas" ? abaNotas()
   : aba === "financeiro" ? abaFinanceiro()
@@ -247,6 +249,13 @@ function abaNotas(){
   conteudo().innerHTML = `<iframe title="Notas fiscais" src="${esc(url.href)}" style="width:100%;height:1600px;border:0;border-radius:12px"></iframe>`;
 }
 
+
+function abaBoletim(){
+  const url = new URL(location.pathname.includes('/web/')?'boletim.html':'web/boletim.html',location.href);
+  url.searchParams.set('restaurant_id',unidade.id);
+  url.searchParams.set('v','20261018-boletim');
+  conteudo().innerHTML = `<iframe title="Boletim do dono" src="${esc(url.href)}" style="width:100%;height:1900px;border:0;border-radius:12px"></iframe>`;
+}
 
 function abaResultados(){
   const url = new URL("web/resultados.html", new URL("../", location.href));
