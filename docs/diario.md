@@ -62,3 +62,10 @@ Mensagens ficam prontas para revisão e envio pelo usuário; pedidos e recebimen
 Gemini preparado no servidor com contexto comercial limitado, sem dados de funcionários ou bancários; depende de configuração privada.
 Rotina semanal agendada na conversa às terças, 09h de São Paulo; sem envio automático a fornecedores.
 Validação: 147 testes, tipos, sintaxe e banco com rollback; sem dados reais na publicação estática.
+
+## 19/10/2026 - Conferência do assistente
+Painel e busca de fornecedores verificados no ambiente privado.
+Prazo desconhecido permanece pendente, sem presumir entrega no mesmo dia.
+Configuração privada do Gemini aguardando chave e confirmação do projeto gratuito.
+Teste adicional da validação de prazo aprovado; demais verificações anteriores preservadas.
+Publicação estática não inclui contatos comerciais, propostas ou resultados reais.
