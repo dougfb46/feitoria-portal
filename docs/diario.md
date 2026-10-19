@@ -41,3 +41,10 @@ Estoque separado por unidade exige contagem e conversão; compras vinculadas des
 Notas separam manifestação Takeat de vínculo com compra; filtros não comprovam lançamento de estoque ou pagamento.
 Validação: 130 testes, tipos, sintaxe JS e ensaio de banco revertido; sem pedidos fictícios persistidos.
 Continuidade: registrar inventário, mínimos e embalagens reais; extrato bancário segue pendente para conciliação.
+
+## 19/10/2026 - Cruzamento fiscal e financeiro
+Referência da NF passa a ser preservada nas novas coletas financeiras; histórico antigo permanece intacto.
+Notas distinguem chave encontrada, candidato, não localizado no recorte e base pendente; vencimento é independente da emissão.
+Consulta não cria despesa nem confirma pagamento bancário; pais e parcelas não são somados entre si.
+Revisão de permissões e privacidade, 137 testes, tipos e JavaScript; lista WhatsApp com dois fornecedores exige separação.
+Continuidade: conferir resultado real após nova coleta e manter inventário/conversões para reposição.
