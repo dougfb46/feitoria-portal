@@ -20,3 +20,10 @@ Histórico e relatórios permanecem em serviços privados, com autorização por
 Visão do grupo e documentos sem unidade exigem papel de dono global.
 A interface preserva a distinção entre cobrança, agendamento e confirmação.
 Publicação contém somente telas; dados e documentos não são enviados a este repositório.
+
+## 18/10/2026 - Navegação e atalhos
+Gestão com visão geral, busca no menu, áreas agrupadas e descrições das tarefas.
+Colaborador com atalhos da rotina e destaque para documentos pendentes.
+Rotas raiz e web atualizadas; checklist da raiz aponta para web/checklist.html.
+Verificados JavaScript, identificação integrada e navegação em prévia de 390 px.
+Somente telas estáticas; sem dados reais, prévias fictícias ou alterações de backend.

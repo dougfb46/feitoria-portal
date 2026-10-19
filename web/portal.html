@@ -40,6 +40,27 @@
   .comprovante{font-family:ui-monospace,monospace;background:#eceae4;border-radius:8px;
                padding:7px 12px;display:inline-block;letter-spacing:2px;margin-top:8px}
   iframe{width:100%;height:58vh;border:1px solid var(--borda);border-radius:12px;background:#fff}
+
+  :focus-visible{outline:3px solid var(--ambar);outline-offset:3px}
+  .marca{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--verde);font-weight:700;margin:0 0 10px}
+  .saudacao{border-top:4px solid var(--verde)}
+  .menu-portal{display:flex;gap:8px;overflow-x:auto;position:sticky;top:0;background:var(--fundo);padding:8px 0 12px;z-index:2;margin-bottom:12px}
+  .menu-portal button{flex:0 0 auto;width:auto;padding:12px 14px;white-space:nowrap;font-size:13px}
+  .atalhos-portal{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+  .atalhos-portal button{display:flex;flex-direction:column;gap:6px;text-align:left;background:white;color:var(--verde);border:1px solid var(--borda);padding:16px;min-height:100px}
+  .atalhos-portal small{color:var(--suave);font-weight:400;line-height:1.4;font-size:12px}
+  .atalhos-portal .principal{background:var(--verde);color:white;border-color:var(--verde)}
+  .atalhos-portal .principal small{color:#e0ece5}
+  .assinatura-inicio{background:#fff8e8;border:1px solid #ddc283;border-radius:12px;padding:14px;margin-bottom:16px}
+  .assinatura-inicio p{font-size:14px;line-height:1.5;margin:0 0 10px}
+  .assinatura-inicio button{padding:10px}
+  .cabecalho-docs{display:flex;gap:12px;align-items:center;justify-content:space-between}
+  .cabecalho-docs button{width:auto;padding:8px;font-size:13px}
+  .doc .meta{line-height:1.6;overflow-wrap:anywhere}
+  .vazio{padding:16px;background:#f7f8f5;border-radius:10px;line-height:1.5}
+  .frame-atividade{padding:10px}
+  @media(max-width:360px){body{padding:10px}.carta{padding:16px}.atalhos-portal{gap:8px}.atalhos-portal button{padding:13px}}
+
 </style>
 </head>
 <body>
@@ -111,10 +132,10 @@ function telaEntrar(msg){
       <h1>Portal do Colaborador</h1>
       <p class="sub">Feitoria da Cerveja</p>
       ${msg ? `<div class="aviso">${esc(msg)}</div>` : ""}
-      <label>Seu PIN</label>
+      <p class="marca">Feitoria · Minha rotina</p><label for="pin">Seu PIN</label>
       <input class="pin" id="pin" type="password" inputmode="numeric" autocomplete="off"
              maxlength="6" placeholder="••••">
-      <label>Sua data de nascimento</label>
+      <label for="nasc">Sua data de nascimento</label>
       <input type="date" id="nasc">
       <button id="entrar" style="margin-top:18px">Entrar</button>
       <p class="sub" style="margin:14px 0 0;font-size:12px">
@@ -137,24 +158,26 @@ async function entrar(){
 /* ---------- início ---------- */
 function telaInicio(msg){
   manterSessao();
+  frameAtivo=null;
   const tipos = new Set(sessao.tipos_treinamento || []);
-  const docs = sessao.documentos.filter(d => secao === "treinamentos" ? tipos.has(d.tipo) : secao === "documentos" ? !tipos.has(d.tipo) : true);
+  const docs = sessao.documentos.filter(d => secao === "treinamentos" ? tipos.has(d.tipo) : secao === "documentos" ? !tipos.has(d.tipo) : true).slice().sort((a,b)=>Number(!!b.pendente)-Number(!!a.pendente));
+  const pendentes=docs.filter(d=>d.pendente).length;
   const menu = [["inicio","Início"],["documentos","Documentos"],["treinamentos","Treinamentos"],
     ["checklists","Checklists"],["operacao","Escala e avisos"],["seguranca","Saúde e segurança"]];
   if(sessao.registra_ponto) menu.splice(3,0,["ponto","Ponto"]);
   app.innerHTML = `
-    <div class="carta">
-      <h1>Olá, ${esc(sessao.colaborador.nome.split(" ")[0])}</h1>
+    <div class="carta saudacao">
+      <p class="marca">Feitoria · Minha rotina</p><h1>Olá, ${esc(sessao.colaborador.nome.split(" ")[0])}</h1>
       <p class="sub" style="margin:0">${esc(sessao.colaborador.funcao || "")} · ${esc(sessao.unidade.nome)}</p>
     </div>
-    <nav aria-label="Meu portal" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">${menu.map(([id,nome])=>
+    <nav class="menu-portal" aria-label="Meu portal">${menu.map(([id,nome])=>
       `<button class="${secao===id?"":"secundaria"}" style="width:auto;padding:11px" data-secao="${id}" aria-current="${secao===id?"page":"false"}">${nome}</button>`).join("")}</nav>
     ${msg ? `<div class="carta"><div class="aviso">${esc(msg)}</div></div>` : ""}
-    <div class="carta">
-      <h2>${secao==="treinamentos"?"Treinamentos e certificados":"Meus documentos"}</h2>
-      ${sessao.pendentes ? `<div class="faixa">
-        ${sessao.pendentes} documento${sessao.pendentes>1?"s":""} esperando sua assinatura</div>` : ""}
-      ${docs.length ? docs.map(d => `
+    <div class="carta" id="conteudo-portal">
+      <div class="cabecalho-docs"><h2>${secao==="treinamentos"?"Treinamentos e certificados":secao==="inicio"?"Para você conferir":"Meus documentos"}</h2>${secao==="inicio"?'<button class="discreto" data-secao="documentos">Ver documentos →</button>':""}</div>
+      ${pendentes && secao!=="inicio" ? `<div class="faixa">
+        ${pendentes} documento${pendentes>1?"s":""} esperando sua assinatura</div>` : ""}
+      ${docs.length ? (secao==="inicio"?docs.slice(0,3):docs).map(d => `
         <div class="doc ${d.pendente?"pendente":""}">
           ${d.pendente ? `<span class="selo pendente">assinar</span>`
             : d.assinado_em ? `<span class="selo assinado">assinado em ${dataBR(d.assinado_em)}</span>`
@@ -162,24 +185,35 @@ function telaInicio(msg){
           <h3>${esc(d.titulo)}</h3>
           <p class="meta">${esc(d.competencia ? "Competência "+d.competencia+" · " : "")}recebido em ${dataBR(d.recebido_em)}
             ${d.prazo ? " · prazo "+dataBR(d.prazo) : ""}</p>
-          <button class="secundaria" style="margin-top:10px" data-abrir="${esc(d.id)}">Abrir</button>
+          <button class="secundaria" style="margin-top:10px" data-abrir="${esc(d.id)}">${d.pendente?"Ler e revisar para assinar":"Ver documento"}</button>
         </div>`).join("") : `<p class="vazio">Nenhum documento por aqui ainda.</p>`}
     </div>
     <button class="discreto" id="sair">Sair</button>`;
 
   app.querySelectorAll("[data-abrir]").forEach(b => b.onclick = () => abrir(b.dataset.abrir));
-  document.getElementById("sair").onclick = () => { sessao=null; pin=""; telaEntrar(); };
   document.getElementById("sair").onclick = encerrarPortal;
   app.querySelectorAll("[data-secao]").forEach(b=>b.onclick=()=>{secao=b.dataset.secao; telaInicio();});
   if(secao === "inicio"){
-    const card=document.createElement("div"); card.className="carta";
-    card.innerHTML=`<h2>Seu portal na Feitoria</h2><p class="sub">Use as opções acima para suas atividades. Os documentos abaixo são os disponíveis para você; assinar continua pedindo sua confirmação individual.</p>${sessao.registra_ponto?`<p class="sub">Você pode registrar o ponto no celular ou no totem da unidade. No celular, a marcação segue a regra de localização da casa. No totem, use o aparelho fixo e seu próprio PIN.</p>`:""}`;
-    app.insertBefore(card,app.querySelector("nav").nextSibling);
+    const card=document.createElement("section");card.setAttribute("aria-label","Atalhos da sua rotina");card.className="atalhos-portal";
+    const atalhos=[...(sessao.registra_ponto?[["ponto","Meu ponto","Registrar ou consultar marcações."]]:[]),
+      ["checklists","Checklists","Começar ou continuar as tarefas."],["operacao","Escala e avisos","Conferir seu turno e os recados."],
+      ["documentos","Documentos","Consultar e revisar assinaturas."],["treinamentos","Treinamentos","Materiais e certificados."],
+      ["seguranca","Saúde e segurança","Orientações para trabalhar bem."]];
+    card.innerHTML=atalhos.map(([id,titulo,descricao],i)=>`<button data-secao="${id}" class="${i===0?'principal':''}"><strong>${titulo}</strong><small>${descricao}</small></button>`).join("");
+    card.querySelectorAll("[data-secao]").forEach(b=>b.onclick=()=>{secao=b.dataset.secao;telaInicio();});
+    app.insertBefore(card,document.getElementById("conteudo-portal"));
+    if(pendentes){
+      const aviso=document.createElement("section");aviso.className="assinatura-inicio";
+      aviso.innerHTML=`<p><strong>${pendentes} documento${pendentes>1?"s":""} esperando sua assinatura</strong><br>Leia e confira antes de confirmar.</p><button class="secundaria">Conferir pendências</button>`;
+      aviso.querySelector("button").onclick=()=>document.getElementById("conteudo-portal").scrollIntoView({block:"start"});
+      app.insertBefore(aviso,card);
+    }
   }
   const paginas={checklists:"checklist.html",operacao:"operacao.html",seguranca:"nr1.html"};
   if(secao==="ponto" && sessao.registra_ponto) paginas.ponto="ponto.html";
   if(paginas[secao]){
-    const card=app.querySelectorAll(".carta")[1];
+    const card=document.getElementById("conteudo-portal");
+    card.classList.add("frame-atividade");
     card.replaceChildren();
     if(secao==="ponto"){
       const aviso=document.createElement("p");aviso.className="sub";
