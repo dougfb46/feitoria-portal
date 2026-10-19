@@ -55,3 +55,10 @@ Conferência do manifesto e financeiro validada por chave fiscal, com recorte ex
 Versão da tela fiscal atualizada no portal para evitar cache da interface anterior.
 Função antiga de PIN revisada; proposta restritiva privada aguarda autorização específica exigida pela revisão automática.
 Nenhum PIN ou pagamento alterado; dados financeiros e propostas de banco permanecem no repositório privado.
+
+## 19/10/2026 - Assistente de compras e Gemini
+Nova entrada de Compras reúne fornecedores, cotações, comparação de propostas, reposição e alertas.
+Mensagens ficam prontas para revisão e envio pelo usuário; pedidos e recebimentos continuam acessíveis.
+Gemini preparado no servidor com contexto comercial limitado, sem dados de funcionários ou bancários; depende de configuração privada.
+Rotina semanal agendada na conversa às terças, 09h de São Paulo; sem envio automático a fornecedores.
+Validação: 147 testes, tipos, sintaxe e banco com rollback; sem dados reais na publicação estática.
