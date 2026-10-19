@@ -48,3 +48,10 @@ Notas distinguem chave encontrada, candidato, não localizado no recorte e base 
 Consulta não cria despesa nem confirma pagamento bancário; pais e parcelas não são somados entre si.
 Revisão de permissões e privacidade, 137 testes, tipos e JavaScript; lista WhatsApp com dois fornecedores exige separação.
 Continuidade: conferir resultado real após nova coleta e manter inventário/conversões para reposição.
+
+## 19/10/2026 - Conferência final do cruzamento
+Consulta real concluída em nova coleta; dados e resultados detalhados somente no ambiente privado.
+Conferência do manifesto e financeiro validada por chave fiscal, com recorte explícito e pendências para revisão.
+Versão da tela fiscal atualizada no portal para evitar cache da interface anterior.
+Função antiga de PIN revisada; proposta restritiva privada aguarda autorização específica exigida pela revisão automática.
+Nenhum PIN ou pagamento alterado; dados financeiros e propostas de banco permanecem no repositório privado.
