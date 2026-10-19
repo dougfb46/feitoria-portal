@@ -70,7 +70,7 @@ function recebimento(){
 }
 function adicionarItem(v={}){
  const row=document.createElement('div');row.className='item-form';
- row.innerHTML='<label>Produto<input data-campo="descricao" maxlength="240" required></label><label>Unidade<input data-campo="unidade" placeholder="kg, un, caixa…" maxlength="20" required></label><label>Quantidade<input data-campo="quantidade" type="number" min="0.000001" max="1000000" step="0.000001" required></label><label>Preço por unidade (R$)<input data-campo="preco_unitario" type="number" min="0" max="1000000" step="0.000001"></label><button type="button" aria-label="Remover item">Remover</button>';
+ row.innerHTML='<label>Produto<input data-campo="descricao" maxlength="240" required></label><label>Unidade<input data-campo="unidade" placeholder="kg, un, caixa…" maxlength="20" required></label><label>Quantidade<input data-campo="quantidade" type="number" min="0.000001" max="1000000" step="0.000001" required></label><label>Preço por unidade (R$)<input data-campo="preco_unitario" type="number" min="0" max="1000000" step="0.000000000001"></label><button type="button" aria-label="Remover item">Remover</button>';
  for(const input of row.querySelectorAll('input'))input.value=v[input.dataset.campo]??'';
  row.querySelector('button').onclick=()=>row.remove();el('itens-form').append(row);
 }
