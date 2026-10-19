@@ -51,6 +51,44 @@
   dialog{border:none;border-radius:16px;padding:22px;max-width:420px;width:92%;
          box-shadow:0 10px 40px rgba(0,0,0,.25)}
   dialog::backdrop{background:rgba(0,0,0,.45)}
+
+  [hidden]{display:none!important}
+  :focus-visible{outline:3px solid var(--ambar);outline-offset:3px}
+  .app{max-width:1320px}
+  .cabecalho{border-top:4px solid var(--verde)}
+  .estrutura{display:grid;grid-template-columns:230px minmax(0,1fr);gap:24px;align-items:start}
+  .menu-gestao{position:sticky;top:16px;max-height:calc(100dvh - 32px);overflow-y:auto;background:white;border:1px solid var(--borda);border-radius:16px;padding:16px}
+  .menu-gestao label{margin-top:0}
+  .abas{display:block;margin:12px 0 0}
+  .grupo-menu{margin-top:18px}
+  .grupo-menu h2{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--suave);margin:0 8px 6px}
+  .abas button{display:block;width:100%;text-align:left;background:transparent;padding:10px 12px;font-size:13px;margin:3px 0;min-height:44px}
+  .abas button:hover{background:#edf3ef;color:var(--verde)}
+  .abas button.ativa{background:var(--verde);color:white}
+  .area-gestao{min-width:0}
+  .titulo-area{margin:4px 0 20px}
+  .titulo-area h2{font-size:26px;letter-spacing:-.025em;margin:3px 0 6px}
+  .titulo-area .sub{margin:0}
+  .sobretitulo{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--verde);font-weight:700}
+  .grade-atalhos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .atalho{display:flex;flex-direction:column;gap:7px;text-align:left;background:white;color:var(--texto);border:1px solid var(--borda);padding:18px;min-height:112px;transition:border-color .15s}
+  .atalho:hover{border-color:var(--verde);background:#f8faf8}
+  .atalho small{font-size:13px;color:var(--suave);line-height:1.5;font-weight:400}
+  .atalho span{font-size:12px;color:var(--verde);margin-top:auto}
+  .destaque-inicio{background:var(--verde);color:white;padding:24px;border-radius:16px;margin-bottom:20px}
+  .destaque-inicio h2{font-size:23px;margin-bottom:8px}
+  .destaque-inicio p{margin:0;line-height:1.6;color:#e0ece5}
+  #conteudo{overflow-x:auto}
+  dialog{max-height:90dvh;overflow:auto}
+  @media(max-width:900px){
+    body{padding:12px}.estrutura{display:block}.menu-gestao{position:static;max-height:none;margin-bottom:18px;padding:12px}
+    .abas{display:flex;gap:8px;overflow-x:auto;flex-wrap:nowrap;padding-bottom:6px}
+    .grupo-menu{display:flex;flex:0 0 auto;gap:4px;margin:0;padding-right:8px;border-right:1px solid var(--borda)}
+    .grupo-menu h2{display:none}.abas button{width:auto;white-space:nowrap;margin:0}
+    .titulo-area h2{font-size:22px}.cabecalho .linha{align-items:center}
+  }
+  @media(max-width:520px){.grade-atalhos{grid-template-columns:1fr}.carta{padding:16px}.linha>*{min-width:120px}}
+
 </style>
 </head>
 <body>
@@ -79,7 +117,7 @@ const esc = (v) => String(v ?? "").replace(/[&<>"']/g, (ch) =>
   ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[ch]));
 const CARGA = [];
 const guarde = (o) => CARGA.push(o) - 1;
-let unidades = [], unidade = null, aba = new URLSearchParams(location.search).has("historico") ? "historico-financeiro" : new URLSearchParams(location.search).has("boletim") ? "boletim" : "equipe";
+let unidades = [], unidade = null, aba = new URLSearchParams(location.search).has("historico") ? "historico-financeiro" : new URLSearchParams(location.search).has("boletim") ? "boletim" : "inicio";
 let pendenciasAbertas = 0;   // aparece como selo na aba Pendências
 let recadosAbertos = 0;      // idem, na aba Operação
 let acoesVencidas = 0;       // idem, na aba NR-1: ação de risco com prazo passado
@@ -125,8 +163,8 @@ function telaLogin(msg){
       <h1>Gestão da Feitoria</h1>
       <p class="sub">Entre com seu e-mail e senha</p>
       ${msg ? `<div class="aviso">${esc(msg)}</div>` : ""}
-      <label>E-mail</label><input type="email" id="email" autocomplete="username">
-      <label>Senha</label><input type="password" id="senha" autocomplete="current-password">
+      <label for="email">E-mail</label><input type="email" id="email" autocomplete="username">
+      <label for="senha">Senha</label><input type="password" id="senha" autocomplete="current-password">
       <button id="entrar" style="width:100%;margin-top:16px">Entrar</button>
     </div>`;
   const entrar = async () => {
@@ -148,6 +186,50 @@ function telaLogin(msg){
   };
 }
 
+
+const AREAS = [
+  ["Começar", [["inicio","Visão geral","Os caminhos para cuidar da casa, da equipe e dos resultados."]]],
+  ["Operação", [
+    ["chk","Checklists","Acompanhe execuções, atrasos e ocorrências da operação."],
+    ["rotinas-gerente","Rotinas do gerente","Confira a operação e encaminhe as decisões do turno."],
+    ["rotinas-dono","Rotinas do dono","Organize decisões, compras e melhorias da casa."],
+    ["oper","Escala e recados","Publique a escala e acompanhe os recados da equipe."]]],
+  ["Pessoas", [
+    ["equipe","Equipe e cadastros","Cadastre pessoas, altere horários e prepare documentos."],
+    ["ponto","Ponto do dia","Consulte as marcações e registre correções com motivo."],
+    ["pend","Pendências de ponto","Revise faltas, ajustes e marcações que precisam de atenção."],
+    ["escala","Jornadas e feriados","Configure jornadas, exceções e regras do ponto."],
+    ["docs","Documentos e assinaturas","Envie documentos e acompanhe as assinaturas."],
+    ["folha","Fechamento de ponto","Confira o mês e visualize sua planilha de fechamento."],
+    ["nr1","Saúde e segurança","Acompanhe riscos, ações e informativos da equipe."]]],
+  ["Resultados", [
+    ["boletim","Boletim do dono","Reúna os destaques e as pendências para decidir."],
+    ["vendas","Vendas e horários","Explore produtos, vendedores e horários de maior movimento."],
+    ["resultados","Resultados e metas","Consulte DRE, custos, CMV, CMO e metas."],
+    ["financeiro","Financeiro Takeat","Consulte os lançamentos importados da Takeat."],
+    ["notas","Notas fiscais","Confira as notas recebidas e seus detalhes."],
+    ["historico-financeiro","Histórico financeiro","Pesquise documentos e consulte as fontes do histórico."]]],
+  ["Configuração", [["acessos","Links e acessos","Encontre os endereços para a equipe e o totem."]]]
+];
+const areaAtual=()=>AREAS.flatMap(([,itens])=>itens).find(([id])=>id===aba)||AREAS[0][1][0];
+const solicitada=location.hash.slice(1);
+if(AREAS.some(([,itens])=>itens.some(([id])=>id===solicitada)))aba=solicitada;
+function menuGestao(){
+  const selos={pend:pendenciasAbertas,oper:recadosAbertos,chk:checklistsAbertos,nr1:acoesVencidas};
+  return AREAS.map(([grupo,itens])=>`<section class="grupo-menu"><h2>${grupo}</h2>${itens.map(([id,nome,descricao])=>`<button data-aba="${id}" data-busca="${esc(nome+' '+descricao)}" class="${aba===id?'ativa':''}" aria-current="${aba===id?'page':'false'}">${nome}${selos[id]?`<span class="selo">${selos[id]}</span>`:''}</button>`).join('')}</section>`).join('');
+}
+function abaInicio(){
+  const atalhos=[
+    ["chk","Conferir a operação","Checklists, atrasos e ocorrências do turno."],
+    ["equipe","Cuidar da equipe","Admissão, ficha, jornada e movimentações."],
+    ["docs","Acompanhar documentos","Envios e assinaturas pendentes."],
+    ["folha","Fechar o ponto","Marcações do mês e planilha de fechamento."],
+    ["boletim","Ler o boletim","Destaques e pendências para suas decisões."],
+    ["resultados","Entender os resultados","Vendas, custos, DRE e metas da casa."]
+  ];
+  conteudo().innerHTML=`<div class="destaque-inicio"><h2>O que vamos cuidar agora?</h2><p>${esc(unidade.name)} · Escolha uma tarefa ou use o menu para explorar as áreas.</p></div><div class="grade-atalhos">${atalhos.map(([id,titulo,descricao])=>`<button class="atalho" data-destino="${id}"><strong>${titulo}</strong><small>${descricao}</small><span>Abrir área →</span></button>`).join('')}</div><p class="sub" style="margin-top:20px">Para compartilhar o portal com a equipe, abra <button class="discreto" data-destino="acessos">Links e acessos</button>.</p>`;
+}
+
 /* ---------- moldura ---------- */
 async function iniciar(){
   try {
@@ -163,7 +245,7 @@ async function iniciar(){
 
 function moldura(usuario){
   app.innerHTML = `
-    <div class="carta">
+    <div class="carta cabecalho">
       <div class="linha">
         <div>
           <h1>Gestão da Feitoria</h1>
@@ -177,31 +259,18 @@ function moldura(usuario){
         <button class="discreto" id="sair">Sair</button>
       </div>
     </div>
-    <div class="abas">
-      <button data-aba="boletim" class="${aba==="boletim"?"ativa":""}">Boletim do dono</button>
-      <button data-aba="resultados" class="${aba==="resultados"?"ativa":""}">Resultados e metas</button>
-      <button data-aba="notas" class="${aba==="notas"?"ativa":""}">Notas fiscais</button>
-      <button data-aba="historico-financeiro" class="${aba==="historico-financeiro"?"ativa":""}">Histórico financeiro</button>
-      <button data-aba="financeiro" class="${aba==="financeiro"?"ativa":""}">Financeiro</button>
-      <button data-aba="vendas" class="${aba==="vendas"?"ativa":""}">Vendas e horários</button>
-      <button data-aba="equipe" class="${aba==="equipe"?"ativa":""}">Equipe</button>
-      <button data-aba="ponto"  class="${aba==="ponto" ?"ativa":""}">Ponto do dia</button>
-      <button data-aba="pend"   class="${aba==="pend"  ?"ativa":""}">Pendências${
-        pendenciasAbertas ? `<span class="selo">${pendenciasAbertas}</span>` : ""}</button>
-      <button data-aba="escala" class="${aba==="escala"?"ativa":""}">Escala</button>
-      <button data-aba="oper"   class="${aba==="oper"  ?"ativa":""}">Operação${
-        recadosAbertos ? `<span class="selo">${recadosAbertos}</span>` : ""}</button>
-      <button data-aba="chk"    class="${aba==="chk"   ?"ativa":""}">Checklists${
-        checklistsAbertos ? `<span class="selo">${checklistsAbertos}</span>` : ""}</button>
-      <button data-aba="nr1"    class="${aba==="nr1"   ?"ativa":""}">NR-1${
-        acoesVencidas ? `<span class="selo">${acoesVencidas}</span>` : ""}</button>
-      <button data-aba="docs"   class="${aba==="docs"  ?"ativa":""}">Documentos</button>
-      <button data-aba="folha"  class="${aba==="folha" ?"ativa":""}">Folha de ponto</button>
-      <button data-aba="rotinas-gerente" class="${aba==="rotinas-gerente"?"ativa":""}">Rotinas do gerente</button>
-      <button data-aba="rotinas-dono" class="${aba==="rotinas-dono"?"ativa":""}">Rotinas do dono</button>
-      <button data-aba="acessos" class="${aba==="acessos"?"ativa":""}">Acessos</button>
-    </div>
-    <div id="conteudo"></div>`;
+    <div class="estrutura">
+      <aside class="menu-gestao">
+        <label for="buscar-area">Encontrar uma área</label>
+        <input type="search" id="buscar-area" placeholder="Ex.: ponto, metas, documentos">
+        <nav class="abas" aria-label="Áreas da gestão">${menuGestao()}</nav>
+        <p id="menu-vazio" class="sub" role="status" hidden>Nenhuma área encontrada.</p>
+      </aside>
+      <main class="area-gestao" id="area-principal">
+        <header class="titulo-area"><span class="sobretitulo">Feitoria · Gestão</span><h2>${esc(areaAtual()[1])}</h2><p class="sub">${esc(areaAtual()[2])}</p></header>
+        <div id="conteudo"></div>
+      </main>
+    </div>`;
 
   document.getElementById("unidade").onchange = (e) => {
     // A15 da revisão: antes só re-renderizava. Filtro de pessoa, período da
@@ -219,11 +288,19 @@ function moldura(usuario){
     atualizarSelo();
   };
   document.getElementById("sair").onclick = async () => { await sb.auth.signOut(); telaLogin(); };
-  app.querySelectorAll("[data-aba]").forEach(b =>
-    b.onclick = () => { aba = b.dataset.aba; moldura(usuario); });
+  const navegar=(id)=>{ aba=id; history.replaceState(null,"","#"+id); moldura(usuario); };
+  app.querySelectorAll("[data-aba]").forEach(b => b.onclick=()=>navegar(b.dataset.aba));
+  document.getElementById("buscar-area").oninput=e=>{
+    const normalizar=t=>t.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+    const busca=normalizar(e.target.value.trim());
+    app.querySelectorAll("[data-busca]").forEach(b=>b.hidden=!normalizar(b.dataset.busca).includes(busca));
+    app.querySelectorAll(".grupo-menu").forEach(g=>g.hidden=![...g.querySelectorAll("button")].some(b=>!b.hidden));
+    document.getElementById("menu-vazio").hidden=!!app.querySelector(".grupo-menu:not([hidden])");
+  };
   render();
+  conteudo().onclick=e=>{const b=e.target.closest("[data-destino]");if(b)navegar(b.dataset.destino);};
 }
-const render = () => aba === "acessos" ? abaAcessos() : aba === "equipe" ? abaEquipe()
+const render = () => aba === "inicio" ? abaInicio() : aba === "acessos" ? abaAcessos() : aba === "equipe" ? abaEquipe()
   : aba === "boletim" ? abaBoletim()
   : aba === "resultados" ? abaResultados()
   : aba === "notas" ? abaNotas()
