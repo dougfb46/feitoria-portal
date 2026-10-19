@@ -13,3 +13,6 @@ de todo tipo de dado pessoal. Segredos permanecem no Supabase.
 
 
 A aba **Boletim do dono** reúne análise do agente e indicadores de gestão após autenticação. Conteúdo dos boletins e dados de negócio permanecem no serviço privado; este repositório contém apenas a interface.
+
+
+A aba **Histórico financeiro** oferece consulta de documentos e referências às fontes após autorização do dono. Os arquivos públicos contêm somente a interface, sem o histórico financeiro.

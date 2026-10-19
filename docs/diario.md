@@ -13,3 +13,10 @@ Consulta restrita ao dono e à unidade pelo serviço privado.
 Histórico e indicadores não são incluídos nesta publicação estática.
 Atualizar painel relê as fontes importadas; a tela informa seus períodos.
 Acesso pela nova aba de Gestão; telas da equipe permanecem preservadas.
+
+## 18/10/2026 - Histórico financeiro
+Nova consulta por fonte, tipo e assunto/fornecedor, com paginação e exportação da página.
+Histórico e relatórios permanecem em serviços privados, com autorização por unidade.
+Visão do grupo e documentos sem unidade exigem papel de dono global.
+A interface preserva a distinção entre cobrança, agendamento e confirmação.
+Publicação contém somente telas; dados e documentos não são enviados a este repositório.

@@ -79,7 +79,7 @@ const esc = (v) => String(v ?? "").replace(/[&<>"']/g, (ch) =>
   ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[ch]));
 const CARGA = [];
 const guarde = (o) => CARGA.push(o) - 1;
-let unidades = [], unidade = null, aba = new URLSearchParams(location.search).has("boletim") ? "boletim" : "equipe";
+let unidades = [], unidade = null, aba = new URLSearchParams(location.search).has("historico") ? "historico-financeiro" : new URLSearchParams(location.search).has("boletim") ? "boletim" : "equipe";
 let pendenciasAbertas = 0;   // aparece como selo na aba Pendências
 let recadosAbertos = 0;      // idem, na aba Operação
 let acoesVencidas = 0;       // idem, na aba NR-1: ação de risco com prazo passado
@@ -181,6 +181,7 @@ function moldura(usuario){
       <button data-aba="boletim" class="${aba==="boletim"?"ativa":""}">Boletim do dono</button>
       <button data-aba="resultados" class="${aba==="resultados"?"ativa":""}">Resultados e metas</button>
       <button data-aba="notas" class="${aba==="notas"?"ativa":""}">Notas fiscais</button>
+      <button data-aba="historico-financeiro" class="${aba==="historico-financeiro"?"ativa":""}">Histórico financeiro</button>
       <button data-aba="financeiro" class="${aba==="financeiro"?"ativa":""}">Financeiro</button>
       <button data-aba="vendas" class="${aba==="vendas"?"ativa":""}">Vendas e horários</button>
       <button data-aba="equipe" class="${aba==="equipe"?"ativa":""}">Equipe</button>
@@ -226,6 +227,7 @@ const render = () => aba === "acessos" ? abaAcessos() : aba === "equipe" ? abaEq
   : aba === "boletim" ? abaBoletim()
   : aba === "resultados" ? abaResultados()
   : aba === "notas" ? abaNotas()
+  : aba === "historico-financeiro" ? abaHistoricoFinanceiro()
   : aba === "financeiro" ? abaFinanceiro()
   : aba === "vendas" ? abaVendas()
   : aba === "ponto" ? abaPonto()
@@ -266,6 +268,13 @@ function abaResultados(){
   conteudo().innerHTML = `<iframe title="Resultados e metas" src="${esc(url.href)}" style="width:100%;height:1600px;border:0;border-radius:12px"></iframe>`;
 }
 
+
+function abaHistoricoFinanceiro(){
+  const url = new URL(location.pathname.includes('/web/')?'historico-financeiro.html':'web/historico-financeiro.html',location.href);
+  url.searchParams.set('restaurant_id',unidade.id);
+  url.searchParams.set('v','20261018-historico');
+  conteudo().innerHTML = `<iframe title="Histórico financeiro" src="${esc(url.href)}" style="width:100%;height:1900px;border:0;border-radius:12px"></iframe>`;
+}
 
 function abaFinanceiro(){
   const url = new URL("web/financeiro.html", new URL("../", location.href));
