@@ -191,6 +191,7 @@ const AREAS = [
   ["Começar", [["inicio","Visão geral","Os caminhos para cuidar da casa, da equipe e dos resultados."]]],
   ["Operação", [
     ["chk","Checklists","Acompanhe execuções, atrasos e ocorrências da operação."],
+    ["compras","Compras e recebimentos","Solicite, aprove e confira entregas com referências de notas e financeiro."],
     ["rotinas-gerente","Rotinas do gerente","Confira a operação e encaminhe as decisões do turno."],
     ["rotinas-dono","Rotinas do dono","Organize decisões, compras e melhorias da casa."],
     ["oper","Escala e recados","Publique a escala e acompanhe os recados da equipe."]]],
@@ -221,6 +222,8 @@ function menuGestao(){
 function abaInicio(){
   const atalhos=[
     ["chk","Conferir a operação","Checklists, atrasos e ocorrências do turno."],
+    ["compras","Organizar as compras","Solicitações, aprovações e conferências de entrega."],
+    ["rotinas-gerente","Conferir rotinas de gestão","Acompanhe as responsabilidades do gerente."],
     ["equipe","Cuidar da equipe","Admissão, ficha, jornada e movimentações."],
     ["docs","Acompanhar documentos","Envios e assinaturas pendentes."],
     ["folha","Fechar o ponto","Marcações do mês e planilha de fechamento."],
@@ -301,6 +304,7 @@ function moldura(usuario){
   conteudo().onclick=e=>{const b=e.target.closest("[data-destino]");if(b)navegar(b.dataset.destino);};
 }
 const render = () => aba === "inicio" ? abaInicio() : aba === "acessos" ? abaAcessos() : aba === "equipe" ? abaEquipe()
+  : aba === "compras" ? abaCompras()
   : aba === "boletim" ? abaBoletim()
   : aba === "resultados" ? abaResultados()
   : aba === "notas" ? abaNotas()
@@ -318,6 +322,12 @@ const render = () => aba === "inicio" ? abaInicio() : aba === "acessos" ? abaAce
   : aba === "folha" ? abaFolha()
   : abaDocs();
 const conteudo = () => document.getElementById("conteudo");
+
+function abaCompras(){
+ const url=new URL(location.pathname.includes('/web/')?'compras.html':'web/compras.html',location.href);
+ url.searchParams.set('restaurant_id',unidade.id);
+ conteudo().innerHTML=`<iframe title="Compras e recebimentos" src="${esc(url.href)}" style="width:100%;height:1500px;border:0;border-radius:12px"></iframe>`;
+}
 
 function abaNotas(){
   const url = new URL("web/notas.html", new URL("../", location.href));
