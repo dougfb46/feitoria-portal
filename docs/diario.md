@@ -27,3 +27,10 @@ Colaborador com atalhos da rotina e destaque para documentos pendentes.
 Rotas raiz e web atualizadas; checklist da raiz aponta para web/checklist.html.
 Verificados JavaScript, identificação integrada e navegação em prévia de 390 px.
 Somente telas estáticas; sem dados reais, prévias fictícias ou alterações de backend.
+
+## 19/10/2026 - Compras e recebimentos
+Nova área em Operação com solicitações, aprovação e acompanhamento das entregas.
+Permite preparar itens de uma nota fiscal e revisar referências de documentos.
+Conferências parciais e histórico preservados; acesso validado no serviço privado.
+Compras não envia pedidos ao fornecedor, paga ou altera estoque automaticamente.
+Publicação inclui somente interface e links; nenhum documento ou dado real no Git público.

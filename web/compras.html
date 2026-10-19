@@ -1,0 +1,116 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Compras e recebimentos · Feitoria</title><style>
+:root{--verde:#1f4d3a;--texto:#233b30;--suave:#657165;--borda:#dfe4da;--fundo:#f5f3ec}*{box-sizing:border-box}body{margin:0;background:var(--fundo);color:var(--texto);font:15px/1.55 system-ui,sans-serif}main{max-width:1200px;margin:auto;padding:20px}h1{font-size:26px;margin:0}h2{font-size:19px;margin:0 0 14px}h3{font-size:16px}p{margin:8px 0 14px}.sub,small{color:var(--suave)}.panel{padding:20px;background:#fff;border:1px solid var(--borda);border-radius:14px;margin:16px 0}.linha{display:flex;gap:10px;flex-wrap:wrap;align-items:end}.linha>*{flex:1;min-width:150px}.linha button{flex:0 0 auto}label{display:block;font-size:13px;margin:10px 0 4px}input,select,textarea,button{font:inherit;color:var(--texto);padding:11px;border:1px solid #b8c8ba;border-radius:8px;background:#fff}input,select,textarea{width:100%}button{cursor:pointer;min-height:44px;font-weight:600}button.primary{background:var(--verde);color:#fff;border-color:var(--verde)}button:disabled{opacity:.5;cursor:wait}:focus-visible{outline:3px solid #c8871f;outline-offset:2px}.aviso{padding:12px 16px;background:#fff4df;border-left:4px solid #c58d38;margin:14px 0}.erro{color:#992f20}#status{min-height:24px}.scroll{overflow:auto}table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:11px 8px;text-align:left;border-bottom:1px solid var(--borda);vertical-align:top}th{font-size:12px;color:var(--suave)}td input{min-width:100px}.badge{display:inline-block;font-size:12px;border-radius:20px;background:#edf3e8;padding:4px 9px;white-space:nowrap}.etapas{font-size:13px;color:var(--suave);line-height:1.8}.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.timeline{border-left:2px solid var(--borda);padding-left:18px}.timeline p{padding:8px 0}.item-form{display:grid;grid-template-columns:3fr 1fr 1fr 1.3fr auto;gap:8px;align-items:end;border-bottom:1px solid var(--borda);padding-bottom:12px}a{color:var(--verde)}dialog{border:0;border-radius:16px;width:94%;max-width:720px;max-height:90dvh;overflow:auto;padding:22px}dialog::backdrop{background:#0007}[hidden]{display:none!important}@media(max-width:650px){main{padding:10px}.panel{padding:14px}.grid{grid-template-columns:1fr}.item-form{grid-template-columns:1fr 1fr}.item-form label:first-child{grid-column:1/-1}.item-form button{grid-column:1/-1}h1{font-size:23px}}
+</style></head><body><main>
+<h1>Compras e recebimentos</h1><p id="intro" class="sub">Conferindo acesso…</p>
+<div class="aviso">Registre o que foi solicitado, aprovado e recebido. A aprovação fica no portal; o pedido ao fornecedor é feito pelos canais habituais. Esta área não paga contas nem altera o estoque automaticamente.</div>
+<p class="etapas">Solicitada → Aprovada → Pedido feito → Recebimento parcial ou conferido</p>
+<p id="status" role="status" aria-live="polite"></p>
+<section id="lista" hidden><div class="linha"><label>Situação<select id="filtro"><option value="">Todas</option><option value="solicitada">Aguardando aprovação</option><option value="aprovada">Aprovadas</option><option value="pedida">Aguardando entrega</option><option value="parcial">Recebimentos parciais</option><option value="conferida">Conferidas</option><option value="cancelada">Canceladas</option></select></label><button id="atualizar">Atualizar</button><button id="nova" class="primary">Nova solicitação</button><button id="da-nota" hidden>Preparar a partir de NF</button></div><div id="pedidos"></div><div class="linha"><button id="anterior">Anterior</button><p id="pagina-info"></p><button id="proxima">Próxima</button></div></section>
+<section id="detalhe" hidden></section><section id="formulario" hidden></section>
+</main><script type="module">
+import {createClient} from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.0/+esm';
+const SB='https://kujelbcbrcmkitzyswbh.supabase.co',ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt1amVsYmNicmNta2l0enlzd2JoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg2NDg0MzAsImV4cCI6MjEwNDIyNDQzMH0.uDwckXtywDBZGU_i4J8S9BdO2fUtRwXCOaLJbSiWzdQ';
+const sb=createClient(SB,ANON),unit=new URLSearchParams(location.search).get('restaurant_id');
+const el=id=>document.getElementById(id),esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const nomes={solicitada:'Aguardando aprovação',aprovada:'Aprovada',pedida:'Aguardando entrega',parcial:'Recebimento parcial',conferida:'Conferida',cancelada:'Cancelada'};
+const money=x=>x===null||x===undefined?'Não informado':new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(Number(x));
+const data=x=>x?(/^\d{4}-\d{2}-\d{2}$/.test(x)?x.split('-').reverse().join('/'):new Date(x).toLocaleString('pt-BR',{timeZone:'America/Sao_Paulo'})):'Sem previsão';
+const fonteLink=url=>typeof url==='string'&&/^https:\/\/(mail|docs)\.google\.com\//.test(url)?'<a target="_blank" rel="noopener noreferrer" href="'+esc(url)+'">Abrir fonte ↗</a>':'';
+let pagina=0,total=0,ehDono=false,ativa=false,atual=null,detalhes=null,ocupado=false;
+function aviso(t,erro=false){el('status').textContent=t;el('status').className=erro?'erro':'';}
+function tela(id){for(const x of ['lista','detalhe','formulario'])el(x).hidden=x!==id;}
+async function call(acao,dados={}){
+ const {data:d,error}=await sb.auth.getSession();if(error||!d.session)throw Error('Entre novamente no portal de gestão.');
+ const r=await fetch(SB+'/functions/v1/gestao-compras',{method:'POST',headers:{'Content-Type':'application/json',apikey:ANON,Authorization:'Bearer '+d.session.access_token},body:JSON.stringify({acao,restaurant_id:unit,...dados})});
+ const v=await r.json();if(!r.ok)throw Error(v.erro||'Não foi possível completar.');return v;
+}
+async function executar(fn){
+ if(ocupado)return;ocupado=true;for(const b of document.querySelectorAll('button'))b.disabled=true;
+ try{await fn();}catch(e){aviso(e.message,true);}finally{ocupado=false;for(const b of document.querySelectorAll('button'))b.disabled=false;el('nova').disabled=!ativa;el('da-nota').disabled=!ativa;el('anterior').disabled=pagina===0;el('proxima').disabled=(pagina+1)*30>=total;}
+}
+async function listar(){
+ aviso('Carregando compras…');const d=await call('lista',{pagina,estado:el('filtro').value});
+ total=d.total;ehDono=d.dono;ativa=d.ativa;el('intro').textContent=d.unidade+' · '+(ehDono?'Dono: solicitações, aprovações e conferências':'Gerente: solicitações e conferências');
+ el('da-nota').hidden=!ehDono;el('nova').disabled=!ativa;
+ el('pedidos').innerHTML='<section class="panel">'+(d.pedidos.length?'<div class="scroll"><table><thead><tr><th>Referência / fornecedor</th><th>Situação</th><th>Entrega prevista</th><th>Itens</th><th></th></tr></thead><tbody>'+d.pedidos.map(p=>'<tr><td><small>'+esc(p.pedido_id.slice(0,8))+'</small><br><strong>'+esc(p.dados.fornecedor)+'</strong></td><td><span class="badge">'+esc(nomes[p.estado])+'</span></td><td>'+esc(data(p.dados.previsao))+'</td><td>'+p.dados.itens.length+'</td><td><button data-pedido="'+esc(p.pedido_id)+'">Ver compra</button></td></tr>').join('')+'</tbody></table></div>':'<h2>Nenhuma compra neste filtro</h2><p class="sub">Comece com uma solicitação ou prepare os itens a partir de uma nota fiscal.</p>')+'</section>';
+ for(const b of document.querySelectorAll('[data-pedido]'))b.onclick=()=>executar(()=>abrir(b.dataset.pedido));
+ el('pagina-info').textContent=total?((pagina*30+1)+' a '+Math.min((pagina+1)*30,total)+' de '+total+' compras'):'0 compras';
+ tela('lista');aviso('Consulta concluída.');
+}
+async function abrir(id){
+ aviso('Abrindo compra…');const d=await call('detalhe',{pedido_id:id});atual=d.pedido;detalhes=d;
+ const p=atual,v=p.dados;const acoes=[];
+ if(ativa&&p.estado==='solicitada'){acoes.push(['revisar','Revisar solicitação']);if(ehDono)acoes.push(['aprovar','Registrar aprovação']);}
+ if(ativa&&p.estado==='aprovada')acoes.push(['pedir','Registrar pedido feito']);
+ if(ativa&&(['pedida','parcial'].includes(p.estado)||(p.estado==='conferida'&&ehDono)))acoes.push(['receber',p.estado==='conferida'?'Corrigir conferência':'Conferir recebimento']);
+ if(ativa&&ehDono&&!['cancelada','conferida'].includes(p.estado)&&!v.recebidos.some(r=>Number(r.quantidade)>0))acoes.push(['cancelar','Cancelar compra']);
+ el('detalhe').innerHTML='<button id="voltar">← Voltar às compras</button><section class="panel"><h2>'+esc(v.fornecedor)+'</h2><p><span class="badge">'+esc(nomes[p.estado])+'</span> · Previsão: '+esc(data(v.previsao))+'</p><p class="sub">Referência do pedido: <code>'+esc(p.pedido_id)+'</code></p><p>'+esc(v.observacao)+'</p><div class="linha">'+acoes.map(([id,t])=>'<button data-acao="'+id+'"'+(id==='receber'?' class="primary"':'')+'>'+t+'</button>').join('')+'</div></section><section class="panel"><h2>Itens solicitados e recebidos</h2><div class="scroll"><table><thead><tr><th>Produto</th><th>Unidade de compra</th><th>Pedido</th><th>Recebido acumulado</th><th>Preço unitário informado</th></tr></thead><tbody>'+v.itens.map(i=>'<tr><td>'+esc(i.descricao)+'</td><td>'+esc(i.unidade)+'</td><td>'+esc(i.quantidade)+'</td><td>'+esc(v.recebidos.find(r=>r.item_id===i.id)?.quantidade??'Ainda não conferido')+'</td><td>'+esc(i.preco_unitario===null?'Não informado':'R$ '+i.preco_unitario.replace('.',','))+'</td></tr>').join('')+'</tbody></table></div><p class="sub">A quantidade recebida é o total acumulado na unidade de compra. Caixa, pacote, kg e litro não são convertidos automaticamente.</p></section><div class="grid"><section class="panel"><h2>Nota fiscal</h2>'+(v.nota?'<p>NF '+esc(v.nota.numero)+' · '+esc(v.nota.fornecedor)+'</p><p>Total informado: '+money(v.nota.total)+'</p><p class="sub">Referência consultada em '+esc(data(v.nota.consultado_em))+'. Confira a natureza da operação na área fiscal.</p>':'<p class="sub">Nenhuma nota vinculada.</p>')+(ehDono&&ativa&&p.estado!=='cancelada'?'<button id="vincular-nota">Vincular NF</button>'+(v.nota?'<button data-desvincular="nota">Retirar vínculo</button>':''):'')+'</section><section class="panel"><h2>Recebimento · checklist K02</h2><p class="sub">Use a referência do pedido no checklist da equipe. Depois de concluído, vincule a conferência aqui.</p><p>'+v.checklists.length+' checklist(s) vinculado(s).</p>'+(ativa&&p.estado!=='cancelada'?'<button id="vincular-checklist">Vincular checklist concluído</button>':'')+v.checklists.map(id=>'<p><code>'+esc(id)+'</code>'+(ehDono?'<button data-desvincular="checklist" data-ref="'+esc(id)+'">Retirar vínculo</button>':'')+'</p>').join('')+'</section></div><section class="panel"><h2>Documentos financeiros</h2><p class="sub">Um vínculo aproxima as fontes; não confirma pagamento nem gera outra despesa.</p><p>'+v.financeiros.length+' referência(s) vinculada(s).</p>'+(ehDono&&ativa&&p.estado!=='cancelada'?'<button id="buscar-financeiro">Procurar boleto ou comprovante</button>':'')+v.financeiros.map(id=>{const f=d.financeiros_vinculados?.find(x=>x.id===id);return '<p>'+(f?esc(f.assunto)+' · '+esc(f.estado)+' · '+fonteLink(f.url)+'<br>':'')+'<code>'+esc(id)+'</code>'+(ehDono?'<button data-desvincular="financeiro" data-ref="'+esc(id)+'">Retirar vínculo</button>':'')+'</p>';}).join('')+'</section><section class="panel"><h2>Histórico</h2><div class="timeline">'+d.eventos.map(e=>'<p><strong>'+esc(({criar:'Solicitação registrada',revisar:'Solicitação revisada',aprovar:'Aprovação registrada',pedir:'Pedido registrado',receber:'Conferência registrada',vincular:'Referência vinculada',desvincular:'Vínculo retirado',cancelar:'Compra cancelada'})[e.acao])+'</strong> · '+esc(data(e.criado_em))+'<br>'+esc(e.motivo)+'<br><small>Autor: '+esc(e.autor_id)+' · dia operacional '+esc(e.business_date)+'</small></p>').join('')+'</div></section>';
+ el('voltar').onclick=()=>executar(listar);
+ for(const b of document.querySelectorAll('[data-acao]'))b.onclick=()=>b.dataset.acao==='revisar'?formulario(v):b.dataset.acao==='receber'?recebimento():acaoSimples(b.dataset.acao);
+ if(el('vincular-nota'))el('vincular-nota').onclick=()=>dialogNota(false);
+ if(el('vincular-checklist'))el('vincular-checklist').onclick=vincularChecklist;
+ if(el('buscar-financeiro'))el('buscar-financeiro').onclick=buscarFinanceiro;
+ for(const b of document.querySelectorAll('[data-desvincular]'))b.onclick=()=>acaoSimples('desvincular',{tipo:b.dataset.desvincular,referencia:b.dataset.ref});
+ tela('detalhe');aviso('Compra carregada. Nenhum pedido é enviado automaticamente ao fornecedor.');
+}
+function dialogo(titulo,html){
+ const d=document.createElement('dialog');d.innerHTML='<h2>'+esc(titulo)+'</h2>'+html+'<p class="erro" role="status"></p><button data-fechar>Fechar</button>';document.body.append(d);d.querySelector('[data-fechar]').onclick=()=>d.close();d.onclose=()=>d.remove();d.showModal();return d;
+}
+async function salvar(acao,payload,d,req){
+ await call(acao,{pedido_id:atual.pedido_id,anterior:atual.id,requisicao:req,...payload});
+ d.close();await abrir(atual.pedido_id);
+}
+function acaoSimples(acao,extra={}){
+ const d=dialogo(({aprovar:'Registrar aprovação',pedir:'Registrar pedido já feito ao fornecedor',cancelar:'Cancelar compra',desvincular:'Corrigir vínculo'})[acao],'<p class="sub">Registre o motivo. O histórico anterior será preservado.</p><label>Motivo<textarea rows="3" minlength="5" maxlength="500"></textarea></label><button class="primary" data-salvar>Confirmar registro</button>'),req=crypto.randomUUID();
+ d.querySelector('[data-salvar]').onclick=()=>executar(async()=>{try{await salvar(acao,{...extra,motivo:d.querySelector('textarea').value},d,req);}catch(e){d.querySelector('.erro').textContent=e.message;}});
+}
+function recebimento(){
+ const v=atual.dados;const d=dialogo('Conferir recebimento','<p>Informe o <strong>total recebido até agora</strong>, incluindo entregas anteriores, na mesma unidade do pedido.</p><div class="scroll"><table><tr><th>Item</th><th>Pedido</th><th>Total recebido</th></tr>'+v.itens.map(i=>'<tr><td>'+esc(i.descricao)+'<br><small>'+esc(i.unidade)+'</small></td><td>'+esc(i.quantidade)+'</td><td><input aria-label="Recebido: '+esc(i.descricao)+'" type="number" min="0" max="1000000" step="0.000001" data-item="'+esc(i.id)+'" value="'+esc(v.recebidos.find(r=>r.item_id===i.id)?.quantidade??'0')+'"></td></tr>').join('')+'</table></div><label><input type="checkbox" style="width:auto" id="encerrar"> Encerrar conferência deste pedido</label><label>Motivo e divergências<textarea rows="3" minlength="5" maxlength="500"></textarea></label><p class="sub">Se encerrar com falta ou sobra, descreva a diferença e o encaminhamento. A conferência não atualiza estoque ou pagamento.</p><button class="primary" data-salvar>Registrar conferência</button>'),req=crypto.randomUUID();
+ d.querySelector('[data-salvar]').onclick=()=>executar(async()=>{try{await salvar('receber',{recebidos:[...d.querySelectorAll('[data-item]')].map(x=>({item_id:x.dataset.item,quantidade:x.value})),encerrar:d.querySelector('#encerrar').checked,motivo:d.querySelector('textarea').value},d,req);}catch(e){d.querySelector('.erro').textContent=e.message;}});
+}
+function adicionarItem(v={}){
+ const row=document.createElement('div');row.className='item-form';
+ row.innerHTML='<label>Produto<input data-campo="descricao" maxlength="240" required></label><label>Unidade<input data-campo="unidade" placeholder="kg, un, caixa…" maxlength="20" required></label><label>Quantidade<input data-campo="quantidade" type="number" min="0.000001" max="1000000" step="0.000001" required></label><label>Preço por unidade (R$)<input data-campo="preco_unitario" type="number" min="0" max="1000000" step="0.000001"></label><button type="button" aria-label="Remover item">Remover</button>';
+ for(const input of row.querySelectorAll('input'))input.value=v[input.dataset.campo]??'';
+ row.querySelector('button').onclick=()=>row.remove();el('itens-form').append(row);
+}
+function formulario(v=null,notaId=null){
+ const editar=!!v&&!notaId,pedidoId=editar?atual.pedido_id:crypto.randomUUID(),req=crypto.randomUUID();
+ el('formulario').innerHTML='<button id="cancelar-form">← Voltar</button><form class="panel" id="form-compra"><h2>'+(editar?'Revisar solicitação':'Nova solicitação de compra')+'</h2><p class="sub">Informe a unidade em que o produto é comprado. A aprovação será registrada pelo dono.</p><label>Fornecedor<input id="fornecedor" maxlength="240" required minlength="2"></label><label>Previsão de entrega<input id="previsao" type="date"></label><div id="itens-form"></div><button type="button" id="add-item">+ Adicionar item</button><label>Observação<textarea id="observacao" maxlength="1000" rows="2"></textarea></label><label>Motivo da solicitação ou revisão<textarea id="motivo-form" maxlength="500" minlength="5" required rows="2"></textarea></label>'+(notaId?'<p class="aviso">Preparado a partir da NF '+esc(notaId)+'. Confira itens, unidades e preços. A nota não comprova recebimento.</p>':'')+'<button class="primary" type="submit">Salvar solicitação</button></form>';
+ el('fornecedor').value=v?.fornecedor??'';el('previsao').value=v?.previsao??'';el('observacao').value=v?.observacao??'';
+ for(const i of v?.itens??[{}])adicionarItem(i);
+ el('add-item').onclick=()=>adicionarItem();el('cancelar-form').onclick=()=>executar(editar?()=>abrir(pedidoId):listar);
+ el('form-compra').onsubmit=e=>{e.preventDefault();executar(async()=>{
+  const itens=[...el('itens-form').children].map(row=>Object.fromEntries([...row.querySelectorAll('input')].map(i=>[i.dataset.campo,i.value])));
+  const d=await call(editar?'revisar':'criar',{pedido_id:pedidoId,anterior:editar?atual.id:null,requisicao:req,fornecedor:el('fornecedor').value,previsao:el('previsao').value,itens,observacao:el('observacao').value,motivo:el('motivo-form').value});
+  aviso('Solicitação salva.');
+  if(notaId){try{const p=await call('detalhe',{pedido_id:pedidoId});await call('vincular',{pedido_id:pedidoId,anterior:p.pedido.id,requisicao:crypto.randomUUID(),tipo:'nota',nota_id:notaId,motivo:'Vínculo com a NF usada para preparar a solicitação.'});}catch{await abrir(pedidoId);aviso('Solicitação salva. A nota não foi vinculada; use Vincular NF na compra.',true);return;}}
+  await abrir(d.pedido_id);
+ });};tela('formulario');aviso(editar?'Alterações exigem nova aprovação.':'Preencha a solicitação. Nada será enviado ao fornecedor.');
+}
+function dialogNota(preparar){
+ const d=dialogo(preparar?'Preparar itens de uma nota':'Vincular nota fiscal','<p class="sub">Use o ID exibido na consulta de notas fiscais. O portal consultará novamente a Takeat antes de usar a referência.</p><label>ID da nota na Takeat<input type="number" min="1" max="2147483647" step="1"></label><button data-consultar class="primary">'+(preparar?'Consultar e preparar':'Conferir e vincular')+'</button>'),req=crypto.randomUUID();
+ d.querySelector('[data-consultar]').onclick=()=>executar(async()=>{try{
+  const id=Number(d.querySelector('input').value);
+  if(preparar){const {nota:n}=await call('preparar_nota',{nota_id:id});if(!n.itens?.length)throw Error('A origem não disponibilizou itens. Crie uma solicitação manual e vincule a NF depois.');
+   const v={fornecedor:n.fornecedor??'',itens:n.itens.map(i=>({descricao:i.descricao??'',unidade:i.unidade??'',quantidade:i.quantidade??'',preco_unitario:i.valor_unitario??''})),observacao:'Preparado da NF '+(n.numero??n.id)+'. Conferir natureza: '+(n.natureza??'não informada')};d.close();formulario(v,id);
+  }else await salvar('vincular',{tipo:'nota',nota_id:id,motivo:'Nota consultada na Takeat e vinculada pelo dono.'},d,req);
+ }catch(e){d.querySelector('.erro').textContent=e.message;}});
+}
+function vincularChecklist(){
+ const d=dialogo('Vincular checklist de recebimento','<p class="sub">Confira fornecedor e referência do pedido antes de selecionar. Apenas K02 concluídos desta unidade aparecem.</p><label>Checklist<select>'+detalhes.checklists.map(c=>'<option value="'+esc(c.id)+'">'+esc(c.business_date+' · '+(c.contexto?.fornecedor??'Sem fornecedor')+' · '+(c.contexto?.pedido_ref??c.id.slice(0,8)))+'</option>').join('')+'</select></label><label>Motivo<textarea rows="2" minlength="5" maxlength="500"></textarea></label><button data-salvar class="primary">Vincular conferência</button>'),req=crypto.randomUUID();
+ d.querySelector('[data-salvar]').disabled=!detalhes.checklists.length;
+ d.querySelector('[data-salvar]').onclick=()=>executar(async()=>{try{await salvar('vincular',{tipo:'checklist',referencia:d.querySelector('select').value,motivo:d.querySelector('textarea').value},d,req);}catch(e){d.querySelector('.erro').textContent=e.message;}});
+}
+function buscarFinanceiro(){
+ const d=dialogo('Relacionar documento financeiro','<label>Fornecedor ou assunto<input maxlength="120"></label><button data-buscar>Procurar nas fontes</button><div data-fontes></div>');d.querySelector('input').value=atual.dados.fornecedor.slice(0,120);
+ d.querySelector('[data-buscar]').onclick=()=>executar(async()=>{try{
+  const {fontes}=await call('fontes',{busca:d.querySelector('input').value});d.querySelector('[data-fontes]').innerHTML=fontes.length?fontes.map((f,i)=>'<div class="panel"><strong>'+esc(f.fornecedor??f.assunto)+'</strong><p>'+esc(data(f.data))+' · '+esc(f.tipo)+' · '+esc(f.estado)+'</p><p>'+money(f.valor_centavos===null?null:f.valor_centavos/100)+' · '+fonteLink(f.url)+'</p><button data-fonte="'+i+'">Vincular referência</button></div>').join(''):'<p>Nenhum documento encontrado nesta unidade. Tente parte do nome.</p>';
+  for(const b of d.querySelectorAll('[data-fonte]'))b.onclick=()=>executar(async()=>{try{await salvar('vincular',{tipo:'financeiro',referencia:fontes[Number(b.dataset.fonte)].id,motivo:'Referência financeira conferida e vinculada pelo dono.'},d,crypto.randomUUID());}catch(e){d.querySelector('.erro').textContent=e.message;}});
+ }catch(e){d.querySelector('.erro').textContent=e.message;}});
+}
+el('filtro').onchange=()=>{pagina=0;executar(listar);};el('atualizar').onclick=()=>executar(listar);
+el('nova').onclick=()=>formulario();el('da-nota').onclick=()=>dialogNota(true);
+el('anterior').onclick=()=>{if(pagina){pagina--;executar(listar);}};el('proxima').onclick=()=>{if((pagina+1)*30<total){pagina++;executar(listar);}};
+if(unit)executar(async()=>{await listar();const id=Number(new URLSearchParams(location.search).get('nota_id'));if(ehDono&&Number.isSafeInteger(id)&&id>0){dialogNota(true);document.querySelector('dialog input').value=id;}});else aviso('Abra Compras e recebimentos dentro do portal de gestão.',true);
+</script></body></html>
