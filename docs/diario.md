@@ -34,3 +34,10 @@ Permite preparar itens de uma nota fiscal e revisar referências de documentos.
 Conferências parciais e histórico preservados; acesso validado no serviço privado.
 Compras não envia pedidos ao fornecedor, paga ou altera estoque automaticamente.
 Publicação inclui somente interface e links; nenhum documento ou dado real no Git público.
+
+## 19/10/2026 - Compras por WhatsApp e reposição
+Pedido colado conserva texto e conversa, prepara itens e permite ao dono registrar envio já realizado.
+Estoque separado por unidade exige contagem e conversão; compras vinculadas descontam a reposição e entradas não duplicam recebimentos.
+Notas separam manifestação Takeat de vínculo com compra; filtros não comprovam lançamento de estoque ou pagamento.
+Validação: 130 testes, tipos, sintaxe JS e ensaio de banco revertido; sem pedidos fictícios persistidos.
+Continuidade: registrar inventário, mínimos e embalagens reais; extrato bancário segue pendente para conciliação.
