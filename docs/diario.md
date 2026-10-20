@@ -76,3 +76,10 @@ Acesso geral exclusivo do dono; gerente conserva o assistente de compras da unid
 Contexto por campos permitidos, sem credenciais ou identificação individual; CMO somente agregado.
 Fontes indisponíveis aparecem como pendências; cada módulo informa seu próprio período.
 Validação de tipos e 150 testes; publicação estática sem dados comerciais reais.
+
+## 20/10/2026 — Conhecimento compartilhado e IA validada
+Análise geral Gemini retornou resposta real no portal; publicação anterior integrada após aprovação.
+Base de conhecimento com regras, propostas, referências, histórico e liberação explícita para IA.
+Tela permite consulta, nova versão, histórico e exportação datada, com acesso por perfil e unidade.
+Memória fica no Supabase; assistentes precisam de conexão própria autorizada e leitura da fonte atual.
+Tipos, sintaxe, verificador de publicação e testes aprovados; sem dados pessoais ou financeiros na publicação estática.
