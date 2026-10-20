@@ -69,3 +69,10 @@ Prazo desconhecido permanece pendente, sem presumir entrega no mesmo dia.
 Configuração privada do Gemini aguardando chave e confirmação do projeto gratuito.
 Teste adicional da validação de prazo aprovado; demais verificações anteriores preservadas.
 Publicação estática não inclui contatos comerciais, propostas ou resultados reais.
+
+## 20/10/2026 — Gemini com análise geral
+Análise de gestão reúne indicadores de vendas, resultados, financeiro, notas e rotinas.
+Acesso geral exclusivo do dono; gerente conserva o assistente de compras da unidade.
+Contexto por campos permitidos, sem credenciais ou identificação individual; CMO somente agregado.
+Fontes indisponíveis aparecem como pendências; cada módulo informa seu próprio período.
+Validação de tipos e 150 testes; publicação estática sem dados comerciais reais.
