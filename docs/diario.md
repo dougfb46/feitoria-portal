@@ -83,3 +83,9 @@ Base de conhecimento com regras, propostas, referências, histórico e liberaç�
 Tela permite consulta, nova versão, histórico e exportação datada, com acesso por perfil e unidade.
 Memória fica no Supabase; assistentes precisam de conexão própria autorizada e leitura da fonte atual.
 Tipos, sintaxe, verificador de publicação e testes aprovados; sem dados pessoais ou financeiros na publicação estática.
+
+## 27/10/2026 — Pergunte à Feitoria
+Nova conversa na área Resultados da gestão, com resposta em texto, período, fontes e cobertura.
+Acesso do dono por unidade. Perguntas ficam somente na memória da página; não há dados comerciais reais no HTML/JS.
+Gmail atual, produção e disponibilidade do cardápio ainda não conectados; interface informa os limites.
+Barreira de publicação, sintaxe e testes aprovados; interface conferida em ambiente local com dados explicitamente fictícios.
