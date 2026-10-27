@@ -16,3 +16,5 @@ A aba **Boletim do dono** reúne análise do agente e indicadores de gestão ap�
 
 
 A aba **Histórico financeiro** oferece consulta de documentos e referências às fontes após autorização do dono. Os arquivos públicos contêm somente a interface, sem o histórico financeiro.
+
+O portal de gestão e o portal do colaborador usam a base visual Sage fornecida pelo dono: componentes, gráficos, navegação e painel do agente. O login e os serviços existentes permanecem nas páginas de serviços. A demonstração visual só é ativada por ?preview=1 e exibe dados fictícios. Drive, Calendar e Gmail mostram o estado de integração pendente; Gemini utiliza o serviço autenticado já existente.
