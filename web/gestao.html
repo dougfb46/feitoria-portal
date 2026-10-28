@@ -205,6 +205,7 @@ const AREAS = [
     ["folha","Fechamento de ponto","Confira o mês e visualize sua planilha de fechamento."],
     ["nr1","Saúde e segurança","Acompanhe riscos, ações e informativos da equipe."]]],
   ["Resultados", [
+    ["assistente","Pergunte à Feitoria","Converse sobre vendas, estoque e documentos da unidade, com fontes e período."],
     ["boletim","Boletim do dono","Reúna os destaques e as pendências para decidir."],
     ["vendas","Vendas e horários","Explore produtos, vendedores e horários de maior movimento."],
     ["resultados","Resultados e metas","Consulte DRE, custos, CMV, CMO e metas."],
@@ -305,6 +306,7 @@ function moldura(usuario){
   conteudo().onclick=e=>{const b=e.target.closest("[data-destino]");if(b)navegar(b.dataset.destino);};
 }
 const render = () => aba === "inicio" ? abaInicio() : aba === "acessos" ? abaAcessos() : aba === "equipe" ? abaEquipe()
+  : aba === "assistente" ? abaConversaGestao()
   : aba === "estoque" ? abaEstoque()
   : aba === "compras" ? abaCompras()
   : aba === "boletim" ? abaBoletim()
@@ -325,6 +327,11 @@ const render = () => aba === "inicio" ? abaInicio() : aba === "acessos" ? abaAce
   : abaDocs();
 const conteudo = () => document.getElementById("conteudo");
 
+function abaConversaGestao(){
+ const url=new URL(location.pathname.includes('/web/')?'conversa-gestao.html':'web/conversa-gestao.html',location.href);
+ url.searchParams.set('restaurant_id',unidade.id);
+ conteudo().innerHTML=`<iframe title="Pergunte à Feitoria" src="${esc(url.href)}" style="width:100%;height:1100px;border:0;border-radius:12px"></iframe>`;
+}
 function abaEstoque(){
  const url=new URL(location.pathname.includes('/web/')?'estoque.html':'web/estoque.html',location.href);
  url.searchParams.set('restaurant_id',unidade.id);

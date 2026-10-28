@@ -22,6 +22,8 @@
   "web/checklist.html",
   "web/compras-assistente.css",
   "web/compras.html",
+  "web/conversa-gestao.html",
+  "web/conversa-gestao.js",
   "web/estoque.html",
   "web/financeiro.html",
   "web/gestao.html",
