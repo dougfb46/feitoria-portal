@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap');
 :root{--verde:#3e6552;--ambar:#976316;--fundo:#eeeee7;--carta:#fff;--texto:#242a26;--suave:#69736c;--borda:#e1e7dd;--soft:#e8efdf;color-scheme:light}
 html[data-theme=dark]{--verde:#a4c69b;--ambar:#ebc27c;--fundo:#17201c;--carta:#222e27;--texto:#f0f3e9;--suave:#b2bfb4;--borda:#3c4a40;--soft:#344735;color-scheme:dark}
 body{font-family:'DM Sans',system-ui,sans-serif;padding:0 24px 28px;background:radial-gradient(ellipse at top right,#a4bb971f,transparent 65%),var(--fundo);line-height:1.5;transition:background-color .25s,color .25s}
@@ -23,3 +24,15 @@ html[data-theme=dark] button:not(.secundaria):not(.discreto):not(.employee-theme
 @media(min-width:760px){.atalhos-portal{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:520px){body{padding:0 16px 20px}.employee-header{padding:22px 0}.employee-header strong{font-size:16px}.employee-header small{font-size:11px}.carta{padding:20px;border-radius:22px}.app:has(#pin){margin-top:12px}.app:has(#pin)>.carta{padding:25px}.saudacao{padding:25px}.atalhos-portal{gap:10px}.atalhos-portal button{padding:17px}.doc{padding:16px}.menu-portal{margin-inline:-4px;padding-inline:4px}.cabecalho-docs{align-items:flex-start}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+/* Tipografia compartilhada da Feitoria. */
+:root{--font:'Manrope',system-ui,-apple-system,'Segoe UI',sans-serif}
+body,input,textarea,select,button{font-family:var(--font);font-variant-numeric:tabular-nums}
+body{font-weight:400}
+h1,h2,h3,h4{font-family:var(--font);font-weight:600}
+button,input[type=button],input[type=submit]{font-weight:500}
+strong,b{font-weight:600}
+@media(max-width:720px){
+ body,p,label,input,select,textarea,button,.sub,.vazio,.aceite,.doc .meta,.atalhos-portal small,.atalhos-portal button,.menu-portal button,.cabecalho-docs button{font-size:16px}
+ .employee-header small,.employee-footer,.marca,.selo{font-size:12px}
+}
