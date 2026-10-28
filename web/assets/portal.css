@@ -26,3 +26,21 @@ strong,b{font-weight:600}
  body,p,label,input,select,textarea,button,.sub,.vazio,.aceite,.doc .meta,.atalhos-portal small,.atalhos-portal button,.menu-portal button,.cabecalho-docs button{font-size:16px}
  .employee-header small,.employee-footer,.marca,.selo{font-size:12px}
 }
+
+/* Agente Feitoria: vidro verde, respiração lenta e reações sem saltos. */
+.orb{--orb-glow:47,133,91;animation:feitoriaOrbBreathe 6s ease-in-out infinite;translate:0 0}
+.orb[data-sleep]{animation-duration:6s}
+.orb-ball{background:radial-gradient(75% 50% at 50% 100%,#b4e4aeed,#b4e4ae00 72%),radial-gradient(60% 60% at 47% 44%,#1c6047 0%,#2e805b 42%,#5caa7b 64%,#a1cfaa 82%,#e3eedc 100%)}
+.orb-swirl{background:radial-gradient(28% 24% at 36% 40%,#84b87cd9,#84b87c00),radial-gradient(26% 22% at 66% 64%,#bce6b599,#bce6b500);animation-duration:12s}
+.orb-rim{box-shadow:inset 0 0 calc(var(--s)*.07) calc(var(--s)*.015) #f4ffe399,inset 0 calc(var(--s)*.06) calc(var(--s)*.1) #ffffff59,inset 0 calc(var(--s)*-.05) calc(var(--s)*.12) #b4e4ae73}
+.orb[data-mood="thinking"] .orb-ball{animation:feitoriaOrbThinking 2.4s ease-in-out infinite;scale:1}
+.orb[data-mood="thinking"] .orb-swirl{animation-duration:4s}
+.orb[data-mood="talking"] .orb-swirl{animation-duration:6s}
+.orb[data-mood="listening"] .orb-ball{filter:brightness(1.09)}
+.hello-orb:before,.hello-orb:after{border-color:#69a77e52;animation-duration:4.8s}
+.hello-orb:after{animation-delay:2.4s}
+.sage-arrival-ring{border-color:#69a77e80}
+@keyframes feitoriaOrbBreathe{0%,100%{translate:0 0}50%{translate:0 -2px}}
+@keyframes feitoriaOrbThinking{0%,100%{filter:brightness(1)}50%{filter:brightness(1.16)}}
+@media(prefers-reduced-motion:reduce){.orb,.orb *, .hello-orb:before,.hello-orb:after{animation:none!important;translate:none!important}}
+html[data-motion="reduced"] .orb,html[data-motion="reduced"] .orb *,html[data-motion="reduced"] .hello-orb:before,html[data-motion="reduced"] .hello-orb:after{animation:none!important;translate:none!important}
