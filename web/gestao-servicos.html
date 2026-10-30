@@ -442,6 +442,7 @@ async function abaEquipe(){
         <div class="linha" style="margin-bottom:14px">
           <h2 style="margin:0">Equipe · ${esc(unidade.name)}</h2>
           <button id="novo">Novo colaborador</button>
+          <button class="secundaria" id="equipe-aparelhos">Aparelhos e acessos</button>
           <button class="secundaria" id="processos-pessoas">Admissão e movimentações</button>
         </div>
         ${r.equipe.length ? `<table>
@@ -464,6 +465,7 @@ async function abaEquipe(){
         </table>` : `<p class="vazio">Nenhum colaborador cadastrado ainda.</p>`}
       </div>`;
     document.getElementById("novo").onclick = () => formulario(null);
+    document.getElementById("equipe-aparelhos").onclick = () => aparelhosEAcessos();
     document.getElementById("processos-pessoas").onclick = () => processosPessoas();
     conteudo().querySelectorAll("[data-documentos]").forEach(b => b.onclick = () => {
       filtroPessoa = b.dataset.documentos;
@@ -476,6 +478,88 @@ async function abaEquipe(){
     conteudo().querySelectorAll("[data-ficha]").forEach(b =>
       b.onclick = () => abrirFicha(CARGA[b.dataset.ficha]));
   } catch(e){ conteudo().innerHTML = `<div class="carta"><div class="aviso">${esc(e.message)}</div></div>`; }
+}
+
+/* ---------- aparelhos e acessos do colaborador ---------- */
+function htmlAparelhos(aparelhos, filtro){
+  const lista = aparelhos.filter(a => filtro === "todos" || (filtro === "liberados" ? a.liberado : !a.liberado))
+    .sort((a,b) => Number(a.liberado) - Number(b.liberado));
+  const horario = iso => iso ? new Date(iso).toLocaleString("pt-BR", {timeZone:"America/Sao_Paulo",dateStyle:"short",timeStyle:"short"}) : "Não informado";
+  if(!lista.length) return `<p class="vazio">${aparelhos.length ? "Nenhum aparelho neste filtro." : "Nenhum aparelho registrado nesta unidade. Peça ao colaborador para tentar entrar no Portal do Colaborador."}</p>`;
+  return `<div style="overflow-x:auto"><table><thead><tr><th>Colaborador / aparelho</th><th>Primeira tentativa</th><th>Último uso registrado</th><th>Acesso</th><th>Ação</th></tr></thead><tbody>${lista.map(a => `<tr>
+    <td><b>${esc(a.colaborador)}</b><br><small>${esc(a.apelido || "Navegador não identificado")}</small></td>
+    <td>${esc(horario(a.primeiro_uso))}</td><td>${esc(horario(a.ultimo_uso))}</td>
+    <td><span class="etiqueta ${a.liberado ? "ponto" : "atencao"}">${a.liberado ? "Liberado" : "Sem liberação"}</span></td>
+    <td><button class="${a.liberado ? "secundaria" : ""}" data-aparelho="${esc(a.id)}">${a.liberado ? "Bloquear" : "Liberar acesso"}</button></td>
+  </tr>`).join("")}</tbody></table></div>`;
+}
+
+function confirmarAparelho(a, nomeUnidade){
+  return new Promise(resolve => {
+    const d = document.createElement("dialog"), liberar = !a.liberado;
+    d.setAttribute("aria-labelledby", "aparelho-confirmar-titulo");
+    d.innerHTML = `<h2 id="aparelho-confirmar-titulo">${liberar ? "Liberar acesso" : "Bloquear aparelho"}?</h2>
+      <p><b>${esc(a.colaborador)}</b><br>${esc(a.apelido || "Navegador não identificado")} · ${esc(nomeUnidade)}</p>
+      <p class="sub">${liberar ? "Confirme com o colaborador que esta tentativa foi feita por ele. Depois da liberação, ele poderá entrar novamente com o próprio PIN e nascimento." : "Este navegador perderá o acesso ao portal nas próximas consultas. Os outros aparelhos da pessoa mantêm sua própria liberação."}</p>
+      <label style="display:flex;gap:10px;align-items:center"><input id="aparelho-conferido" type="checkbox" style="width:auto"> Conferi o colaborador e o aparelho.</label>
+      <div class="linha" style="margin-top:20px"><button id="aparelho-confirmar" disabled>${liberar ? "Confirmar liberação" : "Confirmar bloqueio"}</button><button class="secundaria" id="aparelho-cancelar">Cancelar</button></div>`;
+    d.querySelector("#aparelho-conferido").onchange = e => { d.querySelector("#aparelho-confirmar").disabled = !e.target.checked; };
+    d.querySelector("#aparelho-confirmar").onclick = () => d.close("confirmado");
+    d.querySelector("#aparelho-cancelar").onclick = () => d.close();
+    d.addEventListener("close", () => { const confirmado = d.returnValue === "confirmado"; d.remove(); resolve(confirmado); }, {once:true});
+    document.body.appendChild(d); d.showModal();
+  });
+}
+
+async function aparelhosEAcessos(){
+  const unidadeAparelhos = {id:unidade.id, nome:unidade.name};
+  const d = document.createElement("dialog"); let aparelhos = [], ocupado = false;
+  d.style.maxWidth = "960px";
+  d.setAttribute("aria-labelledby", "aparelhos-titulo");
+  d.innerHTML = `<h2 id="aparelhos-titulo">Aparelhos e acessos</h2><p class="sub">${esc(unidadeAparelhos.nome)} · Portal do Colaborador</p>
+    <p class="sub">Confira quem tentou entrar antes de liberar. Um navegador novo, uma janela anônima ou a limpeza dos dados pode aparecer como outro aparelho.</p>
+    <div class="linha"><label>Mostrar<select id="aparelhos-filtro"><option value="todos">Todos</option><option value="sem_liberacao">Sem liberação</option><option value="liberados">Liberados</option></select></label><button class="secundaria" id="aparelhos-atualizar">Atualizar lista</button></div>
+    <p id="aparelhos-mensagem" role="status" aria-live="polite"></p><div id="aparelhos-lista"></div>
+    <p class="sub" style="margin-top:18px;font-size:12px">“Sem liberação” inclui aparelhos novos e bloqueados anteriormente. O nome do navegador é informado pelo aparelho e serve apenas como referência. Liberar o aparelho mantém o perfil de acesso definido no cadastro da pessoa.</p>
+    <button class="discreto" id="aparelhos-fechar">Fechar</button>`;
+  const el = id => d.querySelector("#"+id);
+  function mensagem(texto, erro=false){ el("aparelhos-mensagem").textContent=texto; el("aparelhos-mensagem").className=erro?"aviso":"sub"; }
+  function controles(valor){ ocupado=valor; d.querySelectorAll("button,select").forEach(b=>b.disabled=valor); el("aparelhos-lista").setAttribute("aria-busy",String(valor)); }
+  function desenhar(){
+    el("aparelhos-lista").innerHTML=htmlAparelhos(aparelhos,el("aparelhos-filtro").value);
+    d.querySelectorAll("[data-aparelho]").forEach(b=>b.onclick=()=>alterar(b.dataset.aparelho));
+  }
+  async function listar(){
+    const resposta=await chamar({action:"aparelhos",restaurant_id:unidadeAparelhos.id});
+    if(!Array.isArray(resposta.aparelhos)) throw new Error("A lista de aparelhos não foi recebida. Tente atualizar.");
+    return resposta.aparelhos;
+  }
+  async function carregar(){
+    if(ocupado)return; controles(true); mensagem("Consultando os aparelhos da unidade…");
+    try{ aparelhos=await listar(); if(!d.isConnected)return; desenhar(); mensagem(`${aparelhos.filter(a=>!a.liberado).length} sem liberação · ${aparelhos.filter(a=>a.liberado).length} liberados`); }
+    catch(e){ if(d.isConnected)mensagem(e.message,true); }
+    finally{ if(d.isConnected)controles(false); }
+  }
+  async function alterar(id){
+    if(ocupado)return; const a=aparelhos.find(a=>a.id===id); if(!a)return;
+    controles(true);
+    try{
+      if(!await confirmarAparelho(a,unidadeAparelhos.nome))return;
+      const liberado=!a.liberado; mensagem("Salvando e conferindo o acesso…");
+      await chamar({action:"liberar_aparelho",restaurant_id:unidadeAparelhos.id,id:a.id,liberado});
+      aparelhos=await listar();
+      if(!d.isConnected)return; desenhar();
+      if(aparelhos.find(item=>item.id===a.id)?.liberado!==liberado)throw new Error("Não foi possível confirmar a alteração. Atualize a lista antes de tentar novamente.");
+      mensagem(liberado ? `Acesso liberado para ${a.colaborador}. Peça para entrar novamente no portal.` : `Aparelho bloqueado para ${a.colaborador}.`);
+    }catch(e){ if(d.isConnected)mensagem(e.message,true); }
+    finally{ if(d.isConnected)controles(false); }
+  }
+  el("aparelhos-atualizar").onclick=carregar;
+  el("aparelhos-filtro").onchange=desenhar;
+  el("aparelhos-fechar").onclick=()=>d.close();
+  d.addEventListener("cancel",e=>{if(ocupado)e.preventDefault();});
+  d.addEventListener("close",()=>d.remove(),{once:true});
+  document.body.appendChild(d); d.showModal(); await carregar();
 }
 
 const rotuloTipo = (t) => ({clt:"CLT", freela_fixo:"Freela fixo",
