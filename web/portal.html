@@ -79,7 +79,20 @@ const esc = (v) => String(v ?? "").replace(/[&<>"']/g, (ch) =>
 
 let pin = "", nascimento = "", sessao = null;
 let secao = "inicio", tempoSessao = null, frameAtivo = null;
-function encerrarPortal(){ clearTimeout(tempoSessao); sessao=null; pin=""; nascimento=""; secao="inicio"; telaEntrar(); }
+// Cozinha incorporada: somente esta janela e a sessão ativa recebem respostas.
+window.addEventListener("message",async e=>{
+  if(e.origin!==location.origin || e.source!==frameAtivo?.contentWindow || !sessao || secao!=="cozinha" || sessao.perfil!=="completo")return;
+  if(e.data?.tipo==="feitoria-cozinha-altura"){const h=Number(e.data.altura);if(Number.isFinite(h))frameAtivo.style.height=Math.min(6000,Math.max(500,h))+"px";if(e.data.inicio)frameAtivo.scrollIntoView({block:"start"});return;}
+  if(e.data?.tipo!=="feitoria-cozinha-chamar" || typeof e.data.id!=="string")return;
+  const janela=frameAtivo.contentWindow, atual=sessao, id=e.data.id;
+  manterSessao();
+  try{
+    const d=await chamar({action:"cozinha",operacao:e.data.operacao,dados:e.data.dados,requisicao:id,motivo:e.data.motivo});
+    if(sessao===atual && janela===frameAtivo?.contentWindow)janela.postMessage({tipo:"feitoria-cozinha-resposta",id,dados:d},location.origin);
+  }catch(err){if(sessao===atual && janela===frameAtivo?.contentWindow)janela.postMessage({tipo:"feitoria-cozinha-resposta",id,erro:err.message},location.origin);}
+});
+
+function encerrarPortal(){ frameAtivo=null; clearTimeout(tempoSessao); sessao=null; pin=""; nascimento=""; secao="inicio"; telaEntrar(); }
 function manterSessao(){
   clearTimeout(tempoSessao);
   if(sessao) tempoSessao=setTimeout(encerrarPortal, 5*60*1000);
@@ -164,6 +177,7 @@ function telaInicio(msg){
   const pendentes=docs.filter(d=>d.pendente).length;
   const menu = [["inicio","Início"],["documentos","Documentos"],["treinamentos","Treinamentos"],
     ["checklists","Checklists"],["operacao","Escala e avisos"],["seguranca","Saúde e segurança"]];
+  if(sessao.perfil==="completo")menu.push(["cozinha","Fechamento da cozinha"]);
   if(sessao.registra_ponto) menu.splice(3,0,["ponto","Ponto"]);
   app.innerHTML = `
     <div class="carta saudacao">
@@ -199,6 +213,7 @@ function telaInicio(msg){
       ["checklists","Checklists","Começar ou continuar as tarefas."],["operacao","Escala e avisos","Conferir seu turno e os recados."],
       ["documentos","Documentos","Consultar e revisar assinaturas."],["treinamentos","Treinamentos","Materiais e certificados."],
       ["seguranca","Saúde e segurança","Orientações para trabalhar bem."]];
+    if(sessao.perfil==="completo")atalhos.push(["cozinha","Fechamento da cozinha","Etiquetas, perdas, sobras e fotos do turno."]);
     card.innerHTML=atalhos.map(([id,titulo,descricao],i)=>`<button data-secao="${id}" class="${i===0?'principal':''}"><strong>${titulo}</strong><small>${descricao}</small></button>`).join("");
     card.querySelectorAll("[data-secao]").forEach(b=>b.onclick=()=>{secao=b.dataset.secao;telaInicio();});
     app.insertBefore(card,document.getElementById("conteudo-portal"));
@@ -211,6 +226,7 @@ function telaInicio(msg){
   }
   const paginas={checklists:"checklist.html",operacao:"operacao.html",seguranca:"nr1.html"};
   if(secao==="ponto" && sessao.registra_ponto) paginas.ponto="ponto.html";
+  if(sessao.perfil==="completo")paginas.cozinha="cozinha-fechamento.html";
   if(paginas[secao]){
     const card=document.getElementById("conteudo-portal");
     card.classList.add("frame-atividade");
@@ -225,7 +241,7 @@ function telaInicio(msg){
     frame.src=url.href;frame.title=menu.find(([id])=>id===secao)?.[1] || "Atividade";
     frame.style="width:100%;height:75dvh;min-height:500px;border:0";
     if(secao==="ponto") frame.allow="camera 'self'; geolocation 'self'";
-    if(secao==="checklists") frame.allow="camera 'self'";
+    if(["checklists","cozinha"].includes(secao)) frame.allow="camera 'self'";
     frame.onload=()=>{
       if(sessao && ["ponto","checklists"].includes(secao))frame.contentWindow.postMessage({tipo:"feitoria-identificar",unidade:TOKEN_UNIDADE,pin},location.origin);
     };

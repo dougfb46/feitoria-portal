@@ -1,0 +1,593 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Fechamento do dia — Feitoria</title>
+<style>
+  :root{--ground:#F2F4F1;--surface:#fff;--ink:#131A16;--muted:#5C6660;--accent:#1F6F4A;
+        --line:#D7DED8;--amber:#A8730C;--amber-bg:#F7EDD6;--red:#9A2B1E;--red-bg:#FBEAE6;--ok-bg:#E2F0E8}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;height:100%}
+  body{background:var(--ground);color:var(--ink);font:17px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+  #app{max-width:760px;margin:0 auto;padding:14px 16px 110px}
+  .top{display:flex;justify-content:space-between;align-items:center;gap:10px;
+       padding:4px 0 12px;border-bottom:1px solid var(--line);margin-bottom:16px}
+  .top b{font-size:15px} .top small{color:var(--muted);font-size:13px;display:block}
+  .link{background:none;border:none;color:var(--accent);font:inherit;font-size:14px;
+        cursor:pointer;padding:6px;text-decoration:underline}
+  h1{font-size:22px;margin:0 0 4px} h2{font-size:17px;margin:26px 0 8px}
+  .sub{color:var(--muted);margin:0 0 18px;font-size:15px}
+  .pinbox{max-width:320px;margin:6vh auto 0;text-align:center}
+  .dots{display:flex;justify-content:center;gap:12px;margin:22px 0 26px;min-height:20px}
+  .dot{width:14px;height:14px;border-radius:50%;background:var(--line)} .dot.on{background:var(--accent)}
+  .pad{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .pad button{height:68px;font-size:24px;font-weight:600;background:var(--surface);color:var(--ink);
+              border:1px solid var(--line);border-radius:12px;cursor:pointer}
+  .pad button:active{background:var(--line)}
+  .pad .wide{font-size:16px;font-weight:500;color:var(--muted)}
+  .big{width:100%;padding:18px;font-size:18px;font-weight:600;border-radius:12px;border:none;
+       background:var(--accent);color:#fff;cursor:pointer;margin-top:14px}
+  .big:disabled{opacity:.55}
+  .ghost{background:var(--surface);color:var(--ink);border:1px solid var(--line)}
+  .perigo{background:var(--red);color:#fff}
+  .msg{border-radius:10px;padding:12px 14px;margin:14px 0;font-size:15px}
+  .msg.e{background:var(--red-bg);color:var(--red)}
+  .msg.s{background:var(--ok-bg);color:var(--accent)}
+  .msg.w{background:var(--amber-bg);color:var(--amber)}
+
+  .placar{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:10px;margin:4px 0 18px}
+  .p{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center}
+  .p b{display:block;font-size:26px;font-weight:700;line-height:1.1}
+  .p span{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+  .p.r b{color:var(--red)} .p.a b{color:var(--amber)} .p.v b{color:var(--accent)}
+
+  .destinos{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:6px}
+  .destinos button{padding:16px 12px;border-radius:12px;border:2px solid var(--line);
+                   background:var(--surface);color:var(--ink);font:inherit;font-size:17px;
+                   font-weight:600;cursor:pointer;text-align:left}
+  .destinos button small{display:block;font-weight:400;font-size:13px;color:var(--muted);margin-top:2px}
+  .destinos button.on{border-color:var(--accent);background:var(--ok-bg);color:var(--accent)}
+
+  .lido{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--line);
+        border-radius:12px;padding:12px 14px;margin-bottom:8px}
+  .lido .n{flex:1;min-width:0}
+  .lido .n b{display:block;font-size:16px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .lido .n small{color:var(--muted);font-size:13px}
+  .lido .tag{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+             padding:5px 9px;border-radius:20px;background:var(--ground);color:var(--muted);white-space:nowrap}
+  .lido .tag.vencido,.lido .tag.quebra{background:var(--red-bg);color:var(--red)}
+  .lido .tag.sobra{background:var(--amber-bg);color:var(--amber)}
+  .lido .tag.consumido{background:var(--ok-bg);color:var(--accent)}
+  .lido button{border:1px solid var(--line);background:var(--ground);color:var(--muted);
+               border-radius:8px;padding:8px 10px;font:inherit;font-size:13px;cursor:pointer}
+
+  .campo{margin:14px 0}
+  .campo label{display:block;font-size:14px;color:var(--muted);margin-bottom:5px}
+  input,textarea{width:100%;padding:14px 16px;font:inherit;font-size:17px;border:1px solid var(--line);
+                 border-radius:10px;background:var(--surface);color:var(--ink)}
+  textarea{min-height:92px;resize:vertical}
+  .fotos{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;margin-top:8px}
+  .fotos div{position:relative;aspect-ratio:1;border-radius:10px;background:var(--surface);
+             border:1px solid var(--line);background-size:cover;background-position:center;overflow:hidden}
+  .fotos .rm{position:absolute;top:5px;right:5px;border:none;border-radius:7px;padding:5px 8px;
+             font:inherit;font-size:12px;background:rgba(0,0,0,.62);color:#fff;cursor:pointer}
+  .fotos .tp{position:absolute;left:5px;bottom:5px;font-size:11px;letter-spacing:.07em;
+             text-transform:uppercase;background:rgba(0,0,0,.62);color:#fff;padding:3px 7px;border-radius:7px}
+  .acoes{position:fixed;left:0;right:0;bottom:0;padding:10px 16px calc(10px + env(safe-area-inset-bottom));
+         background:linear-gradient(180deg,rgba(242,244,241,0) 0%,var(--ground) 32%)}
+  .acoes .dentro{max-width:760px;margin:0 auto;display:flex;gap:10px}
+  .acoes button{flex:1;margin:0}
+  table{width:100%;border-collapse:collapse;font-size:14px;background:var(--surface);
+        border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);
+     padding:10px;border-bottom:1px solid var(--line)}
+  td{padding:10px;border-bottom:1px solid var(--line);vertical-align:top}
+  td.n{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+  /* Visor do QR: pequeno e no alto, para nao cobrir a tela nem a mao que segura a etiqueta */
+  #leitor{position:fixed;top:10px;left:50%;transform:translateX(-50%);
+          width:190px;height:142px;object-fit:cover;border-radius:14px;
+          border:2px solid var(--accent);box-shadow:0 10px 26px rgba(0,0,0,.30);
+          z-index:60;background:#000;display:none}
+  #leitor.on{display:block}
+  body.lendo{padding-top:150px}
+  .ok-flash{position:fixed;inset:0;background:rgba(31,111,74,.22);pointer-events:none;opacity:0;
+            transition:opacity .18s}
+  .ok-flash.on{opacity:1}
+/* No portal, a página cresce com o conteúdo e os botões acompanham a leitura. */
+#app{padding-bottom:24px}.acoes{position:static;margin-top:20px}.acoes .dentro{padding:0}body{padding-bottom:20px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<video id="leitor" playsinline muted></video>
+<div class="ok-flash" id="flash"></div>
+
+<script>
+(function(){
+  var TOKEN = new URLSearchParams(location.search).get('u') || '';
+
+  var VAZIO = { pin:'', sessao:null, fechamento:null, resumo:null, tela:'pin',
+                erro:'', aviso:'', destino:'consumido', lancados:[], pendentes:[],
+                fotos:0, fotosLixeira:0, galeria:[], tipoFoto:'lixeira', nota:'', relatorio:null, carregando:false, lendo:false };
+  var S = JSON.parse(JSON.stringify(VAZIO));
+  var app = document.getElementById('app');
+  var pararLeitor = null;
+
+  window.onerror = function(m){ document.body.insertAdjacentHTML('afterbegin',
+    '<div class="msg e" style="margin:10px">Não foi possível concluir. Atualize a tela.</div>'); };
+
+  function esc(s){ return String(s == null ? '' : s).replace(/[&<>"]/g, function(c){
+    return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]; }); }
+  function toque(){ try { navigator.vibrate && navigator.vibrate(14); } catch(e){} }
+  function flash(){
+    var f = document.getElementById('flash');
+    f.classList.add('on'); setTimeout(function(){ f.classList.remove('on'); }, 200);
+  }
+  function hora(iso){
+    return new Date(iso).toLocaleTimeString('pt-BR',
+      { timeZone:'America/Sao_Paulo', hour:'2-digit', minute:'2-digit' });
+  }
+  function diaBR(d){ return String(d || '').split('-').reverse().join('/'); }
+
+  var pedidos = new Map();
+  window.addEventListener('message',function(e){
+    if(e.origin!==location.origin||e.source!==window.parent||e.data?.tipo!=='feitoria-cozinha-resposta')return;
+    var p=pedidos.get(e.data.id);if(!p)return;pedidos.delete(e.data.id);clearTimeout(p.timer);
+    e.data.erro?p.reject(new Error(e.data.erro)):p.resolve(e.data.dados);
+  });
+  function chamar(corpo){
+    if(window.parent===window)return Promise.reject(new Error('Abra o fechamento pelo portal do funcionário.'));
+    var id=crypto.randomUUID(),motivo='';
+    if(corpo.action==='desfazer'){motivo=prompt('Qual o motivo da correção? A baixa original fica no histórico.')||'';if(motivo.trim().length<5)return Promise.reject(new Error('Informe um motivo com pelo menos cinco caracteres.'));}
+    var dados={};for(var key of ['code','codes','outcome','note','tipo','imagem','legenda','nota','closure_id'])if(corpo[key]!==undefined)dados[key]=corpo[key];
+    return new Promise(function(resolve,reject){
+      var timer=setTimeout(function(){pedidos.delete(id);reject(new Error('Resposta não confirmada. Atualize o fechamento antes de repetir.'));},55000);
+      pedidos.set(id,{resolve:resolve,reject:reject,timer:timer});
+      window.parent.postMessage({tipo:'feitoria-cozinha-chamar',id:id,operacao:corpo.action,dados:dados,motivo:motivo},location.origin);
+    });
+  }
+
+  var ROTULO = { consumido:'Consumido', sobra:'Sobra', revalidado:'Revalidado',
+                 vencido:'Vencido', quebra:'Quebra', outro:'Outro' };
+  var DICA = {
+    consumido:'acabou no uso normal', sobra:'sobrou e foi guardado',
+    revalidado:'trocou de etiqueta, continua no estoque',
+    vencido:'passou da validade, foi fora', quebra:'caiu, queimou, estragou'
+  };
+
+  // ---------- telas ----------
+  function cabecalho(){
+    if (!S.sessao) return '';
+    return '<div class="top"><div><b>' + esc(S.sessao.unidade.nome) + '</b>' +
+      '<small>' + esc(S.sessao.colaborador.nome) +
+      (S.fechamento ? ' · dia ' + esc(diaBR(S.fechamento.dia)) : '') + '</small></div>' +
+      '<button class="link" data-a="atualizar">Atualizar fechamento</button></div>';
+  }
+
+  function telaPin(){return '<div class="pinbox"><h1>Fechamento da cozinha</h1><p class="sub">'+esc(S.erro||'Abrindo sua rotina pelo portal…')+'</p></div>';}
+
+  function telaInicio(){
+    var s = S.sessao;
+    if (S.fechamento) { S.tela = 'lancar'; return telaLancar(); }
+    return cabecalho() +
+      (S.erro ? '<div class="msg e">' + esc(S.erro) + '</div>' : '') +
+      '<h1>Fechar o dia ' + esc(diaBR(s.dia)) + '</h1>' +
+      '<p class="sub">Pegue as embalagens que a equipe guardou e leia uma por uma. ' +
+      'Escolha o destino antes de escanear — ele vale para todas as próximas leituras.</p>' +
+      (s.baixadas_hoje
+        ? '<div class="msg s"><b>' + s.baixadas_hoje + ' etiqueta(s)</b> já foram baixadas hoje pela tela da cozinha. ' +
+          'Elas já entram neste relatório — aqui você termina o que faltou.</div>'
+        : '') +
+      (s.vencidas_ativas
+        ? '<div class="msg w"><b>' + s.vencidas_ativas + ' etiqueta(s)</b> já venceram e continuam em circulação. ' +
+          'No fim do fechamento dá para baixar todas de uma vez.</div>'
+        : '') +
+      '<button class="big" data-a="abrir">Começar o fechamento</button>' +
+      '<button class="big ghost" data-a="ver-relatorio">Ver o último fechamento</button>';
+  }
+
+  function placar(){
+    var r = S.resumo || {};
+    var perdas = Number(r.vencidos || 0) + Number(r.quebras || 0);
+    return '<div class="placar">' +
+      '<div class="p r"><b>' + perdas + '</b><span>Perdas</span></div>' +
+      '<div class="p a"><b>' + (r.sobras || 0) + '</b><span>Sobras</span></div>' +
+      '<div class="p v"><b>' + (r.consumidos || 0) + '</b><span>Consumidos</span></div>' +
+      (Number(r.revalidados || 0)
+        ? '<div class="p"><b>' + r.revalidados + '</b><span>Revalidados</span></div>' : '') +
+    '</div>';
+  }
+
+  function telaLancar(){
+    var destinos = ['consumido','sobra','revalidado','vencido','quebra'].map(function(k){
+      return '<button class="' + (S.destino === k ? 'on' : '') + '" data-a="destino" data-v="' + k + '">' +
+             esc(ROTULO[k]) + '<small>' + esc(DICA[k]) + '</small></button>';
+    }).join('');
+
+    var lista = S.lancados.slice(0, 40).map(function(l){
+      return '<div class="lido">' +
+        '<div class="n"><b>' + esc(l.product_name) + (l.medida ? ' · ' + esc(l.medida) : '') + '</b>' +
+          '<small>' + esc(l.code) + ' · ' + esc(hora(l.closed_at)) +
+          (l.closure_id ? '' : ' · na cozinha') +
+          ' · ' + esc(String(l.closed_by_name || '').split(' ')[0]) + '</small></div>' +
+        '<span class="tag ' + esc(l.outcome) + '">' + esc(ROTULO[l.outcome] || l.outcome) + '</span>' +
+        '<button data-a="desfazer" data-c="' + esc(l.code) + '">desfazer</button>' +
+      '</div>';
+    }).join('');
+
+    return cabecalho() +
+      (S.erro   ? '<div class="msg e">' + esc(S.erro) + '</div>' : '') +
+      (S.aviso  ? '<div class="msg s">' + esc(S.aviso) + '</div>' : '') +
+      '<h1>Lançando: ' + esc(ROTULO[S.destino]) + '</h1>' +
+      '<p class="sub">Tudo que for lido agora entra como <b>' + esc(ROTULO[S.destino]) + '</b>. ' +
+      'Troque o destino quando mudar a pilha.</p>' +
+      '<div class="destinos">' + destinos + '</div>' +
+      placar() +
+      '<button class="big" data-a="escanear">' + (S.lendo ? 'Parar a câmera' : 'Ler etiquetas') + '</button>' +
+      '<div class="campo"><label>Ou digite o código da etiqueta</label>' +
+        '<input id="cod" placeholder="PU-260925-014-1" autocomplete="off" autocapitalize="characters"></div>' +
+      '<button class="big ghost" data-a="digitado">Lançar esse código</button>' +
+      (lista ? '<h2>Baixados hoje (' + S.lancados.length + ')</h2>' + lista : '') +
+      '<div class="acoes"><div class="dentro">' +
+        '<button class="big ghost" data-a="ir" data-t="fotos">Fotos</button>' +
+        '<button class="big" data-a="ir" data-t="conferir">Encerrar o fechamento</button>' +
+      '</div></div>';
+  }
+
+  function telaFotos(){
+    var g = S.galeria.map(function(f){
+      return '<div style="background-image:url(' + esc(f.url) + ')">' +
+        '<span class="tp">' + (f.tipo === 'lixeira' ? 'lixeira' : 'outra') + '</span></div>';
+    }).join('');
+
+    return cabecalho() +
+      (S.erro  ? '<div class="msg e">' + esc(S.erro) + '</div>' : '') +
+      (S.aviso ? '<div class="msg s">' + esc(S.aviso) + '</div>' : '') +
+      '<h1>Fotos e observação</h1>' +
+      (S.fotosLixeira
+        ? '<div class="msg s">Foto da lixeira registrada. As outras são opcionais.</div>'
+        : '<div class="msg w"><b>A foto da lixeira é obrigatória.</b> Sem ela o dia não fecha.</div>') +
+      '<div class="destinos" style="grid-template-columns:repeat(2,1fr)">' +
+        '<button class="' + (S.tipoFoto === 'lixeira' ? 'on' : '') + '" data-a="tipo-foto" data-v="lixeira">' +
+          'Lixeira<small>o que foi descartado</small></button>' +
+        '<button class="' + (S.tipoFoto === 'outra' ? 'on' : '') + '" data-a="tipo-foto" data-v="outra">' +
+          'Outra<small>opcional</small></button>' +
+      '</div>' +
+      '<input type="file" id="foto" accept="image/*" capture="environment" style="display:none">' +
+      '<button class="big" data-a="tirar-foto">Tirar foto de ' +
+        (S.tipoFoto === 'lixeira' ? 'lixeira' : 'outra coisa') + '</button>' +
+      (S.galeria.length ? '<div class="fotos">' + g + '</div>' : '') +
+      '<div class="campo"><label>Observação do dia (opcional)</label>' +
+        '<textarea id="nota" placeholder="Ex.: freezer 2 desligou à tarde, perdemos duas caixas de pastel">' +
+        esc(S.nota) + '</textarea></div>' +
+      '<button class="big ghost" data-a="ir" data-t="lancar">Voltar a lançar</button>' +
+      '<div class="acoes"><div class="dentro">' +
+        '<button class="big" data-a="ir" data-t="conferir">Encerrar o fechamento</button>' +
+      '</div></div>';
+  }
+
+  function telaConferir(){
+    var r = S.resumo || {};
+    var pend = S.pendentes.length;
+    var lista = S.pendentes.slice(0, 30).map(function(p){
+      return '<div class="lido"><div class="n"><b>' + esc(p.product_name) +
+        (p.medida ? ' · ' + esc(p.medida) : '') + '</b><small>' + esc(p.code) + ' · ' +
+        esc(p.storage_method) + '</small></div>' +
+        '<span class="tag vencido">vencida</span></div>';
+    }).join('');
+
+    return cabecalho() +
+      (S.erro ? '<div class="msg e">' + esc(S.erro) + '</div>' : '') +
+      '<h1>Encerrar o fechamento</h1>' +
+      '<p class="sub">' + (r.baixas || 0) + ' etiqueta(s) baixadas · ' + S.fotos + ' foto(s). ' +
+      'Encerrar fecha o dia e disponibiliza o relatório e as fotos no portal de gestão. Depois disso não dá para lançar mais nada.</p>' +
+      (S.fotosLixeira ? '' :
+        '<div class="msg e"><b>Falta a foto da lixeira.</b> ' +
+        '<button class="link" data-a="ir" data-t="fotos">Tirar agora</button></div>') +
+      placar() +
+      (pend
+        ? '<h2>' + pend + ' vencida(s) que ninguém lançou</h2>' +
+          '<p class="sub">Provavelmente foram descartadas sem guardar a embalagem. ' +
+          'Dá para baixar todas como <b>Vencido</b> de uma vez — ou deixar para amanhã.</p>' +
+          lista +
+          (pend > 30 ? '<p class="sub">…e mais ' + (pend - 30) + '.</p>' : '') +
+          '<button class="big ghost" data-a="lote">Baixar as ' + pend + ' como vencidas</button>'
+        : '<div class="msg s">Nenhuma etiqueta vencida ficou para trás.</div>') +
+      '<div class="acoes"><div class="dentro">' +
+        '<button class="big ghost" data-a="ir" data-t="fotos">Voltar</button>' +
+        '<button class="big" data-a="fechar"' + (S.fotosLixeira ? '' : ' disabled') + '>Encerrar e enviar</button>' +
+      '</div></div>';
+  }
+
+  function telaRelatorio(){
+    if (S.carregando || !S.relatorio) return cabecalho() + '<p class="sub">Carregando…</p>';
+    var r = S.relatorio.resumo, linhas = S.relatorio.linhas || [], fotos = S.relatorio.fotos || [];
+    var perdas = Number(r.vencidos || 0) + Number(r.quebras || 0);
+
+    var grupos = {}, ordem = ['vencido','quebra','sobra','revalidado','consumido','outro'];
+    linhas.forEach(function(l){ (grupos[l.outcome] = grupos[l.outcome] || []).push(l); });
+    var corpo = ordem.filter(function(k){ return grupos[k]; }).map(function(k){
+      return '<h2>' + esc(ROTULO[k] || k) + '</h2><table><tbody>' +
+        grupos[k].map(function(l){
+          return '<tr><td><b>' + esc(l.product_name) + '</b><br>' +
+            '<small style="color:var(--muted)">' + esc(l.storage_method) + '</small></td>' +
+            '<td class="n">' + l.etiquetas + ' etq.' +
+            (l.quantidade ? '<br><small>' + l.quantidade + ' ' + esc(l.unidade || '') + '</small>' : '') +
+            '</td></tr>';
+        }).join('') + '</tbody></table>';
+    }).join('');
+
+    var galeria = fotos.length
+      ? '<h2>Fotos</h2><div class="fotos">' + fotos.map(function(f){
+          return '<div style="background-image:url(' + esc(f.url) + ')"></div>';
+        }).join('') + '</div>'
+      : '';
+
+    return cabecalho() +
+      (S.aviso ? '<div class="msg s">' + esc(S.aviso) + '</div>' : '') +
+      '<h1>Fechamento de ' + esc(diaBR(r.dia)) + '</h1>' +
+      '<p class="sub">' + esc(r.closed_by_name || '') + ' · ' + (r.baixas || 0) + ' etiquetas' +
+        (r.email_enviado_em ? ' · e-mail enviado às ' + esc(hora(r.email_enviado_em)) : '') +
+        (r.email_erro ? ' · <span style="color:var(--red)">e-mail não saiu</span>' : '') + '</p>' +
+      '<div class="placar">' +
+        '<div class="p r"><b>' + perdas + '</b><span>Perdas</span></div>' +
+        '<div class="p a"><b>' + (r.sobras || 0) + '</b><span>Sobras</span></div>' +
+        '<div class="p v"><b>' + (r.consumidos || 0) + '</b><span>Consumidos</span></div>' +
+        (Number(r.revalidados || 0)
+          ? '<div class="p"><b>' + r.revalidados + '</b><span>Revalidados</span></div>' : '') +
+      '</div>' +
+      corpo + galeria +
+      (r.nota ? '<h2>Observação</h2><p>' + esc(r.nota) + '</p>' : '') +
+      '<button class="big ghost" data-a="csv">Baixar planilha</button>' +
+      '<button class="big ghost" data-a="ir" data-t="inicio">Voltar</button>';
+  }
+
+  var ultimaTela=null;
+  function render(){
+    var mudou=S.tela!==ultimaTela;ultimaTela=S.tela;
+    if (!TOKEN) { app.innerHTML = '<div class="msg e">Link inválido. Peça o link da sua unidade à gerência.</div>'; return; }
+    if (S.tela === 'pin') app.innerHTML = telaPin();
+    else if (S.tela === 'inicio') app.innerHTML = telaInicio();
+    else if (S.tela === 'lancar') app.innerHTML = telaLancar();
+    else if (S.tela === 'fotos') app.innerHTML = telaFotos();
+    else if (S.tela === 'conferir') app.innerHTML = telaConferir();
+    else app.innerHTML = telaRelatorio();
+
+    var f = document.getElementById('foto');
+    if (f) f.onchange = function(){ if (f.files && f.files[0]) enviarFoto(f.files[0]); };
+    var n = document.getElementById('nota');
+    if (n) n.onblur = function(){ S.nota = n.value; salvarNota(); };
+    if(mudou)requestAnimationFrame(function(){window.scrollTo(0,0);window.parent.postMessage({tipo:'feitoria-cozinha-altura',altura:Math.ceil(app.scrollHeight),inicio:true},location.origin);});
+  }
+
+  // ---------- dados ----------
+  function atualizar(){
+    return chamar({ action:'atual', unit_token:TOKEN, pin:S.pin }).then(function(j){
+      S.sessao = j; S.fechamento = j.fechamento; S.resumo = j.resumo;
+      S.fotos = j.resumo ? Number(j.resumo.fotos || 0) : 0;
+      S.fotosLixeira = j.resumo ? Number(j.resumo.fotos_lixeira || 0) : 0;
+      S.nota = (j.fechamento && j.fechamento.nota) || '';
+      return j;
+    });
+  }
+
+  function carregarLancados(){
+    return chamar({ action:'lancados', unit_token:TOKEN, pin:S.pin })
+      .then(function(j){ S.lancados = j.lancados; S.resumo = j.resumo; render(); })
+      .catch(function(e){ S.erro = e.message; render(); });
+  }
+
+  function lancar(codigo){
+    return chamar({ action:'baixa', unit_token:TOKEN, pin:S.pin, code:codigo, outcome:S.destino })
+      .then(function(j){
+        S.resumo = j.resumo; S.erro = '';
+        S.aviso = j.item.produto + (j.item.medida ? ' · ' + j.item.medida : '') +
+                  ' → ' + ROTULO[j.item.destino];
+        toque(); flash();
+        return carregarLancados();
+      })
+      .catch(function(e){ S.erro = e.message; S.aviso = ''; render(); });
+  }
+
+  function carregarFotos(){
+    return chamar({ action:'fotos', unit_token:TOKEN, pin:S.pin })
+      .then(function(j){
+        S.galeria = j.fotos || [];
+        S.fotos = S.galeria.length;
+        S.fotosLixeira = S.galeria.filter(function(f){ return f.tipo === 'lixeira'; }).length;
+        render();
+      })
+      .catch(function(e){ S.erro = e.message; render(); });
+  }
+
+  function salvarNota(){
+    chamar({ action:'nota', unit_token:TOKEN, pin:S.pin, nota:S.nota }).catch(function(){});
+  }
+
+  // Comprime antes de subir: foto de celular vai a 4 MB e não precisa.
+  function enviarFoto(arquivo){
+    S.erro = ''; S.aviso = 'Enviando foto…'; render();
+    var leitor = new FileReader();
+    leitor.onload = function(){
+      var img = new Image();
+      img.onload = function(){
+        var max = 1280;
+        var r = Math.min(1, max / Math.max(img.width, img.height));
+        var c = document.createElement('canvas');
+        c.width = Math.round(img.width * r); c.height = Math.round(img.height * r);
+        c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+        chamar({ action:'foto', unit_token:TOKEN, pin:S.pin, tipo:S.tipoFoto,
+                 imagem: c.toDataURL('image/jpeg', 0.72) })
+          .then(function(j){
+            S.fotos = j.fotos; S.fotosLixeira = j.fotos_lixeira;
+            S.aviso = 'Foto guardada.'; return carregarFotos();
+          })
+          .catch(function(e){ S.erro = e.message; S.aviso = ''; render(); });
+      };
+      img.src = leitor.result;
+    };
+    leitor.readAsDataURL(arquivo);
+  }
+
+  function escanear(){
+    if (S.lendo) { if (pararLeitor) pararLeitor(); return; }
+    var video = document.getElementById('leitor');
+    if (!('BarcodeDetector' in window) || !video) {
+      S.erro = 'Este aparelho não lê QR pela câmera. Digite o código da etiqueta.';
+      return render();
+    }
+    navigator.mediaDevices.getUserMedia({ video:{ facingMode:'environment' } })
+      .then(function(stream){
+        S.lendo = true; render();
+        video.classList.add('on'); document.body.classList.add('lendo');
+        video.srcObject = stream; video.play();
+        var det = new window.BarcodeDetector({ formats:['qr_code'] });
+        var ultimo = '', quando = 0;
+        pararLeitor = function(){
+          stream.getTracks().forEach(function(t){ t.stop(); });
+          video.classList.remove('on'); document.body.classList.remove('lendo'); S.lendo = false; pararLeitor = null; render();
+        };
+        var tick = function(){
+          if (!stream.active) return;
+          det.detect(video).then(function(r){
+            if (r && r.length) {
+              var v = r[0].rawValue, agora = Date.now();
+              if (v !== ultimo || agora - quando > 2500) {   // não relê a mesma etiqueta sem querer
+                ultimo = v; quando = agora; lancar(v);
+              }
+            }
+            setTimeout(tick, 320);
+          }).catch(function(){ setTimeout(tick, 500); });
+        };
+        setTimeout(tick, 500);
+      })
+      .catch(function(e){ S.erro = 'Não consegui abrir a câmera: ' + e.message; render(); });
+  }
+
+  function baixarCSV(){
+    var r = S.relatorio; if (!r) return;
+    var l = [['Dia','Destino','Produto','Conservacao','Etiquetas','Quantidade','Unidade']];
+    (r.linhas || []).forEach(function(x){
+      l.push([diaBR(r.resumo.dia), ROTULO[x.outcome] || x.outcome, x.product_name,
+              x.storage_method, x.etiquetas, x.quantidade || '', x.unidade || '']);
+    });
+    var csv = '﻿' + l.map(function(li){
+      return li.map(function(c){ return '"' + String(c).replace(/"/g,'""') + '"'; }).join(';');
+    }).join('\r\n');
+    var url = URL.createObjectURL(new Blob([csv], { type:'text/csv;charset=utf-8' }));
+    var a = document.createElement('a');
+    a.href = url; a.download = 'fechamento-' + r.resumo.dia + '.csv'; a.click();
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1500);
+  }
+
+  // ---------- eventos ----------
+  document.addEventListener('click', function(ev){
+    var el = ev.target.closest('button'); if (!el) return;
+    var d = el.getAttribute('data-d'), a = el.getAttribute('data-a');
+
+    if (d !== null && d !== undefined) { if (S.pin.length < 6) S.pin += d; S.erro = ''; return render(); }
+    if (a === 'limpar') { S.pin = ''; return render(); }
+    if (a === 'apagar') { S.pin = S.pin.slice(0, -1); return render(); }
+    if (a === 'sair') { if (pararLeitor) pararLeitor();
+                        S = JSON.parse(JSON.stringify(VAZIO)); return render(); }
+
+    if(a==='atualizar')return atualizar().then(function(){S.erro='';S.tela=S.fechamento?'lancar':'inicio';return S.fechamento?carregarLancados():render();}).catch(function(e){S.erro=e.message;render();});
+    if (a === 'entrar') {
+      el.disabled = true; el.textContent = 'Entrando...';
+      atualizar()
+        .then(function(){ S.erro = ''; S.tela = 'inicio'; toque();
+                          if (S.fechamento) return carregarLancados(); render(); })
+        .catch(function(e){ S.erro = e.message; S.pin = ''; render(); });
+      return;
+    }
+
+    if (a === 'abrir') {
+      el.disabled = true; el.textContent = 'Abrindo...';
+      chamar({ action:'abrir', unit_token:TOKEN, pin:S.pin })
+        .then(function(j){ S.fechamento = j.fechamento; S.resumo = j.resumo;
+                           S.tela = 'lancar'; toque(); return carregarLancados(); })
+        .catch(function(e){ S.erro = e.message; render(); });
+      return;
+    }
+
+    if (a === 'destino') { S.destino = el.getAttribute('data-v'); S.erro=''; toque(); return render(); }
+    if (a === 'escanear') return escanear();
+
+    if (a === 'digitado') {
+      var c = (document.getElementById('cod') || {}).value;
+      if (!c) { S.erro = 'Digite o código.'; return render(); }
+      el.disabled = true; return lancar(c.trim().toUpperCase());
+    }
+
+    if (a === 'desfazer') {
+      el.disabled = true;
+      chamar({ action:'desfazer', unit_token:TOKEN, pin:S.pin, code:el.getAttribute('data-c') })
+        .then(function(j){ S.aviso = j.produto + ' voltou para a circulação.'; S.resumo = j.resumo;
+                           return carregarLancados(); })
+        .catch(function(e){ S.erro = e.message; render(); });
+      return;
+    }
+
+    if (a === 'ir') {
+      var t = el.getAttribute('data-t');
+      S.erro = ''; S.aviso = '';
+      if (pararLeitor) pararLeitor();
+      if (t === 'conferir') {
+        S.carregando = true; S.tela = 'conferir'; render();
+        chamar({ action:'pendentes', unit_token:TOKEN, pin:S.pin })
+          .then(function(j){ S.pendentes = j.pendentes; S.carregando = false; render(); })
+          .catch(function(e){ S.erro = e.message; S.carregando = false; render(); });
+        return;
+      }
+      if (t === 'lancar') { S.tela = 'lancar'; return carregarLancados(); }
+      if (t === 'fotos') { S.tela = 'fotos'; render(); return carregarFotos(); }
+      S.tela = t; return render();
+    }
+
+    if (a === 'lote') {
+      if (!confirm('Baixar ' + S.pendentes.length + ' etiquetas vencidas de uma vez?')) return;
+      el.disabled = true; el.textContent = 'Baixando...';
+      chamar({ action:'baixa_lote', unit_token:TOKEN, pin:S.pin, outcome:'vencido',
+               codes: S.pendentes.map(function(p){ return p.code; }) })
+        .then(function(j){ S.resumo = j.resumo; S.pendentes = []; S.aviso = j.baixados + ' baixadas.';
+                           return carregarLancados().then(function(){ S.tela = 'conferir'; render(); }); })
+        .catch(function(e){ S.erro = e.message; render(); });
+      return;
+    }
+
+    if (a === 'tipo-foto') { S.tipoFoto = el.getAttribute('data-v'); toque(); return render(); }
+    if (a === 'tirar-foto') { var inp = document.getElementById('foto'); if (inp) inp.click(); return; }
+    if (a === 'fechar') {
+      if (!confirm('Encerrar o fechamento de hoje? O relatório e as fotos ficam disponíveis para a gestão, e o dia não aceita mais lançamentos.')) return;
+      el.disabled = true; el.textContent = 'Encerrando...';
+      chamar({ action:'fechar', unit_token:TOKEN, pin:S.pin, nota:S.nota })
+        .then(function(j){
+          S.fechamento = null; S.lancados = []; S.pendentes = [];
+          S.aviso = 'Fechamento encerrado. Relatório e fotos disponíveis para a gestão.';
+          return verRelatorio(j.closure_id);
+        })
+        .catch(function(e){ S.erro = e.message; render(); });
+      return;
+    }
+
+    if (a === 'ver-relatorio') return verRelatorio();
+    if (a === 'csv') return baixarCSV();
+  });
+
+  function verRelatorio(id){
+    S.carregando = true; S.tela = 'relatorio'; render();
+    return chamar({ action:'relatorio', unit_token:TOKEN, pin:S.pin, closure_id:id })
+      .then(function(j){ S.relatorio = j; S.carregando = false; render(); })
+      .catch(function(e){ S.erro = e.message; S.carregando = false; S.tela = 'inicio'; render(); });
+  }
+
+  window.addEventListener('pagehide',function(){if(pararLeitor)pararLeitor();});
+  ['click','keydown','touchstart'].forEach(function(t){document.addEventListener(t,function(){window.parent.postMessage({tipo:'feitoria-atividade'},location.origin);},{passive:true});});
+  new ResizeObserver(function(){window.parent.postMessage({tipo:'feitoria-cozinha-altura',altura:Math.ceil(app.scrollHeight)},location.origin);}).observe(app);
+  render();
+  if(window.parent!==window)atualizar().then(function(){S.tela=S.fechamento?'lancar':'inicio';return S.fechamento?carregarLancados():render();}).catch(function(e){S.erro=e.message;render();});
+})();
+</script>
+</body>
+</html>
