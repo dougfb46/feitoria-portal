@@ -191,6 +191,7 @@ const AREAS = [
   ["Começar", [["inicio","Visão geral","Os caminhos para cuidar da casa, da equipe e dos resultados."]]],
   ["Operação", [
     ["chk","Checklists","Acompanhe execuções, atrasos e ocorrências da operação."],
+    ["cozinha","Fechamento da cozinha","Relatórios do turno, perdas, sobras e fotos."],
     ["estoque","Estoque e reposição","Contagens, recebimentos e sugestão de compras."],
     ["compras","Assistente de compras","Fornecedores, cotações semanais, alertas e acompanhamento dos pedidos."],
     ["rotinas-gerente","Rotinas do gerente","Confira a operação e encaminhe as decisões do turno."],
@@ -310,6 +311,7 @@ function moldura(usuario){
 }
 const render = () => aba === "inicio" ? abaInicio() : aba === "acessos" ? abaAcessos() : aba === "equipe" ? abaEquipe()
   : aba === "assistente" ? abaConversaGestao()
+  : aba === "cozinha" ? abaCozinha()
   : aba === "estoque" ? abaEstoque()
   : aba === "compras" ? abaCompras()
   : aba === "boletim" ? abaBoletim()
@@ -334,6 +336,11 @@ function abaConversaGestao(){
  const url=new URL(location.pathname.includes('/web/')?'conversa-gestao.html':'web/conversa-gestao.html',location.href);
  url.searchParams.set('restaurant_id',unidade.id);
  conteudo().innerHTML=`<iframe title="Pergunte à Feitoria" src="${esc(url.href)}" style="width:100%;height:1100px;border:0;border-radius:12px"></iframe>`;
+}
+function abaCozinha(){
+ const url=new URL(location.pathname.includes('/web/')?'cozinha-gestao.html':'web/cozinha-gestao.html',location.href);
+ url.searchParams.set('restaurant_id',unidade.id);
+ conteudo().innerHTML=`<iframe title="Fechamento da cozinha" src="${esc(url.href)}" style="width:100%;height:1500px;border:0;border-radius:12px"></iframe>`;
 }
 function abaEstoque(){
  const url=new URL(location.pathname.includes('/web/')?'estoque.html':'web/estoque.html',location.href);
