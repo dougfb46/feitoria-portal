@@ -1,0 +1,150 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Semana passada · Feitoria</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<style>
+:root{--font:"DM Sans",-apple-system,"Segoe UI",Roboto,sans-serif;--page:#f7f8f5;--card:#fff;--soft:#f4f4f0;--line:#efeee9;--line-2:#e3e2dc;--ink:#1c1e1d;--ink-2:#3a3e3c;--muted:#7a7e7b;--faint:#b9bcb8;--sage:#5f7f69;--sage-3:#c9d6cc;--sage-soft:#e8eee9;--sage-ink:#4b6853;--up:#4f7a5c;--up-bg:#e6eee8;--down:#c4483e;--down-bg:#fbe8e6;--amber:#9a6f17;--amber-bg:#f8efd9;--ref:#8a8e8b}
+*{box-sizing:border-box}body{margin:0;background:var(--page);color:var(--ink);font:15px/1.5 var(--font)}main{max-width:1200px;margin:auto;padding:20px 16px 40px}
+h1{font-size:28px;margin:0;letter-spacing:-.01em}h2{font-size:18px;margin:0 0 4px}.sub,small{color:var(--muted)}p{margin:6px 0}
+.topo{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:8px}
+.nav{display:flex;gap:8px;align-items:center}.nav b{min-width:170px;text-align:center}
+button{font:inherit;border:1px solid var(--line-2);border-radius:12px;padding:8px 14px;background:var(--card);color:var(--ink);cursor:pointer}button:disabled{opacity:.45;cursor:default}button:not(:disabled):hover{background:var(--soft)}
+.card{background:var(--card);border:1px solid var(--line-2);border-radius:22px;padding:20px;margin:14px 0}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:14px 0}.kpi{background:var(--card);border:1px solid var(--line-2);border-radius:22px;padding:18px}
+.kpi .rot{font-size:13px;color:var(--muted)}.kpi .val{font-size:28px;font-weight:700;margin:4px 0;letter-spacing:-.01em;font-variant-numeric:tabular-nums}.kpi .det{font-size:13px;color:var(--ink-2)}
+.var{display:inline-block;font-size:12px;font-weight:600;border-radius:999px;padding:1px 8px;font-variant-numeric:tabular-nums}.var.up{color:var(--up);background:var(--up-bg)}.var.down{color:var(--down);background:var(--down-bg)}.var.zero{color:var(--muted);background:var(--soft)}
+.aviso{background:var(--amber-bg);border-radius:14px;padding:10px 14px;margin:8px 0;color:#5b4512;font-size:14px}.aviso b{color:#4a380d}
+.erro{background:var(--down-bg);color:#7a2a23;border-radius:14px;padding:12px 16px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}.grid2 .card{margin:0}
+.legenda{display:flex;gap:16px;font-size:13px;color:var(--ink-2);margin:6px 0 10px;flex-wrap:wrap}.legenda i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+svg{display:block;max-width:100%;height:auto;overflow:visible}svg text{font-family:var(--font);font-size:11px;fill:var(--muted)}svg .lbl{fill:var(--ink-2);font-weight:600}
+.alvo{cursor:default}.alvo:hover rect.barra{opacity:.82}
+#dica{position:fixed;pointer-events:none;background:var(--ink);color:#fff;font-size:12px;padding:6px 10px;border-radius:8px;opacity:0;transition:opacity .1s;max-width:260px;z-index:9}
+table{border-collapse:collapse;width:100%;font-size:14px}th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line)}th{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.03em}.n{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.rolar{overflow-x:auto}tr.destaque td{background:var(--sage-soft)}tr.total td{font-weight:700;border-top:2px solid var(--line-2)}
+details{border-top:1px solid var(--line)}details:first-of-type{border-top:0}summary{cursor:pointer;list-style:none;display:grid;grid-template-columns:1fr auto auto;gap:14px;align-items:center;padding:12px 4px}summary::-webkit-details-marker{display:none}summary .nome{font-weight:600}summary .nome::before{content:"▸";display:inline-block;width:16px;color:var(--muted);transition:transform .15s}details[open] summary .nome::before{transform:rotate(90deg)}
+.barrinha{height:6px;border-radius:3px;background:var(--sage);margin-top:4px}
+.mais{margin:6px 0 12px 16px}.criterios{font-size:13px;color:var(--muted)}.criterios li{margin:3px 0}
+@media(max-width:860px){.kpis{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr}}
+@media(max-width:430px){.kpis{grid-template-columns:1fr}h1{font-size:24px}.nav b{min-width:0}}
+</style></head><body><main>
+<div class="topo"><div><h1>Semana passada</h1><p class="sub" id="unidade">Carregando…</p></div>
+<div class="nav"><button id="ant" aria-label="Semana anterior">←</button><b id="periodo">—</b><button id="prox" aria-label="Próxima semana">→</button></div></div>
+<div id="saida" aria-live="polite"></div>
+<div id="dica" role="tooltip"></div>
+</main>
+<script type="module">
+import {createClient} from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.0/+esm';
+const SB='https://kujelbcbrcmkitzyswbh.supabase.co',ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt1amVsYmNicmNta2l0enlzd2JoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg2NDg0MzAsImV4cCI6MjEwNDIyNDQzMH0.uDwckXtywDBZGU_i4J8S9BdO2fUtRwXCOaLJbSiWzdQ',sb=createClient(SB,ANON),unit=new URLSearchParams(location.search).get('restaurant_id');
+const el=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
+const brl=c=>(Number(c)/100).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const brl0=c=>(Number(c)/100).toLocaleString('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0});
+const num=n=>Number(n).toLocaleString('pt-BR',{maximumFractionDigits:1});
+const DS=['dom','seg','ter','qua','qui','sex','sáb'];
+const dt=s=>new Date(s+'T12:00:00Z');
+const dm=s=>{const d=dt(s);return String(d.getUTCDate()).padStart(2,'0')+'/'+String(d.getUTCMonth()+1).padStart(2,'0');};
+const dsem=s=>DS[dt(s).getUTCDay()];
+const somar=(s,n)=>new Date(dt(s).getTime()+n*864e5).toISOString().slice(0,10);
+function variacao(atual,ref){if(ref===null||ref===undefined||!Number(ref))return '<span class="var zero">sem base</span>';const p=(Number(atual)-Number(ref))/Number(ref)*100;const c=Math.abs(p)<.5?'zero':p>0?'up':'down';return `<span class="var ${c}">${p>0?'+':''}${num(p)}%</span>`;}
+let semana=null,atualSegunda=null;
+
+async function call(body){const {data,error}=await sb.auth.getSession();if(error||!data.session)throw Error('Entre novamente no portal de gestão.');const r=await fetch(SB+'/functions/v1/gestao-semana',{method:'POST',headers:{'Content-Type':'application/json','apikey':ANON,'Authorization':'Bearer '+data.session.access_token},body:JSON.stringify({acao:'semana',restaurant_id:unit,...body})});const d=await r.json().catch(()=>({erro:'Resposta inválida do servidor.'}));if(!r.ok)throw Error(d.erro||'Não foi possível concluir.');return d;}
+
+async function carregar(inicio){
+ el('ant').disabled=el('prox').disabled=true;el('saida').innerHTML='<p class="sub">Montando a semana…</p>';
+ try{const d=await call(inicio?{inicio}:{});semana=d.semana.inicio;const h=d.semana.hoje;atualSegunda=somar(h,-((dt(h).getUTCDay()+6)%7));ultimo={...ultimo,d};render(d);larguraAnt=el('saida').clientWidth;}
+ catch(e){if(!semana)el('unidade').textContent='';el('saida').innerHTML=`<p class="erro">${esc(e.message)}</p>`;}
+ finally{if(semana){el('ant').disabled=semana<='2024-11-04';el('prox').disabled=semana>=atualSegunda;}}
+}
+el('ant').onclick=()=>carregar(somar(semana,-7));el('prox').onclick=()=>carregar(somar(semana,7));
+
+// Dica flutuante para os gráficos (hover e foco)
+const dica=el('dica');
+document.addEventListener('pointerover',e=>{const a=e.target.closest('[data-dica]');if(!a)return;dica.innerHTML=a.dataset.dica;dica.style.opacity=1;});
+document.addEventListener('pointermove',e=>{if(dica.style.opacity==='1'){dica.style.left=Math.min(e.clientX+14,innerWidth-270)+'px';dica.style.top=(e.clientY+14)+'px';}});
+document.addEventListener('pointerout',e=>{if(e.target.closest('[data-dica]'))dica.style.opacity=0;});
+
+// Barras verticais com marca de referência opcional. itens: {rot, valor, ref, vazio, dica}
+function barras(itens,{alto=200,destaque=-1,meia=false}={}){
+ const cw=el("saida").clientWidth||900,metade=meia&&cw>860;
+ const W=Math.max(260,(metade?(cw-14)/2:cw)-42),H=alto,top=22,base=H-24,max=Math.max(1,...itens.map(i=>Math.max(i.valor||0,i.ref||0)));
+ const larg=W/itens.length,bw=Math.min(28,larg*.6),y=v=>base-(v/max)*(base-top);
+ const pula=larg<36;let s=`<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img"><line x1="0" x2="${W}" y1="${base}" y2="${base}" stroke="var(--line-2)"/>`;
+ itens.forEach((it,k)=>{const cx=larg*k+larg/2,x=cx-bw/2;
+  s+=`<g class="alvo" data-dica="${esc(it.dica)}" tabindex="0"><rect x="${cx-larg/2}" y="${top-14}" width="${larg}" height="${base-top+14}" fill="transparent"/>`;
+  if(it.vazio)s+=`<rect class="barra" x="${x}" y="${base-26}" width="${bw}" height="26" rx="4" fill="none" stroke="var(--faint)" stroke-dasharray="3 3"/><text x="${cx}" y="${base-31}" text-anchor="middle">s/ dados</text>`;
+  else if(it.valor>0){const yy=y(it.valor),r=Math.min(4,(base-yy)/2);s+=`<path class="barra" d="M${x},${base}V${yy+r}q0,-${r} ${r},-${r}h${bw-2*r}q${r},0 ${r},${r}V${base}Z" fill="var(--sage)" opacity="${destaque<0||destaque===k?1:.55}"/>`;}
+  if(it.ref!==null&&it.ref!==undefined&&!it.vazio)s+=`<line x1="${cx-bw/2-5}" x2="${cx+bw/2+5}" y1="${y(it.ref)}" y2="${y(it.ref)}" stroke="var(--ref)" stroke-width="2" stroke-linecap="round"/>`;
+  if(it.etiqueta&&larg>=52)s+=`<text class="lbl" x="${cx}" y="${(it.vazio?base-26:y(Math.max(it.valor||0,it.ref||0)))-6}" text-anchor="middle">${esc(it.etiqueta)}</text>`;
+  if(!pula||k%2===(itens.length-1)%2)s+=`<text x="${cx}" y="${H-6}" text-anchor="middle">${esc(it.rot)}</text>`;s+=`</g>`;});
+ return s+'</svg>';
+}
+
+function render(d){
+ const S=d.semana,dias=d.dias,sem=d.semanas,atual=sem[sem.length-1],ant=sem[sem.length-2];
+ el('unidade').textContent=d.unidade+' · revisão do dono';
+ el('periodo').textContent=`${dm(S.inicio)} a ${dm(S.fim)}`;
+ const completa=atual.dias_cobertos===7&&!S.parcial;
+ const ref4=sem.slice(-5,-1).filter(w=>w.dias_cobertos===7),med4=ref4.length?ref4.reduce((a,w)=>a+w.centavos,0)/ref4.length:null;
+ const antOk=ant&&ant.dias_cobertos===7,ano=d.ano_anterior,anoOk=ano.dias_cobertos===7;
+ const pagos=d.pagamentos.categorias.reduce((a,c)=>a+Number(c.centavos),0),pagosAnt=d.pagamentos.categorias.reduce((a,c)=>a+Number(c.ant_centavos),0);
+ const semDados=dias.filter(x=>!x.coberto);
+ let h='';
+
+ // Avisos de cobertura: número incompleto nunca aparece como completo
+ if(S.parcial)h+=`<p class="aviso"><b>Semana em andamento.</b> Os dias ainda não fechados não entram; compare só depois de domingo.</p>`;
+ if(semDados.length)h+=`<p class="aviso"><b>Sem dados da Takeat em ${semDados.length} ${semDados.length>1?'dias':'dia'}:</b> ${semDados.map(x=>dsem(x.dia)+' '+dm(x.dia)).join(', ')}. A coleta roda toda madrugada${d.coleta.historico_pendente?` e ainda há ${d.coleta.historico_pendente} ${d.coleta.historico_pendente>1?'meses':'mês'} de histórico na fila`:''}. Esses dias não contam como zero: ficam fora das comparações.</p>`;
+
+ // Números principais
+ const ticket=atual.comandas?atual.centavos/atual.comandas:null;
+ const ticketAnt=antOk&&ant.comandas?ant.centavos/ant.comandas:null;
+ h+=`<div class="kpis">
+ <div class="kpi"><div class="rot">Faturamento da semana${completa?'':` · ${atual.dias_cobertos} de 7 dias`}</div><div class="val">${brl0(atual.centavos)}</div><div class="det">${completa?`${variacao(atual.centavos,antOk?ant.centavos:null)} vs semana anterior<br>${variacao(atual.centavos,med4)} vs média de ${ref4.length||0} ${ref4.length===1?'semana':'semanas'}`:'Comparação só com a semana completa.'}</div></div>
+ <div class="kpi"><div class="rot">Comandas · ticket médio</div><div class="val">${atual.comandas}</div><div class="det">${ticket?brl(ticket)+' por comanda':'—'}${completa&&ticket?'<br>'+variacao(ticket,ticketAnt)+' ticket vs anterior':''}</div></div>
+ <div class="kpi"><div class="rot">Mesma semana em ${dt(ano.inicio).getUTCFullYear()}</div><div class="val">${anoOk?brl0(ano.centavos):'—'}</div><div class="det">${anoOk?(completa?variacao(atual.centavos,ano.centavos)+' este ano':'')+`<br><small>${dm(ano.inicio)} a ${dm(somar(ano.inicio,6))}</small>`:'Histórico desse período ainda não coletado.'}</div></div>
+ <div class="kpi"><div class="rot">Pago na semana (Takeat)</div><div class="val">${d.pagamentos.coberto?brl0(pagos):"—"}</div><div class="det">${d.pagamentos.coberto?variacao(pagos,pagosAnt)+" vs semana anterior"+(!d.pagamentos.ultima_baixa||d.pagamentos.ultima_baixa<S.fim?"<br><small>Takeat sem baixas desde "+(d.pagamentos.ultima_baixa?dm(d.pagamentos.ultima_baixa):"—")+"</small>":""):"Financeiro desta semana ainda não coletado."}</div></div></div>`;
+
+ // Faturamento semanal (13 semanas)
+ h+=`<section class="card"><h2>Faturamento por semana</h2><p class="sub">Últimas 13 semanas, segunda a domingo. Semana com dia faltando aparece tracejada.</p>`+
+ barras(sem.map((w,k)=>{const ok=w.dias_cobertos===7;return {rot:dm(w.inicio),valor:ok?w.centavos:0,vazio:!ok,etiqueta:ok&&(k===sem.length-1||k===sem.length-2)?brl0(w.centavos):'',dica:`<b>${dm(w.inicio)} a ${dm(somar(w.inicio,6))}</b><br>${ok?brl(w.centavos)+' · '+w.comandas+' comandas':`Incompleta: ${w.dias_cobertos} de 7 dias com dados${w.dias_cobertos?' ('+brl(w.centavos)+')':''}`}`};}),{destaque:sem.length-1})+`</section>`;
+
+ // Dia a dia e horários
+ const refDias=dias.some(x=>x.ref_dias>0);
+ h+=`<div class="grid2"><section class="card"><h2>Dia a dia</h2><div class="legenda"><span><i style="background:var(--sage)"></i>Esta semana</span>${refDias?'<span><i style="background:var(--ref);height:3px;vertical-align:3px"></i>Média do mesmo dia (até 4 semanas)</span>':''}</div>`+
+ barras(dias.map(x=>({rot:dsem(x.dia)+' '+dm(x.dia),valor:x.centavos,vazio:!x.coberto,ref:x.ref_dias?x.ref_centavos:null,etiqueta:x.coberto&&x.centavos?brl0(x.centavos):'',dica:`<b>${dsem(x.dia)} ${dm(x.dia)}</b><br>${x.coberto?brl(x.centavos)+' · '+x.comandas+' comandas':'Sem dados da Takeat'}${x.ref_dias?`<br>Média de ${x.ref_dias} ${x.ref_dias>1?'semanas':'semana'}: ${brl(x.ref_centavos)}`:''}`})),{meia:true})+`</section>`;
+ const horas=d.horas,ativas=horas.filter(x=>x.centavos>0||x.ref_centavos>0),hmin=ativas.length?Math.min(...ativas.map(x=>x.hora)):11,hmax=ativas.length?Math.max(...ativas.map(x=>x.hora)):23;
+ h+=`<section class="card"><h2>Horário</h2><div class="legenda"><span><i style="background:var(--sage)"></i>Esta semana</span>${d.ref_semanas_horas?`<span><i style="background:var(--ref);height:3px;vertical-align:3px"></i>Média de ${d.ref_semanas_horas} ${d.ref_semanas_horas>1?'semanas completas':'semana completa'}</span>`:''}</div>`+
+ barras(horas.filter(x=>x.hora>=hmin&&x.hora<=hmax).map(x=>({rot:x.hora+'h',valor:x.centavos,ref:x.ref_centavos,dica:`<b>${x.hora}h às ${x.hora+1}h</b><br>${brl(x.centavos)}${x.ref_centavos!==null?'<br>Média: '+brl(x.ref_centavos):''}`})),{meia:true})+`<p class="sub">Pelo horário em que o pedido foi lançado.</p></section></div>`;
+
+ // Ranking por categoria
+ const totalCat=d.categorias.reduce((a,c)=>a+Number(c.centavos),0)||1;
+ h+=`<section class="card"><h2>Ranking por categoria</h2><p class="sub">Toque na categoria para ver os produtos. Comparação com a semana anterior${antOk?'':' (semana anterior incompleta: compare com cuidado)'}.</p>`+
+ (d.categorias.length?d.categorias.map(c=>{const ps=c.produtos.filter(p=>p.centavos>0||p.ant_centavos>0);const linha=p=>`<tr><td>${esc(p.nome)}</td><td class="n">${num(p.qtd)}</td><td class="n">${brl(p.centavos)}</td><td class="n">${num(p.ant_qtd)}</td><td class="n">${variacao(p.qtd,p.ant_qtd)}</td></tr>`;
+  return `<details><summary><span><span class="nome">${esc(c.categoria)}</span><div class="barrinha" style="width:${Math.max(1,c.centavos/totalCat*100)}%"></div></span><span class="n">${brl0(c.centavos)} <small>· ${num(c.centavos/totalCat*100)}%</small></span><span>${variacao(c.centavos,c.ant_centavos)}</span></summary><div class="rolar"><table><thead><tr><th>Produto</th><th class="n">Qtd</th><th class="n">Valor</th><th class="n">Qtd sem. ant.</th><th class="n">Var. qtd</th></tr></thead><tbody>${ps.slice(0,10).map(linha).join('')}</tbody>${ps.length>10?`<tbody hidden>${ps.slice(10).map(linha).join('')}</tbody>`:''}</table>${ps.length>10?`<button class="mais" data-mais>Ver os outros ${ps.length-10}</button>`:''}</div></details>`;}).join(''):'<p class="sub">Sem vendas com dados nesta semana.</p>')+`</section>`;
+
+ // Atendentes
+ const at=d.atendentes.filter(a=>a.centavos>0||a.ant_centavos>0),semNome=at.find(a=>!a.nome),pctSem=semNome&&atual.centavos?semNome.centavos/atual.centavos*100:0;
+ const diasSem=dias.map(x=>x.dia);
+ h+=`<section class="card"><h2>Venda por atendente</h2><p class="sub">Pelo atendente marcado na conta da Takeat.</p>${pctSem>=20?`<p class="aviso"><b>${num(pctSem)}% do faturamento está sem atendente na conta.</b> O ranking só fica confiável quando a equipe marcar o garçom em cada conta.</p>`:''}
+ <div class="rolar"><table><thead><tr><th>Atendente</th><th class="n">Total</th><th class="n">Comandas</th><th class="n">Itens</th><th class="n">vs anterior</th>${diasSem.map(x=>`<th class="n">${dsem(x)}</th>`).join('')}</tr></thead><tbody>${at.map(a=>`<tr${a.nome?'':' class="destaque"'}><td>${a.nome?esc(a.nome):'<i>Sem atendente na conta</i>'}</td><td class="n">${brl(a.centavos)}</td><td class="n">${a.comandas}</td><td class="n">${num(a.itens)}</td><td class="n">${variacao(a.centavos,a.ant_centavos)}</td>${diasSem.map(x=>`<td class="n">${a.dias[x]?brl0(a.dias[x]):'<small>—</small>'}</td>`).join('')}</tr>`).join('')||`<tr><td colspan="${5+diasSem.length}" class="sub">Sem vendas com dados nesta semana.</td></tr>`}</tbody></table></div><p class="sub">Uma comanda com contas de atendentes diferentes conta para cada um.</p></section>`;
+
+ // Pagamentos
+ const fin=d.pagamentos,velho=!fin.ultima_baixa||fin.ultima_baixa<S.fim,cats=fin.categorias.filter(c=>Number(c.centavos)!==0||Number(c.ant_centavos)!==0);
+ const chave=c=>/m[aã]o de obra|m[uú]sica/i.test(c);
+ h+=`<section class="card"><h2>Pagamentos por categoria</h2><p class="sub">Contas marcadas como pagas na Takeat, pela data do pagamento.</p>${!fin.coberto?`<p class="aviso"><b>O financeiro desta semana ainda não foi coletado da Takeat.</b> O histórico entra aos poucos, de madrugada.</p>`:velho?`<p class="aviso"><b>A Takeat não tem pagamento baixado ${fin.ultima_baixa?'depois de '+dm(fin.ultima_baixa):'nenhum'}.</b> Se as contas da semana foram pagas e não baixadas lá, elas não aparecem aqui. A fonte definitiva do que saiu do banco vai ser o extrato da Stone.</p>`:''}
+ <div class="rolar"><table><thead><tr><th>Categoria</th><th class="n">Lançamentos</th><th class="n">Pago na semana</th><th class="n">Semana anterior</th></tr></thead><tbody>${cats.map(c=>`<tr${chave(c.categoria)?' class="destaque"':''}><td>${esc(c.categoria)}</td><td class="n">${c.lancamentos??'—'}</td><td class="n">${brl(c.centavos)}</td><td class="n">${brl(c.ant_centavos)}</td></tr>`).join('')||'<tr><td colspan="4" class="sub">Nenhum pagamento baixado na Takeat nestas duas semanas.</td></tr>'}</tbody>${cats.length?`<tbody><tr class="total"><td>Total</td><td></td><td class="n">${brl(pagos)}</td><td class="n">${brl(pagosAnt)}</td></tr></tbody>`:''}</table></div><p class="sub">Em destaque: mão de obra (prestadores) e música, como estão categorizados na Takeat.</p></section>`;
+
+ h+=`<section class="card criterios"><h2>Como os números são feitos</h2><ul>
+ <li>Faturamento: itens não cancelados de comandas encerradas, pelo dia operacional (o dia vira à 01:30). Antes da taxa de serviço.</li>
+ <li>Ticket médio por comanda, não por pessoa.</li>
+ <li>Comparações só com semanas que têm os 7 dias coletados. Dia sem coleta nunca vira zero.</li>
+ <li>Pagamentos: valor de cada item/parcela paga; a diferença entre o total da nota e os itens (frete, desconto) aparece em linha própria.</li>
+ <li>Vendas atualizadas em ${d.coleta.vendas_em?new Date(d.coleta.vendas_em).toLocaleString('pt-BR',{timeZone:'America/Sao_Paulo',dateStyle:'short',timeStyle:'short'}):'—'}; financeiro em ${fin.coletado_em?new Date(fin.coletado_em).toLocaleString('pt-BR',{timeZone:'America/Sao_Paulo',dateStyle:'short',timeStyle:'short'}):'—'}.</li></ul></section>`;
+ el('saida').innerHTML=h;
+ el('saida').querySelectorAll('[data-mais]').forEach(b=>b.onclick=()=>{b.previousElementSibling.querySelector('tbody[hidden]').hidden=false;b.remove();});
+}
+// Dentro do portal, avisa a altura para o quadro crescer junto (só a altura, nenhum dado).
+if(parent!==window)new ResizeObserver(()=>parent.postMessage({semanaAltura:document.documentElement.scrollHeight},'*')).observe(document.body);
+let ultimo=null,larguraAnt=0;
+addEventListener('resize',()=>{clearTimeout(ultimo?.t);const t=setTimeout(()=>{const w=el('saida').clientWidth;if(ultimo?.d&&Math.abs(w-larguraAnt)>40){larguraAnt=w;render(ultimo.d);}},200);ultimo={...ultimo,t};});
+if(!unit)el('saida').innerHTML='<p class="erro">Abra esta tela pelo portal de gestão.</p>';else carregar();
+</script></body></html>
