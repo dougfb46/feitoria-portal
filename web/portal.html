@@ -140,6 +140,7 @@ async function chamar(payload){
 
 /* ---------- entrar ---------- */
 function telaEntrar(msg){
+  if(!TOKEN_UNIDADE) msg="Este link está sem identificação da unidade. Peça à gestão o link completo do portal.";
   app.innerHTML = `
     <div class="carta">
       <h1>Portal do Colaborador</h1>
@@ -149,11 +150,12 @@ function telaEntrar(msg){
       <input class="pin" id="pin" type="password" inputmode="numeric" autocomplete="off"
              maxlength="6" placeholder="••••">
       <label for="nasc">Sua data de nascimento</label>
-      <input type="date" id="nasc">
+      <input type="date" id="nasc" value="${esc(nascimento)}" autocomplete="bday">
       <button id="entrar" style="margin-top:18px">Entrar</button>
       <p class="sub" style="margin:14px 0 0;font-size:12px">
         Seu PIN é pessoal. Não empreste: o que for feito com ele fica no seu nome.</p>
     </div>`;
+  document.getElementById("entrar").disabled = !TOKEN_UNIDADE;
   document.getElementById("entrar").onclick = entrar;
   document.getElementById("nasc").onkeydown = (e) => { if(e.key === "Enter") { e.preventDefault(); entrar(); } };
 }
@@ -162,7 +164,7 @@ async function entrar(){
   const bt = document.getElementById("entrar");
   pin = document.getElementById("pin").value.trim();
   nascimento = document.getElementById("nasc").value;
-  if(pin.length < 4 || !nascimento) return telaEntrar("Preencha o PIN e a data de nascimento.");
+  if(!/^[0-9]{4,6}$/.test(pin) || !nascimento) return telaEntrar("Informe um PIN de 4 a 6 números e sua data de nascimento.");
   bt.disabled = true; bt.textContent = "Entrando…";
   try { sessao = await chamar({ action:"entrar" }); telaInicio(); }
   catch(e){ pin = ""; telaEntrar(e.message); }
@@ -171,6 +173,7 @@ async function entrar(){
 /* ---------- início ---------- */
 function telaInicio(msg){
   manterSessao();
+  frameAtivo?.__limparAtividade?.();
   frameAtivo=null;
   const tipos = new Set(sessao.tipos_treinamento || []);
   const docs = sessao.documentos.filter(d => secao === "treinamentos" ? tipos.has(d.tipo) : secao === "documentos" ? !tipos.has(d.tipo) : true).slice().sort((a,b)=>Number(!!b.pendente)-Number(!!a.pendente));
@@ -242,7 +245,18 @@ function telaInicio(msg){
     frame.style="width:100%;height:75dvh;min-height:500px;border:0";
     if(secao==="ponto") frame.allow="camera 'self'; geolocation 'self'";
     if(["checklists","cozinha"].includes(secao)) frame.allow="camera 'self'";
+    const ajuda=document.createElement("p");ajuda.className="sub";
+    const link=document.createElement("a");link.href=url.href;link.target="_blank";link.rel="noopener";link.textContent="Abrir esta atividade em tela própria";
+    ajuda.append(link);card.append(ajuda);
     frame.onload=()=>{
+      try {
+        const doc=frame.contentDocument;
+        const atividade=()=>{if(sessao && frameAtivo===frame)manterSessao();};
+        const eventos=["pointerdown","keydown","input","scroll"];
+        frame.__limparAtividade?.();
+        eventos.forEach(tipo=>doc.addEventListener(tipo,atividade,{capture:true,passive:true}));
+        frame.__limparAtividade=()=>eventos.forEach(tipo=>doc.removeEventListener(tipo,atividade,true));
+      } catch {}
       if(sessao && ["ponto","checklists"].includes(secao))frame.contentWindow.postMessage({tipo:"feitoria-identificar",unidade:TOKEN_UNIDADE,pin},location.origin);
     };
     frameAtivo=frame;card.append(frame);
