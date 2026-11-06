@@ -132,7 +132,9 @@ const main = $("#conteudo");
 let dados = { mesas: null, cervejas: null };
 const TOKEN = new URLSearchParams(location.search).get("u") || "";
 const FUNCAO = "https://kujelbcbrcmkitzyswbh.supabase.co/functions/v1/operacao";
-let aba = "mapa";
+const abaPedida = new URLSearchParams(location.search).get("aba");
+let aba = ["mapa","chopp","turno","recado","lembretes"].includes(abaPedida) ? abaPedida : "mapa";
+const BASE_DADOS = new URL("../", location.href);
 // No celular a planta inteira não cabe legível: começa ampliada e centralizada.
 // Em tela grande ela cabe, e começar ajustada evita rolagem sem motivo.
 let zoom = window.innerWidth < 700 ? 2.4 : 1;
@@ -171,12 +173,13 @@ function semLink(){
 
 async function carregar(){
   try {
-    const [m, c] = await Promise.all([
-      fetch("mesas.json").then(r => r.json()),
-      fetch("cervejas.json").then(r => r.json()),
+    const [mesas, cervejas] = await Promise.allSettled([
+      fetch(new URL("mesas.json", BASE_DADOS)).then(r => {if(!r.ok)throw new Error();return r.json();}),
+      fetch(new URL("cervejas.json", BASE_DADOS)).then(r => {if(!r.ok)throw new Error();return r.json();}),
     ]);
-    dados.mesas = m; dados.cervejas = c;
-    $("#unidade").textContent = m.unidade || "PUB Mogi";
+    dados.mesas = mesas.status === "fulfilled" ? mesas.value : null;
+    dados.cervejas = cervejas.status === "fulfilled" ? cervejas.value : null;
+    $("#unidade").textContent = dados.mesas?.unidade || "PUB Mogi";
     desenhar();
   } catch {
     main.replaceChildren(texto("p", "aviso",
@@ -188,6 +191,7 @@ async function carregar(){
 function telaMapa(){
   const d = dados.mesas;
   const frag = document.createDocumentFragment();
+  if(!d){frag.append(texto("p","aviso","Não foi possível carregar o mapa. Confira a conexão e tente novamente."));const tentar=texto("button",null,"Tentar novamente");tentar.onclick=carregar;frag.append(tentar);return frag;}
   frag.append(texto("div","chapeu","Salão"), texto("h2",null,"Mapa de mesas"),
     texto("p","legenda", d.total + " mesas · digite o número para encontrar no salão"));
 
@@ -209,7 +213,8 @@ function telaMapa(){
   const interno = texto("div","mapa-interno");
   interno.style.setProperty("--larg", zoom === 1 ? "100%" : Math.round(zoom * 100) + "%");
   const img = new Image();
-  img.src = d.imagem; img.alt = "Planta do salão do PUB Mogi com os números das mesas";
+  img.src = new URL(d.imagem, BASE_DADOS).href; img.alt = "Planta do salão do PUB Mogi com os números das mesas";
+  img.addEventListener("error",()=>{img.alt="A imagem do salão não carregou. Tente recarregar a página.";});
   // o alvo de toque acompanha o tamanho em que a planta foi desenhada
   const ajustarAlvo = () => {
     const alvo = Math.max(20, Math.round(interno.clientWidth * 0.013));
@@ -487,6 +492,7 @@ function telaRecado(){
 function desenhar(){
   document.querySelectorAll('[role="tab"]').forEach(b =>
     b.setAttribute("aria-selected", String(b.id === "aba-" + aba)));
+  if(aba === "chopp" && !dados.cervejas){const aviso=texto("div","aviso","Não foi possível carregar o catálogo de cervejas.");const tentar=texto("button",null,"Tentar novamente");tentar.onclick=carregar;main.replaceChildren(aviso,tentar);return;}
   const tela = aba === "mapa"   ? telaMapa()
              : aba === "chopp"  ? telaCervejas()
              : aba === "turno"  ? telaTurno()

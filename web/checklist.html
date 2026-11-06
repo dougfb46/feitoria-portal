@@ -92,6 +92,8 @@ const tela = document.getElementById("tela");
 const rodape = document.getElementById("rodape");
 
 let pin = "", execucao = null, modelo = null, respostas = new Map();
+let momento = "todos";
+const momentos = [["todos","Todas as rotinas"],["abertura","Abertura",["K01"]],["turno","Durante o turno",["K08"]],["fechamento","Fechamento",["K03","K04"]],["entrega","Recebimento de mercadorias",["K02"]],["semana","Cuidados da semana",["K05","K06","K07"]]];
 const pendentes = new Set();
 let contarRespostas = () => {};   // a tela de itens substitui isto
 
@@ -137,7 +139,18 @@ async function telaLista(aviso){
       tela.append(el("p", "Nenhum checklist publicado ainda. A gestão importa os modelos na tela dela.", "vazio"));
       return;
     }
-    d.modelos.forEach(m => {
+    if(!MODO_GESTAO){
+      const label=el("label","Qual trabalho você vai fazer?");
+      const filtro=el("select");
+      momentos.forEach(([valor,nome])=>{const o=el("option",nome);o.value=valor;filtro.append(o);});
+      filtro.value=momento;filtro.onchange=()=>{momento=filtro.value;telaLista();};
+      label.append(filtro);tela.append(label);
+      tela.append(el("p","Escolha a rotina combinada para seu turno. Esta lista não significa que você precisa executar todas as tarefas.","legenda"));
+    }
+    const codigos=momentos.find(([id])=>id===momento)?.[2];
+    const visiveis=MODO_GESTAO || !codigos ? d.modelos : d.modelos.filter(m=>codigos.includes(m.codigo));
+    if(!visiveis.length)tela.append(el("p","Não há rotina publicada para este momento. Confira com o responsável pelo turno.","vazio"));
+    visiveis.forEach(m => {
       const c = el("div", null, "cartao");
       const txt = el("div");
       txt.append(el("b", m.titulo), el("span", [m.codigo, m.quando].filter(Boolean).join(" · ")));
