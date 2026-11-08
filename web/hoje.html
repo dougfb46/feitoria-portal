@@ -1,0 +1,84 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Hoje · Feitoria</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<style>
+:root{--font:"DM Sans",-apple-system,"Segoe UI",Roboto,sans-serif;--page:#f7f8f5;--card:#fff;--soft:#f4f4f0;--line:#efeee9;--line-2:#e3e2dc;--ink:#1c1e1d;--ink-2:#3a3e3c;--muted:#7a7e7b;--sage:#5f7f69;--sage-soft:#e8eee9;--sage-ink:#4b6853;--up:#4f7a5c;--up-bg:#e6eee8;--down:#c4483e;--down-bg:#fbe8e6;--amber:#9a6f17;--amber-bg:#f8efd9}
+*{box-sizing:border-box}body{margin:0;background:var(--page);color:var(--ink);font:15px/1.5 var(--font)}main{max-width:1100px;margin:auto;padding:20px 16px 40px}
+h1{font-size:28px;margin:0;letter-spacing:-.01em}h2{font-size:17px;margin:0 0 10px}.sub,small{color:var(--muted)}p{margin:6px 0}
+a{color:var(--sage-ink)}
+.topo{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:6px}
+button{font:inherit;border:1px solid var(--line-2);border-radius:12px;padding:8px 14px;background:var(--card);color:var(--ink);cursor:pointer}button:hover{background:var(--soft)}
+.card{background:var(--card);border:1px solid var(--line-2);border-radius:22px;padding:18px 20px;margin:14px 0}
+.att{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:4px 12px;align-items:start;padding:12px 0;border-top:1px solid var(--line)}
+.att:first-of-type{border-top:0;padding-top:4px}
+.dot{width:10px;height:10px;border-radius:50%;margin-top:6px}.dot.vermelho{background:var(--down)}.dot.amarelo{background:#d29a2a}
+.att b{display:block}.att .det{color:var(--ink-2);font-size:14px}
+.tag{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.03em;text-transform:uppercase;border-radius:999px;padding:1px 8px;margin-left:6px;vertical-align:1px;background:var(--sage-soft);color:var(--sage-ink)}
+.ir{white-space:nowrap;font-size:14px;font-weight:600;text-decoration:none;border:1px solid var(--line-2);border-radius:10px;padding:5px 10px;color:var(--sage-ink)}.ir:hover{background:var(--soft)}
+.tudo-ok{color:var(--up);font-weight:600}
+.kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:14px 0}
+.kpi{background:var(--card);border:1px solid var(--line-2);border-radius:22px;padding:16px 18px;text-decoration:none;color:inherit;display:block}.kpi:hover{border-color:var(--sage)}
+.kpi .rot{font-size:13px;color:var(--muted)}.kpi .val{font-size:26px;font-weight:700;margin:2px 0;letter-spacing:-.01em;font-variant-numeric:tabular-nums}.kpi .det{font-size:13px;color:var(--ink-2)}
+.var{display:inline-block;font-size:12px;font-weight:600;border-radius:999px;padding:1px 8px;font-variant-numeric:tabular-nums}.var.up{color:var(--up);background:var(--up-bg)}.var.down{color:var(--down);background:var(--down-bg)}
+.grid2{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:14px}.grid2 .card{margin:0}
+.agente-tit{font-weight:600}.secoes{margin:8px 0 0;padding-left:18px;color:var(--ink-2);font-size:14px}.secoes li{margin:3px 0}
+.acoes{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+table{border-collapse:collapse;width:100%;font-size:14px}td{padding:7px 4px;border-bottom:1px solid var(--line);vertical-align:top}tr:last-child td{border-bottom:0}.n{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.conn{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 18px}.conn div{display:flex;justify-content:space-between;gap:8px;align-items:center;font-size:14px}
+.pill{font-size:11.5px;font-weight:600;border-radius:999px;padding:2px 9px;white-space:nowrap}.pill.ok{background:var(--up-bg);color:var(--up)}.pill.off{background:var(--down-bg);color:var(--down)}
+.links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.links a{display:block;border:1px solid var(--line-2);border-radius:14px;padding:10px 12px;text-decoration:none;color:var(--ink)}.links a:hover{border-color:var(--sage)}.links small{display:block}
+.erro{background:var(--down-bg);color:#7a2a23;border-radius:14px;padding:12px 16px}.vazio{color:var(--muted)}
+@media(max-width:860px){.kpis{grid-template-columns:1fr}.grid2{grid-template-columns:1fr}}
+@media(max-width:520px){h1{font-size:24px}.conn,.links{grid-template-columns:1fr}.att{grid-template-columns:auto minmax(0,1fr)}.att .ir{grid-column:2;justify-self:start}}
+</style></head><body><main>
+<div class="topo"><div><h1>Hoje</h1><p class="sub" id="sub">Carregando…</p></div><button id="atualizar">Atualizar</button></div>
+<div id="saida" aria-live="polite"><p class="vazio">Juntando vendas, contas e avisos…</p></div>
+</main>
+<script type="module">
+import {createClient} from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.0/+esm';
+const SB='https://kujelbcbrcmkitzyswbh.supabase.co',ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt1amVsYmNicmNta2l0enlzd2JoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg2NDg0MzAsImV4cCI6MjEwNDIyNDQzMH0.uDwckXtywDBZGU_i4J8S9BdO2fUtRwXCOaLJbSiWzdQ',sb=createClient(SB,ANON),unit=new URLSearchParams(location.search).get('restaurant_id');
+const el=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
+const brl=c=>(Number(c)/100).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const brl0=c=>(Number(c)/100).toLocaleString('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0});
+const dia=s=>{const [,m,d]=String(s).slice(0,10).split('-');return d+'/'+m;};
+const sem=s=>['dom','seg','ter','qua','qui','sex','sáb'][new Date(String(s).slice(0,10)+'T12:00:00Z').getUTCDay()];
+const semLonga=s=>['domingo','segunda','terça','quarta','quinta','sexta','sábado'][new Date(String(s).slice(0,10)+'T12:00:00Z').getUTCDay()];
+const quando=iso=>iso?new Date(iso).toLocaleString('pt-BR',{timeZone:'America/Sao_Paulo',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'nunca';
+// Área do portal que resolve cada item; abre na moldura da gestão.
+const ROTA={vencimentos:'financeiro/vencimentos',semana:'resultados/semana',boletim:'resultados/boletim',equipe:'pessoas/equipe',docs:'pessoas/docs',nr1:'pessoas/nr1',chk:'operacao/chk',pend:'pessoas/pend',integracoes:'integracoes'};
+const ir=(area,texto='Abrir')=>ROTA[area]?`<a class="ir" target="_top" href="${esc(new URL('gestao.html#'+ROTA[area],location.href).href)}">${esc(texto)}</a>`:'';
+const TAKEAT=[['https://novo-gestor.takeat.app','Novo painel de gestão','Indicadores e cadastros da Takeat'],['https://dashboard.takeat.app','Operação e caixa','Mesas, pedidos e fechamento de caixa'],['https://gm.takeat.app','Portal do garçom','O mesmo das maquininhas'],['https://cardapio-inteligente.takeat.app','Cardápio inteligente','Alterações no cardápio com IA']];
+async function call(){const {data,error}=await sb.auth.getSession();if(error||!data.session)throw Error('Entre novamente no portal de gestão.');const r=await fetch(SB+'/functions/v1/gestao-hoje',{method:'POST',headers:{'Content-Type':'application/json','apikey':ANON,'Authorization':'Bearer '+data.session.access_token},body:JSON.stringify({acao:'hoje',restaurant_id:unit})});const d=await r.json().catch(()=>({erro:'Resposta inválida do servidor.'}));if(!r.ok)throw Error(d.erro||'Não foi possível montar a tela Hoje agora.');return d;}
+function render(d){
+ const h=new Date(d.hoje+'T12:00:00Z');
+ el('sub').textContent=(d.unidade||'')+' · '+semLonga(d.hoje)+', '+h.getUTCDate()+' de '+['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'][h.getUTCMonth()]+(d.vendas?.dia?' · vendas da Takeat até '+sem(d.vendas.dia)+' '+dia(d.vendas.dia):'');
+ const ordem={vermelho:0,amarelo:1};
+ const att=[...(d.atencao||[])].sort((a,b)=>(ordem[a.nivel]-ordem[b.nivel])||((a.origem==='agente')-(b.origem==='agente')));
+ let s=`<div class="card"><h2>Precisa de atenção</h2>${att.length?att.map(a=>`<div class="att"><span class="dot ${esc(a.nivel)}"></span><div><b>${esc(a.titulo)}${a.origem==='agente'?'<span class="tag">agente diário</span>':''}</b><div class="det">${esc(a.detalhe)}</div></div>${ir(a.area)}</div>`).join(''):'<p class="tudo-ok">Nada pendente agora.</p>'}</div>`;
+ const v=d.vendas,c=d.contas?.totais;
+ let vendaKpi='<div class="kpi"><div class="rot">Vendas</div><div class="val">—</div><div class="det">Ainda não há dia com coleta completa.</div></div>';
+ if(v){const m=v.media_mesmo_dia_centavos,p=m?((v.centavos/m-1)*100):null;
+  vendaKpi=`<a class="kpi" target="_top" href="${esc(new URL('gestao.html#resultados/vendas',location.href).href)}"><div class="rot">Vendas de ${esc(semLonga(v.dia))} ${esc(dia(v.dia))}</div><div class="val">${brl0(v.centavos)}</div><div class="det">${v.comandas} comandas${p!==null?` · <span class="var ${p>=0?'up':'down'}">${p>=0?'+':''}${p.toFixed(0)}%</span> vs média de ${v.semanas_na_media} ${esc(semLonga(v.dia))}s`:''}</div></a>`;}
+ const sm=d.semana;
+ const semanaKpi=sm?`<a class="kpi" target="_top" href="${esc(new URL('gestao.html#resultados/semana',location.href).href)}"><div class="rot">Semana até ${esc(sem(sm.fim))} ${esc(dia(sm.fim))}</div><div class="val">${brl0(sm.centavos)}</div><div class="det">Desde segunda, ${esc(dia(sm.inicio))}</div></a>`:'<div class="kpi"><div class="rot">Semana</div><div class="val">—</div></div>';
+ const contasKpi=c?`<a class="kpi" target="_top" href="${esc(new URL('gestao.html#financeiro/vencimentos',location.href).href)}"><div class="rot">Contas a pagar</div><div class="val">${brl0(c.hoje.centavos+c.semana.centavos)}</div><div class="det">${c.hoje.contas} hoje · ${c.semana.contas} nos próximos dias${c.atrasada.contas?` · <span class="var down">${c.atrasada.contas} vencidas sem baixa</span>`:''}</div></a>`:'';
+ s+=`<div class="kpis">${vendaKpi}${semanaKpi}${contasKpi}</div>`;
+ const g=d.agente;
+ const agente=g?`<div class="card"><h2>Do agente</h2><div class="agente-tit">${esc(g.titulo)}</div><small>${esc(g.autor||'Agente')} · ${esc(quando(g.emitido_em))}</small><p>${esc(g.resumo||'')}</p>${(g.secoes||[]).length?`<ul class="secoes">${g.secoes.map(x=>`<li>${esc(x.titulo)}${x.tipo==='pendencia'?' <span class="tag">pendência</span>':''}</li>`).join('')}</ul>`:''}<div class="acoes">${ir('boletim','Ler no Boletim')}${g.fonte_url&&/^https:\/\/mail\.google\.com\//.test(g.fonte_url)?`<a class="ir" target="_blank" rel="noopener" href="${esc(g.fonte_url)}">Abrir o e-mail</a>`:''}</div></div>`:`<div class="card"><h2>Do agente</h2><p class="vazio">Nenhum texto do agente guardado ainda.</p></div>`;
+ const prox=d.contas?.proximas||[];
+ const contas=`<div class="card"><h2>Próximas contas</h2>${prox.length?`<table>${prox.slice(0,6).map(x=>`<tr><td>${esc(sem(x.vencimento))} ${esc(dia(x.vencimento))}</td><td>${x.fornecedor?esc(x.fornecedor):'<i class="vazio">Fornecedor sem nome na Takeat</i>'}</td><td class="n">${brl(x.centavos)}</td></tr>`).join('')}</table>`:'<p class="vazio">Nada vence hoje nem nos próximos 6 dias.</p>'}<div class="acoes">${ir('vencimentos','Ver todas as contas')}</div></div>`;
+ s+=`<div class="grid2">${agente}${contas}</div>`;
+ s+=`<div class="grid2" style="margin-top:14px"><div class="card"><h2>Conexões</h2><div class="conn">${(d.conexoes||[]).map(x=>`<div><span>${esc(x.nome)}<small> · ${esc(quando(x.ultima))}</small></span><span class="pill ${x.ok?'ok':'off'}">${x.ok?'Em dia':'Parada'}</span></div>`).join('')}</div></div>
+  <div class="card"><h2>Takeat</h2><div class="links">${TAKEAT.map(([u,t,dd])=>`<a href="${u}" target="_blank" rel="noopener">${esc(t)}<small>${esc(dd)}</small></a>`).join('')}</div></div></div>`;
+ el('saida').innerHTML=s;
+}
+async function carregar(){
+ if(!unit||!/^[0-9a-f-]{36}$/i.test(unit)){el('saida').innerHTML='<p class="erro">Abra esta tela pelo portal de gestão.</p>';return;}
+ el('atualizar').disabled=true;
+ try{render(await call());}catch(e){el('saida').innerHTML=`<p class="erro">${esc(e.message)}</p>`;}
+ finally{el('atualizar').disabled=false;}
+}
+el('atualizar').onclick=carregar;
+new ResizeObserver(()=>parent.postMessage({hojeAltura:document.documentElement.scrollHeight},'*')).observe(document.body);
+carregar();
+</script></body></html>
