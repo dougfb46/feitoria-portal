@@ -1,0 +1,74 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Contas a pagar · Feitoria</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<style>
+:root{--font:"DM Sans",-apple-system,"Segoe UI",Roboto,sans-serif;--page:#f7f8f5;--card:#fff;--soft:#f4f4f0;--line:#efeee9;--line-2:#e3e2dc;--ink:#1c1e1d;--ink-2:#3a3e3c;--muted:#7a7e7b;--sage:#5f7f69;--sage-soft:#e8eee9;--down:#c4483e;--down-bg:#fbe8e6;--amber:#9a6f17;--amber-bg:#f8efd9}
+*{box-sizing:border-box}body{margin:0;background:var(--page);color:var(--ink);font:15px/1.5 var(--font)}main{max-width:1100px;margin:auto;padding:20px 16px 40px}
+h1{font-size:28px;margin:0;letter-spacing:-.01em}h2{font-size:18px;margin:0 0 8px}.sub,small{color:var(--muted)}p{margin:6px 0}
+.topo{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:8px}
+button{font:inherit;border:1px solid var(--line-2);border-radius:12px;padding:8px 14px;background:var(--card);color:var(--ink);cursor:pointer}button:hover{background:var(--soft)}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0}.kpi{background:var(--card);border:1px solid var(--line-2);border-radius:22px;padding:18px}
+.kpi .rot{font-size:13px;color:var(--muted)}.kpi .val{font-size:28px;font-weight:700;margin:4px 0;letter-spacing:-.01em;font-variant-numeric:tabular-nums}.kpi .det{font-size:13px;color:var(--ink-2)}
+.kpi.alerta{border-color:#f0c9c4;background:#fffaf9}.kpi.alerta .val{color:var(--down)}
+.card{background:var(--card);border:1px solid var(--line-2);border-radius:22px;padding:20px;margin:14px 0}
+.aviso{background:var(--amber-bg);border-radius:14px;padding:12px 16px;margin:10px 0;color:#5b4512;font-size:14px}.aviso b{color:#4a380d}
+.erro{background:var(--down-bg);color:#7a2a23;border-radius:14px;padding:12px 16px}
+.vazio{color:var(--muted);padding:6px 0}
+.rolar{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:14px}th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.03em}.n{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+td.forn{font-weight:600}td .cat{display:block;font-weight:400;font-size:13px;color:var(--muted)}.semnome{font-weight:400;color:var(--muted);font-style:italic}
+tr.total td{font-weight:700;border-top:2px solid var(--line-2);border-bottom:0}
+.dias{display:inline-block;font-size:12px;font-weight:600;border-radius:999px;padding:1px 8px;background:var(--down-bg);color:var(--down);white-space:nowrap}
+.rodape{font-size:13px;color:var(--muted);margin-top:18px}
+@media(max-width:760px){.kpis{grid-template-columns:1fr}h1{font-size:24px}th.pg,td.pg{display:none}}
+</style></head><body><main>
+<div class="topo"><div><h1>Contas a pagar</h1><p class="sub" id="unidade">Carregando…</p></div><button id="atualizar">Atualizar</button></div>
+<div id="saida" aria-live="polite"><p class="vazio">Buscando as contas na coleta da Takeat…</p></div>
+</main>
+<script type="module">
+import {createClient} from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.0/+esm';
+const SB='https://kujelbcbrcmkitzyswbh.supabase.co',ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt1amVsYmNicmNta2l0enlzd2JoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg2NDg0MzAsImV4cCI6MjEwNDIyNDQzMH0.uDwckXtywDBZGU_i4J8S9BdO2fUtRwXCOaLJbSiWzdQ',sb=createClient(SB,ANON),unit=new URLSearchParams(location.search).get('restaurant_id');
+const el=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
+const brl=c=>(Number(c)/100).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const dia=s=>{const [a,m,d]=String(s).slice(0,10).split('-');return d+'/'+m;};
+const semana=s=>['dom','seg','ter','qua','qui','sex','sáb'][new Date(String(s).slice(0,10)+'T12:00:00Z').getUTCDay()];
+const quando=iso=>iso?new Date(iso).toLocaleString('pt-BR',{timeZone:'America/Sao_Paulo',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'—';
+const diasEntre=(a,b)=>Math.round((Date.parse(String(b).slice(0,10)+'T12:00:00Z')-Date.parse(String(a).slice(0,10)+'T12:00:00Z'))/864e5);
+async function call(){const {data,error}=await sb.auth.getSession();if(error||!data.session)throw Error('Entre novamente no portal de gestão.');const r=await fetch(SB+'/functions/v1/gestao-vencimentos',{method:'POST',headers:{'Content-Type':'application/json','apikey':ANON,'Authorization':'Bearer '+data.session.access_token},body:JSON.stringify({acao:'vencimentos',restaurant_id:unit})});const d=await r.json().catch(()=>({erro:'Resposta inválida do servidor.'}));if(!r.ok)throw Error(d.erro||'Não foi possível montar as contas agora.');return d;}
+function tabela(contas,hoje,atrasada){
+ if(!contas.length)return '<p class="vazio">Nenhuma conta.</p>';
+ const total=contas.reduce((s,c)=>s+Number(c.centavos),0);
+ return `<div class="rolar"><table><tr><th>Vencimento</th><th>Fornecedor e categoria</th><th class="pg">Pagamento</th><th class="n">Valor</th></tr>${contas.map(c=>`<tr>
+  <td>${esc(semana(c.vencimento))} ${esc(dia(c.vencimento))}${atrasada?`<br><span class="dias">há ${diasEntre(c.vencimento,hoje)} ${diasEntre(c.vencimento,hoje)===1?'dia':'dias'}</span>`:''}</td>
+  <td class="forn">${c.fornecedor?esc(c.fornecedor):'<span class="semnome">Fornecedor sem nome na Takeat</span>'}<span class="cat">${esc(c.categoria||'Sem categoria')}</span></td>
+  <td class="pg">${esc([c.conta_bancaria,c.forma_pagamento].filter(Boolean).join(' · ')||'—')}</td>
+  <td class="n">${brl(c.centavos)}</td></tr>`).join('')}<tr class="total"><td colspan="3">${contas.length} ${contas.length===1?'conta':'contas'}</td><td class="n">${brl(total)}</td></tr></table></div>`;
+}
+function render(d){
+ el('unidade').textContent=(d.unidade||'')+' · hoje, '+dia(d.hoje);
+ const t=d.totais,contas=d.contas||[],grupo=g=>contas.filter(c=>c.grupo===g);
+ const atrasadas=grupo('atrasada').sort((a,b)=>String(b.vencimento).localeCompare(String(a.vencimento))||b.centavos-a.centavos);
+ const fimSemana=new Date(Date.parse(d.hoje+'T12:00:00Z')+6*864e5).toISOString().slice(0,10);
+ const baixa=d.ultima_despesa_baixada,diasBaixa=baixa?diasEntre(baixa,d.hoje):null;
+ let h='';
+ if(diasBaixa===null||diasBaixa>3)h+=`<div class="aviso"><b>Confira antes de pagar.</b> A última despesa com baixa na Takeat é de ${baixa?esc(dia(baixa)):'—'}${diasBaixa!==null?` (há ${diasBaixa} dias)`:''}. Contas pagas depois disso continuam aparecendo aqui como em aberto até alguém dar baixa na Takeat.</div>`;
+ h+=`<div class="kpis">
+  <div class="kpi"><div class="rot">Vence hoje</div><div class="val">${brl(t.hoje.centavos)}</div><div class="det">${t.hoje.contas} ${t.hoje.contas===1?'conta':'contas'}</div></div>
+  <div class="kpi"><div class="rot">Próximos dias, até ${esc(semana(fimSemana))} ${esc(dia(fimSemana))}</div><div class="val">${brl(t.semana.centavos)}</div><div class="det">${t.semana.contas} ${t.semana.contas===1?'conta':'contas'}</div></div>
+  <div class="kpi${t.atrasada.contas?' alerta':''}"><div class="rot">Vencidas sem baixa (60 dias)</div><div class="val">${brl(t.atrasada.centavos)}</div><div class="det">${t.atrasada.contas} ${t.atrasada.contas===1?'conta':'contas'}</div></div></div>`;
+ h+=`<div class="card"><h2>Vence hoje</h2>${tabela(grupo('hoje'),d.hoje,false)}</div>`;
+ h+=`<div class="card"><h2>Próximos dias</h2>${tabela(grupo('semana'),d.hoje,false)}</div>`;
+ h+=`<div class="card"><h2>Vencidas sem baixa</h2><p class="sub">Da mais recente para a mais antiga. Se já foi paga, dê baixa na Takeat; ela sai daqui na próxima coleta.</p>${tabela(atrasadas,d.hoje,true)}</div>`;
+ h+=`<p class="rodape">Fonte: coleta automática do financeiro da Takeat, última em ${esc(quando(d.ultima_coleta))}. Valor de cada conta pelo total da nota ou do lançamento, sem somar os itens por categoria. Não é extrato bancário.</p>`;
+ el('saida').innerHTML=h;
+}
+async function carregar(){
+ if(!unit||!/^[0-9a-f-]{36}$/i.test(unit)){el('saida').innerHTML='<p class="erro">Abra esta tela pelo portal de gestão.</p>';return;}
+ el('atualizar').disabled=true;
+ try{render(await call());}catch(e){el('saida').innerHTML=`<p class="erro">${esc(e.message)}</p>`;}
+ finally{el('atualizar').disabled=false;}
+}
+el('atualizar').onclick=carregar;
+new ResizeObserver(()=>parent.postMessage({vencAltura:document.documentElement.scrollHeight},'*')).observe(document.body);
+carregar();
+</script></body></html>
