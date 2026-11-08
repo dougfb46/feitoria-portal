@@ -47,7 +47,8 @@
   .menu-portal{display:flex;gap:8px;overflow-x:auto;position:sticky;top:0;background:var(--fundo);padding:8px 0 12px;z-index:2;margin-bottom:12px}
   .menu-portal button{flex:0 0 auto;width:auto;padding:12px 14px;white-space:nowrap;font-size:13px}
   .atalhos-portal{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
-  .atalhos-portal button{display:flex;flex-direction:column;gap:6px;text-align:left;background:white;color:var(--verde);border:1px solid var(--borda);padding:16px;min-height:100px}
+  .atalhos-portal button,.atalhos-portal .atalho-externo{display:flex;flex-direction:column;gap:6px;text-align:left;background:white;color:var(--verde);border:1px solid var(--borda);padding:16px;min-height:100px}
+  .atalhos-portal .atalho-externo{border-radius:11px;text-decoration:none;font-weight:600}
   .atalhos-portal small{color:var(--suave);font-weight:400;line-height:1.4;font-size:12px}
   .atalhos-portal .principal{background:var(--verde);color:white;border-color:var(--verde)}
   .atalhos-portal .principal small{color:#e0ece5}
@@ -59,7 +60,7 @@
   .doc .meta{line-height:1.6;overflow-wrap:anywhere}
   .vazio{padding:16px;background:#f7f8f5;border-radius:10px;line-height:1.5}
   .frame-atividade{padding:10px}
-  @media(max-width:360px){body{padding:10px}.carta{padding:16px}.atalhos-portal{gap:8px}.atalhos-portal button{padding:13px}}
+  @media(max-width:360px){body{padding:10px}.carta{padding:16px}.atalhos-portal{gap:8px}.atalhos-portal button,.atalhos-portal .atalho-externo{padding:13px}}
 
 </style>
 <link rel="stylesheet" href="assets/employee.css"></head>
@@ -220,6 +221,17 @@ function telaInicio(msg){
       ["documentos","Documentos","Consultar e revisar assinaturas."],["treinamentos","Aprender","Guias rápidos, materiais e certificados."]];
     if(sessao.perfil==="completo")atalhos.push(["cozinha","Fechamento da cozinha","Etiquetas, perdas, sobras e fotos do turno."]);
     card.innerHTML=atalhos.map(([id,titulo,descricao],i)=>`<button data-secao="${id}" class="${i===0?'principal':''}"><strong>${titulo}</strong><small>${descricao}</small></button>`).join("");
+    if(TOKEN_UNIDADE){
+      const etiquetas=new URL("https://dougfb46.github.io/feitoria-etiquetas/");
+      etiquetas.searchParams.set("u",TOKEN_UNIDADE);
+      const atalho=document.createElement("a");
+      atalho.className="atalho-externo";
+      atalho.href=etiquetas.href;
+      atalho.target="_blank";
+      atalho.rel="noopener noreferrer";
+      atalho.innerHTML="<strong>Etiquetas da cozinha</strong><small>Abrir a tela de impressão em outra aba.</small>";
+      card.append(atalho);
+    }
     card.querySelectorAll("[data-secao]").forEach(b=>b.onclick=()=>{secao=b.dataset.secao;telaInicio();});
     app.insertBefore(card,document.getElementById("conteudo-portal"));
     const resumo=document.createElement("section");resumo.className="carta";
