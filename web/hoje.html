@@ -68,7 +68,7 @@ function render(d){
  const prox=d.contas?.proximas||[];
  const contas=`<div class="card"><h2>Próximas contas</h2>${prox.length?`<table>${prox.slice(0,6).map(x=>`<tr><td>${esc(sem(x.vencimento))} ${esc(dia(x.vencimento))}</td><td>${x.fornecedor?esc(x.fornecedor):'<i class="vazio">Fornecedor sem nome na Takeat</i>'}</td><td class="n">${brl(x.centavos)}</td></tr>`).join('')}</table>`:'<p class="vazio">Nada vence hoje nem nos próximos 6 dias.</p>'}<div class="acoes">${ir('vencimentos','Ver todas as contas')}</div></div>`;
  s+=`<div class="grid2">${agente}${contas}</div>`;
- s+=`<div class="grid2" style="margin-top:14px"><div class="card"><h2>Conexões</h2><div class="conn">${(d.conexoes||[]).map(x=>`<div><span>${esc(x.nome)}<small> · ${esc(quando(x.ultima))}</small></span><span class="pill ${x.ok?'ok':'off'}">${x.ok?'Em dia':'Parada'}</span></div>`).join('')}</div></div>
+ s+=`<div class="grid2" style="margin-top:14px"><div class="card"><h2>Conexões</h2><div class="conn">${(d.conexoes||[]).map(x=>`<div><span>${esc(x.nome)}<small> · ${esc(quando(x.ultima))}</small></span><span class="pill ${x.ok?'ok':'off'}">${x.ok?'Em dia':'Parada'}</span></div>`).join('')}</div><div class="acoes">${ir('integracoes','Arquivos e Drive')}<a class="ir" target="_top" href="${esc(new URL('gestao.html#agenda',location.href).href)}">Agenda Google</a></div></div>
   <div class="card"><h2>Takeat</h2><div class="links">${TAKEAT.map(([u,t,dd])=>`<a href="${u}" target="_blank" rel="noopener">${esc(t)}<small>${esc(dd)}</small></a>`).join('')}</div></div></div>`;
  el('saida').innerHTML=s;
 }
