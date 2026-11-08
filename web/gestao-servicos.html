@@ -188,7 +188,7 @@ function telaLogin(msg){
 
 
 const AREAS = [
-  ["Começar", [["inicio","Visão geral","Os caminhos para cuidar da casa, da equipe e dos resultados."]]],
+  ["Começar", [["hoje","Hoje","O que precisa de atenção, vendas, contas e o texto do agente."],["inicio","Visão geral","Os caminhos para cuidar da casa, da equipe e dos resultados."]]],
   ["Operação", [
     ["chk","Checklists","Acompanhe execuções, atrasos e ocorrências da operação."],
     ["cozinha","Fechamento da cozinha","Relatórios do turno, perdas, sobras e fotos."],
@@ -318,6 +318,7 @@ const render = () => aba === "inicio" ? abaInicio() : aba === "acessos" ? abaAce
   : aba === "compras" ? abaCompras()
   : aba === "semana" ? abaSemana()
   : aba === "vencimentos" ? abaVencimentos()
+  : aba === "hoje" ? abaHoje()
   : aba === "boletim" ? abaBoletim()
   : aba === "resultados" ? abaResultados()
   : aba === "notas" ? abaNotas()
@@ -375,6 +376,16 @@ function abaSemana(){
   // A tela avisa a própria altura (abrir uma categoria aumenta a página).
   const quadro = conteudo().querySelector("iframe");
   const ajustar = e => { if (!quadro.isConnected) return removeEventListener("message", ajustar); if (e.source === quadro.contentWindow && Number.isFinite(e.data?.semanaAltura)) quadro.style.height = Math.max(900, Math.ceil(e.data.semanaAltura) + 20) + "px"; };
+  addEventListener("message", ajustar);
+}
+
+function abaHoje(){
+  const url = new URL(location.pathname.includes('/web/')?'hoje.html':'web/hoje.html',location.href);
+  url.searchParams.set('restaurant_id',unidade.id);
+  url.searchParams.set('v','20261108-hoje');
+  conteudo().innerHTML = `<iframe title="Hoje" src="${esc(url.href)}" style="width:100%;height:1500px;border:0;border-radius:12px"></iframe>`;
+  const quadro = conteudo().querySelector("iframe");
+  const ajustar = e => { if (!quadro.isConnected) return removeEventListener("message", ajustar); if (e.source === quadro.contentWindow && Number.isFinite(e.data?.hojeAltura)) quadro.style.height = Math.max(700, Math.ceil(e.data.hojeAltura) + 20) + "px"; };
   addEventListener("message", ajustar);
 }
 
