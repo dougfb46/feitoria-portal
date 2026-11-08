@@ -79,6 +79,8 @@ const esc = (v) => String(v ?? "").replace(/[&<>"']/g, (ch) =>
 
 let pin = "", nascimento = "", sessao = null;
 let secao = "inicio", tempoSessao = null, frameAtivo = null;
+let abaOperacao = "turno";
+function abrirOperacao(aba){abaOperacao=aba;secao="operacao";telaInicio();}
 // Cozinha incorporada: somente esta janela e a sessão ativa recebem respostas.
 window.addEventListener("message",async e=>{
   if(e.origin!==location.origin || e.source!==frameAtivo?.contentWindow || !sessao || secao!=="cozinha" || sessao.perfil!=="completo")return;
@@ -140,6 +142,7 @@ async function chamar(payload){
 
 /* ---------- entrar ---------- */
 function telaEntrar(msg){
+  if(!TOKEN_UNIDADE) msg="Este link está sem identificação da unidade. Peça à gestão o link completo do portal.";
   app.innerHTML = `
     <div class="carta">
       <h1>Portal do Colaborador</h1>
@@ -149,11 +152,12 @@ function telaEntrar(msg){
       <input class="pin" id="pin" type="password" inputmode="numeric" autocomplete="off"
              maxlength="6" placeholder="••••">
       <label for="nasc">Sua data de nascimento</label>
-      <input type="date" id="nasc">
+      <input type="date" id="nasc" value="${esc(nascimento)}" autocomplete="bday">
       <button id="entrar" style="margin-top:18px">Entrar</button>
       <p class="sub" style="margin:14px 0 0;font-size:12px">
         Seu PIN é pessoal. Não empreste: o que for feito com ele fica no seu nome.</p>
     </div>`;
+  document.getElementById("entrar").disabled = !TOKEN_UNIDADE;
   document.getElementById("entrar").onclick = entrar;
   document.getElementById("nasc").onkeydown = (e) => { if(e.key === "Enter") { e.preventDefault(); entrar(); } };
 }
@@ -162,7 +166,7 @@ async function entrar(){
   const bt = document.getElementById("entrar");
   pin = document.getElementById("pin").value.trim();
   nascimento = document.getElementById("nasc").value;
-  if(pin.length < 4 || !nascimento) return telaEntrar("Preencha o PIN e a data de nascimento.");
+  if(!/^[0-9]{4,6}$/.test(pin) || !nascimento) return telaEntrar("Informe um PIN de 4 a 6 números e sua data de nascimento.");
   bt.disabled = true; bt.textContent = "Entrando…";
   try { sessao = await chamar({ action:"entrar" }); telaInicio(); }
   catch(e){ pin = ""; telaEntrar(e.message); }
@@ -171,12 +175,13 @@ async function entrar(){
 /* ---------- início ---------- */
 function telaInicio(msg){
   manterSessao();
+  frameAtivo?.__limparAtividade?.();
   frameAtivo=null;
   const tipos = new Set(sessao.tipos_treinamento || []);
   const docs = sessao.documentos.filter(d => secao === "treinamentos" ? tipos.has(d.tipo) : secao === "documentos" ? !tipos.has(d.tipo) : true).slice().sort((a,b)=>Number(!!b.pendente)-Number(!!a.pendente));
   const pendentes=docs.filter(d=>d.pendente).length;
-  const menu = [["inicio","Início"],["documentos","Documentos"],["treinamentos","Treinamentos"],
-    ["checklists","Checklists"],["operacao","Escala e avisos"],["seguranca","Saúde e segurança"]];
+  const menu = [["inicio","Início"],["documentos","Documentos"],["treinamentos","Aprender"],
+    ["checklists","Minha rotina"],["operacao","Salão e turno"]];
   if(sessao.perfil==="completo")menu.push(["cozinha","Fechamento da cozinha"]);
   if(sessao.registra_ponto) menu.splice(3,0,["ponto","Ponto"]);
   app.innerHTML = `
@@ -200,8 +205,9 @@ function telaInicio(msg){
           <p class="meta">${esc(d.competencia ? "Competência "+d.competencia+" · " : "")}recebido em ${dataBR(d.recebido_em)}
             ${d.prazo ? " · prazo "+dataBR(d.prazo) : ""}</p>
           <button class="secundaria" style="margin-top:10px" data-abrir="${esc(d.id)}">${d.pendente?"Ler e revisar para assinar":"Ver documento"}</button>
-        </div>`).join("") : `<p class="vazio">Nenhum documento por aqui ainda.</p>`}
+        </div>`).join("") : `<p class="vazio">${secao==="treinamentos"?"Você ainda não recebeu materiais ou certificados de treinamento. Os guias rápidos abaixo ajudam na consulta durante o trabalho.":"Nenhum documento recebido por aqui ainda."}</p>`}
     </div>
+    <details class="carta"><summary>Apoio e cuidados</summary><p class="sub">Orientações de saúde, segurança e canal de escuta.</p><button class="discreto" data-secao="seguranca">Saúde e segurança</button></details>
     <button class="discreto" id="sair">Sair</button>`;
 
   app.querySelectorAll("[data-abrir]").forEach(b => b.onclick = () => abrir(b.dataset.abrir));
@@ -210,19 +216,29 @@ function telaInicio(msg){
   if(secao === "inicio"){
     const card=document.createElement("section");card.setAttribute("aria-label","Atalhos da sua rotina");card.className="atalhos-portal";
     const atalhos=[...(sessao.registra_ponto?[["ponto","Meu ponto","Registrar ou consultar marcações."]]:[]),
-      ["checklists","Checklists","Começar ou continuar as tarefas."],["operacao","Escala e avisos","Conferir seu turno e os recados."],
-      ["documentos","Documentos","Consultar e revisar assinaturas."],["treinamentos","Treinamentos","Materiais e certificados."],
-      ["seguranca","Saúde e segurança","Orientações para trabalhar bem."]];
+      ["checklists","Minha rotina","Escolher abertura, turno ou fechamento."],["operacao","Salão e turno","Mapa de mesas, cervejas e escala."],
+      ["documentos","Documentos","Consultar e revisar assinaturas."],["treinamentos","Aprender","Guias rápidos, materiais e certificados."]];
     if(sessao.perfil==="completo")atalhos.push(["cozinha","Fechamento da cozinha","Etiquetas, perdas, sobras e fotos do turno."]);
     card.innerHTML=atalhos.map(([id,titulo,descricao],i)=>`<button data-secao="${id}" class="${i===0?'principal':''}"><strong>${titulo}</strong><small>${descricao}</small></button>`).join("");
     card.querySelectorAll("[data-secao]").forEach(b=>b.onclick=()=>{secao=b.dataset.secao;telaInicio();});
     app.insertBefore(card,document.getElementById("conteudo-portal"));
+    const resumo=document.createElement("section");resumo.className="carta";
+    const recebidos=sessao.documentos.filter(d=>tipos.has(d.tipo)).length;
+    resumo.innerHTML=`<h2>Seu resumo</h2><p>${pendentes ? `${pendentes} documento${pendentes>1?"s":""} aguardando sua assinatura.` : "Nenhuma assinatura pendente nos documentos recebidos."}</p><p>${recebidos ? `${recebidos} conteúdo${recebidos>1?"s":""} de treinamento recebido${recebidos>1?"s":""}.` : "A gestão ainda não publicou materiais de treinamento para você."}</p><button class="secundaria">Consultar mapa de mesas</button>`;
+    resumo.querySelector("button").onclick=()=>abrirOperacao("mapa");
+    app.insertBefore(resumo,card);
     if(pendentes){
       const aviso=document.createElement("section");aviso.className="assinatura-inicio";
       aviso.innerHTML=`<p><strong>${pendentes} documento${pendentes>1?"s":""} esperando sua assinatura</strong><br>Leia e confira antes de confirmar.</p><button class="secundaria">Conferir pendências</button>`;
       aviso.querySelector("button").onclick=()=>document.getElementById("conteudo-portal").scrollIntoView({block:"start"});
       app.insertBefore(aviso,card);
     }
+  }
+  if(secao==="treinamentos"){
+    const guia=document.createElement("section");guia.className="carta";
+    guia.innerHTML=`<h2>Guias rápidos para o turno</h2><p class="sub">Material de consulta. Ler estas orientações não registra treinamento ou certificado.</p><details><summary>Localizar a mesa antes de atender</summary><p>Consulte o número no mapa, confira a posição no salão e confirme a mesa antes de levar o pedido.</p></details><details><summary>Consultar uma cerveja</summary><p>Use o catálogo para conferir estilo e características. Confirme a disponibilidade com o responsável antes de oferecer.</p></details><details><summary>Usar os checklists</summary><p>Escolha a rotina combinada para seu turno, confira cada item no local e registre a situação real. Em caso de problema, avise o responsável; não marque uma tarefa como feita antes de conferir.</p></details><div class="atalhos-portal"><button data-guia="mapa">Consultar mapa de mesas</button><button data-guia="chopp">Consultar catálogo de cervejas</button></div>`;
+    guia.querySelectorAll("[data-guia]").forEach(b=>b.onclick=()=>abrirOperacao(b.dataset.guia));
+    app.insertBefore(guia,document.getElementById("conteudo-portal"));
   }
   const paginas={checklists:"checklist.html",operacao:"operacao.html",seguranca:"nr1.html"};
   if(secao==="ponto" && sessao.registra_ponto) paginas.ponto="ponto.html";
@@ -238,11 +254,23 @@ function telaInicio(msg){
     }
     const frame=document.createElement("iframe");
     const url=new URL(paginas[secao],location.href);url.searchParams.set("u",TOKEN_UNIDADE);
+    if(secao==="operacao")url.searchParams.set("aba",abaOperacao);
     frame.src=url.href;frame.title=menu.find(([id])=>id===secao)?.[1] || "Atividade";
     frame.style="width:100%;height:75dvh;min-height:500px;border:0";
     if(secao==="ponto") frame.allow="camera 'self'; geolocation 'self'";
     if(["checklists","cozinha"].includes(secao)) frame.allow="camera 'self'";
+    const ajuda=document.createElement("p");ajuda.className="sub";
+    const link=document.createElement("a");link.href=url.href;link.target="_blank";link.rel="noopener";link.textContent="Abrir esta atividade em tela própria";
+    ajuda.append(link);card.append(ajuda);
     frame.onload=()=>{
+      try {
+        const doc=frame.contentDocument;
+        const atividade=()=>{if(sessao && frameAtivo===frame)manterSessao();};
+        const eventos=["pointerdown","keydown","input","scroll"];
+        frame.__limparAtividade?.();
+        eventos.forEach(tipo=>doc.addEventListener(tipo,atividade,{capture:true,passive:true}));
+        frame.__limparAtividade=()=>eventos.forEach(tipo=>doc.removeEventListener(tipo,atividade,true));
+      } catch {}
       if(sessao && ["ponto","checklists"].includes(secao))frame.contentWindow.postMessage({tipo:"feitoria-identificar",unidade:TOKEN_UNIDADE,pin},location.origin);
     };
     frameAtivo=frame;card.append(frame);
