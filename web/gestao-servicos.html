@@ -193,7 +193,7 @@ const AREAS = [
     ["chk","Checklists","Acompanhe execuções, atrasos e ocorrências da operação."],
     ["cozinha","Fechamento da cozinha","Relatórios do turno, perdas, sobras e fotos."],
     ["estoque","Estoque e reposição","Contagens, recebimentos e sugestão de compras."],
-    ["compras","Assistente de compras","Fornecedores, cotações semanais, alertas e acompanhamento dos pedidos."],
+    ["compras","Compras e estoque","Cotações e fornecedores, pedidos e recebimento, estoque e reposição — numa tela só."],
     ["rotinas-gerente","Rotinas do gerente","Confira a operação e encaminhe as decisões do turno."],
     ["rotinas-dono","Rotinas do dono","Organize decisões, compras e melhorias da casa."],
     ["oper","Escala e recados","Publique a escala e acompanhe os recados da equipe."]]],
@@ -347,15 +347,19 @@ function abaCozinha(){
  url.searchParams.set('restaurant_id',unidade.id);
  conteudo().innerHTML=`<iframe title="Fechamento da cozinha" src="${esc(url.href)}" style="width:100%;height:1500px;border:0;border-radius:12px"></iframe>`;
 }
-function abaEstoque(){
- const url=new URL(location.pathname.includes('/web/')?'estoque.html':'web/estoque.html',location.href);
+// Compras e estoque numa tela só (08/11/2026): as três páginas continuam existindo e abrindo sozinhas;
+// aqui elas viram abas da mesma área. A área "estoque" abre direto na aba de estoque.
+const COMPRAS_ABAS=[
+ ["cotacoes","Cotações e fornecedores","assistente-compras.html"],
+ ["pedidos","Pedidos e recebimento","compras.html"],
+ ["estoque","Estoque e reposição","estoque.html"]];
+function abaEstoque(){abaCompras('estoque');}
+function abaCompras(sub){
+ const atual=COMPRAS_ABAS.find(([id])=>id===sub)||COMPRAS_ABAS[0];
+ const url=new URL(location.pathname.includes('/web/')?atual[2]:'web/'+atual[2],location.href);
  url.searchParams.set('restaurant_id',unidade.id);
- conteudo().innerHTML=`<iframe title="Estoque e reposição" src="${esc(url.href)}" style="width:100%;height:1500px;border:0;border-radius:12px"></iframe>`;
-}
-function abaCompras(){
- const url=new URL(location.pathname.includes('/web/')?'assistente-compras.html':'web/assistente-compras.html',location.href);
- url.searchParams.set('restaurant_id',unidade.id);
- conteudo().innerHTML=`<iframe title="Compras e recebimentos" src="${esc(url.href)}" style="width:100%;height:1500px;border:0;border-radius:12px"></iframe>`;
+ conteudo().innerHTML=`<div role="tablist" aria-label="Compras e estoque" style="display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px">${COMPRAS_ABAS.map(([id,nome])=>`<button type="button" role="tab" data-compras="${id}" aria-selected="${id===atual[0]}" class="${id===atual[0]?'':'secundaria'}">${nome}</button>`).join('')}</div><iframe title="${esc(atual[1])}" src="${esc(url.href)}" style="width:100%;height:1500px;border:0;border-radius:12px"></iframe>`;
+ conteudo().querySelectorAll('[data-compras]').forEach(b=>b.addEventListener('click',()=>abaCompras(b.dataset.compras)));
 }
 
 function abaNotas(){
