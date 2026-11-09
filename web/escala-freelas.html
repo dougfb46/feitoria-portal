@@ -1,0 +1,200 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Escala da semana · Feitoria</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<style>
+:root{--font:"DM Sans",-apple-system,"Segoe UI",Roboto,sans-serif;--page:#f7f8f5;--card:#fff;--soft:#f4f4f0;--line:#efeee9;--line-2:#e3e2dc;--ink:#1c1e1d;--ink-2:#3a3e3c;--muted:#7a7e7b;--sage:#5f7f69;--sage-soft:#e8eee9;--down:#c4483e;--down-bg:#fbe8e6;--amber:#9a6f17;--amber-bg:#f8efd9}
+*{box-sizing:border-box}body{margin:0;background:var(--page);color:var(--ink);font:15px/1.5 var(--font)}main{max-width:1200px;margin:auto;padding:20px 16px 40px}
+h1{font-size:28px;margin:0;letter-spacing:-.01em}h2{font-size:18px;margin:0 0 8px}.sub,small{color:var(--muted)}p{margin:6px 0}
+.topo{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:8px}
+.nav{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+button{font:inherit;border:1px solid var(--line-2);border-radius:12px;padding:8px 14px;background:var(--card);color:var(--ink);cursor:pointer}button:hover{background:var(--soft)}button:disabled{opacity:.5;cursor:default}
+button.prim{background:var(--sage);border-color:var(--sage);color:#fff}button.prim:hover{background:#4f6d58}button.perigo{color:var(--down)}
+.card{background:var(--card);border:1px solid var(--line-2);border-radius:22px;padding:20px;margin:14px 0}
+.aviso{background:var(--amber-bg);border-radius:14px;padding:12px 16px;margin:10px 0;color:#5b4512;font-size:14px}
+.erro{background:var(--down-bg);color:#7a2a23;border-radius:14px;padding:12px 16px}.ok{background:var(--sage-soft);color:#2f4a37;border-radius:14px;padding:10px 14px}
+.vazio{color:var(--muted);padding:6px 0}
+.rolar{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;font-size:14px}th,td{text-align:left;padding:8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;white-space:nowrap}.n{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+table.grade{min-width:900px}table.grade td.pessoa{font-weight:600;min-width:150px;position:sticky;left:0;background:var(--card)}table.grade td.pessoa small{display:block;font-weight:400}
+th.fds{color:var(--sage)}
+.cel{display:block;width:100%;min-height:44px;text-align:left;padding:6px 8px;border-radius:10px;border:1px dashed var(--line-2);background:transparent;font-size:13px;line-height:1.3}
+.cel.turno{border-style:solid;background:var(--sage-soft);border-color:#cfdcd2}.cel.folga{border-style:solid;background:var(--soft);color:var(--muted)}.cel.vazia{color:#b5b8b5}
+.cel small{display:block;color:var(--muted)}
+.tag{display:inline-block;font-size:12px;font-weight:600;border-radius:999px;padding:1px 8px;background:var(--soft);color:var(--ink-2);white-space:nowrap}
+.tag.conf{background:var(--amber-bg);color:var(--amber)}.tag.pago{background:var(--sage-soft);color:#2f4a37}.tag.dif{background:var(--down-bg);color:var(--down)}
+dialog{border:0;border-radius:22px;padding:22px;max-width:440px;width:calc(100% - 32px);box-shadow:0 20px 60px rgba(0,0,0,.18)}dialog::backdrop{background:rgba(20,22,21,.35)}
+label{display:block;font-size:13px;color:var(--muted);margin:10px 0 4px}input,select{font:inherit;width:100%;padding:9px 11px;border:1px solid var(--line-2);border-radius:12px;background:#fff;color:var(--ink)}
+.linha{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}.acoes{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-top:16px}
+.check{display:flex;gap:8px;align-items:center;margin-top:12px;color:var(--ink)}.check input{width:auto}
+tr.total td{font-weight:700;border-top:2px solid var(--line-2);border-bottom:0}
+.rodape{font-size:13px;color:var(--muted);margin-top:18px}
+@media(max-width:760px){h1{font-size:24px}.linha{grid-template-columns:1fr 1fr}}
+</style></head><body><main>
+<div class="topo"><div><h1>Escala da semana</h1><p class="sub" id="unidade">Carregando…</p></div>
+ <div class="nav"><button id="ant" aria-label="Semana anterior">←</button><strong id="periodo">—</strong><button id="prox" aria-label="Próxima semana">→</button><button id="hoje">Esta semana</button></div></div>
+<div id="msg" aria-live="polite"></div>
+<div id="saida"><p class="vazio">Buscando a escala…</p></div>
+</main>
+
+<dialog id="dlgTurno"><form method="dialog" id="fTurno">
+ <h2 id="tTitulo">Turno</h2><p class="sub" id="tQuem"></p>
+ <label class="check"><input type="checkbox" id="tFolga"> Folga neste dia</label>
+ <div id="tHorario"><div class="linha">
+  <div><label for="tEnt">Entrada</label><input id="tEnt" type="time" step="300"></div>
+  <div><label for="tSai">Saída</label><input id="tSai" type="time" step="300"></div>
+  <div><label for="tPausa">Pausa (min)</label><input id="tPausa" type="number" min="0" max="240" step="5" value="0"></div></div>
+  <label for="tPos">Posto</label><input id="tPos" maxlength="40" list="postos" placeholder="salão, bar, cozinha…"><datalist id="postos"><option>salão</option><option>bar</option><option>cozinha</option><option>caixa</option></datalist></div>
+ <label for="tObs">Observação</label><input id="tObs" maxlength="200">
+ <div id="tMotivoBox" hidden><label for="tMotivo">Motivo da troca</label><input id="tMotivo" maxlength="200" placeholder="ex.: trocou com outra pessoa"></div>
+ <p class="sub" id="tCalc"></p>
+ <div class="acoes"><button type="button" class="perigo" id="tTirar" hidden>Tirar da escala</button><button value="cancel" formnovalidate>Cancelar</button><button type="submit" class="prim" id="tSalvar">Salvar</button></div>
+</form></dialog>
+
+<dialog id="dlgPag"><form method="dialog" id="fPag">
+ <h2 id="pTitulo">Lançar pagamento</h2><p class="sub" id="pQuem"></p>
+ <label for="pValor">Valor pago (R$)</label><input id="pValor" inputmode="decimal" required>
+ <div class="linha"><div><label for="pData">Pago em</label><input id="pData" type="date"></div>
+  <div><label for="pForma">Forma</label><select id="pForma"><option value="pix">Pix</option><option value="dinheiro">Dinheiro</option><option value="outro">Outro</option></select></div><div></div></div>
+ <label for="pObs">Observação</label><input id="pObs" maxlength="300">
+ <div id="pMotivoBox" hidden><label for="pMotivo">Motivo da correção</label><input id="pMotivo" maxlength="300"></div>
+ <div class="acoes"><button value="cancel" formnovalidate>Cancelar</button><button type="submit" class="prim">Lançar</button></div>
+</form></dialog>
+
+<dialog id="dlgPessoa"><form method="dialog" id="fPessoa">
+ <h2>Cadastrar freela</h2><p class="sub">Freela não bate ponto. Entra na escala e no fechamento da semana.</p>
+ <label for="nNome">Nome completo</label><input id="nNome" required minlength="2" maxlength="120">
+ <label for="nTipo">Tipo</label><select id="nTipo"><option value="freela_variavel">Freela variável (por turno)</option><option value="freela_fixo">Freela fixo (semanal)</option></select>
+ <label for="nFuncao">Função</label><input id="nFuncao" maxlength="80" placeholder="ex.: garçom, cozinha">
+ <div class="acoes"><button value="cancel" formnovalidate>Cancelar</button><button type="submit" class="prim">Cadastrar</button></div>
+</form></dialog>
+
+<script type="module">
+import {createClient} from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.0/+esm';
+const SB='https://kujelbcbrcmkitzyswbh.supabase.co',ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt1amVsYmNicmNta2l0enlzd2JoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg2NDg0MzAsImV4cCI6MjEwNDIyNDQzMH0.uDwckXtywDBZGU_i4J8S9BdO2fUtRwXCOaLJbSiWzdQ',sb=createClient(SB,ANON),unit=new URLSearchParams(location.search).get('restaurant_id');
+const el=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
+const brl=c=>c==null?'—':(Number(c)/100).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const ddmm=s=>{const [,m,d]=String(s).slice(0,10).split('-');return d+'/'+m;};
+const SEM=['dom','seg','ter','qua','qui','sex','sáb'];
+const dsem=s=>SEM[new Date(String(s).slice(0,10)+'T12:00:00Z').getUTCDay()];
+const soma=(d,n)=>new Date(Date.parse(d+'T12:00:00Z')+n*864e5).toISOString().slice(0,10);
+const horas=m=>{m=Number(m)||0;const h=Math.floor(m/60),r=m%60;return r?`${h}h${String(r).padStart(2,'0')}`:`${h}h`;};
+const TIPO={clt:'CLT',socio:'Sócio',pj:'PJ',freela_fixo:'Freela fixo',freela_variavel:'Freela variável'};
+const ehFreela=t=>t==='freela_fixo'||t==='freela_variavel';
+// Segunda-feira da semana do dia operacional (o dia do PUB fecha às 01:30).
+const segundaDe=d=>{const w=new Date(d+'T12:00:00Z').getUTCDay();return soma(d,w===0?-6:1-w);};
+const hojeOperacional=()=>{const p=Object.fromEntries(new Intl.DateTimeFormat('en-CA',{timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date()).map(x=>[x.type,x.value]));const d=`${p.year}-${p.month}-${p.day}`;return (+p.hour*60+ +p.minute)<90?soma(d,-1):d;};
+let seg=segundaDe(new URLSearchParams(location.search).get('semana')||hojeOperacional()),dados=null,editando=null,pagando=null;
+
+async function call(fn,body){const {data,error}=await sb.auth.getSession();if(error||!data.session)throw Error('Entre novamente no portal de gestão.');const r=await fetch(SB+'/functions/v1/'+fn,{method:'POST',headers:{'Content-Type':'application/json','apikey':ANON,'Authorization':'Bearer '+data.session.access_token},body:JSON.stringify({restaurant_id:unit,...body})});const d=await r.json().catch(()=>({erro:'Resposta inválida do servidor.'}));if(!r.ok)throw Error(d.erro||d.error||'Não foi possível concluir agora.');return d;}
+const aviso=(t,tipo='ok')=>{el('msg').innerHTML=t?`<p class="${tipo}">${esc(t)}</p>`:'';};
+
+function celula(p,dia){
+ const t=(dados.turnos||[]).find(x=>x.employee_id===p.id&&x.dia===dia);
+ if(!t)return `<button class="cel vazia" data-p="${p.id}" data-d="${dia}" aria-label="Escalar ${esc(p.nome)} em ${dsem(dia)} ${ddmm(dia)}">+</button>`;
+ if(t.folga)return `<button class="cel folga" data-p="${p.id}" data-d="${dia}" data-t="${t.id}">Folga${t.observacao?`<small>${esc(t.observacao)}</small>`:''}</button>`;
+ const v=t.valor&&t.valor.valor_centavos!=null?` · ${brl(t.valor.valor_centavos)}`:'';
+ const curto=t.valor?.abaixo_da_menor?' <span class="tag conf">conferir</span>':'';
+ return `<button class="cel turno" data-p="${p.id}" data-d="${dia}" data-t="${t.id}">${esc(t.entrada)}–${esc(t.saida)}${curto}<small>${horas(t.minutos)}${t.pausa_min?` · pausa ${t.pausa_min} min`:''}${esc(v)}${t.posicao?` · ${esc(t.posicao)}`:''}</small></button>`;
+}
+
+function render(){
+ const d=dados,dias=[...Array(7)].map((_,i)=>soma(d.semana_inicio,i));
+ el('unidade').textContent=d.unidade||'';
+ el('periodo').textContent=`${ddmm(d.semana_inicio)} a ${ddmm(d.semana_fim)}`;
+ const pessoas=d.pessoas||[];
+ let h=`<div class="card"><div class="topo"><div><h2>Quem trabalha</h2><p class="sub">Toque num dia para escalar, trocar o horário ou marcar folga. Trocar guarda o horário anterior com o motivo.</p></div>
+  <div class="nav"><button id="copiar">Repetir a semana anterior</button><button id="novaPessoa">Cadastrar freela</button></div></div>`;
+ if(!pessoas.length)h+='<p class="vazio">Ninguém ativo nesta unidade. Cadastre a equipe em Equipe e cadastros, ou um freela aqui.</p>';
+ else h+=`<div class="rolar"><table class="grade"><tr><th>Pessoa</th>${dias.map(x=>`<th class="${['sex','sáb','dom'].includes(dsem(x))?'fds':''}">${dsem(x)} ${ddmm(x)}</th>`).join('')}<th class="n">Horas</th></tr>${pessoas.map(p=>`<tr><td class="pessoa">${esc(p.nome)}<small>${esc(TIPO[p.tipo]||p.tipo)}${p.funcao?` · ${esc(p.funcao)}`:''}</small></td>${dias.map(x=>`<td>${celula(p,x)}</td>`).join('')}<td class="n">${horas(p.minutos)}</td></tr>`).join('')}</table></div>`;
+ h+='</div>';
+ if(d.pode_pagar){
+  const fr=pessoas.filter(p=>ehFreela(p.tipo)&&(p.turnos>0||p.pagamento));
+  const calc=fr.reduce((s,p)=>s+(Number(p.valor_calculado_centavos)||0),0);
+  h+=`<div class="card"><h2>Fechamento dos freelas</h2><p class="sub">Calculado pela escala: variável pela faixa de horas de cada turno (4h R$ 60, 6h R$ 90, 8h R$ 110); fixo pela base de R$ 528 por 44h, com R$ 12 por hora a mais ou a menos. O valor pago é o que você lançar.</p>`;
+  if(!fr.length)h+='<p class="vazio">Nenhum freela escalado nesta semana.</p>';
+  else h+=`<div class="rolar"><table><tr><th>Freela</th><th class="n">Turnos</th><th class="n">Horas</th><th class="n">Calculado</th><th class="n">Pago</th><th>Situação</th><th></th></tr>${fr.map(p=>{const g=p.pagamento,dif=g&&p.valor_calculado_centavos!=null&&g.valor_pago_centavos!==p.valor_calculado_centavos;
+   return `<tr><td><b>${esc(p.nome)}</b><br><small>${esc(TIPO[p.tipo])}</small></td><td class="n">${p.turnos}</td><td class="n">${horas(p.minutos)}</td><td class="n">${brl(p.valor_calculado_centavos)}${p.conferir?'<br><span class="tag conf">conferir</span>':''}</td>
+   <td class="n">${g?brl(g.valor_pago_centavos):'—'}</td><td>${g?`<span class="tag pago">pago${g.pago_em?' '+ddmm(g.pago_em):''}${g.forma?' · '+esc(g.forma):''}</span>${dif?' <span class="tag dif">diferente do calculado</span>':''}${g.observacao?`<br><small>${esc(g.observacao)}</small>`:''}`:'<span class="tag">a pagar</span>'}${p.valor_calculado_centavos==null?`<br><small>${esc(p.calculo)}</small>`:''}</td>
+   <td><button data-pagar="${p.id}">${g?'Corrigir':'Lançar'}</button></td></tr>`;}).join('')}<tr class="total"><td colspan="3">${fr.length} ${fr.length===1?'freela':'freelas'}</td><td class="n">${brl(calc)}</td><td class="n">${brl(d.total_pago_centavos)}</td><td colspan="2"></td></tr></table></div>`;
+  h+='</div>';
+ }
+ h+=`<p class="rodape">Semana de segunda a domingo, pelo dia operacional do PUB (turno que passa da meia-noite fica no dia em que começou). Freela não bate ponto: o fechamento usa a escala. Trocas e pagamentos nunca apagam o registro anterior.</p>`;
+ el('saida').innerHTML=h;
+ el('saida').querySelectorAll('.cel').forEach(b=>b.onclick=()=>abrirTurno(b.dataset.p,b.dataset.d,b.dataset.t));
+ el('saida').querySelectorAll('[data-pagar]').forEach(b=>b.onclick=()=>abrirPag(b.dataset.pagar));
+ const c=el('copiar');if(c)c.onclick=copiar;
+ const n=el('novaPessoa');if(n)n.onclick=()=>{el('fPessoa').reset();el('dlgPessoa').showModal();};
+}
+
+function abrirTurno(pid,dia,tid){
+ const p=dados.pessoas.find(x=>x.id===pid),t=tid?dados.turnos.find(x=>x.id===tid):null;
+ editando={pid,dia,t};
+ el('tTitulo').textContent=t?'Trocar turno':'Escalar';
+ el('tQuem').textContent=`${p.nome} · ${dsem(dia)} ${ddmm(dia)}`;
+ el('tFolga').checked=!!t?.folga;el('tEnt').value=t?.entrada||'';el('tSai').value=t?.saida||'';el('tPausa').value=t?.pausa_min??0;
+ el('tPos').value=t?.posicao||'';el('tObs').value=t?.observacao||'';el('tMotivo').value='';
+ el('tMotivoBox').hidden=!t;el('tTirar').hidden=!t;
+ el('tCalc').textContent=t&&!t.folga?`Hoje: ${t.entrada}–${t.saida}, ${horas(t.minutos)} de trabalho.`:'';
+ el('tHorario').hidden=el('tFolga').checked;
+ el('dlgTurno').showModal();
+}
+el('tFolga').onchange=()=>{el('tHorario').hidden=el('tFolga').checked;};
+el('fTurno').onsubmit=async e=>{
+ e.preventDefault();const f=el('tFolga').checked;
+ if(!f&&(!el('tEnt').value||!el('tSai').value))return alert('Informe a entrada e a saída.');
+ try{await call('gestao-escala',{acao:'lancar_turno',employee_id:editando.pid,dia:editando.dia,folga:f,entrada:el('tEnt').value,saida:el('tSai').value,
+  pausa_min:Number(el('tPausa').value||0),posicao:el('tPos').value,observacao:el('tObs').value,substitui_id:editando.t?.id||null,motivo:el('tMotivo').value});
+  el('dlgTurno').close();aviso(editando.t?'Turno trocado. O anterior ficou guardado.':'Turno lançado.');await carregar();}
+ catch(err){alert(err.message);}
+};
+el('tTirar').onclick=async()=>{
+ const motivo=el('tMotivo').value.trim()||prompt('Motivo para tirar da escala:')||'';
+ if(motivo.trim().length<3)return alert('Escreva o motivo (pelo menos 3 letras).');
+ try{await call('gestao-escala',{acao:'remover_turno',id:editando.t.id,motivo});el('dlgTurno').close();aviso('Turno tirado da escala. O registro ficou guardado.');await carregar();}
+ catch(err){alert(err.message);}
+};
+
+function abrirPag(pid){
+ const p=dados.pessoas.find(x=>x.id===pid),g=p.pagamento;pagando={p,g};
+ el('pTitulo').textContent=g?'Corrigir pagamento':'Lançar pagamento';
+ el('pQuem').textContent=`${p.nome} · ${p.turnos} ${p.turnos===1?'turno':'turnos'}, ${horas(p.minutos)} · calculado ${brl(p.valor_calculado_centavos)}${g?` · lançado ${brl(g.valor_pago_centavos)}`:''}`;
+ const base=g?g.valor_pago_centavos:p.valor_calculado_centavos;
+ el('pValor').value=base!=null?(base/100).toFixed(2).replace('.',','):'';
+ el('pData').value=g?.pago_em||hojeOperacional();el('pForma').value=g?.forma||'pix';el('pObs').value=g?.observacao||'';el('pMotivo').value='';
+ el('pMotivoBox').hidden=!g;el('pMotivo').required=!!g;
+ el('dlgPag').showModal();
+}
+el('fPag').onsubmit=async e=>{
+ e.preventDefault();
+ const txt=el('pValor').value.trim().replace(/\s|R\$/g,'');const num=Number(txt.includes(',')?txt.replace(/\./g,'').replace(',','.'):txt);
+ if(!Number.isFinite(num)||num<0)return alert('Valor inválido.');
+ try{await call('gestao-escala',{acao:'pagar',employee_id:pagando.p.id,segunda:dados.semana_inicio,valor_pago_centavos:Math.round(num*100),
+  pago_em:el('pData').value||null,forma:el('pForma').value,observacao:el('pObs').value,corrige_id:pagando.g?.id||null,corrige_motivo:el('pMotivo').value});
+  el('dlgPag').close();aviso(pagando.g?'Correção lançada. O lançamento anterior ficou guardado.':'Pagamento lançado.');await carregar();}
+ catch(err){alert(err.message);}
+};
+el('fPessoa').onsubmit=async e=>{
+ e.preventDefault();
+ try{await call('gestao-equipe',{action:'salvar',nome:el('nNome').value,tipo:el('nTipo').value,funcao:el('nFuncao').value,registra_ponto:false,perfil_portal:'sem_acesso',ativo:true});
+  el('dlgPessoa').close();aviso('Freela cadastrado.');await carregar();}
+ catch(err){alert(err.message);}
+};
+async function copiar(){
+ if(!confirm('Repetir os turnos da semana anterior? Só preenche os dias que estão vazios nesta semana.'))return;
+ try{const r=await call('gestao-escala',{acao:'copiar_semana',para:seg});aviso(r.copiados?`${r.copiados} ${r.copiados===1?'turno copiado':'turnos copiados'}.`:'Nada para copiar: a semana anterior está vazia ou os dias já estavam preenchidos.');await carregar();}
+ catch(err){alert(err.message);}
+}
+async function carregar(){
+ if(!unit||!/^[0-9a-f-]{36}$/i.test(unit)){el('saida').innerHTML='<p class="erro">Abra esta tela pelo portal de gestão.</p>';return;}
+ ['ant','prox','hoje'].forEach(i=>el(i).disabled=true);
+ try{dados=await call('gestao-escala',{acao:'semana',segunda:seg});render();}
+ catch(e){el('saida').innerHTML=`<p class="erro">${esc(e.message)}</p>`;}
+ finally{['ant','prox','hoje'].forEach(i=>el(i).disabled=false);}
+}
+el('ant').onclick=()=>{seg=soma(seg,-7);aviso('');carregar();};
+el('prox').onclick=()=>{seg=soma(seg,7);aviso('');carregar();};
+el('hoje').onclick=()=>{seg=segundaDe(hojeOperacional());aviso('');carregar();};
+new ResizeObserver(()=>parent.postMessage({escalaAltura:document.documentElement.scrollHeight},'*')).observe(document.body);
+carregar();
+</script></body></html>

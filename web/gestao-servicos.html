@@ -198,6 +198,7 @@ const AREAS = [
     ["rotinas-dono","Rotinas do dono","Organize decisões, compras e melhorias da casa."],
     ["oper","Escala e recados","Publique a escala e acompanhe os recados da equipe."]]],
   ["Pessoas", [
+    ["freelas","Escala da semana","Monte a escala de todos, com freelas, e feche o pagamento da semana."],
     ["equipe","Equipe e cadastros","Cadastre pessoas, altere horários e prepare documentos."],
     ["ponto","Ponto do dia","Consulte as marcações e registre correções com motivo."],
     ["pend","Pendências de ponto","Revise faltas, ajustes e marcações que precisam de atenção."],
@@ -318,6 +319,7 @@ const render = () => aba === "inicio" ? abaInicio() : aba === "acessos" ? abaAce
   : aba === "compras" ? abaCompras()
   : aba === "semana" ? abaSemana()
   : aba === "vencimentos" ? abaVencimentos()
+  : aba === "freelas" ? abaFreelas()
   : aba === "hoje" ? abaHoje()
   : aba === "boletim" ? abaBoletim()
   : aba === "resultados" ? abaResultados()
@@ -400,6 +402,17 @@ function abaVencimentos(){
   conteudo().innerHTML = `<iframe title="Contas a pagar" src="${esc(url.href)}" style="width:100%;height:1400px;border:0;border-radius:12px"></iframe>`;
   const quadro = conteudo().querySelector("iframe");
   const ajustar = e => { if (!quadro.isConnected) return removeEventListener("message", ajustar); if (e.source === quadro.contentWindow && Number.isFinite(e.data?.vencAltura)) quadro.style.height = Math.max(700, Math.ceil(e.data.vencAltura) + 20) + "px"; };
+  addEventListener("message", ajustar);
+}
+
+// Escala da semana e fechamento dos freelas (09/11/2026): substitui a planilha semanal.
+function abaFreelas(){
+  const url = new URL(location.pathname.includes('/web/')?'escala-freelas.html':'web/escala-freelas.html',location.href);
+  url.searchParams.set('restaurant_id',unidade.id);
+  url.searchParams.set('v','20261109-escala');
+  conteudo().innerHTML = `<iframe title="Escala da semana" src="${esc(url.href)}" style="width:100%;height:1400px;border:0;border-radius:12px"></iframe>`;
+  const quadro = conteudo().querySelector("iframe");
+  const ajustar = e => { if (!quadro.isConnected) return removeEventListener("message", ajustar); if (e.source === quadro.contentWindow && Number.isFinite(e.data?.escalaAltura)) quadro.style.height = Math.max(700, Math.ceil(e.data.escalaAltura) + 20) + "px"; };
   addEventListener("message", ajustar);
 }
 
