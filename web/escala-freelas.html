@@ -55,6 +55,7 @@ tr.total td{font-weight:700;border-top:2px solid var(--line-2);border-bottom:0}
  <label for="pValor">Valor pago (R$)</label><input id="pValor" inputmode="decimal" required>
  <div class="linha"><div><label for="pData">Pago em</label><input id="pData" type="date"></div>
   <div><label for="pForma">Forma</label><select id="pForma"><option value="pix">Pix</option><option value="dinheiro">Dinheiro</option><option value="outro">Outro</option></select></div><div></div></div>
+ <p class="sub" id="pPix"></p>
  <label for="pObs">Observação</label><input id="pObs" maxlength="300">
  <div id="pMotivoBox" hidden><label for="pMotivo">Motivo da correção</label><input id="pMotivo" maxlength="300"></div>
  <div class="acoes"><button value="cancel" formnovalidate>Cancelar</button><button type="submit" class="prim">Lançar</button></div>
@@ -65,8 +66,26 @@ tr.total td{font-weight:700;border-top:2px solid var(--line-2);border-bottom:0}
  <label for="nNome">Nome completo</label><input id="nNome" required minlength="2" maxlength="120">
  <label for="nTipo">Tipo</label><select id="nTipo"><option value="freela_variavel">Freela variável (por turno)</option><option value="freela_fixo">Freela fixo (semanal)</option></select>
  <label for="nFuncao">Função</label><input id="nFuncao" maxlength="80" placeholder="ex.: garçom, cozinha">
+ <div class="linha" style="grid-template-columns:1fr 2fr"><div><label for="nPixTipo">Chave Pix (opcional)</label><select id="nPixTipo"><option value="">sem chave</option><option value="cpf">CPF</option><option value="telefone">Telefone</option><option value="email">E-mail</option><option value="cnpj">CNPJ</option><option value="aleatoria">Aleatória</option></select></div>
+  <div><label for="nPixChave">&nbsp;</label><input id="nPixChave" maxlength="77" autocomplete="off" spellcheck="false"></div></div>
  <div class="acoes"><button value="cancel" formnovalidate>Cancelar</button><button type="submit" class="prim">Cadastrar</button></div>
 </form></dialog>
+
+<dialog id="dlgPix"><form method="dialog" id="fPix">
+ <h2 id="xTitulo">Chave Pix</h2><p class="sub" id="xQuem"></p>
+ <p class="sub">Fica numa área separada, só o dono vê. Nas telas aparece só o final da chave.</p>
+ <label for="xTipo">Tipo</label><select id="xTipo"><option value="cpf">CPF</option><option value="telefone">Telefone</option><option value="email">E-mail</option><option value="cnpj">CNPJ</option><option value="aleatoria">Chave aleatória</option></select>
+ <label for="xChave">Chave</label><input id="xChave" required maxlength="77" autocomplete="off" spellcheck="false">
+ <div id="xMotivoBox" hidden><label for="xMotivo">Motivo da troca</label><input id="xMotivo" maxlength="200" placeholder="ex.: mudou de banco"></div>
+ <div class="acoes"><button value="cancel" formnovalidate>Cancelar</button><button type="submit" class="prim">Salvar chave</button></div>
+</form></dialog>
+
+<dialog id="dlgVer"><div>
+ <h2>Chave Pix</h2><p class="sub" id="vQuem"></p>
+ <p style="font-size:20px;font-weight:600;word-break:break-all;margin:12px 0" id="vChave"></p>
+ <p class="sub">Esta consulta ficou registrada com seu usuário e o horário.</p>
+ <div class="acoes"><button type="button" id="vCopiar">Copiar</button><button type="button" class="prim" id="vFechar">Fechar</button></div>
+</div></dialog>
 
 <script type="module">
 import {createClient} from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.0/+esm';
@@ -113,16 +132,19 @@ function render(){
   const calc=fr.reduce((s,p)=>s+(Number(p.valor_calculado_centavos)||0),0);
   h+=`<div class="card"><h2>Fechamento dos freelas</h2><p class="sub">Calculado pela escala: variável pela faixa de horas de cada turno (4h R$ 60, 6h R$ 90, 8h R$ 110); fixo pela base de R$ 528 por 44h, com R$ 12 por hora a mais ou a menos. O valor pago é o que você lançar.</p>`;
   if(!fr.length)h+='<p class="vazio">Nenhum freela escalado nesta semana.</p>';
-  else h+=`<div class="rolar"><table><tr><th>Freela</th><th class="n">Turnos</th><th class="n">Horas</th><th class="n">Calculado</th><th class="n">Pago</th><th>Situação</th><th></th></tr>${fr.map(p=>{const g=p.pagamento,dif=g&&p.valor_calculado_centavos!=null&&g.valor_pago_centavos!==p.valor_calculado_centavos;
+  else h+=`<div class="rolar"><table><tr><th>Freela</th><th class="n">Turnos</th><th class="n">Horas</th><th class="n">Calculado</th><th class="n">Pago</th><th>Situação</th><th>Pix</th><th></th></tr>${fr.map(p=>{const g=p.pagamento,dif=g&&p.valor_calculado_centavos!=null&&g.valor_pago_centavos!==p.valor_calculado_centavos,x=(d.pix||{})[p.id];
    return `<tr><td><b>${esc(p.nome)}</b><br><small>${esc(TIPO[p.tipo])}</small></td><td class="n">${p.turnos}</td><td class="n">${horas(p.minutos)}</td><td class="n">${brl(p.valor_calculado_centavos)}${p.conferir?'<br><span class="tag conf">conferir</span>':''}</td>
    <td class="n">${g?brl(g.valor_pago_centavos):'—'}</td><td>${g?`<span class="tag pago">pago${g.pago_em?' '+ddmm(g.pago_em):''}${g.forma?' · '+esc(g.forma):''}</span>${dif?' <span class="tag dif">diferente do calculado</span>':''}${g.observacao?`<br><small>${esc(g.observacao)}</small>`:''}`:'<span class="tag">a pagar</span>'}${p.valor_calculado_centavos==null?`<br><small>${esc(p.calculo)}</small>`:''}</td>
-   <td><button data-pagar="${p.id}">${g?'Corrigir':'Lançar'}</button></td></tr>`;}).join('')}<tr class="total"><td colspan="3">${fr.length} ${fr.length===1?'freela':'freelas'}</td><td class="n">${brl(calc)}</td><td class="n">${brl(d.total_pago_centavos)}</td><td colspan="2"></td></tr></table></div>`;
+   <td>${x?`<small>${esc(x.mascara)}</small><br><button data-pixver="${p.id}">Ver</button> <button data-pix="${p.id}">Trocar</button>`:`<button data-pix="${p.id}">Cadastrar</button>`}</td>
+   <td><button data-pagar="${p.id}">${g?'Corrigir':'Lançar'}</button></td></tr>`;}).join('')}<tr class="total"><td colspan="3">${fr.length} ${fr.length===1?'freela':'freelas'}</td><td class="n">${brl(calc)}</td><td class="n">${brl(d.total_pago_centavos)}</td><td colspan="3"></td></tr></table></div>`;
   h+='</div>';
  }
  h+=`<p class="rodape">Semana de segunda a domingo, pelo dia operacional do PUB (turno que passa da meia-noite fica no dia em que começou). Freela não bate ponto: o fechamento usa a escala. Trocas e pagamentos nunca apagam o registro anterior.</p>`;
  el('saida').innerHTML=h;
  el('saida').querySelectorAll('.cel').forEach(b=>b.onclick=()=>abrirTurno(b.dataset.p,b.dataset.d,b.dataset.t));
  el('saida').querySelectorAll('[data-pagar]').forEach(b=>b.onclick=()=>abrirPag(b.dataset.pagar));
+ el('saida').querySelectorAll('[data-pix]').forEach(b=>b.onclick=()=>abrirPix(b.dataset.pix));
+ el('saida').querySelectorAll('[data-pixver]').forEach(b=>b.onclick=()=>verPix(b.dataset.pixver));
  const c=el('copiar');if(c)c.onclick=copiar;
  const n=el('novaPessoa');if(n)n.onclick=()=>{el('fPessoa').reset();el('dlgPessoa').showModal();};
 }
@@ -163,8 +185,37 @@ function abrirPag(pid){
  el('pValor').value=base!=null?(base/100).toFixed(2).replace('.',','):'';
  el('pData').value=g?.pago_em||hojeOperacional();el('pForma').value=g?.forma||'pix';el('pObs').value=g?.observacao||'';el('pMotivo').value='';
  el('pMotivoBox').hidden=!g;el('pMotivo').required=!!g;
+ const x=(dados.pix||{})[pid];
+ el('pPix').innerHTML=x?`Pix: ${esc(x.mascara)} <button type="button" id="pPixVer">Mostrar chave</button>`:'Sem chave Pix cadastrada.';
+ const bv=el('pPixVer');if(bv)bv.onclick=()=>verPix(pid);
  el('dlgPag').showModal();
 }
+
+// Chave Pix: a tela só recebe o final; a chave inteira vem por pedido (registrado no servidor) e não fica guardada.
+let pixDe=null;
+function abrirPix(pid){
+ const p=dados.pessoas.find(x=>x.id===pid),x=(dados.pix||{})[pid];pixDe=pid;
+ el('xTitulo').textContent=x?'Trocar chave Pix':'Cadastrar chave Pix';
+ el('xQuem').textContent=p.nome+(x?` · hoje: ${x.mascara}`:'');
+ el('fPix').reset();el('xTipo').value=x?.tipo||'cpf';el('xMotivoBox').hidden=!x;el('xMotivo').required=!!x;
+ el('dlgPix').showModal();
+}
+el('fPix').onsubmit=async e=>{
+ e.preventDefault();
+ try{await call('gestao-escala',{acao:'pix_salvar',employee_id:pixDe,tipo:el('xTipo').value,chave:el('xChave').value,motivo:el('xMotivo').value});
+  el('xChave').value='';el('dlgPix').close();aviso('Chave Pix salva.');await carregar();}
+ catch(err){alert(err.message);}
+};
+async function verPix(pid){
+ const p=dados.pessoas.find(x=>x.id===pid);
+ try{const r=await call('gestao-escala',{acao:'pix_ver',employee_id:pid});
+  el('vQuem').textContent=p.nome+' · '+({cpf:'CPF',cnpj:'CNPJ',telefone:'Telefone',email:'E-mail',aleatoria:'Chave aleatória'}[r.tipo]||r.tipo);
+  el('vChave').textContent=r.chave;el('dlgVer').showModal();}
+ catch(err){alert(err.message);}
+}
+el('vCopiar').onclick=async()=>{try{await navigator.clipboard.writeText(el('vChave').textContent);el('vCopiar').textContent='Copiado';}catch{alert('Não deu para copiar. Selecione o texto da chave.');}};
+el('vFechar').onclick=()=>el('dlgVer').close();
+el('dlgVer').addEventListener('close',()=>{el('vChave').textContent='';el('vCopiar').textContent='Copiar';});
 el('fPag').onsubmit=async e=>{
  e.preventDefault();
  const txt=el('pValor').value.trim().replace(/\s|R\$/g,'');const num=Number(txt.includes(',')?txt.replace(/\./g,'').replace(',','.'):txt);
@@ -176,9 +227,15 @@ el('fPag').onsubmit=async e=>{
 };
 el('fPessoa').onsubmit=async e=>{
  e.preventDefault();
- try{await call('gestao-equipe',{action:'salvar',nome:el('nNome').value,tipo:el('nTipo').value,funcao:el('nFuncao').value,registra_ponto:false,perfil_portal:'sem_acesso',ativo:true});
-  el('dlgPessoa').close();aviso('Freela cadastrado.');await carregar();}
- catch(err){alert(err.message);}
+ const pixTipo=el('nPixTipo').value,pixChave=el('nPixChave').value.trim();
+ if(pixTipo&&!pixChave)return alert('Escreva a chave Pix ou escolha "sem chave".');
+ let novo;
+ try{novo=await call('gestao-equipe',{action:'salvar',nome:el('nNome').value,tipo:el('nTipo').value,funcao:el('nFuncao').value,registra_ponto:false,perfil_portal:'sem_acesso',ativo:true});}
+ catch(err){return alert(err.message);}
+ let msg='Freela cadastrado.';
+ if(pixTipo){try{await call('gestao-escala',{acao:'pix_salvar',employee_id:novo.id,tipo:pixTipo,chave:pixChave});msg='Freela cadastrado, com chave Pix.';}
+  catch(err){msg='Freela cadastrado, mas a chave Pix não foi salva: '+err.message+' Cadastre a chave depois, no fechamento.';}}
+ el('nPixChave').value='';el('dlgPessoa').close();aviso(msg,msg.includes('não foi')?'aviso':'ok');await carregar();
 };
 async function copiar(){
  if(!confirm('Repetir os turnos da semana anterior? Só preenche os dias que estão vazios nesta semana.'))return;
