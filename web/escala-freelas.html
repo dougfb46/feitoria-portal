@@ -18,7 +18,8 @@ th{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;le
 table.grade{min-width:900px}table.grade td.pessoa{font-weight:600;min-width:150px;position:sticky;left:0;background:var(--card)}table.grade td.pessoa small{display:block;font-weight:400}
 th.fds{color:var(--sage)}
 .cel{display:block;width:100%;min-height:44px;text-align:left;padding:6px 8px;border-radius:10px;border:1px dashed var(--line-2);background:transparent;font-size:13px;line-height:1.3}
-.cel.turno{border-style:solid;background:var(--sage-soft);border-color:#cfdcd2}.cel.folga{border-style:solid;background:var(--soft);color:var(--muted)}.cel.vazia{color:#b5b8b5}
+.cel.turno{border-style:solid;background:var(--sage-soft);border-color:#cfdcd2}.cel.folga{border-style:solid;background:var(--soft);color:var(--muted)}.cel.vazia{color:#b5b8b5}.cel.alerta{border-color:var(--amber);box-shadow:inset 0 0 0 1px var(--amber)}
+.avisos{background:var(--amber-bg);border-radius:14px;padding:12px 16px;margin:0 0 14px;color:#5b4512;font-size:14px}.avisos ul{margin:6px 0 0;padding-left:18px}.avisos li{margin:2px 0}
 .cel small{display:block;color:var(--muted)}
 .tag{display:inline-block;font-size:12px;font-weight:600;border-radius:999px;padding:1px 8px;background:var(--soft);color:var(--ink-2);white-space:nowrap}
 .tag.conf{background:var(--amber-bg);color:var(--amber)}.tag.pago{background:var(--sage-soft);color:#2f4a37}.tag.dif{background:var(--down-bg);color:var(--down)}
@@ -43,6 +44,7 @@ tr.total td{font-weight:700;border-top:2px solid var(--line-2);border-bottom:0}
   <div><label for="tEnt">Entrada</label><input id="tEnt" type="time" step="300"></div>
   <div><label for="tSai">Saída</label><input id="tSai" type="time" step="300"></div>
   <div><label for="tPausa">Pausa (min)</label><input id="tPausa" type="number" min="0" max="240" step="5" value="0"></div></div>
+  <div class="linha" id="tPausaLinha"><div><label for="tPausaIni">Início da pausa</label><input id="tPausaIni" type="time" step="300"></div><div style="grid-column:span 2"><label>&nbsp;</label><p class="sub" id="tPausaDica" style="margin:8px 0 0"></p></div></div>
   <label for="tPos">Posto</label><input id="tPos" maxlength="40" list="postos" placeholder="salão, bar, cozinha…"><datalist id="postos"><option>salão</option><option>bar</option><option>cozinha</option><option>caixa</option></datalist></div>
  <label for="tObs">Observação</label><input id="tObs" maxlength="200">
  <div id="tMotivoBox" hidden><label for="tMotivo">Motivo da troca</label><input id="tMotivo" maxlength="200" placeholder="ex.: trocou com outra pessoa"></div>
@@ -114,7 +116,9 @@ function celula(p,dia){
  if(t.folga)return `<button class="cel folga" data-p="${p.id}" data-d="${dia}" data-t="${t.id}">Folga${t.observacao?`<small>${esc(t.observacao)}</small>`:''}</button>`;
  const v=t.valor&&t.valor.valor_centavos!=null?` · ${brl(t.valor.valor_centavos)}`:'';
  const curto=t.valor?.abaixo_da_menor?' <span class="tag conf">conferir</span>':'';
- return `<button class="cel turno" data-p="${p.id}" data-d="${dia}" data-t="${t.id}">${esc(t.entrada)}–${esc(t.saida)}${curto}<small>${horas(t.minutos)}${t.pausa_min?` · pausa ${t.pausa_min} min`:''}${esc(v)}${t.posicao?` · ${esc(t.posicao)}`:''}</small></button>`;
+ const alerta=(dados.avisos||[]).some(a=>a.employee_id===p.id&&a.dia===dia);
+ const pausa=t.pausa_min?` · pausa ${t.pausa_min} min${t.pausa_inicio?' às '+esc(t.pausa_inicio):''}`:'';
+ return `<button class="cel turno${alerta?' alerta':''}" data-p="${p.id}" data-d="${dia}" data-t="${t.id}"${alerta?' title="Tem aviso de pausa neste dia"':''}>${esc(t.entrada)}–${esc(t.saida)}${curto}<small>${horas(t.minutos)}${pausa}${esc(v)}${t.posicao?` · ${esc(t.posicao)}`:''}</small></button>`;
 }
 
 function render(){
@@ -124,6 +128,9 @@ function render(){
  const pessoas=d.pessoas||[];
  let h=`<div class="card"><div class="topo"><div><h2>Quem trabalha</h2><p class="sub">Toque num dia para escalar, trocar o horário ou marcar folga. Trocar guarda o horário anterior com o motivo.</p></div>
   <div class="nav"><button id="copiar">Repetir a semana anterior</button><button id="novaPessoa">Cadastrar freela</button></div></div>`;
+ const av=d.avisos||[];
+ if(av.length){const porDia={};av.forEach(a=>(porDia[a.dia]=porDia[a.dia]||[]).push(a));
+  h+=`<div class="avisos"><b>${av.length} ${av.length===1?'aviso':'avisos'} de pausa nesta semana.</b> A escala pode ser salva assim; os avisos só mostram o que foge das regras.<ul>${Object.keys(porDia).sort().map(dd=>porDia[dd].map(a=>`<li><b>${dsem(dd)} ${ddmm(dd)}</b> — ${esc(a.texto)}</li>`).join('')).join('')}</ul></div>`;}
  if(!pessoas.length)h+='<p class="vazio">Ninguém ativo nesta unidade. Cadastre a equipe em Equipe e cadastros, ou um freela aqui.</p>';
  else h+=`<div class="rolar"><table class="grade"><tr><th>Pessoa</th>${dias.map(x=>`<th class="${['sex','sáb','dom'].includes(dsem(x))?'fds':''}">${dsem(x)} ${ddmm(x)}</th>`).join('')}<th class="n">Horas</th></tr>${pessoas.map(p=>`<tr><td class="pessoa">${esc(p.nome)}<small>${esc(TIPO[p.tipo]||p.tipo)}${p.funcao?` · ${esc(p.funcao)}`:''}</small></td>${dias.map(x=>`<td>${celula(p,x)}</td>`).join('')}<td class="n">${horas(p.minutos)}</td></tr>`).join('')}</table></div>`;
  h+='</div>';
@@ -139,6 +146,8 @@ function render(){
    <td><button data-pagar="${p.id}">${g?'Corrigir':'Lançar'}</button></td></tr>`;}).join('')}<tr class="total"><td colspan="3">${fr.length} ${fr.length===1?'freela':'freelas'}</td><td class="n">${brl(calc)}</td><td class="n">${brl(d.total_pago_centavos)}</td><td colspan="3"></td></tr></table></div>`;
   h+='</div>';
  }
+ const rg=d.regras;
+ if(rg)h+=`<p class="rodape">Regras de pausa: até 4h trabalhadas sem pausa; acima de 4h, ${rg.pausa_acima_4h_min} min; acima de 6h, ${rg.pausa_acima_6h_min} min (CLT, ${rg.pausa_acima_6h_clt_min} min). Pelo menos ${rg.min_ativos} pessoas trabalhando durante cada pausa; no máximo ${rg.max_inicio_juntos} começando juntas${rg.pausa_termina_ate?`; pausa termina até ${esc(String(rg.pausa_termina_ate).slice(0,5))}`:''}${(rg.picos||[]).length?`; fora dos picos (${rg.picos.map(k=>`${k.dias.length===7?'todo dia':k.dias.map(n=>SEM[n%7]).join('/')} ${esc(k.inicio)}–${esc(k.fim)}`).join('; ')})`:''}.</p>`;
  h+=`<p class="rodape">Semana de segunda a domingo, pelo dia operacional do PUB (turno que passa da meia-noite fica no dia em que começou). Freela não bate ponto: o fechamento usa a escala. Trocas e pagamentos nunca apagam o registro anterior.</p>`;
  el('saida').innerHTML=h;
  el('saida').querySelectorAll('.cel').forEach(b=>b.onclick=()=>abrirTurno(b.dataset.p,b.dataset.d,b.dataset.t));
@@ -155,6 +164,7 @@ function abrirTurno(pid,dia,tid){
  el('tTitulo').textContent=t?'Trocar turno':'Escalar';
  el('tQuem').textContent=`${p.nome} · ${dsem(dia)} ${ddmm(dia)}`;
  el('tFolga').checked=!!t?.folga;el('tEnt').value=t?.entrada||'';el('tSai').value=t?.saida||'';el('tPausa').value=t?.pausa_min??0;
+ el('tPausaIni').value=t?.pausa_inicio||'';editando.clt=p.tipo==='clt';editando.pausaMexida=!!t;dicaPausa();
  el('tPos').value=t?.posicao||'';el('tObs').value=t?.observacao||'';el('tMotivo').value='';
  el('tMotivoBox').hidden=!t;el('tTirar').hidden=!t;
  el('tCalc').textContent=t&&!t.folga?`Hoje: ${t.entrada}–${t.saida}, ${horas(t.minutos)} de trabalho.`:'';
@@ -162,11 +172,29 @@ function abrirTurno(pid,dia,tid){
  el('dlgTurno').showModal();
 }
 el('tFolga').onchange=()=>{el('tHorario').hidden=el('tFolga').checked;};
+// Pausa sugerida pelas regras (horas trabalhadas): até 4h sem pausa; acima de 4h, 15 min; acima de 6h, 30 min (CLT 60).
+// Só preenche sozinha num turno novo, enquanto a pausa não foi mexida à mão.
+const minDe=s=>{const [h,m]=String(s).split(':').map(Number);return h*60+m;};
+function pausaSugerida(){
+ const e=el('tEnt').value,s=el('tSai').value;if(!e||!s)return null;
+ const bruto=(minDe(s)-minDe(e)+1440)%1440,rg=dados?.regras||{pausa_acima_4h_min:15,pausa_acima_6h_min:30,pausa_acima_6h_clt_min:60};
+ const longa=editando?.clt?rg.pausa_acima_6h_clt_min:rg.pausa_acima_6h_min;
+ if(bruto-longa>360)return longa;if(bruto-rg.pausa_acima_4h_min>240)return rg.pausa_acima_4h_min;return 0;
+}
+function dicaPausa(){
+ const sug=pausaSugerida(),p=Number(el('tPausa').value||0);
+ if(sug!=null&&!editando.pausaMexida)el('tPausa').value=sug;
+ const atual=Number(el('tPausa').value||0);
+ el('tPausaLinha').hidden=atual===0;
+ el('tPausaDica').textContent=sug==null?'':(atual<sug?`Pelas regras, este turno pede ${sug} min de pausa.`:`Pausa pelas regras: ${sug?sug+' min':'não precisa'}.`)+(atual>0&&!el('tPausaIni').value?' Informe quando ela começa.':'');
+}
+['tEnt','tSai','tPausaIni'].forEach(i=>el(i).addEventListener('input',dicaPausa));
+el('tPausa').addEventListener('input',()=>{editando.pausaMexida=true;dicaPausa();});
 el('fTurno').onsubmit=async e=>{
  e.preventDefault();const f=el('tFolga').checked;
  if(!f&&(!el('tEnt').value||!el('tSai').value))return alert('Informe a entrada e a saída.');
  try{await call('gestao-escala',{acao:'lancar_turno',employee_id:editando.pid,dia:editando.dia,folga:f,entrada:el('tEnt').value,saida:el('tSai').value,
-  pausa_min:Number(el('tPausa').value||0),posicao:el('tPos').value,observacao:el('tObs').value,substitui_id:editando.t?.id||null,motivo:el('tMotivo').value});
+  pausa_min:Number(el('tPausa').value||0),pausa_inicio:el('tPausaIni').value||null,posicao:el('tPos').value,observacao:el('tObs').value,substitui_id:editando.t?.id||null,motivo:el('tMotivo').value});
   el('dlgTurno').close();aviso(editando.t?'Turno trocado. O anterior ficou guardado.':'Turno lançado.');await carregar();}
  catch(err){alert(err.message);}
 };
