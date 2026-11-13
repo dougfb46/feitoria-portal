@@ -1,0 +1,586 @@
+<!doctype html>
+<html lang="pt-BR">
+<title>Treinamento de Salão PUB Mogi</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=Source+Sans+3:wght@400;600;700&display=swap">
+<style>
+/* Layout: abas como "torneiras" no topo; cada aba é uma folha que também sai na impressão. */
+:root{
+  --bg:#f6f7f2; --paper:#ffffff; --ink:#1d2a22; --muted:#56635a; --line:#d5dbd2;
+  --amber:#b8730a; --amber-soft:#f6e7c9; --bottle:#24563d; --bottle-soft:#e0ece4; --warn:#a33a2a;
+  --display:"Big Shoulders Display","Arial Narrow",Impact,sans-serif;
+  --body:"Source Sans 3","Segoe UI",Roboto,Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#141a16; --paper:#1c241f; --ink:#e8ede6; --muted:#a3b0a6; --line:#33403a;
+  --amber:#e6a23c; --amber-soft:#3a2e16; --bottle:#7cc39b; --bottle-soft:#1f3328; --warn:#ef8a78; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141a16; --paper:#1c241f; --ink:#e8ede6; --muted:#a3b0a6; --line:#33403a;
+  --amber:#e6a23c; --amber-soft:#3a2e16; --bottle:#7cc39b; --bottle-soft:#1f3328; --warn:#ef8a78; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;margin:0}
+.wrap{max-width:860px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 56px}
+header.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:8px 24px;border-bottom:3px solid var(--ink);padding-bottom:12px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;line-height:1.05;margin:0}
+h1{font-size:clamp(2.2rem,6vw,3.4rem);font-weight:800;letter-spacing:.01em;text-transform:uppercase}
+h1 span{color:var(--amber)}
+.sub{color:var(--muted);font-size:.95rem;max-width:40ch}
+nav.tabs{display:flex;flex-wrap:wrap;gap:6px;margin:16px 0 24px}
+nav.tabs a{font-family:var(--display);font-weight:600;font-size:1.15rem;letter-spacing:.03em;text-transform:uppercase;text-decoration:none;color:var(--ink);border:1.5px solid var(--line);background:var(--paper);padding:6px 14px;border-radius:4px}
+nav.tabs a:hover{border-color:var(--amber)}
+nav.tabs a[aria-current="page"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+nav.tabs a:focus-visible,button:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+section.sheet{display:grid;gap:20px}
+section.sheet[hidden]{display:none}
+h2{font-size:2.1rem;font-weight:800;text-transform:uppercase}
+h3{font-size:1.35rem;font-weight:600;text-transform:uppercase;letter-spacing:.02em;color:var(--bottle)}
+p{margin:0;max-width:66ch}
+.lead{font-size:1.1rem}
+.meta{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:var(--bottle-soft);color:var(--bottle);padding:3px 10px;border-radius:999px}
+.chip.am{background:var(--amber-soft);color:var(--amber)}
+.block{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:18px 20px;display:grid;gap:12px;min-width:0}
+.note{border-left:4px solid var(--amber);background:var(--amber-soft);padding:12px 16px;border-radius:0 6px 6px 0}
+.note.red{border-color:var(--warn);background:transparent;border:1.5px solid var(--warn);border-left-width:4px}
+ol.steps{list-style:none;counter-reset:s;margin:0;padding:0;display:grid;gap:10px}
+ol.steps li{counter-increment:s;display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:start}
+ol.steps li::before{content:counter(s);font-family:var(--display);font-weight:800;font-size:1.6rem;line-height:1;color:var(--amber);text-align:right;padding-top:2px}
+ol.steps b{display:block}
+ol.steps small{color:var(--muted);font-size:.92rem}
+ul.plain{margin:0;padding-left:20px;display:grid;gap:6px}
+.say{font-style:italic;color:var(--bottle)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.tablebox{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.95rem}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.opa{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.opa div{border:2px solid var(--ink);border-radius:6px;padding:12px;text-align:center}
+.opa strong{font-family:var(--display);font-size:2.4rem;line-height:1;color:var(--amber);display:block}
+.opa span{font-weight:700;display:block}
+.opa small{color:var(--muted)}
+/* cartão de bolso */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.pocket{border:2px dashed var(--muted);border-radius:10px;padding:16px;background:var(--paper);display:grid;gap:10px;align-content:start}
+.pocket h3{color:var(--ink);font-size:1.25rem;display:flex;justify-content:space-between}
+.pocket h3 em{font-style:normal;color:var(--amber)}
+.pocket dl{margin:0;display:grid;gap:8px}
+.pocket dt{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.pocket dd{margin:0;font-size:.98rem}
+.fill{border-bottom:1.5px solid var(--muted);display:inline-block;min-width:110px;color:var(--muted);font-style:normal}
+/* cartaz */
+.poster{background:var(--paper);border:3px solid var(--ink);border-radius:8px;padding:22px;display:grid;gap:16px}
+.poster .motto{font-family:var(--display);font-weight:800;font-size:clamp(1.6rem,5vw,2.4rem);text-transform:uppercase;line-height:1.05}
+.poster ol.steps{grid-template-columns:repeat(auto-fit,minmax(300px,1fr));column-gap:24px}
+.slots{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.slot{border:1.5px solid var(--line);border-radius:6px;padding:10px 12px;min-height:64px}
+.slot b{font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block}
+/* teste */
+.quiz{display:grid;gap:14px}
+.q{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:14px 16px;display:grid;gap:8px}
+.q p{font-weight:600}
+.opts{display:grid;gap:6px}
+.opts button{font:inherit;text-align:left;background:transparent;color:var(--ink);border:1.5px solid var(--line);border-radius:6px;padding:8px 12px;cursor:pointer}
+.opts button:hover{border-color:var(--amber)}
+.opts button.ok{border-color:var(--bottle);background:var(--bottle-soft)}
+.opts button.no{border-color:var(--warn);color:var(--warn)}
+.why{font-size:.92rem;color:var(--muted)}
+.score{font-family:var(--display);font-size:1.6rem;font-weight:800}
+.sign{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:6px}
+.sign div{border-bottom:1.5px solid var(--muted);padding-top:28px;font-size:.85rem;color:var(--muted)}
+footer{margin-top:36px;color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padding-top:12px}
+@media (max-width:480px){.opa{grid-template-columns:1fr}ol.steps li{grid-template-columns:34px 1fr}}
+@media print{
+  nav.tabs,.noprint{display:none!important}
+  section.sheet[hidden]{display:grid!important}
+  section.sheet{break-before:page}
+  section.sheet:first-of-type{break-before:auto}
+  body{background:#fff;color:#000}
+  .block,.pocket,.poster,.q{break-inside:avoid}
+}
+</style>
+<nav style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;padding:10px 16px;background:#1d3427;font:600 15px system-ui,sans-serif"><a href="index.html" style="color:#f3ead7">Treinamento</a><a href="video.html" style="color:#f3ead7">▶ Vídeo</a><a href="comanda.html" style="color:#f3ead7">📱 Abrir a comanda</a></nav>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1><img src="logo-feitoria-claro.webp" alt="Feitoria" style="height:.9em;width:auto;vertical-align:-0.05em;margin-right:.3em;background:#201e1d;border-radius:6px;padding:4px 8px">Salão <span>PUB Mogi</span></h1>
+      <p class="sub">Treinamento do elenco: atendimento e venda na mesa. Feitoria da Cerveja, Mogi das Cruzes.</p>
+    </div>
+    <div class="meta"><span class="chip">Versão 08/11/2026</span><span class="chip am">Uso interno</span></div>
+  </header>
+
+  <nav class="tabs" aria-label="Partes do treinamento">
+    <a href="#equipe">Equipe CLT</a>
+    <a href="#freela">Freelas</a>
+    <a href="#preturno">Pré-turno</a>
+    <a href="#cartao">Cartão de bolso</a>
+    <a href="#cartaz">Cartaz</a>
+    <a href="#encantar">Encantar</a>
+    <a href="#consulta">Consulta</a>
+    <a href="#teste">Teste</a>
+  </nav>
+
+  <section class="block" aria-labelledby="t-foco" style="margin-bottom:24px">
+    <h3 id="t-foco">Itens foco sugeridos</h3>
+    <p>Itens que a casa quer destacar agora. Sobremesa e porção para dividir são as vendas mais esquecidas: é aí que está a oportunidade.</p>
+    <div class="tablebox"><table>
+      <thead><tr><th>Turno</th><th>Chopp foco</th><th>Porção foco</th><th>Para fechar</th></tr></thead>
+      <tbody>
+        <tr><td>Almoço (até 16h)</td><td>Pilsen; sem álcool: suco de maracujá</td><td>Pastéis Salgados 4 un. enquanto o prato sai</td><td><b>Novidade:</b> sobremesa do encarte + Café Espresso (R$ 8)</td></tr>
+        <tr><td>Até 20h30</td><td>Pilsen; quem não conhece: Régua Degustação</td><td><b>Combos (+R$ 30):</b> casal: Trio Happy Hour + 2 canecas de Pilsen; grupo: Quarteto Alemão + 1 martelo de Pilsen</td><td>Saideira</td></tr>
+        <tr><td>Noite (20h em diante)</td><td>Pilsen; quem quer diferente: Pêssego Lager</td><td>Crispy Chicken</td><td>Sobremesa para dividir ou saideira</td></tr>
+      </tbody>
+    </table></div>
+    <p class="why">Os combos valem para pedido lançado até 20h30. Na Takeat, lance o Quarteto ou o Trio e marque o complemento do combo com Pilsen. A porção rápida depende da cozinha confirmar o tempo de saída.</p>
+  </section>
+
+  <section class="block" aria-labelledby="t-perfil" style="margin-bottom:24px">
+    <h3 id="t-perfil">O que oferecer para cada convidado</h3>
+    <div class="tablebox"><table>
+      <thead><tr><th>O convidado</th><th>Ofereça</th><th>Como falar</th></tr></thead>
+      <tbody>
+        <tr><td>Está sozinho</td><td>Aperitivo Feitoria; Mini Sanduba; Pastéis Salgados 4 un.</td><td class="say">"Para um, o Aperitivo Feitoria é na medida. Vai bem com uma Pilsen."</td></tr>
+        <tr><td>Casal até 20h30</td><td>Combo Trio Happy Hour + 2 canecas de Pilsen (grupo maior: Quarteto + martelo)</td><td class="say">"Para vocês dois, até 20h30 o Trio Happy Hour vem com duas canecas de Pilsen por mais 30 reais."</td></tr>
+        <tr><td>Pediu Heineken</td><td>Belgian Pale Ale</td><td class="say">"Heineken a gente não tem, mas a Belgian Pale Ale é a que eu indico para quem gosta."</td></tr>
+        <tr><td>Toma vinho</td><td>Chopp de vinho (tinto) ou Chopp de vinho Rosé</td><td class="say">"Não servimos taça de vinho, mas temos chopp de vinho, tinto e rosé. Quer provar?"</td></tr>
+        <tr><td>Já está no chopp de vinho</td><td>O outro chopp de vinho; Sour Goiaba; Pink Gin</td><td class="say">"Já provou o rosé? Se quiser algo frutado também, a Sour de goiaba é ótima."</td></tr>
+        <tr><td>Não toma chopp</td><td>Pink Gin, Floradora, London Mule, Caipirinha; chopp de vinho</td><td class="say">"O Pink Gin é o drink que mais sai. A Floradora também é bem pedida."</td></tr>
+        <tr><td>Não bebe álcool</td><td>Drinks sem álcool (Pink Gin sem álcool); suco de maracujá; Heineken 0.0</td><td class="say">"Temos drink sem álcool, o Pink Gin sem álcool é ótimo. Também tem suco natural e Heineken zero."</td></tr>
+        <tr><td>Não come glúten</td><td>Drinks com receita conferida ou cerveja rotulada sem glúten</td><td class="say">"Vou conferir os ingredientes do drink com o bar e o rótulo da cerveja antes de indicar."</td></tr>
+      </tbody>
+    </table></div>
+    <p class="why">Comida sem glúten ou sem lactose: confirme sempre com a cozinha antes de prometer.</p>
+  </section>
+
+  <section class="block" aria-labelledby="t-disney" style="margin-bottom:24px">
+    <h3 id="t-disney">O jeito Feitoria de receber</h3>
+    <p>Inspirado no padrão de atendimento da Disney e na linguagem do manual da franquia: na Feitoria, quem trabalha é <b>elenco</b> e quem chega é <b>convidado</b>. Clima descontraído, pouca formalidade, atenção total.</p>
+    <div class="grid2">
+      <div class="note"><p><b>Palco</b> é onde o convidado está: Salão, Deck, Jardim, Chalé, balcão. Sorriso, postura, celular guardado, nada de recado ou assunto paralelo na frente do convidado.</p></div>
+      <div class="note"><p><b>Bastidor</b> é cozinha, estoque e área interna. É ali que se descansa, se usa o celular e se resolve problema entre colegas.</p></div>
+    </div>
+    <div class="tablebox"><table>
+      <thead><tr><th>As 4 chaves, nesta ordem</th><th>No PUB, na prática</th></tr></thead>
+      <tbody>
+        <tr><td><b>1. Segurança</b></td><td>Chão molhado ou copo quebrado: sinalizar e limpar na hora. Alergia, glúten, lactose: confirmar com a cozinha. Álcool nunca para menor de 18 anos. Convidado alterado: chamar o gerente.</td></tr>
+        <tr><td><b>2. Cortesia</b></td><td>Receber na entrada, perguntar o nome e usar o nome. Sugerir, nunca impor. Nunca dar ordem: pedir "por favor, poderia...".</td></tr>
+        <tr><td><b>3. Show</b></td><td>Palco limpo e organizado, uniforme em ordem, falar do chopp com gosto. Todos os chopes são de produção própria e só existem na Feitoria.</td></tr>
+        <tr><td><b>4. Eficiência</b></td><td>OPA, roteiro da mesa, comanda certa, combo lançado como complemento.</td></tr>
+      </tbody>
+    </table></div>
+    <p class="why">Quando duas chaves brigam, vence a que vem antes. Correr no pico é eficiência, mas não passa por cima de segurança nem de cortesia.</p>
+    <div class="grid2">
+      <div class="block" style="padding:14px 16px"><h3>Momento mágico</h3><ul class="plain"><li>Lembrar o nome e o chopp de quem volta.</li><li>Percebeu aniversário? Avisar o gerente.</li><li>Água para quem está há tempo no sol do Deck.</li><li>Entregar antes do prometido.</li></ul></div>
+      <div class="block" style="padding:14px 16px"><h3>Quando algo dá errado</h3><ol class="plain"><li>Ouvir até o fim, sem interromper.</li><li><span class="say">"Eu entendo como isso te chateou."</span></li><li><span class="say">"Sinto muito, não é assim que gostamos de receber."</span></li><li>Resolver ou chamar o gerente, e voltar à mesa para conferir.</li></ol><p class="why">Nunca discutir, culpar a cozinha ou diminuir o problema.</p></div>
+    </div>
+  </section>
+
+  <!-- ===================== EQUIPE CLT ===================== -->
+  <section class="sheet" id="equipe" aria-labelledby="t-equipe">
+    <h2 id="t-equipe">Trilha do elenco da casa</h2>
+    <div class="meta"><span class="chip">4 encontros de 20–30 min</span><span class="chip">Semana 1</span><span class="chip am">Depois: pré-turno todo dia</span></div>
+    <p class="lead">Quem é da casa é a referência do salão. Você conhece o cardápio, puxa o ritmo da sua praça e ajuda o freela da praça do lado.</p>
+
+    <div class="block">
+      <h3>Encontro 1 · A conta da mesa</h3>
+      <p>O convidado entra no PUB querendo uma noite boa. Oferecer na hora certa melhora a noite dele. Esquecer a mesa faz ele beber menos e ir embora mais cedo.</p>
+      <div class="note"><p><b>Onde está a venda esquecida:</b> quase toda mesa pede chopp; comida para dividir e sobremesa aparecem bem menos. Vamos observar as mesas e testar a oferta. Agora as sobremesas são novidade, com encarte na mesa, e o café entra no almoço.</p></div>
+      <div class="note"><p><b>A conta da casa:</b> hoje a comanda média do salão fica entre R$ 123 e R$ 129. Se 1 de cada 5 mesas pedir só mais uma rodada de Pilsen, são cerca de <b>250 chopes a mais por mês</b>, uns R$ 5,6 mil em venda. Quanto maior a conta, maior a taxa de serviço.</p></div>
+      <p>Oferecer não é empurrar. Empurrar é insistir depois do "não" ou sugerir o mais caro sem motivo. Oferecer é dizer o nome de uma coisa que combina com aquela mesa, uma vez, no momento certo.</p>
+      <p><b>Exercício:</b> cada um conta uma vez em que foi bem atendido num bar e o que o garçom fez.</p>
+    </div>
+
+    <div class="block">
+      <h3>Encontro 2 · O roteiro da mesa</h3>
+      <p>Onze passos, da chegada até a porta. O cartaz da área interna tem a versão curta.</p>
+      <ol class="steps">
+        <li><div><b>Receber</b>Sorriso, seu nome e uma pergunta: "Primeira vez aqui na Feitoria?" Se for, explique em uma frase: chopp artesanal da casa, comida para dividir, música à noite. <b>Já na abertura da comanda:</b> nome e sobrenome do convidado, celular e número de pessoas. É obrigatório.</div></li>
+        <li><div><b>Ler a mesa</b>Casal: régua ou porção para dois. Família: pedido da criança primeiro. Grupo grande: porção e rodada para todos. Quem está com pressa: bebida já.</div></li>
+        <li><div><b>Bebida primeiro</b>Mesa sentada sem copo é a prioridade da sua praça. Ofereça o chopp do dia pelo nome e uma opção sem álcool.</div></li>
+        <li><div><b>Tirar o pedido de pé, na ponta da mesa</b>Espere todos olharem para você e fale alto o bastante para a última pessoa ouvir. Lá fora, no Deck e no Jardim, a música e o vento pedem voz mais alta.</div></li>
+        <li><div><b>Oferecer um item pelo nome</b>Junto com o pedido principal: a porção para dividir, o chopp que combina com o prato, o drink da casa.</div></li>
+        <li><div><b>Repetir o pedido</b>Inteiro, com ponto da carne, sem cebola, tamanho do copo. Erro de pedido custa tempo e humor da mesa.</div></li>
+        <li><div><b>Lançar o pedido na Takeat</b>Na comanda já aberta com nome, celular e pessoas. Combo até 20h30: lançar o Trio ou o Quarteto e marcar o complemento.</div></li>
+        <li><div><b>Confirmar a escolha</b>"Boa escolha, esse sai muito aqui." Só se for verdade.</div></li>
+        <li><div><b>Enquanto a comida não chega</b>Ofereça a porção rápida (Pastéis Salgados 4 un.). Copo a 1/3: ofereça a próxima rodada antes de esvaziar.</div></li>
+        <li><div><b>Ao tirar os pratos</b>Mostre o encarte de sobremesas: é novidade da casa. Hoje quase nenhuma mesa pede sobremesa: ofereça no momento certo e observe a resposta. No almoço, depois da sobremesa, o café. À noite, a saideira.</div></li>
+        <li><div><b>Despedir</b>Acompanhe até a saída quando der e convide para voltar: "Sexta tem música, aparece."</div></li>
+      </ol>
+      <div class="opa" aria-label="Método OPA">
+        <div><strong>O</strong><span>Observar</span><small>a praça inteira, o tempo todo</small></div>
+        <div><strong>P</strong><span>Perceber</span><small>o que cada mesa precisa agora</small></div>
+        <div><strong>A</strong><span>Atender</span><small>antes de o convidado levantar a mão</small></div>
+      </div>
+      <p>Conversa entre colegas, só de frente para o salão. Celular pessoal fica guardado no turno.</p>
+    </div>
+
+    <div class="block">
+      <h3>Encontro 3 · Saber o que está vendendo</h3>
+      <p>Garçom que conhece o cardápio vende sem esforço. A tela de operação no celular tem o descritivo dos 37 chopes. Use na frente do convidado sem vergonha: é melhor que inventar.</p>
+      <div class="tablebox"><table>
+        <thead><tr><th>Para quem pede</th><th>Ofereça</th><th>Como falar</th></tr></thead>
+        <tbody>
+          <tr><td>"Algo leve, refrescante"</td><td>Pilsen (ABV 4,8% · IBU 18)</td><td class="say">"A Pilsen é clara, leve, com aroma floral. É a que mais sai." Combina com quibe com queijo ou coxinha sem massa.</td></tr>
+          <tr><td>"Gosto de cerveja amarga"</td><td>Indonesian IPA (7,2% · IBU 70)</td><td class="say">"É a queridinha da Feitoria: amargor marcado, aroma de maracujá e goiaba." Combina com costelinha barbecue ou pastel de carne com gorgonzola.</td></tr>
+          <tr><td>"Quero lúpulo, mas mais leve"</td><td>Session IPA (5,5% · IBU 45)</td><td class="say">"É a IPA mais leve, com aroma de frutas tropicais: melão, tangerina, maracujá."</td></tr>
+          <tr><td>"Quero algo diferente, frutado"</td><td>Pêssego Lager (5% · IBU 12) ou Sour (4,25% · IBU 7)</td><td class="say">"A Pêssego Lager é feita com pêssego em calda, leve e macia. A Sour é azedinha, com fruta da época."</td></tr>
+          <tr><td>"Gosto de escura"</td><td>Munich Dunkel (bem encorpada: Imperial Stout)</td><td class="say">"A Munich Dunkel é maltada, lembra passas, mais adocicada." Combina com costelinha barbecue. Imperial Stout (9,5%): chocolate e café, servida na taça.</td></tr>
+          <tr><td>"Gosto de doce"</td><td>Avelã Lager (5,5% · IBU 18)</td><td class="say">"É a nossa mais doce, lembra chocolate com castanhas." Combina com pastel de chocolate.</td></tr>
+          <tr><td>"Não sei, não conheço"</td><td>Régua Degustação</td><td class="say">"Quer provar alguns antes? A régua é ótima para escolher."</td></tr>
+          <tr><td>"Tem Heineken?"</td><td>Belgian Pale Ale</td><td class="say">"Heineken não temos, mas a Belgian Pale Ale é a que eu indico."</td></tr>
+          <tr><td>"Não bebo cerveja"</td><td>Pink Gin, Floradora, Chopp de vinho; sem álcool: Pink Gin sem álcool, suco, Heineken 0.0</td><td class="say">"O Pink Gin é o drink que mais sai. Tem chopp de vinho, suco natural e cerveja sem álcool também."</td></tr>
+        </tbody>
+      </table></div>
+      <p><b>Exercício:</b> cada um descreve 2 chopes e 2 pratos como faria na mesa. O gerente corrige com a ficha.</p>
+      <p class="why">Descrição de chopp confere com o descritivo da tela de operação. Prato confere com a cozinha. Na dúvida, não invente ingrediente.</p>
+    </div>
+
+    <div class="block">
+      <h3>Encontro 4 · Lançar, medir, ensinar</h3>
+      <ul class="plain">
+        <li><b>Pessoas na comanda.</b> Hoje quase toda comanda diz "1 pessoa". Conte e lance o número certo.</li>
+        <li><b>Pessoas, nome, sobrenome e celular do convidado.</b> Obrigatório em toda comanda. <b>Como fazer:</b> na maquininha, digite o telefone e toque em <i>cadastro completo</i>, depois nome e um sobrenome; no app do garçom, toque em <i>+ Cliente</i> no carrinho. Nos dois, marque a quantidade de pessoas da mesa no topo da comanda. Veja o <a href="comanda.html">vídeo com as telas</a>. Pede na abertura da comanda, logo na chegada: "Para abrir a comanda, qual seu nome completo e celular? Assim, se você for do Clube Feitoria, o cashback já entra." O dado é do convidado: não anote em papel, não use no seu celular pessoal e não passe para ninguém.</li>
+        <li><b>O quadro da área interna.</b> Mostra o item foco do dia, quantos saíram ontem e se o ticket subiu contra o mesmo dia da semana passada.</li>
+        <li><b>Seu freela vizinho.</b> No fim de semana você é a referência dele: tira dúvida de cardápio e avisa o que acabou.</li>
+      </ul>
+      <p><b>Ensaio em duplas</b>, um é convidado e o outro é elenco, depois trocam. Três situações:</p>
+      <div class="grid2">
+        <div class="note"><p><b>Casal, sábado 20h45.</b> Chegam, olham o cardápio e não sabem o que pedir de chopp.</p></div>
+        <div class="note"><p><b>Família, domingo 13h30.</b> Dois adultos e duas crianças, salão cheio, a comida vai demorar.</p></div>
+        <div class="note"><p><b>Grupo de 6, sexta 21h.</b> "A gente tá com pressa." Recusa a primeira porção.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FREELAS ===================== -->
+  <section class="sheet" id="freela" aria-labelledby="t-freela" hidden>
+    <h2 id="t-freela">Trilha rápida do freela</h2>
+    <div class="meta"><span class="chip">20 minutos</span><span class="chip">Antes do 1º turno</span><span class="chip am">5 min de reforço a cada convocação</span></div>
+    <p class="lead">Bem-vindo à Feitoria. Esta folha é o que você precisa para o seu turno render. Leia, faça o teste rápido e pergunte o que não ficou claro.</p>
+
+    <div class="block">
+      <h3>Como a casa funciona</h3>
+      <ul class="plain">
+        <li><b>Áreas:</b> Chalé, Central, Jardim, Salão externo e Deck. O gerente diz qual é a sua praça no pré-turno.</li>
+        <li><b>Seu ponto de apoio:</b> o colega da casa na praça do lado. Dúvida de cardápio, ele resolve.</li>
+        <li><b>Pico:</b> sexta e sábado, 20h30 às 21h30. Ninguém sai do salão nessa hora. Pausa só conforme o plano da escala.</li>
+        <li><b>O que acabou:</b> o gerente avisa no pré-turno e de novo se mudar. Não ofereça o que acabou.</li>
+        <li><b>Recado para a gestão:</b> o canal de recado da tela de operação aceita mensagem anônima.</li>
+      </ul>
+    </div>
+
+    <div class="block">
+      <h3>Seu roteiro em 6 passos</h3>
+      <ol class="steps">
+        <li><div><b>Chegou, cumprimentou, abriu a comanda</b>Seu nome e "já trago uma bebida enquanto vocês olham?" Na abertura da comanda: nome e sobrenome do convidado, celular e número de pessoas.</div></li>
+        <li><div><b>Bebida primeiro</b>Mesa sem copo é a sua prioridade. Diga o nome de um chopp: "A Pilsen está saindo muito hoje."</div></li>
+        <li><div><b>Uma oferta com o pedido</b>Uma porção para dividir. Uma vez só. Se disserem não, tudo bem.</div></li>
+        <li><div><b>Repetir e lançar certo</b>Repita o pedido e lance na comanda já aberta. Combo: marque o complemento.</div></li>
+        <li><div><b>Copo a 1/3</b>Passe pela mesa e ofereça a próxima rodada antes de o copo secar.</div></li>
+        <li><div><b>Fim da mesa</b>Mostre o encarte de sobremesas (é novidade). No almoço, ofereça o café. À noite, a saideira. Agradeça e convide para voltar.</div></li>
+      </ol>
+    </div>
+
+    <div class="block">
+      <h3>Os chopes que você precisa saber</h3>
+      <div class="tablebox"><table>
+        <thead><tr><th>Chopp</th><th>Em uma frase</th></tr></thead>
+        <tbody>
+          <tr><td>Pilsen</td><td>O mais leve e o que mais sai. É o chopp foco.</td></tr>
+          <tr><td>Indonesian IPA</td><td>Aroma forte de lúpulo, amargor no final.</td></tr>
+          <tr><td>Session IPA</td><td>IPA mais leve, fácil de beber.</td></tr>
+          <tr><td>Pêssego Lager</td><td>Leve e frutada, para quem quer algo diferente.</td></tr>
+          <tr><td>Régua Degustação</td><td>Para quem não conhece e quer provar antes.</td></tr>
+        </tbody>
+      </table></div>
+      <p class="why">Os outros chopes estão descritos na tela de operação. Se o convidado quiser uma explicação que você não sabe dar, chame alguém do elenco da casa: é a regra do manual da franquia.</p>
+      <ul class="plain">
+        <li><b>Até 20h30 (+R$ 30):</b> casal: Trio Happy Hour + 2 canecas de Pilsen; grupo: Quarteto Alemão + 1 martelo de Pilsen.</li>
+        <li><b>Sozinho:</b> Aperitivo Feitoria ou Mini Sanduba.</li>
+        <li><b>Pediu Heineken:</b> Belgian Pale Ale. <b>Toma vinho:</b> chopp de vinho, tinto ou rosé. <b>Não toma chopp:</b> Pink Gin. <b>Sem álcool:</b> Pink Gin sem álcool. <b>Escura:</b> Munich Dunkel. <b>Sem glúten:</b> drink com ingredientes conferidos ou cerveja rotulada sem glúten.</li>
+      </ul>
+    </div>
+
+    <div class="note red">
+      <p><b>O que não se faz:</b> insistir depois do "não"; prometer o que acabou; abrir comanda sem número de pessoas, nome, sobrenome e celular do convidado; celular, recado ou assunto paralelo no palco.</p>
+    </div>
+  </section>
+
+  <!-- ===================== PRÉ-TURNO ===================== -->
+  <section class="sheet" id="preturno" aria-labelledby="t-pre" hidden>
+    <h2 id="t-pre">Pré-turno do gerente</h2>
+    <div class="meta"><span class="chip">5 minutos</span><span class="chip">Antes de abrir cada turno</span><span class="chip am">Noite: depois da conferência de faltas das 18h30</span></div>
+    <p class="lead">Um roteiro fixo, sempre na mesma ordem. Cabe em 5 minutos se não virar reunião.</p>
+    <div class="block">
+      <ol class="steps">
+        <li><div><b>Número de ontem</b>Ticket por comanda de ontem contra o mesmo dia da semana passada. Subiu ou caiu, e quanto.<small>Fonte: tela Semana passada ou Hoje.</small></div></li>
+        <li><div><b>Item foco de hoje</b>Um chopp, uma porção, uma sobremesa. Mostre a foto. Todo mundo oferece os três.</div></li>
+        <li><div><b>O que acabou ou está no fim</b>Da conferência com a cozinha e com o bar. Diga o substituto de cada um.</div></li>
+        <li><div><b>Praças</b>Quem fica em cada área e qual colega da casa é a referência de cada freela.</div></li>
+        <li><div><b>Um ponto do turno anterior</b>Uma coisa que deu certo e uma para melhorar, sem nome de ninguém.</div></li>
+      </ol>
+    </div>
+    <div class="block">
+      <h3>Durante o turno</h3>
+      <ul class="plain">
+        <li>Acompanhe uma praça por turno e anote mesa sem bebida, copo vazio e pedido que demorou.</li>
+        <li>Confira se as comandas são abertas com nome, sobrenome, celular do convidado e número de pessoas preenchidos.</li>
+        <li>Barril perto do fim: avise o salão antes de acabar.</li>
+        <li>No fim, atualize o quadro: quantos itens foco saíram.</li>
+      </ul>
+      <p class="why">O ranking por garçom espera a Takeat corrigir o registro do atendente. Quando vier, compara só mesma função, dia e turno, e serve para escolher quem treinar, nunca para punir.</p>
+    </div>
+  </section>
+
+  <!-- ===================== CARTÃO ===================== -->
+  <section class="sheet" id="cartao" aria-labelledby="t-cartao" hidden>
+    <h2 id="t-cartao">Cartão de bolso</h2>
+    <p>Tamanho de celular. Frente e verso, dobrado ao meio e plastificado. Já vem com os itens foco sugeridos; se a semana mudar, troque os nomes.</p>
+    <div class="cards">
+      <div class="pocket">
+        <h3>Feitoria · Salão <em>Frente</em></h3>
+        <dl>
+          <div><dt>1 · Chegada e abertura da comanda</dt><dd class="say">"Boa noite! Eu sou o/a ___ e vou atender vocês. Primeira vez na Feitoria? Para abrir a comanda, qual seu nome completo e celular? Se for do Clube Feitoria, o cashback já entra."</dd><dd><b>Obrigatório: nome + sobrenome, celular e nº de pessoas.</b></dd></div>
+          <div><dt>2 · Bebida</dt><dd class="say">"Enquanto olham o cardápio, já trago um chopp? A Pilsen está saindo muito hoje. Quer algo diferente? A de pêssego é leve e frutada."</dd></div>
+          <div><dt>3 · Com o pedido</dt><dd class="say">"Para beliscar enquanto o prato sai, trago uns pastéis? Vêm 4, um para cada." <br>À noite: "O Crispy Chicken é a porção que mais sai, dá para a mesa toda."</dd></div>
+          <div><dt>4 · Casal, até 20h30</dt><dd class="say">"Para vocês dois, até 20h30 o Trio Happy Hour vem com duas canecas de Pilsen por mais 30 reais." Grupo maior: Quarteto Alemão + martelo.</dd></div>
+          <div><dt>Sozinho</dt><dd class="say">"Para um, o Aperitivo Feitoria é na medida."</dd></div>
+          <div><dt>5 · Repetir</dt><dd class="say">"Deixa eu repetir para não errar nada..."</dd></div>
+        </dl>
+      </div>
+      <div class="pocket">
+        <h3>Feitoria · Salão <em>Verso</em></h3>
+        <dl>
+          <div><dt>6 · Copo a 1/3</dt><dd class="say">"Já deixo a próxima rodada encaminhada?"</dd></div>
+          <div><dt>7 · Quem não conhece</dt><dd class="say">"Quer provar alguns antes? A Régua Degustação ajuda a escolher."</dd></div>
+          <div><dt>Pediu outra coisa</dt><dd>Heineken → Belgian Pale Ale · Vinho → Chopp de vinho tinto ou rosé · Escura → Munich Dunkel · Sem chopp → Pink Gin · Sem álcool → Pink Gin sem álcool, suco ou Heineken 0.0 · Sem glúten → drink conferido ou cerveja rotulada sem glúten</dd></div>
+          <div><dt>8 · Ao tirar os pratos</dt><dd class="say">"Temos sobremesas novas na casa, olha aqui [mostrar o encarte]. A tartelete é ótima para dividir."</dd></div>
+          <div><dt>9 · Almoço: café</dt><dd class="say">"E um espresso para fechar? Começamos a servir agora no almoço."</dd></div>
+          <div><dt>9 · Noite: saideira</dt><dd class="say">"Antes de fechar a conta, uma saideira?"</dd></div>
+          <div><dt>10 · Despedida</dt><dd class="say">"Obrigado pela visita! Sexta tem música, voltem."</dd></div>
+        </dl>
+      </div>
+    </div>
+    <p class="why">No almoço troque "chopp" por "bebida" quando a mesa tiver criança ou alguém dirigindo, e ofereça a opção sem álcool.</p>
+  </section>
+
+  <!-- ===================== CARTAZ ===================== -->
+  <section class="sheet" id="cartaz" aria-labelledby="t-cartaz" hidden>
+    <h2 id="t-cartaz">Cartaz da área interna</h2>
+    <div class="poster">
+      <p class="motto">Olhe a mesa. Pense no próximo passo. Vá antes de chamarem.</p>
+      <ol class="steps">
+        <li><div><b>Sorriso, nome, uma pergunta; abrir a comanda com nome, celular e nº de pessoas</b></div></li>
+        <li><div><b>Ler a mesa:</b> casal, família, grupo, pressa</div></li>
+        <li><div><b>Mesa sem copo recebe bebida primeiro</b></div></li>
+        <li><div><b>De pé na ponta, voz para a última pessoa</b></div></li>
+        <li><div><b>Um item pelo nome</b> junto com o pedido</div></li>
+        <li><div><b>Repetir o pedido inteiro</b></div></li>
+        <li><div><b>Lançar o pedido; combo = marcar o complemento</b></div></li>
+        <li><div><b>Porção rápida</b> enquanto a comida não sai</div></li>
+        <li><div><b>Copo a 1/3: próxima rodada</b></div></li>
+        <li><div><b>Ao tirar os pratos:</b> encarte de sobremesas; almoço: café; noite: saideira</div></li>
+        <li><div><b>Despedida e convite para voltar</b></div></li>
+      </ol>
+      <div class="opa">
+        <div><strong>O</strong><span>Observar</span></div>
+        <div><strong>P</strong><span>Perceber</span></div>
+        <div><strong>A</strong><span>Atender</span></div>
+      </div>
+      <div class="slots">
+        <div class="slot"><b>Chopp foco de hoje</b>Pilsen · diferente: Pêssego Lager</div>
+        <div class="slot"><b>Porção foco de hoje</b>Almoço: Pastéis 4 un. · Noite: Crispy Chicken · Sozinho: Aperitivo Feitoria</div>
+        <div class="slot"><b>Combos até 20h30 (+R$ 30)</b>Quarteto Alemão + 1 martelo Pilsen · Trio Happy Hour + 2 canecas Pilsen</div>
+        <div class="slot"><b>Novidade</b>Sobremesas (mostrar o encarte) · Café Espresso no almoço</div>
+        <div class="slot"><b>Acabou hoje</b></div>
+        <div class="slot"><b>Ticket ontem x semana passada</b></div>
+        <div class="slot"><b>Itens foco vendidos ontem</b></div>
+      </div>
+      <p class="why">Pico: sexta e sábado 20h30–21h30, domingo 13h30–14h30. O gerente planeja cobertura e intervalos para o pico.</p>
+    </div>
+  </section>
+
+  <!-- ===================== ENCANTAR ===================== -->
+  <section class="sheet" id="encantar" aria-labelledby="t-encantar" hidden>
+    <h2 id="t-encantar">Encantar o convidado</h2>
+    <p class="lead">Ferramentas do livro "O jeito Disney de encantar os clientes" (Disney Institute), adaptadas ao PUB.</p>
+
+    <div class="block">
+      <h3>Diretrizes do elenco, em toda interação</h3>
+      <ol class="steps">
+        <li><div><b>Olhe nos olhos e sorria</b>No começo e no fim de cada contato.</div></li>
+        <li><div><b>Cumprimente todo convidado</b>Mesmo fora da sua praça, mesmo correndo.</div></li>
+        <li><div><b>Procure quem precisa</b>Quem está olhando em volta, procurando o banheiro, querendo tirar foto do grupo ou precisando de mais uma cadeira.</div></li>
+        <li><div><b>Nunca só "não sei"</b>Descubra a resposta ou leve o convidado até quem sabe.</div></li>
+        <li><div><b>Postura de disponível</b>Sem braço cruzado, sem encostar, sem celular no palco.</div></li>
+        <li><div><b>Agradeça</b>Cada convidado, na saída.</div></li>
+      </ol>
+    </div>
+
+    <div class="block">
+      <h3>Leia a mesa com a bússola do convidado</h3>
+      <p><b>Necessidade</b> (o que veio buscar), <b>desejo</b> (o que quer viver), <b>expectativa</b> (o que imagina da casa) e <b>emoção</b> (como está chegando). No livro, o terceiro ponto se chama "estereótipos".</p>
+      <div class="tablebox"><table>
+        <thead><tr><th>Quem chega</th><th>Necessidade</th><th>Desejo</th><th>Expectativa</th><th>Emoção</th><th>O que fazer</th></tr></thead>
+        <tbody>
+          <tr><td>Almoço com hora para voltar</td><td>Comer bem</td><td>Uma pausa boa no dia</td><td>Prato que sai rápido</td><td>Pressa</td><td>Bebida e pedido logo; avisar o tempo do prato; conta rápida</td></tr>
+          <tr><td>Família no domingo</td><td>Almoço</td><td>Tarde tranquila juntos</td><td>Lugar que recebe criança</td><td>Cansaço, criança com fome</td><td>Pedido da criança primeiro; trocador; pastéis enquanto espera</td></tr>
+          <tr><td>Casal no fim de tarde</td><td>Beber e petiscar</td><td>Conversar sem pressa</td><td>Chopp bom e lugar bonito</td><td>Relaxar</td><td>Combo do Trio até 20h30; não interromper a conversa à toa</td></tr>
+          <tr><td>Grupo à noite com música</td><td>Beber e comer</td><td>Festa com os amigos</td><td>Música e rodada sem espera</td><td>Animação</td><td>Rodada antes de secar; porção para a mesa; avisar o pico</td></tr>
+          <tr><td>Quem entende de cerveja</td><td>Chopp diferente</td><td>Descobrir novidade</td><td>Elenco que sabe falar de estilo</td><td>Curiosidade</td><td>Régua; contar o que entrou na torneira; ABV e IBU</td></tr>
+          <tr><td>Aniversário ou comemoração</td><td>Espaço para o grupo</td><td>Um dia marcante</td><td>Ser lembrado</td><td>Alegria, ansiedade com a organização</td><td>Avisar o gerente; bolo pode, sem glitter, confete ou spray</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <div class="block">
+      <h3>A pergunta por trás da pergunta</h3>
+      <div class="tablebox"><table>
+        <thead><tr><th>O convidado pergunta</th><th>O que ele quer saber</th><th>Responda</th></tr></thead>
+        <tbody>
+          <tr><td>"Que horas começa a música?"</td><td>Se vale esperar e onde sentar</td><td>O horário e a mesa onde se ouve melhor</td></tr>
+          <tr><td>"Tem mesa?"</td><td>Quanto vai esperar</td><td>Um tempo honesto e onde esperar com um chopp</td></tr>
+          <tr><td>"Qual é a boa?"</td><td>O que combina com ele</td><td>Pergunte do que gosta e indique duas</td></tr>
+          <tr><td>"Demora?"</td><td>Se dá tempo</td><td>Um tempo honesto e uma opção mais rápida</td></tr>
+          <tr><td>"Tem algo sem glúten?"</td><td>Se é seguro para ele</td><td>A opção e a confirmação da cozinha</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <div class="grid2">
+      <div class="block">
+        <h3>Frases de alerta</h3>
+        <p>Avisam que um problema está chegando. Resolva na hora e conte no pré-turno ou no canal de recado.</p>
+        <ul class="plain"><li>"Faz tempo que ninguém vem aqui."</li><li>"Já pedi faz um tempão."</li><li>"Acabou de novo?"</li><li>A mesma pergunta repetida por muita gente.</li></ul>
+      </div>
+      <div class="block">
+        <h3>O cenário também atende</h3>
+        <ul class="plain"><li>Mesa limpa, copo certo para cada chopp, telão funcionando.</li><li>Aquecedor no frio; sombra e água no calor.</li><li>Som que não deixa conversar: avise o gerente.</li><li><b>Ninguém passa por lixo:</b> quem vê, recolhe.</li></ul>
+      </div>
+    </div>
+
+    <div class="block">
+      <h3>Atenção especial</h3>
+      <ul class="plain">
+        <li><b>Crianças:</b> pedido primeiro, cuidado com copo de vidro na beira da mesa, trocador disponível.</li>
+        <li><b>Idosos e pessoas com deficiência:</b> mesa de acesso fácil, perto do banheiro; pergunte antes de ajudar.</li>
+        <li><b>Quem não conhece cerveja artesanal:</b> régua e explicação simples, sem termos técnicos.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===================== CONSULTA ===================== -->
+  <section class="sheet" id="consulta" aria-labelledby="t-consulta" hidden>
+    <h2 id="t-consulta">Consulta rápida do elenco</h2>
+    <p class="lead">O que os convidados mais perguntam, com a resposta da casa. Fonte: site feitoriapubcafe.com.br, consultado em 09/11/2026. Se o site mudar, vale o site.</p>
+
+    <div class="block">
+      <h3>A casa em uma frase</h3>
+      <p>Cervejaria e bistrô em Mogi das Cruzes: <b>12 torneiras</b> de chopp produzido pela Feitoria (mais de 50 receitas já passaram por elas), cozinha feita para dividir e música ao vivo num quintal aberto e arborizado. O telão do salão mostra o que está saindo nas torneiras agora.</p>
+      <p><b>Sempre na torneira:</b> Pilsen, Weizenbier, Belgian Pale Ale, Session IPA, Indonesian e Munich Dunkel. As outras torneiras giram. <b>Growler</b> para levar. Sem álcool: Heineken 0.0. Sem glúten: só com o rótulo conferido.</p>
+    </div>
+
+    <div class="block">
+      <h3>Clube Feitoria</h3>
+      <p>O convidado recebe <b>5% de volta</b> nas compras elegíveis, como saldo para a próxima conta. O saldo é pessoal, vale por 60 dias e não vira dinheiro. Cadastro grátis pelo celular. Na abertura da comanda, basta informar o telefone do cadastro e o cashback entra sozinho. Membros têm campanhas exclusivas e mimo de aniversário.</p>
+      <p class="say">"Para abrir a comanda, qual seu nome completo e celular? Assim, se você for do Clube Feitoria, o cashback já entra."</p>
+    </div>
+
+    <div class="block">
+      <h3>Perguntas frequentes</h3>
+      <div class="tablebox"><table>
+        <thead><tr><th>O convidado pergunta</th><th>Resposta da casa</th></tr></thead>
+        <tbody>
+          <tr><td>Que horas abre e fecha?</td><td>Segunda 12h–22h; terça a quinta 12h–23h; sexta e sábado 12h–00h; domingo 12h–22h. Feriados e eventos: confirmar.</td></tr>
+          <tr><td>Tem almoço?</td><td>Todos os dias, das 12h às 16h, com prato feito na hora.</td></tr>
+          <tr><td>Preciso reservar?</td><td>Não é obrigatório, mas garante a mesa. Chegada até 19h30, com o responsável presente. Reserva só vale depois da confirmação da equipe pelo WhatsApp.</td></tr>
+          <tr><td>E para grupo grande?</td><td>Acima de 20 pessoas: 50% dos convidados presentes até 20h para manter a mesa.</td></tr>
+          <tr><td>Posso trazer bolo e decoração?</td><td>Pode. Só não entram glitter, confetes e sprays. Para comemorar, a casa organiza pelo formulário do site.</td></tr>
+          <tr><td>Pode vir com criança?</td><td>Pode. O quintal é aberto, a casa atende famílias e tem trocador para bebês.</td></tr>
+          <tr><td>Tem Wi-Fi? E no frio?</td><td>Wi-Fi para quem pedir no balcão. Nos dias frios, os aquecedores do quintal são ligados.</td></tr>
+          <tr><td>Tem música ao vivo hoje?</td><td>Não é todo dia: a agenda fica no fim de semana e sai no site e no Instagram @feitoria.mogi.</td></tr>
+          <tr><td>Dá para ver o cardápio?</td><td>Pelo QR Code da mesa (menu digital, atualizado pela casa). Chopes no cardápio da parede e no telão.</td></tr>
+          <tr><td>O que é a régua?</td><td>Quatro estilos da torneira, à escolha do convidado, servidos lado a lado. Melhor jeito de descobrir do que gosta.</td></tr>
+          <tr><td>Vocês fazem delivery?</td><td>O site tem o botão de pedir delivery. Para o salão, use o QR Code.</td></tr>
+          <tr><td>Quero trabalhar aí.</td><td>Pelo site, em "Trabalhe conosco", que abre o WhatsApp da casa.</td></tr>
+        </tbody>
+      </table></div>
+      <p class="why">Endereço: Rua Fernão Guedes de Souza, 75, Jardim Armênia, Mogi das Cruzes. Almoço: a compra da semana é escolhida à mão, com fornecedores locais.</p>
+    </div>
+  </section>
+
+  <!-- ===================== TESTE ===================== -->
+  <section class="sheet" id="teste" aria-labelledby="t-teste" hidden>
+    <h2 id="t-teste">Teste do treinamento</h2>
+    <p>Freela responde as 5 primeiras. Elenco da casa responde todas as 16. Toque na resposta para ver se acertou.</p>
+    <div class="quiz" id="quiz"></div>
+    <p class="score noprint" id="score" aria-live="polite"></p>
+    <div class="block">
+      <h3>Registro</h3>
+      <p>Até o módulo de treinamento do portal ficar pronto, este registro em papel vale como comprovação.</p>
+      <div class="sign">
+        <div>Nome</div><div>Data</div><div>Acertos</div><div>Assinatura</div><div>Gerente responsável</div>
+      </div>
+    </div>
+  </section>
+
+  <footer>Feitoria da Cerveja · PUB Mogi · material de treinamento da equipe.</footer>
+</div>
+
+<script>
+(function(){
+  var ids=["equipe","freela","preturno","cartao","cartaz","encantar","consulta","teste"];
+  function show(){
+    var h=(location.hash||"").replace("#","");
+    if(ids.indexOf(h)<0) h="equipe";
+    ids.forEach(function(id){
+      document.getElementById(id).hidden=(id!==h);
+      var a=document.querySelector('nav.tabs a[href="#'+id+'"]');
+      if(id===h) a.setAttribute("aria-current","page"); else a.removeAttribute("aria-current");
+    });
+  }
+  window.addEventListener("hashchange",show); show();
+
+  var Q=[
+    ["A mesa acabou de sentar e ninguém tem copo. O que vem primeiro?",["Explicar o cardápio inteiro","Oferecer bebida pelo nome","Esperar chamarem"],1,"Mesa sem bebida recebe oferta de bebida antes de tudo."],
+    ["O que é obrigatório lançar em toda comanda, além dos itens?",["Nome e sobrenome do convidado, celular e número de pessoas","Só o número da mesa","Nada mais"],0,"É regra da casa: sem isso não medimos o consumo por pessoa nem chamamos o convidado de volta."],
+    ["O convidado disse \"não\" para a porção. E agora?",["Insistir mais uma vez","Oferecer outra porção na hora","Aceitar e voltar no próximo passo do roteiro"],2,"Uma oferta por momento. Insistir vira empurrar."],
+    ["Quando oferecer a próxima rodada?",["Quando o copo estiver a 1/3","Só quando o convidado pedir","Quando trouxer a conta"],0,"Antes de o copo secar, para não haver espera."],
+    ["Qual é o pico da noite de sexta e sábado?",["18h às 19h","20h30 às 21h30","Depois da meia-noite"],1,"Nessa hora ninguém sai do salão."],
+    ["O que significa OPA?",["Oferecer, Pedir, Agradecer","Observar, Perceber, Atender","Organizar, Preparar, Arrumar"],1,"Olhar a praça, entender o que a mesa precisa e ir antes de chamarem."],
+    ["Família com criança no almoço. Por onde começar?",["Pelo pedido da criança","Pelo chopp dos adultos","Pela sobremesa"],0,"Criança com fome deixa a mesa toda com pressa."],
+    ["Convidado pergunta de um chopp que você não conhece.",["Inventa uma descrição","Diz que não sabe e sai","Consulta o descritivo na tela de operação"],2,"Consultar na frente do convidado é melhor que inventar."],
+    ["Tirou os pratos do almoço. O que fazer?",["Trazer a conta","Mostrar o encarte de sobremesas e depois oferecer o café","Esperar o convidado pedir"],1,"Sobremesa e café no almoço são novidade da casa."],
+    ["O convidado pede Heineken. O que oferecer?",["Dizer que não tem e sair","Belgian Pale Ale","Heineken 0.0"],1,"Não temos Heineken com álcool; a Belgian Pale Ale é a indicação da casa."],
+    ["Até que horas valem os combos de Quarteto e Trio com Pilsen?",["Até 20h30","A noite toda","Só no almoço"],0,"Pedido lançado até 20h30. Ofereça antes do pico."],
+    ["Qual a ordem das 4 chaves do atendimento?",["Eficiência, Show, Cortesia, Segurança","Segurança, Cortesia, Show, Eficiência","Show, Eficiência, Segurança, Cortesia"],1,"Quando duas brigam, vence a que vem antes."],
+    ["Você precisa responder uma mensagem no celular. Onde?",["No salão, rapidinho","No bastidor: cozinha, estoque ou área interna","Atrás do balcão, abaixado"],1,"No palco, celular guardado."],
+    ["O convidado pergunta algo que você não sabe. O que fazer?",["Dizer que não sabe","Descobrir a resposta ou levar até quem sabe","Mandar perguntar no caixa"],1,"Nunca só não sei."],
+    ["O barril da Pilsen está no fim. O que fazer?",["Nada, o bar resolve","Avisar o salão e oferecer o substituto","Continuar oferecendo Pilsen"],1,"O convidado não deve descobrir que acabou depois de pedir."],
+    ["Para que serve o ranking por garçom, quando existir?",["Para punir quem vende menos","Para escolher quem treinar e no quê","Para cortar escala"],1,"Compara só mesma função, dia e turno, e serve ao treino."]
+  ];
+  var box=document.getElementById("quiz"), done=0, right=0;
+  Q.forEach(function(q,i){
+    var d=document.createElement("div"); d.className="q";
+    var p=document.createElement("p"); p.textContent=(i+1)+". "+q[0]; d.appendChild(p);
+    var o=document.createElement("div"); o.className="opts";
+    var why=document.createElement("p"); why.className="why"; why.hidden=true; why.textContent=q[3];
+    q[1].forEach(function(t,j){
+      var b=document.createElement("button"); b.type="button"; b.id="q"+i+"o"+j; b.textContent=t;
+      b.addEventListener("click",function(){
+        if(d.dataset.done) return; d.dataset.done="1"; done++;
+        if(j===q[2]){b.className="ok"; right++;} else {b.className="no"; o.children[q[2]].className="ok";}
+        why.hidden=false;
+        document.getElementById("score").textContent=right+" de "+done+" certas";
+      });
+      o.appendChild(b);
+    });
+    d.appendChild(o); d.appendChild(why); box.appendChild(d);
+  });
+})();
+</script>
+
