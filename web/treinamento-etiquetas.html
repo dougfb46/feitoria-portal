@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1f6f4a">
+<title>Etiquetas e fechamento · Treinamento Feitoria</title>
+<style>
+  :root{--bg:#f2f4f1;--paper:#fff;--ink:#17221c;--muted:#5c6961;--green:#1f6f4a;--green-soft:#e2f0e8;--line:#d8e1da;--amber:#8d5d0b;--amber-bg:#fbf2dc;--shadow:0 10px 30px rgba(23,34,28,.08)}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+  button{font:inherit;cursor:pointer}
+  .hero{background:var(--green);color:#fff;padding:28px max(22px,calc((100vw - 1120px)/2));}
+  .eyebrow{margin:0 0 6px;color:#d7ebdd;font-size:.8rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
+  h1{font-size:clamp(1.8rem,4vw,2.7rem);line-height:1.1;margin:0 0 10px}
+  .hero p{max-width:760px;margin:0;color:#ecf5ee}
+  .hero-link{display:inline-block;margin-top:15px;padding:9px 13px;border:1px solid #c8e3d1;border-radius:9px;color:#fff;text-decoration:none;font-size:.9rem;font-weight:750}
+  .hero-link:hover{background:#ffffff18}
+  .module-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 12px}
+  .module-tabs .btn[aria-pressed="true"]{background:var(--green-soft);border-color:var(--green);color:var(--green)}
+  main{max-width:1120px;margin:22px auto;padding:0 18px 36px}
+  .notice{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;margin-bottom:18px;border:1px solid #e6d29f;border-radius:12px;background:var(--amber-bg);color:#62450e}
+  .notice b{display:block;margin-bottom:2px}
+  .controls{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:0 0 16px}
+  .btn{border:1px solid var(--line);border-radius:10px;padding:10px 15px;background:#fff;color:var(--ink);font-weight:700}
+  .btn.primary{background:var(--green);border-color:var(--green);color:#fff}
+  .btn:disabled{opacity:.48;cursor:not-allowed}
+  .status{margin-left:auto;color:var(--muted);font-size:.9rem}
+  .progress{height:6px;border-radius:99px;background:#dfe7e0;overflow:hidden;margin-bottom:16px}
+  .progress span{display:block;height:100%;width:20%;background:var(--green);transition:width .25s ease}
+  .layout{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(270px,.7fr);gap:18px;align-items:start}
+  .screen-card,.side-card{background:var(--paper);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}
+  .screen-title{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--line)}
+  .screen-title strong{font-size:1rem}
+  .demo-chip{display:inline-flex;align-items:center;border-radius:30px;padding:4px 9px;background:var(--amber-bg);color:var(--amber);font-size:.72rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap}
+  .mock{min-height:495px;padding:18px;background:#f7f8f6}
+  .app-window{max-width:620px;margin:0 auto;padding:14px;background:#f2f4f1;border:1px solid #d7ded8;border-radius:14px;color:#131a16}
+  .app-top{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:0 0 11px;margin-bottom:14px;border-bottom:1px solid #d7ded8;font-size:.82rem}
+  .app-top small{display:block;color:#5c6660}
+  .app-title{font-size:1.15rem;margin:7px 0 3px}
+  .app-sub{font-size:.88rem;color:#5c6660;margin:0 0 14px}
+  .dots{display:flex;justify-content:center;gap:9px;margin:17px}
+  .dots i{width:12px;height:12px;border-radius:50%;background:#d7ded8}
+  .dots i.on{background:var(--green)}
+  .keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:280px;margin:0 auto}
+  .keypad button,.product,.option{border:1px solid #d7ded8;border-radius:10px;background:#fff;color:#17221c}
+  .keypad button{height:46px;font-size:1.15rem;font-weight:700}
+  .demo-search{border:1px solid #d7ded8;background:#fff;border-radius:9px;padding:10px 12px;color:#68736c;margin:12px 0}
+  .category{font-size:.7rem;letter-spacing:.09em;text-transform:uppercase;color:#667169;margin:15px 0 7px}
+  .products{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .product{text-align:left;padding:12px;font-weight:700;min-height:64px}
+  .product small{display:block;color:#68736c;font-weight:400;margin-top:2px}
+  .option-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+  .option{text-align:left;padding:13px;font-weight:700}
+  .option small{display:block;color:#68736c;font-weight:400;margin-top:3px}
+  .option.selected{outline:2px solid var(--green);background:#e2f0e8}
+  .preview-label{width:min(100%,430px);aspect-ratio:50/30;margin:15px auto 12px;background:#fff;border:1px solid #aeb8b0;border-radius:4px;padding:10px;position:relative;box-shadow:0 3px 10px #00000012;font-family:Arial,sans-serif}
+  .label-brand{font-size:.55rem;font-weight:800;border-bottom:2px solid #111;padding-bottom:4px;display:flex;justify-content:space-between}
+  .label-product{font-size:clamp(1rem,3vw,1.65rem);font-weight:800;margin:7px 0 2px;line-height:1.05}
+  .label-meta{font-size:.57rem;line-height:1.35}
+  .label-expiry{position:absolute;bottom:0;left:0;right:0;background:#111;color:#fff;padding:5px 10px;display:flex;justify-content:space-between;align-items:center}
+  .label-expiry b{font-size:.7rem}.label-expiry strong{font-size:.9rem}
+  .sample-note{text-align:center;color:#8d5d0b;font-size:.72rem;font-weight:700;margin:0}
+  .sim-button{width:100%;border:0;border-radius:9px;padding:12px;background:var(--green);color:white;font-weight:800;margin-top:12px}
+  .sim-button.secondary{background:#fff;color:var(--ink);border:1px solid var(--line)}
+  .side-card{padding:18px}
+  .side-card h2{font-size:1rem;margin:0 0 8px}
+  .caption{min-height:118px;padding:13px;border-radius:12px;background:#eef5ef;border-left:4px solid var(--green);font-size:1rem}
+  .caption-label{color:var(--green);font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin:0 0 5px}
+  .side-card p{color:var(--muted)}
+  .step-list{display:grid;gap:6px;margin:13px 0 0;padding:0;list-style:none}
+  .step-list button{width:100%;display:flex;align-items:center;gap:10px;padding:8px;text-align:left;border:0;border-radius:9px;background:transparent;color:var(--muted)}
+  .step-list button.current{background:var(--green-soft);color:var(--green);font-weight:800}
+  .step-num{display:grid;place-items:center;width:25px;height:25px;border-radius:50%;background:#e8ece8;font-size:.8rem;font-weight:800;flex:0 0 auto}
+  .current .step-num{background:var(--green);color:white}
+  .footnote{margin:16px 0 0;color:var(--muted);font-size:.83rem}
+  .flow{display:flex;gap:0;list-style:none;padding:0;margin:0 0 20px;align-items:stretch}
+  .flow li{flex:1;min-width:0;position:relative;padding-right:18px}
+  .flow li:last-child{padding-right:0}
+  .flow li:not(:last-child)::after{content:'→';position:absolute;right:3px;top:23px;color:var(--muted)}
+  .flow button{width:100%;height:100%;min-height:85px;border:1px solid var(--line);border-radius:12px;padding:10px 6px;background:white;color:var(--muted);font-size:.82rem;line-height:1.25}
+  .flow button span{display:block;font-size:1.45rem;margin-bottom:5px}
+  .flow button[aria-current="step"]{background:var(--green-soft);border:2px solid var(--green);color:var(--green);font-weight:750}
+  .flow button.complete{color:var(--green);border-color:#a9cbb5}
+  .guide-hint{margin:0;padding:10px 18px;background:var(--green-soft);color:var(--green);font-size:.86rem;font-weight:650}
+  .guided{position:relative;outline:3px solid #d2a131!important;outline-offset:3px;animation:point 1s ease-out 2}
+  .sim-button:disabled{opacity:.45;cursor:not-allowed}
+  button:focus-visible,a:focus-visible{outline:3px solid #d2a131;outline-offset:3px}
+  @keyframes point{0%,100%{box-shadow:0 0 0 0 #d2a13100}50%{box-shadow:0 0 0 8px #d2a13125}}
+  @media(max-width:600px){.flow{flex-direction:column;gap:6px}.flow li{padding:0 0 12px}.flow li:not(:last-child)::after{content:'↓';top:auto;bottom:-7px;right:calc(50% - 5px)}.flow button{min-height:44px;display:flex;align-items:center;gap:9px;padding:8px 12px;text-align:left}.flow button span{font-size:1.1rem;margin:0}.hero-link{margin-top:10px}.hero{padding:20px}.mock{min-height:0}.screen-title{padding:12px}}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  @media(max-width:800px){.layout{grid-template-columns:1fr}.mock{min-height:420px}.status{width:100%;margin:2px 0 0}.hero{padding-top:24px;padding-bottom:24px}}
+  @media(max-width:480px){main{padding:0 12px 24px}.mock{padding:10px;min-height:390px}.app-window{padding:11px}.products{grid-template-columns:1fr}.option-list{grid-template-columns:1fr}.btn{padding:9px 11px;font-size:.9rem}.caption{min-height:0}.notice{font-size:.9rem}}
+  @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header class="hero">
+  <p class="eyebrow">Feitoria da Cerveja · PUB Mogi</p>
+  <h1>Etiquetas e fechamento, passo a passo</h1>
+  <p>Aprenda a etiquetar os preparos e a fazer o fechamento da cozinha. Assista à demonstração narrada e legendada ou pratique nas telas simuladas.</p>
+  <a class="hero-link" href="https://dougfb46.github.io/feitoria-etiquetas/?u=48f7713d-add7-4246-b5f1-c03e3a8d9ce2" target="_blank" rel="noopener">Abrir portal real do PUB Mogi ↗</a>
+</header>
+<main>
+  <div class="notice" role="note"><div><b>Aprenda sem medo de errar</b>Esta é uma simulação: você pode clicar à vontade. Nenhum lançamento, foto ou impressão é enviado ao sistema.</div></div>
+  <div class="module-tabs" aria-label="Escolha o treinamento">
+    <button class="btn" data-module="labels" aria-pressed="true">1. Etiquetas</button>
+    <button class="btn" data-module="closing" aria-pressed="false">2. Fechamento da cozinha</button>
+  </div>
+  <nav aria-label="Fluxograma do processo"><ol class="flow" id="flow"></ol></nav>
+  <div class="controls" aria-label="Controles do treinamento">
+    <button class="btn primary" id="watch">▶ Assistir treinamento</button>
+    <button class="btn" id="practice">Praticar na simulação</button>
+    <button class="btn" id="pause" disabled>Ⅱ Pausar</button>
+    <button class="btn" id="prev" disabled>← Voltar</button>
+    <button class="btn" id="next">Avançar →</button>
+    <span class="status" id="status" aria-live="polite">Etapa 1 de 5</span>
+  </div>
+  <div class="progress" aria-label="Progresso"><span id="bar"></span></div>
+  <section class="layout" aria-label="Demonstração do portal">
+    <div class="screen-card">
+      <div class="screen-title"><strong id="screenHeading">1. Acessar e entrar</strong><span class="demo-chip">Tela simulada</span></div>
+      <p class="guide-hint" id="guideHint"></p>
+      <div class="mock" id="mock" aria-live="polite"></div>
+    </div>
+    <aside class="side-card">
+      <p class="caption-label" id="captionLabel">Narração e legenda</p>
+      <div class="caption" id="caption" aria-live="polite"></div>
+      <h2 style="margin-top:18px">Etapas</h2>
+      <ol class="step-list" id="stepList"></ol>
+      <p class="footnote" id="modeHint">Clique em “Assistir treinamento” para ouvir a narração e acompanhar as legendas. O navegador pode pedir permissão para falar em voz alta.</p>
+    </aside>
+  </section>
+</main>
+<script>
+(() => {
+  const modules = {
+  labels: [
+    {title:'Acessar e entrar', caption:'Vamos começar! Abra o link do PUB Mogi pelo QR Code do cartaz. Digite seu PIN individual e toque em Entrar. Pronto, você está no portal! Use sempre seu próprio PIN e saia da sessão quando terminar.', screen:'pin'},
+    {title:'Encontrar o produto', caption:'Agora, vamos escolher o alimento! Busque pelo nome ou passe pelas categorias. Achou? Confira se é o produto certo. Se ele não aparecer, chame a gerência para ajudar com o cadastro.', screen:'products'},
+    {title:'Escolher a conservação', caption:'Como esse preparo vai ser guardado? Escolha a opção que corresponde ao recipiente: ambiente, refrigerado, congelado ou descongelado. Fique de olho! Cada produto tem suas opções e seus prazos cadastrados.', screen:'storage'},
+    {title:'Conferir a etiqueta', caption:'Está quase! Dê uma boa olhada na prévia: produto, conservação, lote e validade. O sistema calcula a validade usando o cadastro. Ajuste a quantidade de etiquetas e, se precisar, informe a porção. Tudo certo? Vamos imprimir!', screen:'preview'},
+    {title:'Imprimir e aplicar', caption:'Hora de imprimir! No portal real, conecte a NIIMBOT B1 Pro ou use a impressão do navegador. Confira se saiu bem legível e cole no recipiente limpo e seco. Para terminar, toque em Sair. Lembrete: a etiqueta registra o preparo; o estoque da Takeat tem seu próprio lançamento.', screen:'done'}
+  ],
+  closing: [
+    {title:'Abrir o fechamento', caption:'Vamos fechar a cozinha! No Portal do Funcionário, toque em Fechamento da cozinha. Sua identificação já vem com você, sem outro PIN. Confira o dia operacional e toque em Começar o fechamento. Vamos lá!', screen:'closeHome'},
+    {title:'Classificar o que aconteceu', caption:'Agora, cada etiqueta ganha seu destino! Escolha primeiro: Consumido, Sobra, Revalidado, Vencido ou Quebra. Depois, leia o QR Code ou digite o código. Mudou de pilha? Troque o destino antes da próxima leitura!', screen:'closeLaunch'},
+    {title:'Registrar fotos e observação', caption:'Chegou a hora das fotos! A foto da lixeira é obrigatória para fechar o dia. Você também pode incluir outras fotos e uma observação. Teve algum imprevisto? Conte o que aconteceu com clareza. A gestão recebe tudo junto com o fechamento.', screen:'closePhotos'},
+    {title:'Conferir e encerrar', caption:'Última conferência! Revise consumidos, sobras e perdas, e veja se alguma etiqueta vencida ficou sem baixa. Foto da lixeira registrada? Resumo conferido? Então toque em Encerrar e enviar. Atenção: depois de encerrar, o dia não aceita novos lançamentos.', screen:'closeReview'},
+    {title:'Acompanhar pela gestão', caption:'Fechamento concluído! A gestão acompanha os itens, as observações e as fotos na área Fechamento da cozinha. Assim, todo mundo consegue conferir o que aconteceu no turno. Para atualizar a produção intermediária na Takeat, use o fluxo de lançamento de produção.', screen:'closeManager'}
+  ]};
+  let module='labels', step=0, mode='idle', pin='';
+  let selectedProduct='Molho da casa', selectedStorage='Refrigerado', qty=1;
+  let closeDestination='Consumido', closeItems=[], closeBinPhoto=false, closeOtherPhoto=false;
+  const flows={labels:[['①','Entrar com PIN'],['⌕','Escolher produto'],['❄','Como guardar'],['▤','Conferir etiqueta'],['✓','Imprimir e colar']],closing:[['①','Abrir fechamento'],['⌕','Classificar etiquetas'],['▧','Foto da lixeira'],['▤','Conferir e encerrar'],['✓','Gestão acompanha']]};
+  const hints={labels:['Toque em Entrar para experimentar.','Escolha um produto na tela.','Escolha a conservação e confirme.','Confira a prévia e toque em Imprimir.','Confira a etiqueta física e cole no recipiente.'],closing:['Toque em Começar o fechamento.','Escolha o destino antes de registrar a etiqueta.','Adicione a foto fictícia da lixeira.','Confira os totais; a foto da lixeira é obrigatória.','O relatório e as fotos ficam disponíveis à gestão.']};
+  let advanceTimer=null, utterance=null, voiceRun=0, lastScene='';
+  const $=id=>document.getElementById(id);
+  const mock=$('mock');
+  const getSteps=()=>modules[module];
+  function frame(body){return `<div class="app-window"><div class="app-top"><div><b>${module==='closing'?'Fechamento da cozinha':'Etiquetas'}</b><small>Feitoria PUB Cafe Mogi</small></div><span>SIMULAÇÃO</span></div>${body}</div>`}
+  function renderPin(){
+    const dots=Array.from({length:4},(_,i)=>`<i class="${i<pin.length?'on':''}"></i>`).join('');
+    const keys=['1','2','3','4','5','6','7','8','9','Limpar','0','Apagar'].map(k=>`<button data-key="${k}">${k}</button>`).join('');
+    return frame(`<h2 class="app-title">Digite seu PIN para começar</h2><p class="app-sub">Use seu acesso individual.</p><div class="dots">${dots}</div><div class="keypad">${keys}</div><button class="sim-button" data-action="enter">Entrar (simulação)</button>`);
+  }
+  function renderProducts(){
+    return frame(`<h2 class="app-title">O que você vai etiquetar?</h2><div class="demo-search">⌕ &nbsp;Buscar produto (exemplo)</div><p class="category">Mais usados aqui</p><div class="products"><button class="product" data-product="Molho da casa">Molho da casa<small>Exemplo de produto</small></button><button class="product" data-product="Frango desfiado">Frango desfiado<small>Exemplo de produto</small></button></div><p class="category">Outros</p><div class="products"><button class="product" data-product="Arroz cozido">Arroz cozido<small>Exemplo de produto</small></button></div>`);
+  }
+  function renderStorage(){
+    const options=[['Ambiente','seco, temperatura ambiente'],['Refrigerado','até 4 °C'],['Congelado','-18 °C'],['Descongelado','após descongelar']];
+    return frame(`<h2 class="app-title">${selectedProduct}</h2><p class="app-sub">Como vai ser guardado?</p><div class="option-list">${options.map(([name,hint])=>`<button class="option ${name===selectedStorage?'selected':''}" data-storage="${name}">${name}<small>${hint}</small></button>`).join('')}</div><p class="sample-note">Opções e prazos mostrados aqui são ilustrativos.</p><button class="sim-button" data-action="confirm-storage">Conferir etiqueta →</button>`);
+  }
+  function renderPreview(){
+    return frame(`<h2 class="app-title">Conferir e imprimir</h2><p class="app-sub">Prévia da etiqueta (dados de exemplo)</p><div class="preview-label"><div class="label-brand"><span>FEITORIA PUB CAFE MOGI</span><span>${selectedStorage.toUpperCase()}</span></div><div class="label-product">${selectedProduct}</div><div class="label-meta">MANIP. 09/11/26 17:30<br>DEMO-001 · EXEMPLO</div><div class="label-expiry"><b>VALIDADE</b><strong>11/11/26 17:30</strong></div></div><p class="sample-note">A data acima é fictícia. Na operação, confira a validade gerada pelo portal.</p><div style="display:flex;justify-content:center;align-items:center;gap:14px;margin-top:14px"><button class="btn" data-action="minus" aria-label="Diminuir etiquetas">−</button><strong>${qty} ${qty===1?'etiqueta':'etiquetas'}</strong><button class="btn" data-action="plus" aria-label="Aumentar etiquetas">+</button></div><button class="sim-button" data-action="print">Imprimir (simulação)</button>`);
+  }
+  function renderDone(){
+    return frame(`<h2 class="app-title">Impressão concluída (simulação)</h2><p class="app-sub">Na cozinha, confirme o resultado físico antes de seguir.</p><div class="notice" style="margin:12px 0"><span>✓</span><div><b>Confira a etiqueta</b>Texto nítido, produto correto e validade legível.</div></div><button class="sim-button secondary" data-action="restart">Recomeçar demonstração</button>`);
+  }
+  function renderCloseHome(){return frame(`<h2 class="app-title">Fechamento da cozinha</h2><p class="app-sub">Dia operacional · sessão do Portal do Funcionário</p><div class="notice" style="margin:12px 0"><span>i</span><div><b>Confira o dia</b>As etiquetas já baixadas pela tela da cozinha aparecem no fechamento.</div></div><button class="sim-button" data-close="start">Começar o fechamento (simulação)</button>`);}
+  function renderCloseLaunch(){
+    const destinations=[['Consumido','uso normal'],['Sobra','voltou ao estoque'],['Revalidado','ganhou outra etiqueta'],['Vencido','passou da validade'],['Quebra','caiu ou estragou']];
+    const rows=closeItems.length?`<div style="margin-top:14px"><b>Baixados nesta simulação</b>${closeItems.map(x=>`<div class="demo-search" style="display:flex;justify-content:space-between"><span>${x.item}</span><b>${x.destination}</b></div>`).join('')}</div>`:'';
+    return frame(`<h2 class="app-title">Lançando: ${closeDestination}</h2><p class="app-sub">Escolha o destino antes de ler cada etiqueta.</p><div class="option-list">${destinations.map(([name,hint])=>`<button class="option ${name===closeDestination?'selected':''}" data-destination="${name}">${name}<small>${hint}</small></button>`).join('')}</div><div class="demo-search" style="margin-top:14px">Código da etiqueta: ETQ-DEMO-001</div><button class="sim-button" data-close="scan">Registrar etiqueta fictícia</button>${rows}<button class="sim-button secondary" data-close="photos">Ir para fotos e observação</button>`);
+  }
+  function renderClosePhotos(){return frame(`<h2 class="app-title">Fotos e observação</h2><p class="app-sub">A foto da lixeira é obrigatória para encerrar.</p><div class="option ${closeBinPhoto?'selected':''}" style="margin:8px 0">${closeBinPhoto?'✓ Foto da lixeira registrada (simulação)':'Foto da lixeira - obrigatória'}</div><button class="sim-button" data-close="binPhoto">${closeBinPhoto?'Foto da lixeira registrada':'Adicionar foto fictícia da lixeira'}</button><div class="option ${closeOtherPhoto?'selected':''}" style="margin:10px 0">${closeOtherPhoto?'✓ Foto extra registrada (simulação)':'Outra foto - opcional'}</div><button class="sim-button secondary" data-close="otherPhoto">${closeOtherPhoto?'Foto opcional registrada':'Adicionar foto opcional'}</button><label style="display:block;margin:13px 0 5px;font-weight:700">Observação do dia (opcional)</label><textarea disabled placeholder="Exemplo: freezer 2 desligou à tarde" style="width:100%;min-height:60px;border:1px solid var(--line);border-radius:9px;padding:9px;font:inherit"></textarea><button class="sim-button secondary" data-close="review">Conferir fechamento</button>`);}
+  function renderCloseReview(){const count=closeItems.length;const totals=['Consumido','Sobra','Revalidado','Vencido','Quebra'].map(k=>`${k}: ${closeItems.filter(x=>x.destination===k).length}`).join(' · ');return frame(`<h2 class="app-title">Encerrar o fechamento</h2><p class="app-sub">${count} etiqueta(s) baixadas · ${closeBinPhoto?'1 foto obrigatória':'foto da lixeira pendente'}</p><div class="notice" style="margin:12px 0"><span>✓</span><div><b>Resumo da simulação</b>${totals}</div></div>${closeBinPhoto?'':'<p class="sample-note">Antes de encerrar, registre a foto da lixeira.</p>'}<button class="sim-button" data-close="finish" ${closeBinPhoto?'':'disabled'}>Encerrar e enviar (simulação)</button><button class="sim-button secondary" data-close="photos">Voltar às fotos</button>`);}
+  function renderCloseManager(){return frame(`<h2 class="app-title">Gestão · Fechamento da cozinha</h2><p class="app-sub">Relatório de demonstração</p><div class="products"><div class="product">Consumidos<small>${closeItems.filter(x=>x.destination==='Consumido').length} etiqueta(s)</small></div><div class="product">Sobras<small>${closeItems.filter(x=>x.destination==='Sobra').length} etiqueta(s)</small></div><div class="product">Perdas<small>${closeItems.filter(x=>['Vencido','Quebra'].includes(x.destination)).length} etiqueta(s)</small></div><div class="product">Fotos<small>${Number(closeBinPhoto)+Number(closeOtherPhoto)} foto(s) fictícias</small></div></div><p class="sample-note" style="margin-top:14px">No portal real, a gestão abre os detalhes e as fotos autorizadas do fechamento.</p><button class="sim-button secondary" data-close="restart">Recomeçar capítulo</button>`);}
+  function render(){
+    const steps=getSteps(),s=steps[step];
+    $('flow').innerHTML=flows[module].map(([icon,label],i)=>`<li><button data-step="${i}" ${i===step?'aria-current="step"':''} class="${i<step?'complete':''}"><span aria-hidden="true">${i<step?'✓':icon}</span>${label}</button></li>`).join('');
+    $('guideHint').textContent=hints[module][step]; $('screenHeading').textContent=`${step+1}. ${s.title}`;
+    $('caption').textContent=s.caption; $('status').textContent=`Etapa ${step+1} de ${steps.length}`;
+    $('bar').style.width=`${((step+1)/steps.length)*100}%`;
+    $('prev').disabled=step===0; $('next').disabled=step===steps.length-1;
+    document.querySelectorAll('[data-module]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.module===module)));
+    $('stepList').innerHTML=steps.map((x,i)=>`<li><button class="${i===step?'current':''}" data-step="${i}"><span class="step-num">${i+1}</span>${x.title}</button></li>`).join('');
+    const screens={pin:renderPin,products:renderProducts,storage:renderStorage,preview:renderPreview,done:renderDone,closeHome:renderCloseHome,closeLaunch:renderCloseLaunch,closePhotos:renderClosePhotos,closeReview:renderCloseReview,closeManager:renderCloseManager};
+    mock.innerHTML=screens[s.screen]();
+    const scene=module+step;
+    if(scene!==lastScene&&!matchMedia('(prefers-reduced-motion: reduce)').matches)mock.animate([{opacity:.3,transform:'translateY(8px)'},{opacity:1,transform:'translateY(0)'}],{duration:260,easing:'ease-out'});
+    lastScene=scene;
+    const targets={pin:'[data-action="enter"]',products:'[data-product]',storage:'[data-storage]',preview:'[data-action="print"]',closeHome:'[data-close="start"]',closeLaunch:'[data-destination]',closePhotos:'[data-close="binPhoto"]',closeReview:'[data-close="finish"]'};
+    if(targets[s.screen])mock.querySelector(targets[s.screen])?.classList.add('guided');
+  }
+  function setStep(n){step=Math.max(0,Math.min(getSteps().length-1,n));render();}
+  function stopVoice(){voiceRun++;clearTimeout(advanceTimer);advanceTimer=null;if('speechSynthesis'in window)window.speechSynthesis.cancel();utterance=null;}
+  function speakCurrent(){
+    stopVoice();
+    if(mode!=='watch')return;
+    const run=voiceRun;
+    if(!('speechSynthesis'in window)||!('SpeechSynthesisUtterance'in window)){
+      $('modeHint').textContent='A voz não está disponível neste navegador. A demonstração continuará com as legendas.';
+      advanceTimer=setTimeout(()=>advanceWatch(),Math.max(7000,getSteps()[step].caption.length*62));return;
+    }
+    utterance=new SpeechSynthesisUtterance(getSteps()[step].caption);utterance.lang='pt-BR';utterance.rate=1.04;utterance.pitch=1.12;
+    const voices=window.speechSynthesis.getVoices();const voice=voices.find(v=>/^pt-BR$/i.test(v.lang))||voices.find(v=>/^pt/i.test(v.lang));if(voice)utterance.voice=voice;
+    utterance.onend=()=>{if(mode==='watch'&&run===voiceRun)advanceTimer=setTimeout(()=>advanceWatch(),850);};
+    utterance.onerror=()=>{if(mode==='watch'&&run===voiceRun)advanceTimer=setTimeout(()=>advanceWatch(),Math.max(7000,getSteps()[step].caption.length*62));};
+    window.speechSynthesis.speak(utterance);
+  }
+  function advanceWatch(){if(step>=getSteps().length-1){mode='idle';$('pause').disabled=true;$('watch').textContent='▶ Assistir novamente';$('modeHint').textContent='Demonstração concluída. Você pode assistir novamente ou praticar clicando nas telas.';return;}setStep(step+1);speakCurrent();}
+  $('watch').addEventListener('click',()=>{stopVoice();mode='watch';$('watch').textContent='▶ Reiniciar narração';$('pause').disabled=false;$('pause').textContent='Ⅱ Pausar';$('modeHint').textContent='A narração é gerada pelo navegador. As legendas permanecem visíveis durante toda a demonstração.';setStep(0);speakCurrent();});
+  $('pause').addEventListener('click',()=>{if(mode==='watch'){mode='paused';stopVoice();$('pause').textContent='▶ Continuar';}else if(mode==='paused'){mode='watch';$('pause').textContent='Ⅱ Pausar';speakCurrent();}});
+  $('practice').addEventListener('click',()=>{stopVoice();mode='practice';$('watch').textContent='▶ Assistir treinamento';$('pause').disabled=true;$('modeHint').textContent='Prática fictícia: toque nos botões dentro da tela. Nenhum dado será salvo no portal.';pin='';qty=1;closeItems=[];closeBinPhoto=false;closeOtherPhoto=false;closeDestination='Consumido';setStep(0);});
+  $('prev').addEventListener('click',()=>{if(mode==='watch')stopVoice();setStep(step-1);if(mode==='watch')speakCurrent();});
+  $('next').addEventListener('click',()=>{if(mode==='watch')stopVoice();setStep(step+1);if(mode==='watch')speakCurrent();});
+  document.querySelector('.module-tabs').addEventListener('click',e=>{const b=e.target.closest('[data-module]');if(!b||b.dataset.module===module)return;stopVoice();module=b.dataset.module;mode='idle';step=0;pin='';qty=1;closeItems=[];closeBinPhoto=false;closeOtherPhoto=false;closeDestination='Consumido';$('watch').textContent='▶ Assistir treinamento';$('pause').disabled=true;$('modeHint').textContent='Escolha assistir à narração ou praticar clicando nas telas simuladas.';render();});
+  $('flow').addEventListener('click',e=>{const b=e.target.closest('[data-step]');if(!b)return;stopVoice();setStep(Number(b.dataset.step));if(mode==='watch')speakCurrent();});
+  $('stepList').addEventListener('click',e=>{const b=e.target.closest('[data-step]');if(!b)return;if(mode==='watch')stopVoice();setStep(Number(b.dataset.step));if(mode==='watch')speakCurrent();});
+  mock.addEventListener('click',e=>{
+    const key=e.target.closest('[data-key]');if(key&&step===0){const k=key.dataset.key;if(k==='Limpar')pin='';else if(k==='Apagar')pin=pin.slice(0,-1);else if(pin.length<4)pin+=k;render();return;}
+    const prod=e.target.closest('[data-product]');if(prod){selectedProduct=prod.dataset.product;setStep(2);return;}
+    const storage=e.target.closest('[data-storage]');if(storage){selectedStorage=storage.dataset.storage;render();return;}
+    const action=e.target.closest('[data-action]')?.dataset.action;
+    if(action==='confirm-storage'){setStep(3);}else if(action==='enter'){pin='1234';setStep(1);}else if(action==='plus'){qty=Math.min(20,qty+1);render();}else if(action==='minus'){qty=Math.max(1,qty-1);render();}else if(action==='print'){setStep(4);}else if(action==='restart'){pin='';qty=1;selectedProduct='Molho da casa';selectedStorage='Refrigerado';setStep(0);}
+    const close=e.target.closest('[data-close]')?.dataset.close;
+    if(close==='start')setStep(1);
+    else if(close==='scan'){closeItems.push({item:'Etiqueta ETQ-DEMO-'+String(closeItems.length+1).padStart(3,'0'),destination:closeDestination});render();}
+    else if(close==='photos')setStep(2);
+    else if(close==='binPhoto'){closeBinPhoto=true;render();}
+    else if(close==='otherPhoto'){closeOtherPhoto=true;render();}
+    else if(close==='review')setStep(3);
+    else if(close==='finish'){if(closeBinPhoto)setStep(4);}
+    else if(close==='restart'){closeItems=[];closeBinPhoto=false;closeOtherPhoto=false;closeDestination='Consumido';setStep(0);}
+    const dest=e.target.closest('[data-destination]');if(dest){closeDestination=dest.dataset.destination;render();}
+  });
+  document.addEventListener('visibilitychange',()=>{if(document.hidden&&mode==='watch'){mode='paused';stopVoice();$('pause').textContent='▶ Continuar';}});
+  render();
+})();
+</script>
+</body>
+</html>

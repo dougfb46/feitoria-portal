@@ -89,3 +89,10 @@ Nova conversa na área Resultados da gestão, com resposta em texto, período, f
 Acesso do dono por unidade. Perguntas ficam somente na memória da página; não há dados comerciais reais no HTML/JS.
 Gmail atual, produção e disponibilidade do cardápio ainda não conectados; interface informa os limites.
 Barreira de publicação, sintaxe e testes aprovados; interface conferida em ambiente local com dados explicitamente fictícios.
+
+
+## 13/11/2026 - Treinamento da cozinha
+Treinamento de etiquetas e fechamento com dados fictícios e fluxograma clicável.
+Narração do navegador, legendas e animações leves em HTML independente.
+Sem chamadas ao servidor, envio de fotos ou acionamento da impressora.
+Atalho cozinha.html direciona ao treinamento; inclusão explícita na lista de publicação.
