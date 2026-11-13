@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="pt-BR">
+<title>Vídeo de Treinamento do Salão</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=Source+Sans+3:wght@400;600;700&display=swap">
+<style>
+/* Layout: um "palco" 16:9 com cenas narradas; capítulos e controles embaixo. */
+:root{
+  --bg:#eef1ec; --panel:#ffffff; --ink:#1d2a22; --muted:#56635a; --line:#d5dbd2;
+  --stage:#17241c; --stage-ink:#f2efe6; --stage-muted:#a9b8ad; --amber:#e3a33b; --amber-deep:#b8730a; --green:#7cc39b; --red:#ef8a78;
+  --display:"Big Shoulders Display","Arial Narrow",Impact,sans-serif;
+  --body:"Source Sans 3","Segoe UI",Roboto,Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#101611;--panel:#1a221d;--ink:#e8ede6;--muted:#a3b0a6;--line:#304036;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#101611;--panel:#1a221d;--ink:#e8ede6;--muted:#a3b0a6;--line:#304036;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body)}
+.wrap{max-width:1040px;margin:0 auto;padding-block:20px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:14px}
+.head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:6px 16px}
+.head .brand{display:flex;align-items:center;gap:12px}
+.head img{height:44px;width:auto;border-radius:6px;background:#201e1d;padding:6px 10px}
+.head h1{font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:clamp(1.6rem,4vw,2.3rem);margin:0;line-height:1}
+.head p{margin:0;color:var(--muted);font-size:.92rem}
+.stage{position:relative;aspect-ratio:16/9;width:100%;background:var(--stage);color:var(--stage-ink);border-radius:10px;overflow:hidden;container-type:inline-size}
+.scene{position:absolute;inset:0;padding:6cqw 7cqw 13cqw;display:flex;flex-direction:column;justify-content:center;gap:2.2cqw;opacity:0;transform:translateY(1.5cqw);transition:opacity .5s ease,transform .5s ease}
+.scene.on{opacity:1;transform:none}
+.scene .logo{height:9cqw;width:auto;align-self:flex-start}
+.chap{font-size:1.6cqw;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--amber)}
+.title{font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:6.2cqw;line-height:.95;margin:0;text-wrap:balance}
+.title em{font-style:normal;color:var(--amber)}
+.big{font-family:var(--display);font-weight:800;font-size:15cqw;line-height:.85;color:var(--amber)}
+.items{display:grid;gap:1.3cqw;margin:0;padding:0;list-style:none}
+.items li{font-size:2.5cqw;line-height:1.25;display:grid;grid-template-columns:3.2cqw 1fr;gap:1.2cqw;opacity:0;transform:translateX(-1cqw);transition:opacity .4s ease,transform .4s ease}
+.scene.on .items li{opacity:1;transform:none}
+.scene.on .items li:nth-child(2){transition-delay:.6s}.scene.on .items li:nth-child(3){transition-delay:1.2s}.scene.on .items li:nth-child(4){transition-delay:1.8s}.scene.on .items li:nth-child(5){transition-delay:2.4s}
+.items li::before{content:"";width:1.4cqw;height:1.4cqw;border-radius:50%;background:var(--amber);margin-top:.9cqw}
+.items.no li::before{background:var(--red)}
+.items b{color:var(--amber)}
+.quote{font-size:2.8cqw;font-style:italic;color:var(--green);border-left:.5cqw solid var(--green);padding-left:2cqw;margin:0}
+.opa,.keys{display:grid;grid-template-columns:repeat(3,1fr);gap:2cqw}
+.keys{grid-template-columns:repeat(4,1fr)}
+.opa div,.keys div{border:.3cqw solid var(--stage-ink);border-radius:1cqw;padding:2cqw;text-align:center}
+.opa strong,.keys strong{display:block;font-family:var(--display);font-size:9cqw;line-height:.9;color:var(--amber)}
+.keys strong{font-size:6cqw}
+.opa span,.keys span{font-size:2.4cqw;font-weight:700}
+.opa small,.keys small{display:block;font-size:1.6cqw;color:var(--stage-muted);margin-top:.6cqw}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:2.4cqw}
+.card{border:.25cqw solid rgba(242,239,230,.25);border-radius:1.2cqw;padding:2cqw;display:grid;gap:.8cqw;align-content:start}
+.card h3{margin:0;font-family:var(--display);font-size:3.4cqw;text-transform:uppercase;color:var(--amber)}
+.card p{margin:0;font-size:2.1cqw}
+.card.back h3{color:var(--stage-muted)}
+.sub{position:absolute;left:0;right:0;bottom:0;padding:1.6cqw 7cqw 2.2cqw;background:linear-gradient(transparent,rgba(0,0,0,.55) 30%);font-size:2.1cqw;line-height:1.35;color:#fff;min-height:10cqw;display:flex;align-items:flex-end}
+.bar{position:absolute;left:0;top:0;height:.5cqw;background:var(--amber);width:0}
+.start{position:absolute;inset:0;display:grid;place-items:center;background:rgba(10,18,13,.55);border:0;color:#fff;font:inherit;cursor:pointer}
+.start span{font-family:var(--display);font-weight:800;font-size:5cqw;text-transform:uppercase;border:.35cqw solid #fff;border-radius:999px;padding:1.4cqw 4cqw}
+.start[hidden]{display:none}
+.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.controls button,.chapters button{font:inherit;font-weight:600;background:var(--panel);color:var(--ink);border:1.5px solid var(--line);border-radius:6px;padding:8px 14px;cursor:pointer}
+.controls button:hover,.chapters button:hover{border-color:var(--amber-deep)}
+button:focus-visible{outline:3px solid var(--amber-deep);outline-offset:2px}
+.controls .count{margin-left:auto;color:var(--muted);font-variant-numeric:tabular-nums;font-size:.92rem}
+.controls label{display:flex;gap:6px;align-items:center;font-size:.92rem;color:var(--muted)}
+.chapters{display:flex;flex-wrap:wrap;gap:6px}
+.chapters button{font-weight:400;font-size:.88rem;padding:6px 10px}
+.chapters button[aria-current="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.note{color:var(--muted);font-size:.88rem;max-width:70ch;margin:0}
+@media (prefers-reduced-motion: reduce){.scene,.items li{transition:none}}
+</style>
+<nav style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;padding:10px 16px;background:#1d3427;font:600 15px system-ui,sans-serif"><a href="index.html" style="color:#f3ead7">Treinamento</a><a href="video.html" style="color:#f3ead7">▶ Vídeo</a><a href="comanda.html" style="color:#f3ead7">📱 Abrir a comanda</a></nav>
+
+<div class="wrap">
+  <div class="head">
+    <div class="brand"><img src="logo-feitoria-claro.webp" alt="Feitoria da Cerveja"><h1>Treinamento do elenco</h1></div>
+    <p>Feitoria da Cerveja · PUB Mogi · cerca de 9 minutos</p>
+  </div>
+
+  <div class="stage" id="stage" aria-live="off">
+    <div class="bar" id="bar"></div>
+    <div id="scenes"></div>
+    <div class="sub" id="sub" aria-live="polite"></div>
+    <button class="start" id="start" type="button" aria-label="Assistir ao treinamento"><span>▶ Assistir</span></button>
+  </div>
+
+  <div class="controls">
+    <button type="button" id="prev">◀ Voltar</button>
+    <button type="button" id="play">Pausar</button>
+    <button type="button" id="next">Avançar ▶</button>
+    <label><input type="checkbox" id="voice" checked> Narração</label>
+    <span class="count" id="count"></span>
+  </div>
+  <div class="chapters" id="chapters" aria-label="Capítulos"></div>
+  <p class="note">A narração usa a voz em português do próprio aparelho. Sem som, a legenda e o tempo de cada cena seguem iguais. Depois do vídeo, faça o teste na página de treinamento do salão.</p>
+</div>
+
+<script>
+(function(){
+  var S=[
+    {c:"Boas-vindas",h:'<img class="logo" src="logo-feitoria-claro.webp" alt=""><p class="title">Bem-vindo ao <em>elenco</em></p><p class="quote">Olhe a mesa. Pense no próximo passo. Vá antes de chamarem.</p>',
+     t:"Bem-vindo ao elenco da Feitoria da Cerveja. Neste treinamento você vai ver como receber cada convidado do jeito da casa, da chegada até a saideira."},
+    {c:"Elenco e convidados",h:'<p class="chap">O jeito da casa</p><div class="pair"><div class="card"><h3>Você é elenco</h3><p>Equipe da casa e freelas. Cada turno é um show, e cada um tem o seu papel.</p></div><div class="card"><h3>Cliente é convidado</h3><p>Quem entra é recebido como visita: ambiente descontraído, pouca formalidade, muita atenção.</p></div></div>',
+     t:"Na Feitoria, quem trabalha é o elenco, e quem chega é convidado. A ideia vem dos parques da Disney: cada turno é um show, e cada um de nós tem um papel. O clima é descontraído e com pouca formalidade, mas a atenção ao convidado é total."},
+    {c:"Palco e bastidor",h:'<p class="chap">Onde você está?</p><div class="pair"><div class="card"><h3>Palco</h3><p>Salão, Deck, Jardim, Chalé, balcão. Sorriso, postura, celular guardado. Nada de conversa paralela ou recado na frente do convidado.</p></div><div class="card back"><h3>Bastidor</h3><p>Cozinha, estoque, área interna. É aqui que se descansa, se usa o celular e se resolve problema entre colegas.</p></div></div>',
+     t:"Pense em palco e bastidor. O palco é todo lugar onde o convidado está: salão, deck, jardim, chalé e balcão. No palco: sorriso, postura e celular guardado. Nada de conversa paralela ou recado na frente do convidado. Pausa, celular e problema entre colegas ficam no bastidor: cozinha, estoque e área interna."},
+    {c:"O cenário",h:'<p class="chap">O quintal também atende</p><ul class="items"><li><span><b>Visão:</b> mesa limpa, copo certo para cada chopp, telão funcionando</span></li><li><span><b>Conforto:</b> aquecedor no frio, sombra e água no calor</span></li><li><span><b>Som:</b> se não dá para conversar, avise o gerente</span></li><li><span><b>Ninguém passa por lixo:</b> quem vê, recolhe</span></li></ul>',
+     t:"O cenário também atende. O convidado percebe a casa com os cinco sentidos: mesa limpa, o copo certo para cada chopp, o telão funcionando, aquecedor ligado no frio, sombra e água no calor. Se o som não deixa a mesa conversar, avise o gerente. E uma regra da Disney que vale aqui: ninguém passa por lixo. Copo largado ou guardanapo no chão, quem vê recolhe, seja de qual praça for."},
+    {c:"As 4 chaves",h:'<p class="chap">Em ordem de prioridade</p><div class="keys"><div><strong>1</strong><span>Segurança</span><small>de todos, sempre primeiro</small></div><div><strong>2</strong><span>Cortesia</span><small>cada convidado especial</small></div><div><strong>3</strong><span>Show</span><small>o palco impecável</small></div><div><strong>4</strong><span>Eficiência</span><small>rápido e certo</small></div></div>',
+     t:"Toda decisão segue quatro chaves, nesta ordem: segurança, cortesia, show e eficiência. Quando duas brigam, vence a que vem antes. Correr no pico é eficiência, mas não vale passar por cima da segurança nem da cortesia."},
+    {c:"Segurança",h:'<p class="chap">Chave 1 · Segurança</p><ul class="items"><li><span>Chão molhado ou copo quebrado: <b>sinalize e limpe na hora</b></span></li><li><span>Alergia, glúten, lactose: <b>confirme com a cozinha</b> antes de prometer</span></li><li><span>Álcool <b>nunca</b> para menor de 18 anos</span></li><li><span>Convidado alterado: <b>chame o gerente</b>, não discuta</span></li></ul>',
+     t:"Segurança vem primeiro. Chão molhado ou copo quebrado: sinalize e limpe na hora. Alergia, glúten ou lactose: confirme com a cozinha antes de prometer. Álcool nunca para menor de dezoito anos. E convidado alterado: chame o gerente, não discuta."},
+    {c:"A venda esquecida",h:'<p class="chap">Oportunidades</p><div class="pair"><div class="card"><span class="big">🍮</span><p>sobremesa quase ninguém pede</p></div><div class="card"><span class="big">🍟</span><p>porção para dividir também fica de fora</p></div></div>',
+     t:"Quase toda mesa pede chopp. Mas sobremesa e porção para dividir aparecem bem menos. Vamos observar as mesas e oferecer na hora certa, respeitando a preferência de cada convidado. Oferecer na hora certa faz parte do show."},
+    {c:"O método OPA",h:'<p class="chap">O tempo todo</p><div class="opa"><div><strong>O</strong><span>Observar</span><small>a praça inteira</small></div><div><strong>P</strong><span>Perceber</span><small>o que a mesa precisa</small></div><div><strong>A</strong><span>Atender</span><small>antes de chamarem</small></div></div>',
+     t:"Use o OPA. Observe a sua praça inteira o tempo todo. Perceba o que cada mesa precisa agora. E atenda antes de o convidado levantar a mão."},
+    {c:"Diretrizes do elenco",h:'<p class="chap">Em toda interação</p><ul class="items"><li><span><b>Olhe nos olhos e sorria</b>, no começo e no fim</span></li><li><span><b>Cumprimente todo convidado</b>, mesmo fora da sua praça</span></li><li><span><b>Procure quem precisa:</b> banheiro, foto do grupo, mais uma cadeira</span></li><li><span>Nunca só "não sei": <b>descubra ou leve até quem sabe</b></span></li><li><span><b>Postura de disponível</b> e obrigado a cada convidado</span></li></ul>',
+     t:"Seis atitudes em toda interação. Olhe nos olhos e sorria, no começo e no fim. Cumprimente todo convidado, mesmo fora da sua praça. Procure quem precisa de ajuda: mostrar o banheiro, tirar a foto do grupo, puxar mais uma cadeira. Nunca responda só não sei: descubra ou leve até quem sabe. Mantenha postura de quem está disponível, sem braço cruzado nem encostado. E agradeça cada convidado."},
+    {c:"Leia a mesa",h:'<p class="chap">A bússola do convidado</p><div class="keys"><div><strong>N</strong><span>Necessidade</span><small>o que veio buscar</small></div><div><strong>D</strong><span>Desejo</span><small>o que quer viver</small></div><div><strong>E</strong><span>Expectativa</span><small>o que imagina da casa</small></div><div><strong>E</strong><span>Emoção</span><small>como está chegando</small></div></div>',
+     t:"Para ler a mesa, use a bússola do convidado. Necessidade: o que ele veio buscar, como almoçar. Desejo: o que ele quer viver, como uma tarde boa com a família. Expectativa: o que ele imagina da casa, como chopp artesanal de verdade. E emoção: como ele está chegando. Quem almoça com hora para voltar está com pressa: bebida e prato rápido. Família no domingo quer calma e atenção às crianças. Grupo à noite quer música e rodada sem espera."},
+    {c:"Chegada e comanda",h:'<p class="chap">Passo 1 · Chegada</p><p class="quote">"Boa noite! Mesa para quantos? Venham comigo."</p><p class="quote">"Para abrir a comanda, qual seu nome completo e celular? Se for do Clube Feitoria, o cashback já entra."</p><ul class="items"><li><span><b>Obrigatório:</b> nome e sobrenome, celular e número de pessoas</span></li><li><span><b>Clube Feitoria:</b> 5% de volta para a próxima conta, pelo telefone</span></li><li><span>Use o nome do convidado durante todo o atendimento</span></li></ul>',
+     t:"Esteja atento à entrada e receba o convidado: sorriso, seu nome, e mesa para quantos. Pergunte se é a primeira vez na Feitoria. Já na abertura da comanda, peça nome e sobrenome, celular e número de pessoas. É obrigatório, e é pelo telefone que o convidado do Clube Feitoria recebe cinco por cento de volta para a próxima conta. Use o nome do convidado durante o atendimento. E o celular é dele: não anote em papel nem guarde no seu celular."},
+    {c:"Primeira vez?",h:'<p class="chap">Primeira vez na casa</p><ul class="items"><li><span><b>12 torneiras</b> de chopp da Feitoria, mais de 50 receitas já passaram por elas</span></li><li><span>O telão mostra o que está saindo; porções no <b>QR Code</b> da mesa</span></li><li><span>Pergunte: prefere algo <b>mais leve</b> ou <b>mais forte</b>?</span></li></ul>',
+     t:"Se for a primeira vez, conte em poucas palavras: são doze torneiras de chopp produzido pela Feitoria, e mais de cinquenta receitas já passaram por elas. O telão mostra o que está saindo agora, e as porções estão no QR Code da mesa. Depois pergunte: prefere algo mais leve ou mais forte? Se já conhece a casa, conte a novidade da semana."},
+    {c:"A pergunta por trás",h:'<p class="chap">Responda o que ele quer saber</p><ul class="items"><li><span>"Que horas começa a música?" → horário <b>e</b> onde se ouve melhor</span></li><li><span>"Tem mesa?" → quanto tempo e onde esperar com um chopp</span></li><li><span>"Qual é a boa?" → pergunte do que gosta e indique duas</span></li><li><span>"Tem algo sem glúten?" → a opção <b>e</b> a confirmação da cozinha</span></li></ul>',
+     t:"Toda pergunta tem uma pergunta por trás. Quem pergunta que horas começa a música quer saber também onde sentar para ouvir melhor. Quem pergunta se tem mesa quer saber quanto tempo vai esperar, e onde, de preferência com um chopp na mão. Quem pergunta qual é a boa quer uma indicação para o gosto dele: pergunte e indique duas. Responda o que ele realmente quer saber."},
+    {c:"Bebida primeiro",h:'<p class="chap">Passo 2 · Bebida</p><p class="title">Mesa sem copo é <em>prioridade</em></p><ul class="items"><li><span><b>Pilsen</b> · clara, leve, aroma floral, a que mais sai</span></li><li><span><b>Pêssego Lager</b> · feita com pêssego em calda, leve e macia</span></li><li><span><b>Régua Degustação</b> · 4 estilos à escolha, lado a lado</span></li></ul>',
+     t:"Mesa sentada sem copo é a sua prioridade. A Pilsen é clara, leve, com aroma floral, e é a que mais sai. Quem quer algo diferente: a Pêssego Lager, feita com pêssego em calda, leve e macia. E quem quer provar antes: a Régua Degustação, com quatro estilos à escolha, servidos lado a lado. Freela que não souber explicar um chopp chama alguém da casa."},
+    {c:"Cada convidado, parte 1",h:'<p class="chap">Quem pede outra coisa</p><ul class="items"><li><span>Pediu <b>Heineken</b> → Belgian Pale Ale: fácil de beber, toque de pêssego, amargor moderado</span></li><li><span>Gosta de <b>escura</b> → Munich Dunkel: maltada, lembra passas, mais adocicada</span></li><li><span>Toma <b>vinho</b> → chope de vinho, tinto ou rosé, servido na taça</span></li><li><span>Está <b>sozinho</b> → Aperitivo Feitoria</span></li></ul>',
+     t:"Quem pede Heineken: ofereça a Belgian Pale Ale, fácil de beber, com toque de pêssego e amargor moderado. Quem gosta de escura: a Munich Dunkel, maltada, que lembra passas e é mais adocicada. Quem toma vinho: o chope de vinho, tinto ou rosé, servido na taça. E quem está sozinho: o Aperitivo Feitoria, na medida para um."},
+    {c:"Cada convidado, parte 2",h:'<p class="chap">Sem chopp, sem álcool, sem glúten</p><ul class="items"><li><span>Não toma chopp → <b>Pink Gin</b>, Floradora</span></li><li><span>Não bebe álcool → <b>Pink Gin sem álcool</b>, suco, Heineken 0.0</span></li><li><span>Não come glúten → <b>drinks com ingredientes conferidos ou cerveja rotulada sem glúten</b></span></li></ul>',
+     t:"Quem não toma chopp: Pink Gin ou Floradora. Quem não bebe álcool: o Pink Gin sem álcool, suco natural ou Heineken zero. Quem não come glúten: drinks com ingredientes conferidos ou cerveja rotulada sem glúten."},
+    {c:"Harmonização",h:'<p class="chap">O que combina com o quê</p><ul class="items"><li><span><b>Pilsen</b> + quibe com queijo ou coxinha sem massa</span></li><li><span><b>Indonesian IPA</b> + costelinha barbecue ou pastel de carne com gorgonzola</span></li><li><span><b>Munich Dunkel</b> + costelinha barbecue</span></li><li><span><b>Chope de vinho</b> + pizzas</span></li><li><span><b>Avelã Lager</b> ou <b>Imperial Stout</b> + pastel de chocolate</span></li></ul>',
+     t:"Use a harmonização para sugerir com naturalidade. Pilsen combina com quibe com queijo ou coxinha sem massa. Indonesian IPA, com costelinha barbecue ou pastel de carne com gorgonzola. Munich Dunkel, com costelinha barbecue. Chope de vinho, com pizza. E a Avelã Lager ou a Imperial Stout combinam com pastel de chocolate."},
+    {c:"O pedido",h:'<p class="chap">Passo 3 · Pedido</p><ul class="items"><li><span>De pé, na ponta da mesa, voz para a última pessoa</span></li><li><span><b>Uma oferta pelo nome</b>, em tom de sugestão</span></li><li><span><b>Repita o pedido inteiro</b> antes de sair</span></li><li><span>Disse não? Tudo bem. Não insista.</span></li></ul>',
+     t:"Para tirar o pedido, fique de pé na ponta da mesa e fale alto o bastante para a última pessoa ouvir. Faça uma oferta pelo nome, em tom de sugestão, nunca de imposição. Repita o pedido inteiro antes de sair. Se disserem não, tudo bem: não insista."},
+    {c:"Combos até 20h30",h:'<p class="chap">Até 20h30 · +R$ 30</p><div class="pair"><div class="card"><h3>Casal</h3><p>Trio Happy Hour + 2 canecas de Pilsen</p></div><div class="card"><h3>Grupo</h3><p>Quarteto Alemão + 1 martelo de Pilsen</p></div></div><p class="quote">"Para vocês dois, até 20h30 o Trio vem com duas canecas por mais 30."</p>',
+     t:"Até as oito e meia tem combo, por mais trinta reais. Para casal, o Trio Happy Hour com duas canecas de Pilsen. Para grupo, o Quarteto Alemão com um martelo de Pilsen. Na Takeat, lance a porção e marque o complemento do combo."},
+    {c:"Enquanto espera",h:'<p class="chap">Passo 4 · Enquanto a comida não chega</p><ul class="items"><li><span>Almoço: <b>Pastéis Salgados</b>, 4 unidades</span></li><li><span>Noite: <b>Crispy Chicken</b>, a porção que mais sai</span></li><li><span>Copo a 1/3: <b>ofereça a próxima rodada</b></span></li></ul>',
+     t:"Enquanto a comida não chega, ofereça algo para beliscar. No almoço, os pastéis salgados, que vêm quatro. À noite, o Crispy Chicken, a porção que mais sai. E quando o copo estiver em um terço, ofereça a próxima rodada antes de secar."},
+    {c:"Sobremesa e café",h:'<p class="chap">Passo 5 · Novidade da casa</p><p class="title">Tirou os pratos? <em>Mostre o encarte</em></p><ul class="items"><li><span>Sobremesas novas, para dividir</span></li><li><span>Almoço: <b>café espresso</b> para fechar</span></li><li><span>Noite: <b>a saideira</b></span></li></ul>',
+     t:"Ao tirar os pratos, mostre o encarte de sobremesas: é novidade da casa e é para dividir. No almoço, depois da sobremesa, ofereça o café espresso. À noite, a saideira. Agradeça e convide para voltar."},
+    {c:"Momento mágico",h:'<p class="chap">Pequenos gestos, grande lembrança</p><ul class="items"><li><span>Lembrar o <b>nome e o chopp</b> de quem volta</span></li><li><span>Percebeu um <b>aniversário</b>? Avise o gerente</span></li><li><span>Água para quem está há tempo no sol do Deck</span></li><li><span>Entregar <b>antes</b> do prometido</span></li></ul>',
+     t:"O que o convidado mais lembra são os pequenos gestos fora do roteiro. Lembrar o nome e o chopp de quem volta. Perceber um aniversário e avisar o gerente. Oferecer água para quem está há tempo no sol do deck. Entregar antes do prometido. Isso é o momento mágico, e quase sempre não custa nada."},
+    {c:"Quando algo dá errado",h:'<p class="chap">Reclamação é chance de encantar</p><ul class="items"><li><span><b>Ouça</b> até o fim, sem interromper</span></li><li><span>"<b>Eu entendo</b> como isso te chateou."</span></li><li><span>"<b>Sinto muito</b>, não é assim que gostamos de receber."</span></li><li><span><b>Resolva</b> ou chame o gerente, e volte à mesa para conferir</span></li></ul>',
+     t:"Quando algo dá errado, a reclamação é a chance de encantar. Ouça até o fim, sem interromper. Diga: eu entendo como isso te chateou. Sinto muito, não é assim que gostamos de receber. Resolva, ou chame o gerente, e volte à mesa depois para conferir. Nunca discuta, nunca culpe a cozinha e nunca diminua o problema."},
+    {c:"Frases de alerta",h:'<p class="chap">Antes de virar reclamação</p><ul class="items no"><li><span>"Faz tempo que ninguém vem aqui."</span></li><li><span>"Já pedi faz um tempão."</span></li><li><span>"Acabou de novo?"</span></li><li><span>A mesma pergunta repetida por muita gente</span></li></ul><p class="quote">Ouviu? Resolva na hora e conte no pré-turno.</p>',
+     t:"Algumas frases avisam que um problema está chegando. Faz tempo que ninguém vem aqui. Já pedi faz um tempão. Acabou de novo? Ou a mesma pergunta repetida por muita gente, como onde fica o banheiro. Ouviu uma dessas? Resolva na hora e conte no pré-turno, ou mande pelo canal de recado. É assim que a casa corrige o que se repete."},
+    {c:"Pico e turno",h:'<p class="chap">Durante o show</p><ul class="items"><li><span><b>Pico:</b> sexta e sábado 20h30 às 21h30, domingo 13h30 às 14h30</span></li><li><span>O gerente <b>planeja cobertura e intervalos</b> para o pico</span></li><li><span>Barril acabando: <b>avise o salão</b> e ofereça o substituto</span></li></ul>',
+     t:"Fique atento ao pico: sexta e sábado das oito e meia às nove e meia da noite, e domingo da uma e meia às duas e meia da tarde. O gerente organiza a cobertura das praças e os intervalos, respeitando as pausas previstas e as necessidades da equipe. Barril acabando, avise e ofereça o substituto, para o convidado não descobrir que acabou."},
+    {c:"Não se faz",h:'<p class="chap">Fora do roteiro da Feitoria</p><ul class="items no"><li><span>Insistir depois do <b>não</b></span></li><li><span>Prometer o que <b>acabou</b> ou não pode cumprir</span></li><li><span>Abrir comanda <b>sem nome e celular</b></span></li><li><span>Celular, recado ou assunto paralelo <b>no palco</b></span></li></ul>',
+     t:"O que não se faz na Feitoria: insistir depois do não. Prometer o que acabou ou o que não pode cumprir. Abrir comanda sem número de pessoas, nome, sobrenome e celular. E celular, recado ou assunto paralelo no palco, na frente do convidado."},
+    {c:"Fim",h:'<img class="logo" src="logo-feitoria-claro.webp" alt=""><p class="title">O show é <em>seu</em></p><ul class="items"><li><span>Faça o teste na página de treinamento</span></li><li><span>Pegue seu cartão de bolso com o gerente</span></li></ul>',
+     t:"É isso. Olhe a mesa, pense no próximo passo e vá antes de chamarem. Agora faça o teste na página de treinamento e pegue o seu cartão de bolso com o gerente. Bom show!"}
+  ];
+
+  var host=document.getElementById("scenes"), chapters=document.getElementById("chapters");
+  S.forEach(function(s,i){
+    var d=document.createElement("div"); d.className="scene"; d.innerHTML=s.h; host.appendChild(d); s.el=d;
+    var b=document.createElement("button"); b.type="button"; b.id="ch"+i; b.textContent=(i+1)+". "+s.c;
+    b.addEventListener("click",function(){go(i,true);}); chapters.appendChild(b); s.btn=b;
+  });
+
+  var cur=0, playing=false, timer=null, raf=null, t0=0, dur=0, token=0;
+  var sub=document.getElementById("sub"), bar=document.getElementById("bar"), count=document.getElementById("count");
+  var playBtn=document.getElementById("play"), voiceBox=document.getElementById("voice"), startBtn=document.getElementById("start");
+  var synth=("speechSynthesis" in window)?window.speechSynthesis:null, ptVoice=null;
+  function pickVoice(){ if(!synth) return; try{ var v=synth.getVoices()||[]; var br=v.filter(function(x){return /^pt(-|_)BR/i.test(x.lang);}); ptVoice=br.filter(function(x){return /Natural|Online|Francisca|Thalita/i.test(x.name);})[0]||br.filter(function(x){return /Google/i.test(x.name);})[0]||br[0]||v.filter(function(x){return /^pt/i.test(x.lang);})[0]||null; }catch(e){} }
+  pickVoice(); if(synth && "onvoiceschanged" in synth) synth.onvoiceschanged=pickVoice;
+
+  function words(t){return t.split(/\s+/).length;}
+  function stopAll(){ token++; clearTimeout(timer); cancelAnimationFrame(raf); if(synth){try{synth.cancel();}catch(e){}} }
+  function tick(){ var p=Math.min(1,(performance.now()-t0)/dur); bar.style.width=(p*100)+"%"; if(p<1&&playing) raf=requestAnimationFrame(tick); }
+  function show(i){
+    S.forEach(function(s,j){ s.el.classList.toggle("on",j===i); s.btn.setAttribute("aria-current",j===i?"true":"false"); });
+    sub.textContent=S[i].t; count.textContent="Cena "+(i+1)+" de "+S.length;
+  }
+  function go(i,user){
+    stopAll(); cur=Math.max(0,Math.min(S.length-1,i)); show(cur); bar.style.width="0";
+    if(user && !playing){ return; }
+    if(playing) run();
+  }
+  function advance(my){ if(my!==token||!playing) return; if(cur<S.length-1){ cur++; show(cur); run(); } else { playing=false; playBtn.textContent="Assistir de novo"; bar.style.width="100%"; } }
+  function run(){
+    var my=++token, s=S[cur]; dur=Math.max(6000, words(s.t)/2.4*1000+1500); t0=performance.now(); raf=requestAnimationFrame(tick);
+    var spoke=false;
+    if(voiceBox.checked && synth){
+      try{
+        var u=new SpeechSynthesisUtterance(s.t); u.lang="pt-BR"; if(ptVoice) u.voice=ptVoice; u.rate=1.08; u.pitch=1.15;
+        u.onend=function(){ spoke=true; timer=setTimeout(function(){advance(my);},900); };
+        u.onerror=function(){ if(!spoke){ timer=setTimeout(function(){advance(my);},Math.max(0,dur-(performance.now()-t0))); } };
+        synth.speak(u);
+        setTimeout(function(){ if(my===token && !spoke && playing && !(synth.speaking)) advance(my); }, dur+4000);
+        return;
+      }catch(e){}
+    }
+    timer=setTimeout(function(){advance(my);},dur);
+  }
+  function play(){ startBtn.hidden=true; if(!playing && cur>=S.length-1 && playBtn.textContent==="Assistir de novo"){cur=0;} playing=true; playBtn.textContent="Pausar"; show(cur); run(); }
+  function pause(){ playing=false; stopAll(); playBtn.textContent="Continuar"; }
+  startBtn.addEventListener("click",play);
+  playBtn.addEventListener("click",function(){ playing?pause():play(); });
+  document.getElementById("next").addEventListener("click",function(){ startBtn.hidden=true; go(cur+1,true); });
+  document.getElementById("prev").addEventListener("click",function(){ startBtn.hidden=true; go(cur-1,true); });
+  voiceBox.addEventListener("change",function(){ if(playing){ stopAll(); run(); } });
+  show(0); playBtn.textContent="Assistir";
+})();
+</script>

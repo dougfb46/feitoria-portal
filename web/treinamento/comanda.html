@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="pt-BR">
+<title>Abrir a Comanda Certo</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+:root{--bg:#f4f1ea;--ink:#1d2a22;--muted:#5a665e;--red:#c8141c;--card:#fff;--line:#d9d2c3;--accent:#24563d}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141a16;--ink:#ece8df;--muted:#a9b3ac;--card:#1f2722;--line:#33403a;--accent:#7fc29b}}
+:root[data-theme="dark"]{--bg:#141a16;--ink:#ece8df;--muted:#a9b3ac;--card:#1f2722;--line:#33403a;--accent:#7fc29b}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Segoe UI",Arial,sans-serif}
+.wrap{max-width:900px;margin:0 auto;padding:20px 16px 40px}
+h1{font-size:1.5rem;margin:0 0 4px}
+.sub{color:var(--muted);margin:0 0 16px}
+.stage{display:grid;grid-template-columns:260px 1fr;gap:24px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:20px;min-height:560px}
+.phone{width:240px;border:10px solid #111;border-radius:28px;overflow:hidden;background:#fff;justify-self:center;box-shadow:0 10px 30px rgba(0,0,0,.2)}
+.phone img{display:block;width:100%}
+.step{font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:var(--red);font-weight:700}
+.stage h2{font-size:1.6rem;margin:6px 0 10px}
+.say{font-size:1.1rem;line-height:1.5;margin:0}
+.tip{margin-top:14px;padding:10px 12px;border-left:4px solid var(--accent);background:color-mix(in srgb,var(--accent) 10%,transparent);font-size:.95rem}
+.controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;align-items:center}
+button{font:inherit;padding:10px 16px;border-radius:6px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+button.main{background:var(--red);border-color:var(--red);color:#fff;font-weight:600}
+.bar{flex:1;min-width:120px;height:6px;background:var(--line);border-radius:3px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--red);width:0;transition:width .3s}
+.dots{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.dots button{padding:4px 9px;font-size:.8rem}
+.dots button.on{background:var(--ink);color:var(--bg)}
+@media (max-width:640px){.stage{grid-template-columns:1fr;min-height:0}.phone{width:200px}}
+</style>
+<nav style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;padding:10px 16px;background:#1d3427;font:600 15px system-ui,sans-serif"><a href="index.html" style="color:#f3ead7">Treinamento</a><a href="video.html" style="color:#f3ead7">▶ Vídeo</a><a href="comanda.html" style="color:#f3ead7">📱 Abrir a comanda</a></nav>
+<div class="wrap">
+  <h1>Abrir a comanda certo</h1>
+  <p class="sub">Feitoria PUB Mogi · app do garçom (o mesmo sistema da maquininha Stone) · cerca de 2 min · telas reais, dados fictícios</p>
+  <div class="stage">
+    <div class="phone"><img id="img" alt=""></div>
+    <div>
+      <div class="step" id="step"></div>
+      <h2 id="title"></h2>
+      <p class="say" id="say"></p>
+      <div class="tip" id="tip" hidden></div>
+    </div>
+  </div>
+  <div class="controls">
+    <button id="prev">◀ Voltar</button>
+    <button class="main" id="play">▶ Assistir com narração</button>
+    <button id="next">Avançar ▶</button>
+    <div class="bar"><i id="bar"></i></div>
+  </div>
+  <div class="dots" id="dots"></div>
+</div>
+<script>
+var S=[
+{img:"tela1.jpg",t:"Ache a mesa",s:"Abra o app do garçom no celular, ou a maquininha Stone. Toque no número da mesa. Mesa vermelha já tem conta aberta; verde está livre.",tip:"É o mesmo sistema nos dois aparelhos: o passo a passo vale para os dois."},
+{img:"tela2.jpg",t:"Marque quantas pessoas",s:"Logo no topo aparece o número de pessoas. Antes de qualquer pedido, toque no mais até chegar ao número de pessoas sentadas na mesa.",tip:"Sem isso, a casa não sabe o gasto por pessoa. É o número que mostra se o nosso atendimento está vendendo bem."},
+{img:"tela3.jpg",t:"Conferiu? Duas pessoas, duas pessoas",s:"Aqui, uma mesa de casal: duas pessoas. Chegou mais gente depois? Volte e aumente. Saiu alguém, diminua.",tip:"Regra: comanda aberta sempre com a quantidade certa de pessoas."},
+{img:"tela4.jpg",t:"Primeiro pedido",s:"Escolha a categoria e o item, como sempre. Na hora da bebida, lembre da oferta: chopp primeiro.",tip:""},
+{img:"tela5.jpg",t:"Escolha o tamanho",s:"Escolha o tamanho e toque em adicionar ao carrinho. O pedido ainda não foi para a cozinha nem para o bar.",tip:""},
+{img:"tela6.jpg",t:"Abra o carrinho",s:"O número no botão do meio mostra os itens no carrinho. Toque nele para revisar.",tip:""},
+{img:"tela7.jpg",t:"Toque em mais Cliente",s:"No carrinho, antes de fazer o pedido, toque em mais Cliente. É aqui que a comanda ganha dono.",tip:"Na maquininha: digite o telefone e toque em cadastro completo."},
+{img:"tela8.jpg",t:"Nome e um sobrenome",s:"Escreva o nome e um sobrenome do convidado. Só o primeiro nome não serve: no fim da noite ninguém acha a Maria certa.",tip:"Pergunte com simpatia: Qual o seu nome e sobrenome, para eu deixar sua conta no seu nome?"},
+{img:"tela9.jpg",t:"E o celular",s:"Coloque o celular com DDD. Na tela ele aparece como opcional, mas para nós é obrigatório: é com ele que o convidado ganha o cashback do Clube Feitoria.",tip:"Toque em salvar e depois em fazer pedido. Pronto: comanda com pessoas, nome, sobrenome e celular."},
+{img:"tela2.jpg",t:"Resumo",s:"Quatro coisas em toda comanda: quantidade de pessoas, nome, sobrenome e celular. Tudo na abertura, não no fechamento. É simples e leva vinte segundos.",tip:"Pessoas · Nome · Sobrenome · Celular"}
+];
+var i=0,playing=false,voice=null;
+function pick(){var v=speechSynthesis.getVoices();voice=v.find(function(x){return /pt-BR/i.test(x.lang)&&/Natural|Online|Francisca|Thalita/i.test(x.name)})||v.find(function(x){return /pt-BR/i.test(x.lang)&&/Google/i.test(x.name)})||v.find(function(x){return /pt-BR/i.test(x.lang)})||v.find(function(x){return /^pt/i.test(x.lang)})||null}
+if(window.speechSynthesis){pick();speechSynthesis.onvoiceschanged=pick}
+var dots=document.getElementById("dots");
+S.forEach(function(_,k){var b=document.createElement("button");b.textContent=k+1;b.onclick=function(){stop();show(k)};dots.appendChild(b)});
+function show(k){i=k;var c=S[k];
+ document.getElementById("img").src="telas-garcom/"+c.img;document.getElementById("img").alt="Tela do app: "+c.t;
+ document.getElementById("step").textContent="Passo "+(k+1)+" de "+S.length;
+ document.getElementById("title").textContent=c.t;document.getElementById("say").textContent=c.s;
+ var tp=document.getElementById("tip");tp.hidden=!c.tip;tp.textContent=c.tip;
+ document.getElementById("bar").style.width=((k+1)/S.length*100)+"%";
+ [].forEach.call(dots.children,function(b,j){b.classList.toggle("on",j===k)});}
+function speak(){if(!playing)return;var c=S[i];var u=new SpeechSynthesisUtterance(c.t+". "+c.s+" "+c.tip);u.lang="pt-BR";if(voice)u.voice=voice;u.rate=1.08;u.pitch=1.15;
+ u.onend=function(){if(!playing)return;if(i<S.length-1){show(i+1);setTimeout(speak,600)}else stop()};speechSynthesis.speak(u)}
+function stop(){playing=false;if(window.speechSynthesis)speechSynthesis.cancel();document.getElementById("play").textContent="▶ Assistir com narração"}
+document.getElementById("play").onclick=function(){if(playing){stop();return}if(!window.speechSynthesis){alert("Este navegador não tem narração; use os botões.");return}playing=true;this.textContent="⏸ Pausar";speak()};
+document.getElementById("next").onclick=function(){stop();if(i<S.length-1)show(i+1)};
+document.getElementById("prev").onclick=function(){stop();if(i>0)show(i-1)};
+show(0);
+</script>
