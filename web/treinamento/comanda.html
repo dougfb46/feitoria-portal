@@ -32,7 +32,7 @@ button.main{background:var(--red);border-color:var(--red);color:#fff;font-weight
 <nav style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;padding:10px 16px;background:#1d3427;font:600 15px system-ui,sans-serif"><a href="index.html" style="color:#f3ead7">Treinamento</a><a href="video.html" style="color:#f3ead7">▶ Vídeo</a><a href="comanda.html" style="color:#f3ead7">📱 Abrir a comanda</a></nav>
 <div class="wrap">
   <h1>Abrir a comanda certo</h1>
-  <p class="sub">Feitoria PUB Mogi · app do garçom (o mesmo sistema da maquininha Stone) · cerca de 2 min · telas reais, dados fictícios</p>
+  <p class="sub">Feitoria PUB Mogi · app do garçom (o mesmo sistema da maquininha Stone) · cerca de 3 min · telas reais, dados fictícios</p>
   <div class="stage">
     <div class="phone"><img id="img" alt=""></div>
     <div>
@@ -61,7 +61,10 @@ var S=[
 {img:"tela7.jpg",t:"Toque em mais Cliente",s:"No carrinho, antes de fazer o pedido, toque em mais Cliente. É aqui que a comanda ganha dono.",tip:"Na maquininha: digite o telefone e toque em cadastro completo."},
 {img:"tela8.jpg",t:"Nome e um sobrenome",s:"Escreva o nome e um sobrenome do convidado. Só o primeiro nome não serve: no fim da noite ninguém acha a Maria certa.",tip:"Pergunte com simpatia: Qual o seu nome e sobrenome, para eu deixar sua conta no seu nome?"},
 {img:"tela9.jpg",t:"E o celular",s:"Coloque o celular com DDD. Na tela ele aparece como opcional, mas para nós é obrigatório: é com ele que o convidado ganha o cashback do Clube Feitoria.",tip:"Toque em salvar e depois em fazer pedido. Pronto: comanda com pessoas, nome, sobrenome e celular."},
-{img:"tela2.jpg",t:"Resumo",s:"Quatro coisas em toda comanda: quantidade de pessoas, nome, sobrenome e celular. Tudo na abertura, não no fechamento. É simples e leva vinte segundos.",tip:"Pessoas · Nome · Sobrenome · Celular"}
+{img:"stone1.jpg",t:"Na maquininha Stone",s:"Na maquininha é a mesma tela, em Adicionar Cliente. Coloque o nome e um sobrenome, e o celular com DDD. Toque em cadastro completo se precisar, e depois em salvar.",tip:"Nome e celular aqui são de exemplo."},
+{img:"stone2.jpg",t:"Selecione o cliente antes de pedir",s:"Muito importante: depois de salvar, toque no nome do convidado para deixá-lo marcado em vermelho. Só então toque em fazer pedido. Se ficar marcado só Mesa, o pedido não vai para o nome dele.",tip:"Sempre selecionar o cliente antes de fazer o pedido."},
+{img:"stone3.jpg",t:"Confira a comanda",s:"Na comanda, confira: a quantidade de pessoas no topo e o pedido no nome do convidado. Aqui, três pessoas e o Trio Happy Hour lançado para a Maria.",tip:""},
+{img:"tela2.jpg",t:"Resumo",s:"Em toda comanda: quantidade de pessoas, nome, sobrenome e celular, tudo na abertura. E antes de fazer o pedido, selecione o cliente. É simples e leva vinte segundos.",tip:"Pessoas · Nome · Sobrenome · Celular · Cliente selecionado"}
 ];
 var i=0,playing=false,voice=null;
 function pick(){var v=speechSynthesis.getVoices();voice=v.find(function(x){return /pt-BR/i.test(x.lang)&&/Natural|Online|Francisca|Thalita/i.test(x.name)})||v.find(function(x){return /pt-BR/i.test(x.lang)&&/Google/i.test(x.name)})||v.find(function(x){return /pt-BR/i.test(x.lang)})||v.find(function(x){return /^pt/i.test(x.lang)})||null}
