@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Freela na Feitoria</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=Source+Sans+3:wght@400;600;700&display=swap">
+<style>
+:root{--bg:#f4f1ea;--card:#fff;--ink:#1d2a22;--muted:#56635a;--line:#ddd5c6;--stage:#17241c;--amber:#e3a33b;--amber-d:#a8670a;--green:#24563d;--red:#b4432f;
+--display:"Big Shoulders Display","Arial Narrow",Impact,sans-serif;--body:"Source Sans 3","Segoe UI",system-ui,sans-serif}
+@media (prefers-color-scheme:dark){:root{--bg:#121813;--card:#1c241f;--ink:#ece8df;--muted:#a9b3ac;--line:#33403a;--amber-d:#e3a33b;--green:#7fc29b;--red:#ef8a78}}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:64px}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 var(--body)}
+header.hero{background:var(--stage);color:#f2efe6;padding:28px 18px 26px}
+.hero .in{max-width:860px;margin:0 auto}
+.hero img{height:38px;width:auto;background:#201e1d;border-radius:6px;padding:6px 10px}
+.hero h1{font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:clamp(2.2rem,8vw,3.4rem);line-height:.95;margin:16px 0 8px}
+.hero h1 em{font-style:normal;color:var(--amber)}
+.hero p{margin:0;color:#c9d3cb;max-width:60ch}
+nav{position:sticky;top:0;z-index:5;background:var(--stage);border-top:1px solid #2c3c31;overflow-x:auto;white-space:nowrap}
+nav .in{max-width:860px;margin:0 auto;display:flex;gap:4px;padding:8px 12px}
+nav a{color:#f2efe6;text-decoration:none;font-weight:600;font-size:.92rem;padding:6px 10px;border-radius:999px;border:1px solid #3a4c40}
+nav a:hover,nav a:focus-visible{border-color:var(--amber);outline:none}
+main{max-width:860px;margin:0 auto;padding:8px 16px 60px}
+section{padding-top:22px}
+h2{font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:2rem;line-height:1;margin:14px 0 6px}
+h2 small{display:block;font-family:var(--body);text-transform:none;font-weight:600;font-size:.9rem;color:var(--amber-d);letter-spacing:.06em;margin-bottom:4px}
+.lead{color:var(--muted);margin:0 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:12px}
+ol.rules{list-style:none;counter-reset:r;margin:0;padding:0;display:grid;gap:10px}
+ol.rules li{counter-increment:r;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px 12px 58px;position:relative}
+ol.rules li::before{content:counter(r);position:absolute;left:14px;top:10px;font-family:var(--display);font-weight:800;font-size:2rem;line-height:1;color:var(--amber-d)}
+ol.rules b{display:block}
+.steps{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
+.steps .card{margin:0}
+.steps .n{font-family:var(--display);font-weight:800;font-size:1.6rem;color:var(--amber-d);line-height:1}
+.steps b{display:block;margin:2px 0}
+.say{font-style:italic;color:var(--green)}
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:.96rem}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+tr:last-child td{border-bottom:0}
+.tw{overflow-x:auto;margin-bottom:12px}
+.beers{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
+.beer{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px}
+.beer h3{margin:0;font-family:var(--display);font-size:1.5rem;text-transform:uppercase;line-height:1}
+.beer .num{font-size:.85rem;color:var(--muted);margin:4px 0 8px;font-variant-numeric:tabular-nums}
+.beer p{margin:0 0 8px}
+.chip{display:inline-block;font-size:.8rem;font-weight:600;border:1px solid var(--line);border-radius:999px;padding:1px 8px;margin:2px 4px 0 0}
+.glass{display:grid;gap:10px;grid-template-columns:repeat(3,1fr)}
+.glass .card{margin:0;text-align:center}
+.glass svg{width:56px;height:70px;stroke:currentColor;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;color:var(--amber-d)}
+.glass b{display:block;font-size:1.05rem}
+.glass span{color:var(--muted);font-size:.9rem}
+@media (max-width:560px){.glass{grid-template-columns:1fr}}
+.hl{border-left:4px solid var(--amber);padding-left:12px}
+.warn{border-color:var(--red)}
+.warn b{color:var(--red)}
+.tag{font-size:.75rem;font-weight:700;color:var(--red);border:1px solid var(--red);border-radius:4px;padding:0 5px;margin-left:4px}
+.q{margin-bottom:14px}
+.q p{margin:0 0 8px;font-weight:600}
+.q button{display:block;width:100%;text-align:left;font:inherit;background:var(--card);color:var(--ink);border:1.5px solid var(--line);border-radius:8px;padding:9px 12px;margin-bottom:6px;cursor:pointer}
+.q button:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.q button.ok{border-color:var(--green);background:color-mix(in srgb,var(--green) 14%,var(--card))}
+.q button.no{border-color:var(--red);background:color-mix(in srgb,var(--red) 12%,var(--card))}
+.q .why{display:none;font-size:.92rem;color:var(--muted);margin:2px 0 0}
+.q.done .why{display:block}
+#score{font-family:var(--display);font-weight:800;font-size:1.6rem}
+footer{max-width:860px;margin:0 auto;padding:0 16px 40px;color:var(--muted);font-size:.85rem}
+a{color:var(--amber-d)}
+</style>
+</head>
+<body>
+<header class="hero"><div class="in">
+  <img src="logo-feitoria-claro.webp" alt="Feitoria da Cerveja">
+  <h1>Seu turno na <em>Feitoria</em></h1>
+  <p>O que o freela precisa saber antes de pisar no salão. Leia tudo uma vez (cerca de 15 minutos), faça o teste no fim e use esta página como consulta durante o turno.</p>
+</div></header>
+
+<nav aria-label="Seções"><div class="in">
+  <a href="#casa">A casa</a><a href="#regras">Regras de ouro</a><a href="#mesa">A mesa</a><a href="#comanda">Comanda</a><a href="#chopes">Chopes</a><a href="#copos">Copos</a><a href="#drinks">Drinks</a><a href="#comida">Comida</a><a href="#pedidos">Pediu outra coisa</a><a href="#chame">Chame alguém</a><a href="#teste">Teste</a>
+</div></nav>
+
+<main>
+
+<section id="casa">
+  <h2><small>1 · Antes de tudo</small>A casa em um minuto</h2>
+  <div class="card">
+    <p><b>Aqui, quem trabalha é elenco e quem chega é convidado.</b> O clima é descontraído, com pouca formalidade e atenção total.</p>
+    <p><b>Palco e bastidor.</b> Palco é onde o convidado está: salão, deck, jardim, chalé e balcão. No palco: sorriso, postura de quem está disponível e celular guardado. Pausa, celular e conversa entre colegas ficam no bastidor.</p>
+    <p><b>O chope é da casa.</b> Todos os chopes são receitas da Feitoria e só existem aqui. São 12 torneiras: seis estilos quase fixos e as outras que giram. O telão mostra o que está saindo agora.</p>
+    <p style="margin:0"><b>Chope fresco.</b> O chope não é pasteurizado: sai do tanque da cervejaria direto para as torneiras. Por isso é mais fresco que a cerveja de garrafa ou lata.</p>
+  </div>
+</section>
+
+<section id="regras">
+  <h2><small>2 · Inegociável</small>Regras de ouro</h2>
+  <p class="lead">Valem em todo turno, do primeiro ao último convidado.</p>
+  <ol class="rules">
+    <li><b>Sorriso no rosto e olho no convidado.</b> Mesa nova precisa ver que você a notou logo: um olhar, um aceno, "já venho atender vocês". Atendimento em até 2 minutos depois de sentar.</li>
+    <li><b>Comanda abre com pessoas, nome, sobrenome e celular.</b> E o cliente é selecionado antes de tocar em "Fazer pedido".</li>
+    <li><b>Mesa sem copo é prioridade.</b> Bebida primeiro, sempre.</li>
+    <li><b>Toda mesa recebe oferta, sem exceção.</b> Pelo nome do produto, nos quatro momentos da mesa: chegada, pedido, copo a 1/3 e pratos vazios. Quem decide se quer é o convidado, não você.</li>
+    <li><b>Rádio ligado, no ouvido, o turno inteiro.</b> Responda quando chamarem e fale curto. Detalhes na seção <a href="#chame">Chame alguém</a>.</li>
+    <li><b>Pausa só no horário da escala.</b> No pico (sexta e sábado, 20h30 às 21h30) ninguém sai do salão.</li>
+    <li><b>Celular pessoal guardado no palco.</b> Conversa paralela, só no bastidor.</li>
+    <li><b>Não sabe? Não invente.</b> Chame alguém da casa. Melhor um "vou confirmar e já volto" do que uma resposta errada.</li>
+    <li><b>Não prometa o que não pode cumprir.</b> O que acabou, ingrediente, alergia ou tempo de prato: só depois de confirmar com o bar ou a cozinha.</li>
+    <li><b>Álcool nunca para menor de 18.</b> Na dúvida, peça documento. Convidado alterado: chame o gerente e não discuta.</li>
+  </ol>
+</section>
+
+<section id="mesa">
+  <h2><small>3 · O seu roteiro</small>A mesa em 6 passos</h2>
+  <div class="steps">
+    <div class="card"><span class="n">1</span><b>Chegar e abrir a comanda</b>Sorriso, seu nome e uma pergunta. <span class="say">"Boa noite, eu sou a Ana e vou atender vocês. Primeira vez na Feitoria?"</span> Na abertura: pessoas, nome, sobrenome e celular.</div>
+    <div class="card"><span class="n">2</span><b>Bebida primeiro</b>Dê dois caminhos, não uma pergunta aberta. <span class="say">"Vocês preferem algo leve e refrescante ou mais amargo e intenso?"</span></div>
+    <div class="card"><span class="n">3</span><b>Uma oferta junto com o pedido</b>Uma porção para dividir ou o chope que combina com o prato.</div>
+    <div class="card"><span class="n">4</span><b>Repetir e lançar</b><span class="say">"Deixa eu repetir para não errar nada…"</span> Lance na comanda já aberta, com o cliente selecionado.</div>
+    <div class="card"><span class="n">5</span><b>Entregar e acompanhar</b>Coloque na frente da pessoa e diga o nome: <span class="say">"Sua Pilsen. Saúde!"</span> Copo a 1/3: ofereça a próxima rodada antes de secar.</div>
+    <div class="card"><span class="n">6</span><b>Fechar bem</b>Tire os pratos e, com a mesa limpa, mostre o encarte de sobremesas. No almoço, café; à noite, saideira. Agradeça e convide para voltar.</div>
+  </div>
+  <div class="card warn" style="margin-top:12px"><b>Venda ativa: o garçom que só anota pedido não está atendendo.</b>
+    <ul style="margin:6px 0 0;padding-left:20px">
+      <li><b>Chegada:</b> bebida e algo para beliscar. <span class="say">"Já trago uma Pilsen e uns pastéis enquanto vocês olham?"</span></li>
+      <li><b>Pedido:</b> uma porção para dividir ou o chope que combina com o prato.</li>
+      <li><b>Copo a 1/3:</b> a próxima rodada, antes de a mesa chamar.</li>
+      <li><b>Pratos vazios:</b> mesa limpa, encarte de sobremesas na mão, depois café ou saideira.</li>
+    </ul>
+    <p style="margin:8px 0 0">Nunca pergunte <b>"vão querer mais alguma coisa?"</b>: diga o nome do produto. Oferecer não incomoda; incomoda a mesa esperar e ninguém aparecer. Ouviu um não? Tudo bem: no próximo momento da mesa, vem a próxima oferta.</p>
+  </div>
+  <div class="card hl"><b>Chegue à mesa com a mão ocupada.</b> Levando água, recolhendo um copo, limpando a mesa. Assim você confere a mesa sem interromper a conversa.</div>
+</section>
+
+<section id="comanda">
+  <h2><small>4 · Sem exceção</small>Abrir a comanda</h2>
+  <div class="card">
+    <p><b>Obrigatório em toda comanda:</b> número de pessoas, nome e sobrenome do convidado e celular.</p>
+    <p><b>Na maquininha:</b> digite o telefone, toque em cadastro completo e preencha nome e um sobrenome. <b>No app do garçom:</b> toque em + Cliente no carrinho. Nos dois, marque a quantidade de pessoas no topo da comanda.</p>
+    <p><b>Antes de "Fazer pedido":</b> o cliente precisa estar selecionado.</p>
+    <p class="say">"Para abrir a comanda, qual seu nome completo e celular? Se você for do Clube Feitoria, o cashback já entra."</p>
+    <p style="margin:0">O dado é do convidado: não anote em papel, não guarde no seu celular e não passe para ninguém. <a href="comanda.html">Ver as telas, passo a passo</a>.</p>
+  </div>
+</section>
+
+<section id="chopes">
+  <h2><small>5 · O que mais sai</small>Os chopes quase fixos</h2>
+  <p class="lead">Seis estilos que quase sempre estão na torneira. As outras torneiras mudam: olhe o telão. ABV é o teor alcoólico; IBU é o amargor (quanto maior, mais amargo).</p>
+  <div class="beers">
+    <div class="beer"><h3>Pilsen</h3><div class="num">ABV 4,8% · IBU 18</div><p>Clara, leve e refrescante, com aroma levemente floral. A mais tradicional e a que mais sai.</p><span class="chip">tulipa</span><span class="chip">caneca</span><span class="chip">martelo</span></div>
+    <div class="beer"><h3>Belgian Pale Ale</h3><div class="num">ABV 5,5% · IBU 22</div><p>Fácil de beber, toque de mel, leve aroma de pêssego, perfil condimentado belga. É a indicação para quem pede uma cerveja de marca conhecida.</p><span class="chip">half</span><span class="chip">pint</span><span class="chip">martelo</span></div>
+    <div class="beer"><h3>Pêssego Lager</h3><div class="num">ABV 5% · IBU 12</div><p>Feita com pêssego em calda: clara, macia, adocicada e bem gaseificada. Para quem quer algo diferente e leve.</p><span class="chip">tulipa</span><span class="chip">caneca</span><span class="chip">martelo</span></div>
+    <div class="beer"><h3>Avelã Lager</h3><div class="num">ABV 5,5% · IBU 18</div><p>A mais doce da casa: avelã e baunilha, lembra chocolate com castanhas. Combina com pastel de chocolate.</p><span class="chip">tulipa</span><span class="chip">caneca</span><span class="chip">martelo</span></div>
+    <div class="beer"><h3>Session IPA</h3><div class="num">ABV 5,5% · IBU 45</div><p>Uma IPA mais leve: aroma de melão, tangerina, damasco e maracujá. Bom degrau para quem quer começar no lúpulo.</p><span class="chip">half</span><span class="chip">pint</span><span class="chip">martelo</span></div>
+    <div class="beer"><h3>Indonesian IPA</h3><div class="num">ABV 7,2% · IBU 70</div><p>A queridinha da Feitoria. Âmbar avermelhada, amargor bem marcado, maracujá com goiaba madura. Para quem gosta de amargo.</p><span class="chip">half</span><span class="chip">pint</span><span class="chip">martelo</span></div>
+  </div>
+  <div class="card hl" style="margin-top:12px">
+    <b>Régua Degustação: o carro-chefe.</b> Quatro estilos à escolha do convidado, servidos lado a lado. Ofereça para quem está em dúvida, para quem vem pela primeira vez e para o casal que quer dividir. Ajude a montar do mais leve para o mais intenso. <span class="say">"Quer conhecer quatro estilos de uma vez? A Régua é o jeito mais gostoso de descobrir o seu."</span>
+  </div>
+  <div class="card"><b>Quem pede amargo pela primeira vez</b> não vai direto na Indonesian: comece pela Belgian Pale Ale ou pela Session IPA.</div>
+</section>
+
+<section id="copos">
+  <h2><small>6 · Cada copo, um estilo</small>Os copos</h2>
+  <div class="glass">
+    <div class="card"><svg viewBox="0 0 56 70" aria-hidden="true"><path d="M12 6 Q8 30 18 44 Q22 50 22 58 H34 Q34 50 38 44 Q48 30 44 6 Z"/><path d="M20 64 H36"/></svg><b>Tulipa (300 ml) e caneca (500 ml)</b><span>As lagers e a Weizen: Pilsen, Pêssego, Avelã, Munich Dunkel, Baunilha Toffee, Weizen.</span></div>
+    <div class="card"><svg viewBox="0 0 56 70" aria-hidden="true"><path d="M14 6 H42 Q44 30 40 50 L38 64 H18 L16 50 Q12 30 14 6 Z"/></svg><b>Half (300 ml) e pint (500 ml)</b><span>As ales: Belgian Pale Ale, Session IPA, Indonesian IPA, APA. A curva do copo segura o aroma.</span></div>
+    <div class="card"><svg viewBox="0 0 56 70" aria-hidden="true"><path d="M12 6 Q12 30 28 34 Q44 30 44 6 Z"/><path d="M28 34 V60 M18 64 H38"/></svg><b>Taça (440 ml)</b><span>As especiais: Imperial Stout, Sour, Chope de Vinho.</span></div>
+  </div>
+  <div class="card" style="margin-top:12px">Copo vai para a mesa limpo, sem marca, sem trinca e com o colarinho certo. Copo com defeito volta para o bar.</div>
+  <div class="card warn"><b>Martelo (1,2 L) é para quem é corajoso, não para dividir.</b> Casal pode dividir, mas a casa não indica. <b>Nunca leve copo vazio para a mesa dividir um martelo.</b> Mesa que quer dividir: ofereça uma rodada, cada um com o seu copo.</div>
+</section>
+
+<section id="drinks">
+  <h2><small>7 · Guia rápido</small>Os drinks da casa</h2>
+  <p class="lead">O que vai em cada um e para quem indicar. Receita e medida são do bar; aqui é para você saber vender.</p>
+  <div class="tw"><table>
+    <thead><tr><th>Drink</th><th>O que leva</th><th>Copo</th><th>Para quem</th></tr></thead>
+    <tbody>
+      <tr><td><b>Pink Gin</b></td><td>Gin, xarope de frutas vermelhas, limão, gengibre, água com gás e espuma de gengibre</td><td>Taça</td><td>Quem não toma chope. Frutado, refrescante, com um toque picante do gengibre.</td></tr>
+      <tr><td><b>Floradora</b></td><td>A mesma base do Pink Gin, mais longa, finalizada com gomo de limão</td><td>Pint</td><td>Quem quer um drink frutado para beber com calma.</td></tr>
+      <tr><td><b>London Mule</b></td><td>Gin ou vodka, limão, gengibre, água com gás, espuma de gengibre e raspas de limão</td><td>Caneca metálica</td><td>Quem gosta de cítrico e de gengibre. Pergunte: gin ou vodka?</td></tr>
+      <tr><td><b>Gin Tônica</b></td><td>Gin, limão, tônica e especiarias da casa</td><td>Taça de gin</td><td>O clássico, para quem já sabe que gosta de gin.</td></tr>
+      <tr><td><b>Tropical</b></td><td>Gin, suco de laranja, limão e tônica</td><td>Taça de gin</td><td>Quem quer gin tônica mais suave e cítrica.</td></tr>
+      <tr><td><b>Fitzgerald</b></td><td>Gin, limão, açúcar, angostura e casca de limão-siciliano</td><td>Copo baixo</td><td>Drink curto, cítrico e sem gás.</td></tr>
+      <tr><td><b>Negroni</b></td><td>Campari, vermute e gin, com casca de laranja</td><td>Copo baixo</td><td>Quem gosta de amargo e forte. Avise que é um drink potente.</td></tr>
+      <tr><td><b>Caipirinha Feitoria</b></td><td>Limão, açúcar e cachaça ou vodka</td><td>Copo Ilha Bela</td><td>A brasileira de sempre. Pergunte: cachaça ou vodka?</td></tr>
+      <tr><td><b>Cozumel</b></td><td>Chope Pilsen, limão e melado, com borda de sal rosa</td><td>Taça de gin</td><td>Quem gosta de chope e quer algo diferente. Leva chope: não serve para quem evita glúten.</td></tr>
+    </tbody>
+  </table></div>
+  <div class="card"><b>Sem álcool:</b> qualquer drink da casa pode ser feito sem álcool (o Pink Gin sem álcool é o mais pedido). Também tem suco de maracujá e Heineken 0.0. <b>Alergia ou restrição:</b> confirme os ingredientes com o bar antes de indicar.</div>
+</section>
+
+<section id="comida">
+  <h2><small>8 · O que oferecer</small>Comida que a casa quer vender</h2>
+  <p class="lead">Não decore o cardápio inteiro: ofereça estes. O resto está no QR Code da mesa. Pense em três momentos: algo para beliscar na chegada, algo para dividir no meio e um fechamento doce.</p>
+  <div class="tw"><table>
+    <thead><tr><th>Momento</th><th>Ofereça</th><th>Como falar</th></tr></thead>
+    <tbody>
+      <tr><td><b>Chegada</b><br>enquanto escolhem</td><td><b>Pastéis Salgados</b> (4 unidades)</td><td class="say">"Para beliscar enquanto escolhem, trago uns pastéis? Vêm quatro, um para cada."</td></tr>
+      <tr><td><b>Para dividir</b><br>casal</td><td><b>Trio Happy Hour</b>: torresmo, mandioca frita e calabresa acebolada</td><td class="say">"O Trio é a nossa porção para dividir, vai muito bem com a Pilsen."</td></tr>
+      <tr><td><b>Para dividir</b><br>grupo</td><td><b>Quarteto Alemão</b> ou <b>Atrevida</b> (16 salgadinhos sortidos)</td><td class="say">"Para a mesa toda, a Atrevida vem com coxinha, quibe, bolinho de costela e pastel."</td></tr>
+      <tr><td><b>Quem quer frango</b></td><td><b>Crispy Chicken</b>: tiras de frango empanadas no panko com molho da casa</td><td class="say">"O Crispy Chicken é um dos que mais saem, crocante e rápido."</td></tr>
+      <tr><td><b>Quem quer algo da casa</b></td><td><b>Bolinho de Costela</b>: massa de mandioca com costela desfiada</td><td class="say">"É receita nossa, combina com a Indonesian."</td></tr>
+      <tr><td><b>Está sozinho</b></td><td><b>Mini Sanduba Bacon e Cheddar</b> ou <b>Aperitivo Feitoria</b></td><td class="say">"Para um, o Mini Sanduba é na medida: vêm dois, com batata."</td></tr>
+      <tr><td><b>Quer pizza</b></td><td><b>Pizzas de massa fina</b>, boas para dividir</td><td>Com o Chope de Vinho, pizza é a combinação certa.</td></tr>
+      <tr><td><b>Fechamento</b></td><td><b>Sobremesas do encarte</b>; <b>Pastel de chocolate</b> com a Avelã Lager; café no almoço</td><td class="say">"Temos sobremesas novas, olha aqui. Essa é ótima para dividir."</td></tr>
+    </tbody>
+  </table></div>
+  <h3 style="font-family:var(--display);text-transform:uppercase;font-size:1.4rem;margin:18px 0 8px">Almoço</h3>
+  <div class="tw"><table>
+    <thead><tr><th>Ofereça</th><th>Para quem</th></tr></thead>
+    <tbody>
+      <tr><td><b>Crispy Chicken</b></td><td>O que mais sai no almoço. Bom para quem está com pressa.</td></tr>
+      <tr><td><b>Filé Oswaldo Aranha</b> (fim de semana)</td><td>Dois medalhões de filé com alho crocante, arroz, farofa e batata. O prato da casa no fim de semana.</td></tr>
+      <tr><td><b>Opção vegetal</b>: Tofu defumado ou Strogonoff de cogumelos</td><td>Quem não come carne. Ingredientes: confirme com a cozinha.</td></tr>
+    </tbody>
+  </table></div>
+  <div class="card hl">Sem glúten, sem lactose ou alergia: <b>sempre confirme com a cozinha antes de prometer.</b> Tempo de porção: cerca de 20 minutos. Se a mesa estiver com pressa, avise e ofereça os pastéis.</div>
+</section>
+
+<section id="pedidos">
+  <h2><small>9 · Na hora da dúvida</small>Pediu outra coisa?</h2>
+  <div class="tw"><table>
+    <thead><tr><th>O convidado</th><th>Ofereça</th></tr></thead>
+    <tbody>
+      <tr><td>Pediu Heineken ou outra marca</td><td>Belgian Pale Ale. <span class="say">"Essa a gente não tem, mas a Belgian é a que eu indico para quem gosta."</span></td></tr>
+      <tr><td>Não sabe o que quer</td><td>Régua Degustação</td></tr>
+      <tr><td>Quer leve</td><td>Pilsen ou Pêssego Lager</td></tr>
+      <tr><td>Gosta de amargo</td><td>Indonesian IPA (primeira vez no amargo: Session IPA)</td></tr>
+      <tr><td>Gosta de doce</td><td>Avelã Lager</td></tr>
+      <tr><td>Toma vinho</td><td>Chope de Vinho, na taça</td></tr>
+      <tr><td>Não toma chope</td><td>Pink Gin ou outro drink da casa</td></tr>
+      <tr><td>Não bebe álcool</td><td>Qualquer drink da casa sem álcool (o Pink Gin é o mais pedido), suco ou Heineken 0.0</td></tr>
+      <tr><td>Não come glúten</td><td>Só com confirmação: drink com ingredientes conferidos pelo bar ou cerveja rotulada sem glúten. Chope tem glúten.</td></tr>
+      <tr><td>Está sozinho</td><td>Aperitivo Feitoria ou Mini Sanduba</td></tr>
+    </tbody>
+  </table></div>
+  <div class="card"><b>Acabou?</b> Não diga só "não tem". Acolha, explique e ofereça a alternativa na mesma frase. <span class="say">"Esse barril acabou agora, mas a Belgian é bem parecida. Quer provar?"</span></div>
+</section>
+
+<section id="chame">
+  <h2><small>10 · Você não está sozinho</small>Chame alguém da casa</h2>
+  <div class="card warn"><b>Chame o gerente ou o colega da casa quando:</b>
+    <ul style="margin:6px 0 0;padding-left:20px">
+      <li>o convidado pedir explicação de um chope ou prato que você não sabe dar;</li>
+      <li>houver reclamação (ouça até o fim, diga "sinto muito, vou resolver" e chame);</li>
+      <li>alguém perguntar sobre alergia, glúten ou lactose;</li>
+      <li>houver dúvida sobre a idade de quem pede álcool;</li>
+      <li>um convidado estiver alterado;</li>
+      <li>cair copo, quebrar vidro ou molhar o chão: afaste as pessoas, sinalize e avise.</li>
+    </ul>
+  </div>
+  <div class="card"><b>O colega da casa da praça do lado é o seu ponto de apoio.</b> O gerente diz quem é no pré-turno.</div>
+  <div class="card"><b>Rádio</b>
+    <ul style="margin:6px 0 0;padding-left:20px">
+      <li>No começo do turno, configure e teste o rádio com o gerente.</li>
+      <li>Ligado e no ouvido o turno inteiro. Pegue e devolva carregado.</li>
+      <li>Fale curto: quem chama, para quem e o quê. <span class="say">"Bar, aqui é a Ana do Deck: mesa 32 sem copo."</span></li>
+      <li>Responda quando chamarem, mesmo que seja "ok, já vou".</li>
+      <li>Rádio é para o trabalho: nada de conversa pessoal ou brincadeira no canal.</li>
+      <li>Perto da mesa, fale baixo ou se afaste. O convidado não precisa ouvir o rádio.</li>
+    </ul>
+  </div>
+  <div class="card"><b>Pausa.</b> Só no horário que o gerente definiu na escala. No pico, ninguém sai do salão. Precisou sair fora do horário? Avise pelo rádio antes.</div>
+</section>
+
+<section id="teste">
+  <h2><small>11 · Para fechar</small>Teste rápido</h2>
+  <p class="lead">Toque na resposta. Faça antes do primeiro turno e mostre o resultado ao gerente.</p>
+  <div id="quiz"></div>
+  <div class="card"><span id="score">0 de 8</span> <span id="msg" style="color:var(--muted)"></span></div>
+</section>
+
+</main>
+<footer>Feitoria da Cerveja · PUB Mogi · Treinamento do freela · versão de 17/11/2026 · uso interno. Fontes: playbook "7 dias para aumentar o ticket médio" (Politi Academy), guia de estilos da Feitoria (abr/2026), fichas técnicas de drinks (out/2026), cardápio e análise de vendas (jun–jul/2026), manual de operação da franquia e treinamento do salão.</footer>
+
+<script>
+var Q=[
+ ["A mesa pede um martelo e quatro copos vazios para dividir.",["Leva os quatro copos","Explica que o martelo não é para dividir e oferece uma rodada, cada um com o seu","Leva só dois copos"],1,"Nunca leve copo vazio para dividir um martelo. Quem quer dividir recebe uma rodada."],
+ ["Os pratos da mesa acabaram de esvaziar. O que você faz?",["Pergunta \"vão querer mais alguma coisa?\"","Tira os pratos e mostra o encarte de sobremesas, dizendo o nome de uma","Espera a mesa pedir a conta"],1,"Toda mesa recebe oferta pelo nome, sem exceção. Mesa limpa, encarte na mão."],
+ ["O que é obrigatório para abrir a comanda?",["Só o número da mesa","Pessoas, nome, sobrenome e celular do convidado","Nome e e-mail"],1,"Pessoas, nome, sobrenome e celular, em toda comanda. E o cliente selecionado antes de \"Fazer pedido\"."],
+ ["Uma mesa acabou de sentar e você está ocupado. O que fazer?",["Esperar terminar e só depois ir","Mostrar que viu: olhar, aceno ou \"já venho atender vocês\"","Pedir para outro colega sem avisar a mesa"],1,"A mesa precisa saber que foi notada. O atendimento deve acontecer em até 2 minutos."],
+ ["O convidado pede Heineken. O que oferecer?",["Indonesian IPA","Belgian Pale Ale","Imperial Stout"],1,"A Belgian Pale Ale é fácil de beber e é a indicação da casa para quem pede uma marca conhecida."],
+ ["Em que copo vai a Indonesian IPA?",["Tulipa","Half ou pint","Taça"],1,"Ales vão no half ou no pint. Lagers, na tulipa ou na caneca. Especiais, na taça."],
+ ["O convidado está em dúvida entre vários chopes. Qual é o carro-chefe para esse momento?",["A Régua Degustação","Um copo de água","Dizer que todos são bons"],0,"Quatro estilos à escolha, lado a lado. Ele prova e descobre o dele."],
+ ["Perguntaram se um drink tem glúten e você não sabe.",["Diz que não tem","Confirma com o bar antes de responder","Indica o Cozumel"],1,"Restrição e alergia: só depois de confirmar. O Cozumel leva chope, que tem glúten."],
+ ["São 20h45 de sábado e você quer fazer sua pausa.",["Sai, porque está cansado","Espera o horário da escala; no pico ninguém sai do salão","Avisa um colega e vai"],1,"Pausa só no horário da escala. Sexta e sábado, das 20h30 às 21h30, é pico."],
+ ["Um convidado parece ter menos de 18 anos e pede chope.",["Serve, porque ele está com adultos","Pede documento; sem confirmação, não serve álcool","Serve só meio copo"],1,"Álcool nunca para menor de 18. Na dúvida, documento. Se precisar, chame o gerente."]
+];
+var host=document.getElementById('quiz'),score=0,done=0;
+Q.forEach(function(q,i){var d=document.createElement('div');d.className='q card';var p=document.createElement('p');p.textContent=(i+1)+'. '+q[0];d.appendChild(p);
+ q[1].forEach(function(o,j){var b=document.createElement('button');b.type='button';b.textContent=o;b.addEventListener('click',function(){if(d.classList.contains('done'))return;d.classList.add('done');done++;
+  if(j===q[2]){b.classList.add('ok');score++;}else{b.classList.add('no');d.querySelectorAll('button')[q[2]].classList.add('ok');}
+  document.getElementById('score').textContent=score+' de '+Q.length;
+  if(done===Q.length)document.getElementById('msg').textContent=score===Q.length?'Tudo certo. Mostre ao gerente.':'Revise as que errou e mostre ao gerente.';});d.appendChild(b);});
+ var w=document.createElement('p');w.className='why';w.textContent=q[3];d.appendChild(w);host.appendChild(d);});
+document.getElementById('score').textContent='0 de '+Q.length;
+</script>
+</body>
+</html>
