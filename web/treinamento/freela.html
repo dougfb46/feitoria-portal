@@ -70,6 +70,13 @@ tr:last-child td{border-bottom:0}
 #score{font-family:var(--display);font-weight:800;font-size:1.6rem}
 footer{max-width:860px;margin:0 auto;padding:0 16px 40px;color:var(--muted);font-size:.85rem}
 a{color:var(--amber-d)}
+.short{display:flex;gap:14px;align-items:center;margin:4px 0 14px}
+.short video{width:150px;aspect-ratio:9/16;border-radius:10px;background:#0f1812;border:1px solid var(--line);flex:none}
+.short p{margin:0;font-size:.95rem}.short b{display:block;font-family:var(--display);text-transform:uppercase;font-size:1.15rem}
+.vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.vgrid figure{margin:0}.vgrid video{width:100%;aspect-ratio:9/16;border-radius:10px;background:#0f1812;border:1px solid var(--line)}
+.vgrid figcaption{font-size:.85rem;font-weight:600;margin-top:4px}
+.feedbtn{display:block;text-align:center;background:var(--stage);color:#f2efe6;text-decoration:none;font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:1.35rem;letter-spacing:.03em;padding:14px 16px;border-radius:12px;border:2px solid var(--amber)}
 </style>
 </head>
 <body>
@@ -80,13 +87,21 @@ a{color:var(--amber-d)}
 </div></header>
 
 <nav aria-label="Seções"><div class="in">
-  <a href="#casa">A casa</a><a href="#regras">Regras de ouro</a><a href="#mesa">A mesa</a><a href="#comanda">Comanda</a><a href="#chopes">Chopes</a><a href="#copos">Copos</a><a href="#drinks">Drinks</a><a href="#comida">Comida</a><a href="#pedidos">Pediu outra coisa</a><a href="#chame">Chame alguém</a><a href="#teste">Teste</a>
+  <a href="#shorts">▶ Vídeos</a><a href="#casa">A casa</a><a href="#regras">Regras de ouro</a><a href="#mesa">A mesa</a><a href="#comanda">Comanda</a><a href="#chopes">Chopes</a><a href="#copos">Copos</a><a href="#drinks">Drinks</a><a href="#comida">Comida</a><a href="#pedidos">Pediu outra coisa</a><a href="#chame">Chame alguém</a><a href="#teste">Teste</a>
 </div></nav>
 
 <main>
 
+<section id="shorts">
+  <h2><small>Assista primeiro</small>Os 11 shorts do freela</h2>
+  <p class="lead">Menos de um minuto cada. Assista todos antes do primeiro turno; cada um também aparece na seção dele.</p>
+  <p><a class="feedbtn" href="feed.html">▶ Assistir em sequência, deslizando (modo TikTok)</a></p>
+  <div class="vgrid"><figure><video controls playsinline preload="none" poster="shorts/freela-01-a-casa-em-40-segundos.jpg" src="shorts/freela-01-a-casa-em-40-segundos.mp4" aria-label="Short 01: A casa em 40 segundos"></video><figcaption>01 · A casa em 40 segundos</figcaption></figure><figure><video controls playsinline preload="none" poster="shorts/freela-02-as-regras-de-ouro.jpg" src="shorts/freela-02-as-regras-de-ouro.mp4" aria-label="Short 02: As regras de ouro"></video><figcaption>02 · As regras de ouro</figcaption></figure><figure><video controls playsinline preload="none" poster="shorts/freela-03-abrir-a-comanda.jpg" src="shorts/freela-03-abrir-a-comanda.mp4" aria-label="Short 03: Abrir a comanda"></video><figcaption>03 · Abrir a comanda</figcaption></figure><figure><video controls playsinline preload="none" poster="shorts/freela-04-a-mesa-em-6-passos.jpg" src="shorts/freela-04-a-mesa-em-6-passos.mp4" aria-label="Short 04: A mesa em 6 passos"></video><figcaption>04 · A mesa em 6 passos</figcaption></figure><figure><video controls playsinline preload="none" poster="shorts/freela-05-venda-ativa.jpg" src="shorts/freela-05-venda-ativa.mp4" aria-label="Short 05: Venda ativa"></video><figcaption>05 · Venda ativa</figcaption></figure><figure><video controls playsinline preload="none" poster="shorts/freela-06-os-chopes-quase-fixos.jpg" src="shorts/freela-06-os-chopes-quase-fixos.mp4" aria-label="Short 06: Os chopes quase fixos"></video><figcaption>06 · Os chopes quase fixos</figcaption></figure><figure><video controls playsinline preload="none" poster="shorts/freela-07-copos-e-martelo.jpg" src="shorts/freela-07-copos-e-martelo.mp4" aria-label="Short 07: Copos e martelo"></video><figcaption>07 · Copos e martelo</figcaption></figure><figure><video controls playsinline preload="none" poster="shorts/freela-08-os-drinks.jpg" src="shorts/freela-08-os-drinks.mp4" aria-label="Short 08: Os drinks"></video><figcaption>08 · Os drinks</figcaption></figure><figure><video controls playsinline preload="none" poster="shorts/freela-09-a-comida-que-a-casa-quer-vender.jpg" src="shorts/freela-09-a-comida-que-a-casa-quer-vender.mp4" aria-label="Short 09: A comida que a casa quer vender"></video><figcaption>09 · A comida que a casa quer vender</figcaption></figure><figure><video controls playsinline preload="none" poster="shorts/freela-10-pediu-outra-coisa.jpg" src="shorts/freela-10-pediu-outra-coisa.mp4" aria-label="Short 10: Pediu outra coisa"></video><figcaption>10 · Pediu outra coisa</figcaption></figure><figure><video controls playsinline preload="none" poster="shorts/freela-11-chame-alguem-da-casa.jpg" src="shorts/freela-11-chame-alguem-da-casa.mp4" aria-label="Short 11: Chame alguém da casa"></video><figcaption>11 · Chame alguém da casa</figcaption></figure></div>
+</section>
+
 <section id="casa">
   <h2><small>1 · Antes de tudo</small>A casa em um minuto</h2>
+  <div class="short"><video controls playsinline preload="none" poster="shorts/freela-01-a-casa-em-40-segundos.jpg" src="shorts/freela-01-a-casa-em-40-segundos.mp4" aria-label="Short 01: A casa em 40 segundos"></video><p><b>Short 01 · A casa em 40 segundos</b>A casa em 40 segundos. Assista antes do primeiro turno.</p></div>
   <div class="card">
     <p><b>Aqui, quem trabalha é elenco e quem chega é convidado.</b> O clima é descontraído, com pouca formalidade e atenção total.</p>
     <p><b>Palco e bastidor.</b> Palco é onde o convidado está: salão, deck, jardim, chalé e balcão. No palco: sorriso, postura de quem está disponível e celular guardado. Pausa, celular e conversa entre colegas ficam no bastidor.</p>
@@ -97,6 +112,7 @@ a{color:var(--amber-d)}
 
 <section id="regras">
   <h2><small>2 · Inegociável</small>Regras de ouro</h2>
+  <div class="short"><video controls playsinline preload="none" poster="shorts/freela-02-as-regras-de-ouro.jpg" src="shorts/freela-02-as-regras-de-ouro.mp4" aria-label="Short 02: As regras de ouro"></video><p><b>Short 02 · As regras de ouro</b>As 10 regras, uma a uma.</p></div>
   <p class="lead">Valem em todo turno, do primeiro ao último convidado.</p>
   <ol class="rules">
     <li><b>Sorriso no rosto e olho no convidado.</b> Mesa nova precisa ver que você a notou logo: um olhar, um aceno, "já venho atender vocês". Atendimento em até 2 minutos depois de sentar.</li>
@@ -114,6 +130,8 @@ a{color:var(--amber-d)}
 
 <section id="mesa">
   <h2><small>3 · O seu roteiro</small>A mesa em 6 passos</h2>
+  <div class="short"><video controls playsinline preload="none" poster="shorts/freela-04-a-mesa-em-6-passos.jpg" src="shorts/freela-04-a-mesa-em-6-passos.mp4" aria-label="Short 04: A mesa em 6 passos"></video><p><b>Short 04 · A mesa em 6 passos</b>Os seis passos, do primeiro olhar à despedida.</p></div>
+  <div class="short"><video controls playsinline preload="none" poster="shorts/freela-05-venda-ativa.jpg" src="shorts/freela-05-venda-ativa.mp4" aria-label="Short 05: Venda ativa"></video><p><b>Short 05 · Venda ativa</b>Os quatro momentos de oferta. Nunca "mais alguma coisa?".</p></div>
   <div class="steps">
     <div class="card"><span class="n">1</span><b>Chegar e abrir a comanda</b>Sorriso, seu nome e uma pergunta. <span class="say">"Boa noite, eu sou a Ana e vou atender vocês. Primeira vez na Feitoria?"</span> Na abertura: pessoas, nome, sobrenome e celular.</div>
     <div class="card"><span class="n">2</span><b>Bebida primeiro</b>Dê dois caminhos, não uma pergunta aberta. <span class="say">"Vocês preferem algo leve e refrescante ou mais amargo e intenso?"</span></div>
@@ -136,6 +154,7 @@ a{color:var(--amber-d)}
 
 <section id="comanda">
   <h2><small>4 · Sem exceção</small>Abrir a comanda</h2>
+  <div class="short"><video controls playsinline preload="none" poster="shorts/freela-03-abrir-a-comanda.jpg" src="shorts/freela-03-abrir-a-comanda.mp4" aria-label="Short 03: Abrir a comanda"></video><p><b>Short 03 · Abrir a comanda</b>Pessoas, nome, sobrenome e celular.</p></div>
   <div class="card">
     <p><b>Obrigatório em toda comanda:</b> número de pessoas, nome e sobrenome do convidado e celular.</p>
     <p><b>Na maquininha:</b> digite o telefone, toque em cadastro completo e preencha nome e um sobrenome. <b>No app do garçom:</b> toque em + Cliente no carrinho. Nos dois, marque a quantidade de pessoas no topo da comanda.</p>
@@ -147,6 +166,7 @@ a{color:var(--amber-d)}
 
 <section id="chopes">
   <h2><small>5 · O que mais sai</small>Os chopes quase fixos</h2>
+  <div class="short"><video controls playsinline preload="none" poster="shorts/freela-06-os-chopes-quase-fixos.jpg" src="shorts/freela-06-os-chopes-quase-fixos.mp4" aria-label="Short 06: Os chopes quase fixos"></video><p><b>Short 06 · Os chopes quase fixos</b>Os seis quase fixos e a Régua Degustação.</p></div>
   <p class="lead">Seis estilos que quase sempre estão na torneira. As outras torneiras mudam: olhe o telão. ABV é o teor alcoólico; IBU é o amargor (quanto maior, mais amargo).</p>
   <div class="beers">
     <div class="beer"><h3>Pilsen</h3><div class="num">ABV 4,8% · IBU 18</div><p>Clara, leve e refrescante, com aroma levemente floral. A mais tradicional e a que mais sai.</p><span class="chip">tulipa</span><span class="chip">caneca</span><span class="chip">martelo</span></div>
@@ -164,6 +184,7 @@ a{color:var(--amber-d)}
 
 <section id="copos">
   <h2><small>6 · Cada copo, um estilo</small>Os copos</h2>
+  <div class="short"><video controls playsinline preload="none" poster="shorts/freela-07-copos-e-martelo.jpg" src="shorts/freela-07-copos-e-martelo.mp4" aria-label="Short 07: Copos e martelo"></video><p><b>Short 07 · Copos e martelo</b>Copo certo, volumes e a regra do martelo.</p></div>
   <div class="glass">
     <div class="card"><svg viewBox="0 0 56 70" aria-hidden="true"><path d="M12 6 Q8 30 18 44 Q22 50 22 58 H34 Q34 50 38 44 Q48 30 44 6 Z"/><path d="M20 64 H36"/></svg><b>Tulipa (300 ml) e caneca (500 ml)</b><span>As lagers e a Weizen: Pilsen, Pêssego, Avelã, Munich Dunkel, Baunilha Toffee, Weizen.</span></div>
     <div class="card"><svg viewBox="0 0 56 70" aria-hidden="true"><path d="M14 6 H42 Q44 30 40 50 L38 64 H18 L16 50 Q12 30 14 6 Z"/></svg><b>Half (300 ml) e pint (500 ml)</b><span>As ales: Belgian Pale Ale, Session IPA, Indonesian IPA, APA. A curva do copo segura o aroma.</span></div>
@@ -175,6 +196,7 @@ a{color:var(--amber-d)}
 
 <section id="drinks">
   <h2><small>7 · Guia rápido</small>Os drinks da casa</h2>
+  <div class="short"><video controls playsinline preload="none" poster="shorts/freela-08-os-drinks.jpg" src="shorts/freela-08-os-drinks.mp4" aria-label="Short 08: Os drinks"></video><p><b>Short 08 · Os drinks</b>Os drinks em 30 segundos. Todos podem ser sem álcool.</p></div>
   <p class="lead">O que vai em cada um e para quem indicar. Receita e medida são do bar; aqui é para você saber vender.</p>
   <div class="tw"><table>
     <thead><tr><th>Drink</th><th>O que leva</th><th>Copo</th><th>Para quem</th></tr></thead>
@@ -195,6 +217,7 @@ a{color:var(--amber-d)}
 
 <section id="comida">
   <h2><small>8 · O que oferecer</small>Comida que a casa quer vender</h2>
+  <div class="short"><video controls playsinline preload="none" poster="shorts/freela-09-a-comida-que-a-casa-quer-vender.jpg" src="shorts/freela-09-a-comida-que-a-casa-quer-vender.mp4" aria-label="Short 09: A comida que a casa quer vender"></video><p><b>Short 09 · A comida que a casa quer vender</b>Beliscar, dividir e fechar.</p></div>
   <p class="lead">Não decore o cardápio inteiro: ofereça estes. O resto está no QR Code da mesa. Pense em três momentos: algo para beliscar na chegada, algo para dividir no meio e um fechamento doce.</p>
   <div class="tw"><table>
     <thead><tr><th>Momento</th><th>Ofereça</th><th>Como falar</th></tr></thead>
@@ -223,6 +246,7 @@ a{color:var(--amber-d)}
 
 <section id="pedidos">
   <h2><small>9 · Na hora da dúvida</small>Pediu outra coisa?</h2>
+  <div class="short"><video controls playsinline preload="none" poster="shorts/freela-10-pediu-outra-coisa.jpg" src="shorts/freela-10-pediu-outra-coisa.mp4" aria-label="Short 10: Pediu outra coisa"></video><p><b>Short 10 · Pediu outra coisa</b>Sempre tem uma resposta.</p></div>
   <div class="tw"><table>
     <thead><tr><th>O convidado</th><th>Ofereça</th></tr></thead>
     <tbody>
@@ -243,6 +267,7 @@ a{color:var(--amber-d)}
 
 <section id="chame">
   <h2><small>10 · Você não está sozinho</small>Chame alguém da casa</h2>
+  <div class="short"><video controls playsinline preload="none" poster="shorts/freela-11-chame-alguem-da-casa.jpg" src="shorts/freela-11-chame-alguem-da-casa.mp4" aria-label="Short 11: Chame alguém da casa"></video><p><b>Short 11 · Chame alguém da casa</b>Quando chamar, rádio e pausa.</p></div>
   <div class="card warn"><b>Chame o gerente ou o colega da casa quando:</b>
     <ul style="margin:6px 0 0;padding-left:20px">
       <li>o convidado pedir explicação de um chope ou prato que você não sabe dar;</li>

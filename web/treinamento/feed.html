@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>Freela na Feitoria · Feed</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=Source+Sans+3:wght@400;600;700&display=swap">
+<style>
+:root{--stage:#17241c;--amber:#e3a33b;--green:#7cc39b;--red:#ef8a78;--cream:#f2efe6;--muted:#a9b8ad;
+--display:"Big Shoulders Display","Arial Narrow",Impact,sans-serif;--body:"Source Sans 3","Segoe UI",system-ui,sans-serif}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:#000;color:var(--cream);font:17px/1.4 var(--body);overscroll-behavior:none}
+.feed{height:100dvh;overflow-y:scroll;scroll-snap-type:y mandatory;scrollbar-width:none}
+.feed::-webkit-scrollbar{display:none}
+.slide{height:100dvh;scroll-snap-align:start;scroll-snap-stop:always;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.frame{position:relative;height:100%;width:min(100vw,calc(100dvh*9/16));background:var(--stage)}
+video{width:100%;height:100%;object-fit:cover;display:block;background:var(--stage)}
+.top{position:absolute;left:0;right:0;bottom:4px;padding:22px 12px max(10px,env(safe-area-inset-bottom));display:flex;align-items:center;gap:8px;background:linear-gradient(transparent,rgba(0,0,0,.6) 45%);z-index:3;pointer-events:none}
+.top a,.top button{pointer-events:auto}
+.back{color:var(--cream);text-decoration:none;font-weight:700;font-size:.9rem;background:rgba(0,0,0,.35);border-radius:999px;padding:6px 11px}
+.chip{font-weight:700;font-size:.82rem;letter-spacing:.06em;text-transform:uppercase;color:var(--amber);background:rgba(0,0,0,.35);border-radius:999px;padding:6px 11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.count{margin-left:auto;font-weight:700;font-size:.85rem;background:rgba(0,0,0,.35);border-radius:999px;padding:6px 10px}
+.snd{border:0;background:rgba(0,0,0,.5);color:var(--cream);border-radius:999px;padding:6px 10px;font:700 .85rem var(--body);cursor:pointer}
+.prog{position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(255,255,255,.18);z-index:3}
+.prog i{display:block;height:100%;width:0;background:var(--amber)}
+.paused::after{content:"";position:absolute;left:50%;top:50%;width:84px;height:84px;margin:-42px;border-radius:50%;background:rgba(0,0,0,.45) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M8 5v14l11-7z' fill='%23f2efe6'/%3E%3C/svg%3E") center/46px no-repeat;z-index:2;pointer-events:none}
+.card{position:relative;height:100%;width:min(100vw,calc(100dvh*9/16));background:var(--stage);display:flex;flex-direction:column;justify-content:center;padding:70px 26px 60px;gap:16px}
+.card .k{font-weight:700;letter-spacing:.14em;text-transform:uppercase;font-size:.85rem;color:var(--amber)}
+.card h1,.card h2{font-family:var(--display);font-weight:800;text-transform:uppercase;line-height:.95;margin:0}
+.card h1{font-size:clamp(2.6rem,12vw,3.6rem)} .card h1 em,.card h2 em{font-style:normal;color:var(--amber)}
+.card h2{font-size:clamp(2rem,9vw,2.7rem)}
+.card p{margin:0;color:#d5dcd6}
+.logo{height:42px;width:auto;align-self:flex-start}
+.go{border:0;border-radius:14px;background:var(--amber);color:#1d1a12;font:800 1.5rem var(--display);text-transform:uppercase;letter-spacing:.04em;padding:16px 18px;cursor:pointer}
+.steps{display:grid;gap:8px;margin:4px 0}
+.steps div{display:flex;gap:10px;align-items:baseline;font-weight:600}
+.steps b{font-family:var(--display);font-size:1.4rem;color:var(--amber);min-width:1.4em}
+.q{font-weight:700;font-size:1.15rem;color:var(--cream)}
+.opts{display:grid;gap:10px}
+.opts button{border:2px solid #3a4c40;background:#1f2f25;color:var(--cream);border-radius:12px;padding:13px 14px;text-align:left;font:600 1rem var(--body);cursor:pointer}
+.opts button.ok{border-color:var(--green);background:#1d3b2a}
+.opts button.no{border-color:var(--red);background:#3b2220;opacity:.85}
+.opts.done button{pointer-events:none}
+.msg{display:none;border-left:5px solid var(--amber);padding:8px 12px;background:rgba(227,163,59,.1);border-radius:6px;font-weight:600}
+.opts.done + .msg{display:block}
+.hint{position:absolute;left:0;right:0;bottom:max(18px,env(safe-area-inset-bottom));text-align:center;color:var(--muted);font-weight:700;font-size:.9rem;letter-spacing:.06em;animation:up 1.6s ease-in-out infinite}
+@keyframes up{0%,100%{transform:translateY(0);opacity:.6}50%{transform:translateY(-8px);opacity:1}}
+.dots{display:flex;gap:6px}.dots span{width:26px;height:6px;border-radius:3px;background:#3a4c40}.dots span.on{background:var(--amber)}
+a.link{color:var(--green);font-weight:700}
+@media (prefers-reduced-motion:reduce){.hint{animation:none}.feed{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<main class="feed" id="feed"></main>
+<script>
+const V=n=>{const s={1:'a-casa-em-40-segundos',2:'as-regras-de-ouro',3:'abrir-a-comanda',4:'a-mesa-em-6-passos',5:'venda-ativa',6:'os-chopes-quase-fixos',7:'copos-e-martelo',8:'os-drinks',9:'a-comida-que-a-casa-quer-vender',10:'pediu-outra-coisa',11:'chame-alguem-da-casa'}[n];return 'shorts/freela-'+String(n).padStart(2,'0')+'-'+s;};
+const ETAPAS=[
+ {nome:'Chegou na casa',vids:[1,2,11],
+  q:'Um convidado pergunta sobre um chope que você não conhece. O que você faz?',
+  op:['Invento algo parecido, para não ficar sem resposta','Chamo alguém da casa pelo rádio','Digo que não sei e sigo para a próxima mesa'],ok:1,
+  msg:'Não sabe? Não invente: chame alguém da casa. Sorriso no rosto, rádio ligado e pausa só na escala.'},
+ {nome:'Na mesa',vids:[3,4,5],
+  q:'Os copos da mesa estão a um terço. O que você diz?',
+  op:['"Vão querer mais alguma coisa?"','"Mais uma rodada de Pilsen para a mesa?"','Nada. Espero a mesa me chamar.'],ok:1,
+  msg:'Toda mesa recebe oferta, sem exceção. Diga o nome do produto e chegue antes de chamarem.'},
+ {nome:'No copo',vids:[6,7,8],
+  q:'Um casal pede um martelo e um copo vazio para dividir. E aí?',
+  op:['Levo o copo vazio, o cliente pediu','Não levo copo vazio: sugiro um chope para cada um','Digo que martelo é proibido para casal'],ok:1,
+  msg:'Martelo é para os corajosos. Nunca leve copo vazio para dividir martelo. E copo certo é chope certo: lagers na tulipa ou caneca, ales no half ou pint, especiais na taça.'},
+ {nome:'Vender e resolver',vids:[9,10],
+  q:'O convidado pede Heineken. Qual a resposta?',
+  op:['"Não temos."','"Essa a gente não tem, mas a Belgian é a que eu indico para quem gosta."','"Só temos chope artesanal, olha o cardápio."'],ok:1,
+  msg:'Nunca "não tem" seco: sempre ofereça a alternativa. E pense em três momentos: beliscar, dividir e fechar.'}
+];
+const TOTAL=ETAPAS.reduce((a,e)=>a+e.vids.length,0);
+const feed=document.getElementById('feed');let html='',k=0;
+const dots=i=>'<div class="dots">'+ETAPAS.map((_,j)=>`<span class="${j<=i?'on':''}"></span>`).join('')+'</div>';
+html+=`<section class="slide"><div class="card"><img class="logo" src="logo-feitoria-claro.webp" alt="Feitoria">
+<div class="k">Freela · seu turno</div><h1>11 vídeos.<br><em>7 minutos.</em></h1>
+<div class="steps">${ETAPAS.map((e,i)=>`<div><b>${i+1}</b>${e.nome}</div>`).join('')}</div>
+<p>Deslize para cima, como no TikTok. No fim de cada etapa, uma pergunta rápida.</p>
+<button class="go" id="go">▶ Começar com som</button></div><div class="hint">deslize ↑</div></section>`;
+ETAPAS.forEach((e,i)=>{
+ e.vids.forEach(n=>{k++;html+=`<section class="slide" data-v="${k}"><div class="frame"><video playsinline preload="none" poster="${V(n)}.jpg" src="${V(n)}.mp4"></video>
+ <div class="top"><a class="back" href="freela.html" aria-label="Voltar ao portal do freela">←</a><span class="chip">Etapa ${i+1} · ${e.nome}</span><span class="count">${k}/${TOTAL}</span><button class="snd" hidden>🔇 Som</button></div><div class="prog"><i></i></div></div></section>`;});
+ html+=`<section class="slide"><div class="card">${dots(i)}<div class="k">Fim da etapa ${i+1} · ${e.nome}</div><h2>Rapidinho:</h2>
+ <div class="q">${e.q}</div><div class="opts" data-ok="${e.ok}">${e.op.map((o,j)=>`<button data-i="${j}">${o}</button>`).join('')}</div>
+ <div class="msg">${e.msg}</div></div><div class="hint">${i<ETAPAS.length-1?'próxima etapa ↑':'↑'}</div></section>`;
+});
+html+=`<section class="slide"><div class="card"><img class="logo" src="logo-feitoria-claro.webp" alt="Feitoria"><div class="k">Você chegou ao fim</div>
+<h1>Olhe a mesa.<br><em>Vá antes de chamarem.</em></h1><p>Agora faça o teste de 10 perguntas e guarde o portal para consultar durante o turno.</p>
+<a class="go" style="text-align:center;text-decoration:none" href="freela.html#teste">Fazer o teste</a><p><a class="link" href="freela.html">Abrir o portal do freela</a></p></div></section>`;
+feed.innerHTML=html;
+const vids=[...document.querySelectorAll('video')];let unlocked=false,cur=null;
+function slides(){return [...feed.querySelectorAll('.slide')];}
+function playV(v){
+ if(cur&&cur!==v){cur.pause();cur.currentTime=0;}cur=v;v.preload='auto';
+ const i=vids.indexOf(v);if(vids[i+1])vids[i+1].preload='auto';
+ v.muted=!unlocked;v.closest('.frame').classList.remove('paused');
+ v.play().catch(()=>{v.muted=true;v.play().catch(()=>v.closest('.frame').classList.add('paused'));}).then(()=>{v.closest('.frame').querySelector('.snd').hidden=!v.muted;});
+}
+const io=new IntersectionObserver(es=>es.forEach(e=>{const v=e.target.querySelector('video');
+ if(e.isIntersecting&&e.intersectionRatio>.6){if(v)playV(v);else if(cur){cur.pause();}}
+}),{root:feed,threshold:[.6]});
+slides().forEach(s=>io.observe(s));
+document.getElementById('go').addEventListener('click',()=>{
+ unlocked=true;const ps=vids.map(v=>{v.muted=false;return (v.play()||Promise.resolve()).then(()=>{v.pause();v.currentTime=0;}).catch(()=>{});});
+ Promise.race([Promise.allSettled(ps),new Promise(r=>setTimeout(r,1500))]).then(()=>{cur=null;slides()[1].scrollIntoView({behavior:'smooth'});});
+});
+vids.forEach(v=>{
+ const fr=v.closest('.frame'),bar=fr.querySelector('.prog i'),snd=fr.querySelector('.snd');
+ v.addEventListener('timeupdate',()=>{bar.style.width=(v.currentTime/v.duration*100||0)+'%';});
+ v.addEventListener('ended',()=>{const s=v.closest('.slide').nextElementSibling;if(s)s.scrollIntoView({behavior:'smooth'});});
+ v.addEventListener('click',()=>{if(v.paused){v.play();fr.classList.remove('paused');}else{v.pause();fr.classList.add('paused');}});
+ snd.addEventListener('click',ev=>{ev.stopPropagation();unlocked=true;vids.forEach(x=>x.muted=false);snd.hidden=true;});
+});
+document.querySelectorAll('.opts').forEach(o=>o.addEventListener('click',ev=>{
+ const b=ev.target.closest('button');if(!b||o.classList.contains('done'))return;
+ const ok=+o.dataset.ok;o.classList.add('done');b.classList.add(+b.dataset.i===ok?'ok':'no');o.children[ok].classList.add('ok');
+}));
+document.addEventListener('keydown',ev=>{if(!['ArrowDown','ArrowUp',' '].includes(ev.key))return;
+ const s=slides(),i=s.findIndex(x=>Math.abs(x.getBoundingClientRect().top)<10);
+ if(ev.key===' '&&cur&&cur.closest('.slide')===s[i]){ev.preventDefault();cur.click();return;}
+ const j=ev.key==='ArrowUp'?i-1:i+1;if(s[j]){ev.preventDefault();s[j].scrollIntoView({behavior:'smooth'});}});
+</script>
+</body>
+</html>
