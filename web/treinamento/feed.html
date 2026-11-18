@@ -55,13 +55,13 @@ a.link{color:var(--green);font-weight:700}
 <body>
 <main class="feed" id="feed"></main>
 <script>
-const V=n=>{const s={1:'a-casa-em-40-segundos',2:'as-regras-de-ouro',3:'abrir-a-comanda',4:'a-mesa-em-6-passos',5:'venda-ativa',6:'os-chopes-quase-fixos',7:'copos-e-martelo',8:'os-drinks',9:'a-comida-que-a-casa-quer-vender',10:'pediu-outra-coisa',11:'chame-alguem-da-casa'}[n];return 'shorts/freela-'+String(n).padStart(2,'0')+'-'+s;};
+const V=n=>{const s={1:'a-casa-em-40-segundos',2:'as-regras-de-ouro',3:'abrir-a-comanda',4:'a-mesa-em-6-passos',5:'venda-ativa',6:'os-chopes-quase-fixos',7:'copos-e-martelo',8:'os-drinks',9:'a-comida-que-a-casa-quer-vender',10:'pediu-outra-coisa',11:'chame-alguem-da-casa',12:'comanda-no-app'}[n];return 'shorts/freela-'+String(n).padStart(2,'0')+'-'+s;};
 const ETAPAS=[
  {nome:'Chegou na casa',vids:[1,2,11],
   q:'Um convidado pergunta sobre um chope que você não conhece. O que você faz?',
   op:['Invento algo parecido, para não ficar sem resposta','Chamo alguém da casa pelo rádio','Digo que não sei e sigo para a próxima mesa'],ok:1,
   msg:'Não sabe? Não invente: chame alguém da casa. Sorriso no rosto, rádio ligado e pausa só na escala.'},
- {nome:'Na mesa',vids:[3,4,5],
+ {nome:'Na mesa',vids:[3,12,4,5],
   q:'Os copos da mesa estão a um terço. O que você diz?',
   op:['"Vão querer mais alguma coisa?"','"Mais uma rodada de Pilsen para a mesa?"','Nada. Espero a mesa me chamar.'],ok:1,
   msg:'Toda mesa recebe oferta, sem exceção. Diga o nome do produto e chegue antes de chamarem.'},
@@ -78,7 +78,7 @@ const TOTAL=ETAPAS.reduce((a,e)=>a+e.vids.length,0);
 const feed=document.getElementById('feed');let html='',k=0;
 const dots=i=>'<div class="dots">'+ETAPAS.map((_,j)=>`<span class="${j<=i?'on':''}"></span>`).join('')+'</div>';
 html+=`<section class="slide"><div class="card"><img class="logo" src="logo-feitoria-claro.webp" alt="Feitoria">
-<div class="k">Freela · seu turno</div><h1>11 vídeos.<br><em>7 minutos.</em></h1>
+<div class="k">Freela · seu turno</div><h1>12 vídeos.<br><em>9 minutos.</em></h1>
 <div class="steps">${ETAPAS.map((e,i)=>`<div><b>${i+1}</b>${e.nome}</div>`).join('')}</div>
 <p>Deslize para cima, como no TikTok. No fim de cada etapa, uma pergunta rápida.</p>
 <button class="go" id="go">▶ Começar com som</button></div><div class="hint">deslize ↑</div></section>`;
