@@ -17,11 +17,16 @@ h1 em{font-style:normal;color:#b8730a}
 .card p{margin:0;padding:0 18px 14px;color:var(--muted)}
 video{display:block;width:100%;aspect-ratio:16/9;background:var(--stage)}
 .tip{background:#fff7e6;border:1px solid #ecd08f;border-radius:12px;padding:14px 16px;font-size:17px}
+.mod{font-family:'Big Shoulders Display',sans-serif;font-weight:800;text-transform:uppercase;font-size:30px;margin:8px 0 14px}
+.eps{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:16px;margin-bottom:26px}
+.eps .card{margin:0}.eps .card h2{font-size:22px;padding:12px 14px 2px}.eps .card p{padding:0 14px 10px;font-size:15px}
+.eps video{aspect-ratio:9/16}
 </style>
 <nav style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;padding:10px 16px;background:#1d3427;font:600 15px system-ui,sans-serif"><a href="index.html" style="color:#f3ead7">Treinamento</a><a href="videos.html" style="color:#f3ead7">▶ Vídeos da história</a><a href="video.html" style="color:#f3ead7">Vídeo em slides</a><a href="comanda.html" style="color:#f3ead7">📱 Abrir a comanda</a></nav>
 <div class="wrap">
-  <h1>Treinamento do salão <em>em 3 vídeos</em></h1>
-  <p class="lead">Acompanhe o primeiro turno da Júlia na Feitoria. Cada parte tem entre 3 e 4 minutos.</p>
+  <h1>Trilha do salão <em>da equipe</em></h1>
+  <p class="lead">Acompanhe a Júlia na Feitoria. Módulo 1: o primeiro turno, em 3 partes de 3 a 4 minutos. Módulo 2: o chope, em episódios curtos na vertical.</p>
+  <h2 class="mod">Módulo 1 · O jeito da casa</h2>
 
   <section class="card">
     <h2>Parte 1 · O jeito da casa</h2>
@@ -40,6 +45,15 @@ video{display:block;width:100%;aspect-ratio:16/9;background:var(--stage)}
     <p>Pedido, promoções, pico de movimento, reclamações, pequenos cuidados, conta e despedida.</p>
     <video controls preload="metadata" playsinline src="videos/parte-3-do-pedido-a-saideira.mp4"></video>
   </section>
+
+  <h2 class="mod">Módulo 2 · O chope</h2>
+  <div class="eps">
+    <section class="card"><h2>Ep. 05 · Como ler uma cerveja</h2><p>ABV, IBU, malte, lúpulo, levedura e as quatro famílias.</p><video controls preload="none" playsinline poster="videos/equipe-ep05-como-ler-uma-cerveja.jpg" src="videos/equipe-ep05-como-ler-uma-cerveja.mp4"></video></section>
+    <section class="card"><h2>Ep. 06 · Leves e de trigo</h2><p>Pilsen, Weizen, Belgian, Pêssego e Chope de Vinho.</p><video controls preload="none" playsinline poster="videos/equipe-ep06-torneiras-leves-e-de-trigo.jpg" src="videos/equipe-ep06-torneiras-leves-e-de-trigo.mp4"></video></section>
+    <section class="card"><h2>Ep. 07 · Amargas, escuras e especiais</h2><p>A escada do amargor, Indonesian, Dunkel, Avelã, Toffee, Stout e Sour.</p><video controls preload="none" playsinline poster="videos/equipe-ep07-amargas-escuras-e-especiais.jpg" src="videos/equipe-ep07-amargas-escuras-e-especiais.mp4"></video></section>
+    <section class="card"><h2>Ep. 08 · As IPAs</h2><p>As IPAs que passam pelas torneiras e como indicar cada uma.</p><video controls preload="none" playsinline poster="videos/equipe-ep08-as-ipas.jpg" src="videos/equipe-ep08-as-ipas.mp4"></video></section>
+  </div>
+  <p class="lead" style="font-size:16px">Episódios 9 a 12 (belgas e inglesas, as fortes, copos e serviço, indicar o chope certo) chegam em breve.</p>
 
   <div class="tip">Depois dos vídeos, faça o teste na <a href="index.html">página de treinamento</a> e peça seu cartão de bolso ao Responsável do Turno.</div>
 </div>
