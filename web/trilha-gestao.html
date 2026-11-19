@@ -1,0 +1,62 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Trilha do salão · Feitoria</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<style>
+:root{--font:"DM Sans",-apple-system,"Segoe UI",Roboto,sans-serif;--page:#f7f8f5;--card:#fff;--soft:#f4f4f0;--line:#efeee9;--line-2:#e3e2dc;--ink:#1c1e1d;--ink-2:#3a3e3c;--muted:#7a7e7b;--sage:#5f7f69;--sage-soft:#e8eee9;--down:#c4483e;--down-bg:#fbe8e6;--amber:#9a6f17;--amber-bg:#f8efd9}
+*{box-sizing:border-box}body{margin:0;background:var(--page);color:var(--ink);font:15px/1.5 var(--font)}main{max-width:1200px;margin:auto;padding:20px 16px 40px}
+h1{font-size:28px;margin:0;letter-spacing:-.01em}h2{font-size:18px;margin:0 0 8px}.sub,small{color:var(--muted)}p{margin:6px 0}
+button{font:inherit;border:1px solid var(--line-2);border-radius:12px;padding:8px 14px;background:var(--card);color:var(--ink);cursor:pointer}button:hover{background:var(--soft)}button:disabled{opacity:.5;cursor:default}
+button.prim{background:var(--sage);border-color:var(--sage);color:#fff}
+.card{background:var(--card);border:1px solid var(--line-2);border-radius:22px;padding:20px;margin:14px 0}
+.erro{background:var(--down-bg);color:#7a2a23;border-radius:14px;padding:12px 16px}.ok{background:var(--sage-soft);color:#2f4a37;border-radius:14px;padding:10px 14px}
+.rolar{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:860px}th,td{text-align:left;padding:8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.03em}
+td.pessoa{font-weight:600;min-width:160px;position:sticky;left:0;background:var(--card)}td.pessoa small{display:block;font-weight:400}
+.tag{display:inline-block;font-size:12px;font-weight:600;border-radius:999px;padding:1px 8px;background:var(--soft);color:var(--ink-2);white-space:nowrap;margin:1px 0}
+.tag.ok{background:var(--sage-soft);color:#2f4a37;padding:1px 8px}.tag.conf{background:var(--amber-bg);color:var(--amber)}
+.cel button{margin-top:4px;padding:5px 10px;font-size:13px}
+.mods{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}.mods div{background:var(--soft);border-radius:14px;padding:10px 12px;font-size:14px}
+dialog{border:0;border-radius:22px;padding:22px;max-width:440px;width:calc(100% - 32px);box-shadow:0 20px 60px rgba(0,0,0,.18)}dialog::backdrop{background:rgba(20,22,21,.35)}
+label{display:block;font-size:13px;color:var(--muted);margin:10px 0 4px}input{font:inherit;width:100%;padding:9px 11px;border:1px solid var(--line-2);border-radius:12px}
+.acoes{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
+</style></head><body><main>
+<h1>Trilha do salão</h1><p class="sub" id="unidade">Carregando…</p>
+<div id="msg" aria-live="polite"></div>
+<div class="card"><h2>Regra do certificado</h2><p>70% de acerto no teste de cada módulo, feito pelo funcionário no portal com o PIN dele, e a prática acompanhada no turno, assinada aqui pela gestão ou no portal por um avaliador.</p><div class="mods" id="mods"></div></div>
+<div class="card"><h2>Equipe</h2><div class="rolar" id="saida"><p class="sub">Buscando o progresso…</p></div></div>
+</main>
+<dialog id="dlg"><form method="dialog" id="fAss">
+ <h2>Assinar a prática</h2><p class="sub" id="dQuem"></p><p id="dDesc"></p>
+ <p class="sub">Ao assinar, você confirma com a sua conta da gestão que acompanhou a prática deste módulo no turno. O registro não pode ser editado nem apagado.</p>
+ <label for="dObs">Observação (opcional)</label><input id="dObs" maxlength="300">
+ <div class="acoes"><button value="cancel" formnovalidate>Cancelar</button><button type="submit" class="prim" id="dOk">Assinar</button></div>
+</form></dialog>
+<script type="module">
+import {createClient} from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.0/+esm';
+const SB='https://kujelbcbrcmkitzyswbh.supabase.co',ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt1amVsYmNicmNta2l0enlzd2JoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg2NDg0MzAsImV4cCI6MjEwNDIyNDQzMH0.uDwckXtywDBZGU_i4J8S9BdO2fUtRwXCOaLJbSiWzdQ',sb=createClient(SB,ANON),unit=new URLSearchParams(location.search).get('restaurant_id');
+const el=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
+const data=s=>s?new Date(s).toLocaleDateString('pt-BR',{timeZone:'America/Sao_Paulo'}):'';
+async function call(fn,body){const {data,error}=await sb.auth.getSession();if(error||!data.session)throw Error('Entre novamente no portal de gestão.');const r=await fetch(SB+'/functions/v1/'+fn,{method:'POST',headers:{'Content-Type':'application/json','apikey':ANON,'Authorization':'Bearer '+data.session.access_token},body:JSON.stringify({restaurant_id:unit,...body})});const d=await r.json().catch(()=>({erro:'Resposta inválida do servidor.'}));if(!r.ok)throw Error(d.erro||d.error||'Não foi possível concluir agora.');return d;}
+let D=null,alvo=null;
+async function carregar(){
+ try{D=await call('gestao-trilha',{acao:'equipe'});}catch(e){el('saida').innerHTML=`<p class="erro">${esc(e.message)}</p>`;return;}
+ el('unidade').textContent=D.unidade+' · '+D.pessoas.length+' pessoas ativas';
+ el('mods').innerHTML=D.modulos.map(m=>`<div><b>Módulo ${m.ordem} · ${esc(m.nome)}</b><br>${m.horas} h · mínimo ${m.minimo} de ${m.perguntas}<br><small>${esc(m.pratica)}</small></div>`).join('');
+ el('saida').innerHTML=D.pessoas.length?`<table><thead><tr><th>Pessoa</th>${D.modulos.map(m=>`<th>M${m.ordem} · ${esc(m.nome)}</th>`).join('')}<th>Certificado</th></tr></thead><tbody>${D.pessoas.map(p=>`<tr><td class="pessoa">${esc(p.nome)}<small>${esc(p.funcao||'')}${p.acesso_portal==='sem_acesso'?' · sem acesso ao portal':''}</small></td>${p.modulos.map(m=>`<td class="cel">${m.aprovado?`<span class="tag ok">teste ✓ ${m.melhor.acertos}/${m.melhor.total}</span>`:m.melhor?`<span class="tag conf">melhor ${m.melhor.acertos}/${m.melhor.total}</span>`:`<span class="tag">sem teste</span>`}<br>${m.pratica?`<span class="tag ok">prática ✓</span><small>${esc(m.pratica.avaliador)} · ${data(m.pratica.assinado_em)}</small>`:m.aprovado?`<button data-p="${esc(p.id)}" data-m="${esc(m.codigo)}">Assinar prática</button>`:''}</td>`).join('')}<td>${p.certificado?'<span class="tag ok">🏅 concluído</span>':'<span class="tag">em andamento</span>'}</td></tr>`).join('')}</tbody></table>`:'<p class="sub">Nenhuma pessoa ativa nesta unidade.</p>';
+ el('saida').querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>abrir(b.dataset.p,b.dataset.m));
+}
+function abrir(pid,mod){
+ const p=D.pessoas.find(x=>x.id===pid),m=D.modulos.find(x=>x.codigo===mod);alvo={pid,mod};
+ el('dQuem').textContent=p.nome+' · Módulo '+m.ordem+' · '+m.nome;el('dDesc').textContent=m.pratica+'.';el('dObs').value='';el('dlg').showModal();
+}
+el('fAss').addEventListener('submit',async ev=>{
+ if(ev.submitter?.value==='cancel')return;ev.preventDefault();el('dOk').disabled=true;
+ try{const r=await call('gestao-trilha',{acao:'assinar',employee_id:alvo.pid,modulo:alvo.mod,observacao:el('dObs').value});
+  el('dlg').close();el('msg').innerHTML=`<p class="ok">Prática de ${esc(r.pessoa)} assinada por ${esc(r.avaliador)}.</p>`;await carregar();}
+ catch(e){el('msg').innerHTML=`<p class="erro">${esc(e.message)}</p>`;el('dlg').close();}
+ finally{el('dOk').disabled=false;}
+});
+new ResizeObserver(()=>parent.postMessage({trilhaAltura:document.documentElement.scrollHeight},'*')).observe(document.body);
+carregar();
+</script></body></html>
