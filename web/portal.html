@@ -251,8 +251,12 @@ function telaInicio(msg){
     guia.innerHTML=`<h2>Guias rápidos para o turno</h2><p class="sub">Material de consulta. Ler estas orientações não registra treinamento ou certificado.</p><details><summary>Localizar a mesa antes de atender</summary><p>Consulte o número no mapa, confira a posição no salão e confirme a mesa antes de levar o pedido.</p></details><details><summary>Consultar uma cerveja</summary><p>Use o catálogo para conferir estilo e características. Confirme a disponibilidade com o responsável antes de oferecer.</p></details><details><summary>Usar os checklists</summary><p>Escolha a rotina combinada para seu turno, confira cada item no local e registre a situação real. Em caso de problema, avise o responsável; não marque uma tarefa como feita antes de conferir.</p></details><div class="atalhos-portal"><button data-guia="mapa">Consultar mapa de mesas</button><button data-guia="chopp">Consultar catálogo de cervejas</button></div>`;
     guia.querySelectorAll("[data-guia]").forEach(b=>b.onclick=()=>abrirOperacao(b.dataset.guia));
     app.insertBefore(guia,document.getElementById("conteudo-portal"));
+    const trilha=document.createElement("section");trilha.className="carta";
+    trilha.innerHTML=`<h2>Trilha do salão</h2><p class="sub">4 módulos em vídeos curtos: O jeito da casa, O chope, A mesa, Imprevistos e despedida. Deslize para cima, como no TikTok.</p><p>Certificado de 16 horas: 70% de acerto no teste de cada módulo e prática acompanhada no turno, assinada pelo responsável.</p><button data-trilha>▶ Assistir à Trilha do salão</button>`;
+    trilha.querySelector("[data-trilha]").onclick=()=>{secao="trilha";telaInicio();};
+    app.insertBefore(trilha,guia);
   }
-  const paginas={checklists:"checklist.html",operacao:"operacao.html",seguranca:"nr1.html"};
+  const paginas={checklists:"checklist.html",operacao:"operacao.html",seguranca:"nr1.html",trilha:"treinamento/feed-equipe.html"};
   if(secao==="ponto" && sessao.registra_ponto) paginas.ponto="ponto.html";
   if(sessao.perfil==="completo"){paginas.cozinha="cozinha-fechamento.html";paginas.producao="cozinha-producao.html";}
   if(paginas[secao]){
@@ -267,10 +271,11 @@ function telaInicio(msg){
     const frame=document.createElement("iframe");
     const url=new URL(paginas[secao],location.href);url.searchParams.set("u",TOKEN_UNIDADE);
     if(secao==="operacao")url.searchParams.set("aba",abaOperacao);
-    frame.src=url.href;frame.title=menu.find(([id])=>id===secao)?.[1] || "Atividade";
+    frame.src=url.href;frame.title=secao==="trilha"?"Trilha do salão":(menu.find(([id])=>id===secao)?.[1] || "Atividade");
     frame.style="width:100%;height:75dvh;min-height:500px;border:0";
     if(secao==="ponto") frame.allow="camera 'self'; geolocation 'self'";
     if(["checklists","cozinha"].includes(secao)) frame.allow="camera 'self'";
+    if(secao==="trilha"){ frame.allow="autoplay; fullscreen"; frame.style="width:100%;height:85dvh;min-height:560px;border:0;border-radius:12px;background:#000"; }
     const ajuda=document.createElement("p");ajuda.className="sub";
     const link=document.createElement("a");link.href=url.href;link.target="_blank";link.rel="noopener";link.textContent="Abrir esta atividade em tela própria";
     ajuda.append(link);card.append(ajuda);
@@ -278,7 +283,7 @@ function telaInicio(msg){
       try {
         const doc=frame.contentDocument;
         const atividade=()=>{if(sessao && frameAtivo===frame)manterSessao();};
-        const eventos=["pointerdown","keydown","input","scroll"];
+        const eventos=["pointerdown","keydown","input","scroll","timeupdate"];
         frame.__limparAtividade?.();
         eventos.forEach(tipo=>doc.addEventListener(tipo,atividade,{capture:true,passive:true}));
         frame.__limparAtividade=()=>eventos.forEach(tipo=>doc.removeEventListener(tipo,atividade,true));
