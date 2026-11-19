@@ -31,6 +31,7 @@
   "web/conversa-gestao.js",
   "web/cozinha-fechamento.html",
   "web/cozinha-gestao.html",
+  "web/cozinha-producao.html",
   "web/escala-freelas.html",
   "web/estoque.html",
   "web/financeiro.html",
