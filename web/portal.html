@@ -84,7 +84,7 @@ let abaOperacao = "turno";
 function abrirOperacao(aba){abaOperacao=aba;secao="operacao";telaInicio();}
 // Cozinha incorporada: somente esta janela e a sessão ativa recebem respostas.
 window.addEventListener("message",async e=>{
-  if(e.origin!==location.origin || e.source!==frameAtivo?.contentWindow || !sessao || secao!=="cozinha" || sessao.perfil!=="completo")return;
+  if(e.origin!==location.origin || e.source!==frameAtivo?.contentWindow || !sessao || !["cozinha","producao"].includes(secao) || sessao.perfil!=="completo")return;
   if(e.data?.tipo==="feitoria-cozinha-altura"){const h=Number(e.data.altura);if(Number.isFinite(h))frameAtivo.style.height=Math.min(6000,Math.max(500,h))+"px";if(e.data.inicio)frameAtivo.scrollIntoView({block:"start"});return;}
   if(e.data?.tipo!=="feitoria-cozinha-chamar" || typeof e.data.id!=="string")return;
   const janela=frameAtivo.contentWindow, atual=sessao, id=e.data.id;
@@ -92,7 +92,7 @@ window.addEventListener("message",async e=>{
   try{
     const d=await chamar({action:"cozinha",operacao:e.data.operacao,dados:e.data.dados,requisicao:id,motivo:e.data.motivo});
     if(sessao===atual && janela===frameAtivo?.contentWindow)janela.postMessage({tipo:"feitoria-cozinha-resposta",id,dados:d},location.origin);
-  }catch(err){if(sessao===atual && janela===frameAtivo?.contentWindow)janela.postMessage({tipo:"feitoria-cozinha-resposta",id,erro:err.message},location.origin);}
+  }catch(err){if(sessao===atual && janela===frameAtivo?.contentWindow)janela.postMessage({tipo:"feitoria-cozinha-resposta",id,erro:err.message,status:err.status??0},location.origin);}
 });
 
 function encerrarPortal(){ frameAtivo=null; clearTimeout(tempoSessao); sessao=null; pin=""; nascimento=""; secao="inicio"; telaEntrar(); }
@@ -137,7 +137,7 @@ async function chamar(payload){
       device_hash: aparelho(), device_label: navigator.platform || "Celular", ...payload })
   });
   const d = await r.json().catch(()=>({error:"Resposta inválida."}));
-  if(!r.ok) throw new Error(d.error || "Não foi possível completar.");
+  if(!r.ok){const erro=new Error(d.error || "Não foi possível completar.");erro.status=r.status;throw erro;}
   return d;
 }
 
@@ -183,7 +183,7 @@ function telaInicio(msg){
   const pendentes=docs.filter(d=>d.pendente).length;
   const menu = [["inicio","Início"],["documentos","Documentos"],["treinamentos","Aprender"],
     ["checklists","Minha rotina"],["operacao","Salão e turno"]];
-  if(sessao.perfil==="completo")menu.push(["cozinha","Fechamento da cozinha"]);
+  if(sessao.perfil==="completo")menu.push(["cozinha","Fechamento da cozinha"],["producao","Registrar produção"]);
   if(sessao.registra_ponto) menu.splice(3,0,["ponto","Ponto"]);
   app.innerHTML = `
     <div class="carta saudacao">
@@ -219,7 +219,7 @@ function telaInicio(msg){
     const atalhos=[...(sessao.registra_ponto?[["ponto","Meu ponto","Registrar ou consultar marcações."]]:[]),
       ["checklists","Minha rotina","Escolher abertura, turno ou fechamento."],["operacao","Salão e turno","Mapa de mesas, cervejas e escala."],
       ["documentos","Documentos","Consultar e revisar assinaturas."],["treinamentos","Aprender","Guias rápidos, materiais e certificados."]];
-    if(sessao.perfil==="completo")atalhos.push(["cozinha","Fechamento da cozinha","Etiquetas, perdas, sobras e fotos do turno."]);
+    if(sessao.perfil==="completo")atalhos.push(["cozinha","Fechamento da cozinha","Etiquetas, perdas, sobras e fotos do turno."],["producao","Registrar produção","Lotes preparados, rendimento real e conferência da ficha."]);
     card.innerHTML=atalhos.map(([id,titulo,descricao],i)=>`<button data-secao="${id}" class="${i===0?'principal':''}"><strong>${titulo}</strong><small>${descricao}</small></button>`).join("");
     if(TOKEN_UNIDADE){
       const etiquetas=new URL("https://dougfb46.github.io/feitoria-etiquetas/");
@@ -254,7 +254,7 @@ function telaInicio(msg){
   }
   const paginas={checklists:"checklist.html",operacao:"operacao.html",seguranca:"nr1.html"};
   if(secao==="ponto" && sessao.registra_ponto) paginas.ponto="ponto.html";
-  if(sessao.perfil==="completo")paginas.cozinha="cozinha-fechamento.html";
+  if(sessao.perfil==="completo"){paginas.cozinha="cozinha-fechamento.html";paginas.producao="cozinha-producao.html";}
   if(paginas[secao]){
     const card=document.getElementById("conteudo-portal");
     card.classList.add("frame-atividade");
@@ -355,3 +355,4 @@ telaEntrar();
 </script>
 <footer class="employee-footer">Feitoria · Portal do colaborador<br><a href="privacidade.html">Privacidade e proteção dos seus dados</a></footer><script src="assets/employee-theme.js"></script></body>
 </html>
+
