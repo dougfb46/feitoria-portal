@@ -60,6 +60,20 @@
   .doc .meta{line-height:1.6;overflow-wrap:anywhere}
   .vazio{padding:16px;background:#f7f8f5;border-radius:10px;line-height:1.5}
   .frame-atividade{padding:10px}
+  .trilha-mod{border:1px solid var(--borda);border-radius:12px;padding:12px 14px;margin:10px 0}
+  .trilha-mod h3{margin:0 0 4px;font-size:16px}
+  .trilha-mod .acoes{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+  .trilha-mod .acoes button{width:auto;padding:10px 12px;font-size:14px}
+  .trilha-barra{height:8px;border-radius:99px;background:#eceae4;overflow:hidden;margin:8px 0}
+  .trilha-barra i{display:block;height:100%;background:var(--ok)}
+  .pergunta{border-top:1px solid var(--borda);padding:14px 0}
+  .pergunta p{margin:0 0 8px;font-weight:600}
+  .pergunta label{display:flex;gap:10px;align-items:flex-start;padding:9px 10px;border:1px solid var(--borda);border-radius:10px;margin:6px 0;font-weight:400;cursor:pointer}
+  .pergunta input{margin-top:3px;width:auto}
+  .certificado{border:3px solid #17241c;outline:1px solid #a8670a;outline-offset:-9px;border-radius:6px;padding:28px 20px;text-align:center;background:#f6f2e9;color:#17241c}
+  .certificado .t{font-size:34px;font-weight:800;letter-spacing:.02em;text-transform:uppercase;margin:6px 0}
+  .certificado .n{font-size:24px;font-weight:800;text-transform:uppercase;border-bottom:2px solid #17241c;display:inline-block;padding:0 12px 4px;margin:8px 0}
+  @media print{.employee-header,.menu-portal,.saudacao,.nao-imprimir{display:none!important}body{background:#fff;padding:0}.carta{border:0}}
   @media(max-width:360px){body{padding:10px}.carta{padding:16px}.atalhos-portal{gap:8px}.atalhos-portal button,.atalhos-portal .atalho-externo{padding:13px}}
 
 </style>
@@ -255,6 +269,7 @@ function telaInicio(msg){
     trilha.innerHTML=`<h2>Trilha do salão</h2><p class="sub">4 módulos em vídeos curtos: O jeito da casa, O chope, A mesa, Imprevistos e despedida. Deslize para cima, como no TikTok.</p><p>Certificado de 16 horas: 70% de acerto no teste de cada módulo e prática acompanhada no turno, assinada pelo responsável.</p><button data-trilha>▶ Assistir à Trilha do salão</button>`;
     trilha.querySelector("[data-trilha]").onclick=()=>{secao="trilha";telaInicio();};
     app.insertBefore(trilha,guia);
+    carregarTrilha(trilha);
   }
   const paginas={checklists:"checklist.html",operacao:"operacao.html",seguranca:"nr1.html",trilha:"treinamento/feed-equipe.html"};
   if(secao==="ponto" && sessao.registra_ponto) paginas.ponto="ponto.html";
@@ -349,6 +364,94 @@ async function assinar(id, bt){
     bt.disabled = false; bt.textContent = "Assinar documento";
     erro.innerHTML = `<div class="aviso">${esc(e.message)}</div>`;
   }
+}
+
+/* ---------- trilha do salão: progresso, teste, prática e certificado ---------- */
+async function carregarTrilha(card){
+  const area=document.createElement("div");area.innerHTML=`<p class="sub">Carregando seu progresso…</p>`;card.append(area);
+  let d;
+  try{ d=await chamar({action:"trilha"}); }catch(e){ area.remove(); return; }
+  const feitos=d.modulos.filter(m=>m.concluido).length;
+  area.innerHTML=`<div class="trilha-barra" aria-hidden="true"><i style="width:${Math.round(feitos/Math.max(1,d.modulos.length)*100)}%"></i></div>
+   <p class="sub" style="margin:0">${feitos} de ${d.modulos.length} módulos concluídos</p>
+   ${d.modulos.map(m=>`<div class="trilha-mod">
+     <h3>Módulo ${m.ordem} · ${esc(m.nome)}</h3>
+     <p class="sub" style="margin:0">${m.horas} h · teste: mínimo ${m.minimo} de ${m.perguntas}</p>
+     <p style="margin:6px 0 0;font-size:14px">${m.aprovado?`<span class="selo assinado">teste aprovado ${m.melhor?`(${m.melhor.acertos}/${m.melhor.total})`:""}</span>`:m.melhor?`<span class="selo pendente">melhor nota ${m.melhor.acertos}/${m.melhor.total}</span>`:`<span class="selo mural">teste não feito</span>`}
+      ${m.pratica?`<span class="selo assinado">prática assinada por ${esc(m.pratica.avaliador)}</span>`:m.aprovado?`<span class="selo pendente">falta a prática</span>`:""}</p>
+     <div class="acoes">${!m.aprovado?`<button data-teste="${esc(m.codigo)}">${m.tentativas?"Refazer o teste":"Fazer o teste"}</button>`:""}
+      ${m.aprovado&&!m.pratica?`<button class="secundaria" data-pratica="${esc(m.codigo)}">Assinar a prática</button>`:""}</div>
+   </div>`).join("")}
+   ${d.completo?`<button data-cert style="margin-top:6px">🏅 Ver meu certificado</button>`:""}`;
+  area.querySelectorAll("[data-teste]").forEach(b=>b.onclick=()=>telaTeste(b.dataset.teste));
+  area.querySelectorAll("[data-pratica]").forEach(b=>b.onclick=()=>telaPratica(d.modulos.find(m=>m.codigo===b.dataset.pratica)));
+  const c=area.querySelector("[data-cert]");if(c)c.onclick=()=>telaCertificado(d.certificado,d.modulos);
+}
+function voltarAprender(){secao="treinamentos";telaInicio();window.scrollTo(0,0);}
+async function telaTeste(modulo){
+  manterSessao();
+  app.innerHTML=`<div class="carta"><p class="vazio">Abrindo o teste…</p></div>`;
+  let t;
+  try{ t=await chamar({action:"trilha_teste",modulo}); }catch(e){ return telaInicio(e.message); }
+  app.innerHTML=`<div class="carta"><p class="marca">Trilha do salão · teste</p><h1>${esc(t.nome)}</h1>
+   <p class="sub">${t.perguntas.length} perguntas. Para passar: ${t.minimo} acertos (70%). Pode refazer quantas vezes precisar.</p>
+   <form id="form-teste">${t.perguntas.map((p,i)=>`<div class="pergunta"><p>${i+1}. ${esc(p.texto)}</p>
+     ${["A","B","C"].map(l=>`<label><input type="radio" name="${esc(p.id)}" value="${l}" required><span>${esc(p.alternativas[l])}</span></label>`).join("")}</div>`).join("")}
+   <div id="erro-teste"></div><button type="submit" style="margin-top:8px">Enviar respostas</button></form>
+   <button class="discreto" id="voltar-teste" style="margin-top:10px">Voltar</button></div>`;
+  document.getElementById("voltar-teste").onclick=voltarAprender;
+  const form=document.getElementById("form-teste");
+  form.onsubmit=async ev=>{
+    ev.preventDefault();manterSessao();
+    const respostas={};t.perguntas.forEach(p=>{const m=form.querySelector(`input[name="${CSS.escape(p.id)}"]:checked`);if(m)respostas[p.id]=m.value;});
+    const bt=form.querySelector("button[type=submit]");bt.disabled=true;bt.textContent="Corrigindo…";
+    try{
+      const r=await chamar({action:"trilha_responder",modulo,respostas});
+      app.innerHTML=`<div class="carta" style="text-align:center"><div style="font-size:52px;line-height:1;color:${r.aprovado?"var(--ok)":"var(--ambar)"}">${r.aprovado?"✓":"↻"}</div>
+       <h1 style="margin:10px 0 4px">${r.aprovado?"Aprovado!":"Quase lá"}</h1><p class="sub">${r.acertos} de ${r.total} acertos · mínimo ${r.minimo}</p>
+       ${r.aprovado?`<p>Agora falta a prática acompanhada no turno, assinada pelo avaliador.</p>`:`<p>Reveja os vídeos e tente de novo.</p>`}</div>
+       ${r.revisar.length?`<div class="carta"><h2>Para revisar</h2>${r.revisar.map(q=>`<div class="pergunta"><p>${esc(q.texto)}</p><p class="sub" style="font-weight:400">${esc(q.aula||"")}${q.explicacao?" · "+esc(q.explicacao):""}</p></div>`).join("")}</div>`:""}
+       <button id="fim-teste">Voltar para a trilha</button>`;
+      document.getElementById("fim-teste").onclick=voltarAprender;
+    }catch(e){bt.disabled=false;bt.textContent="Enviar respostas";document.getElementById("erro-teste").innerHTML=`<div class="aviso">${esc(e.message)}</div>`;}
+  };
+}
+function telaPratica(m){
+  manterSessao();
+  app.innerHTML=`<div class="carta"><p class="marca">Trilha do salão · prática</p><h1>Módulo ${m.ordem} · ${esc(m.nome)}</h1>
+   <p>${esc(m.pratica_descricao)}.</p>
+   <div class="aceite">Quem acompanhou a prática confirma, com o próprio PIN, que ${esc(sessao.colaborador.nome.split(" ")[0])} cumpriu a prática deste módulo no turno.</div>
+   <label for="pin-aval">PIN do avaliador</label>
+   <input class="pin" id="pin-aval" type="password" inputmode="numeric" autocomplete="off" maxlength="6" placeholder="••••">
+   <label for="obs-aval">Observação (opcional)</label><input id="obs-aval" maxlength="300" autocomplete="off">
+   <div id="erro-pratica"></div><button id="assinar-pratica" style="margin-top:12px">Assinar a prática</button>
+   <button class="discreto" id="voltar-pratica" style="margin-top:10px">Voltar</button></div>`;
+  document.getElementById("voltar-pratica").onclick=voltarAprender;
+  const bt=document.getElementById("assinar-pratica");
+  bt.onclick=async()=>{
+    manterSessao();bt.disabled=true;bt.textContent="Assinando…";
+    try{
+      const r=await chamar({action:"trilha_pratica",modulo:m.codigo,pin_avaliador:document.getElementById("pin-aval").value.trim(),observacao:document.getElementById("obs-aval").value});
+      app.innerHTML=`<div class="carta" style="text-align:center"><div style="font-size:52px;color:var(--ok);line-height:1">✓</div>
+       <h1 style="margin:10px 0 4px">Prática assinada</h1><p class="sub">Módulo ${m.ordem} · ${esc(m.nome)}<br>por ${esc(r.avaliador)} em ${dataHoraBR(r.assinado_em)}</p>
+       <button id="ok-pratica" style="margin-top:16px">Voltar para a trilha</button></div>`;
+      document.getElementById("ok-pratica").onclick=voltarAprender;
+    }catch(e){bt.disabled=false;bt.textContent="Assinar a prática";document.getElementById("pin-aval").value="";document.getElementById("erro-pratica").innerHTML=`<div class="aviso">${esc(e.message)}</div>`;}
+  };
+}
+function telaCertificado(c,mods){
+  manterSessao();
+  app.innerHTML=`<div class="carta"><div class="certificado">
+    <div style="font-size:12px;font-weight:700;letter-spacing:.2em;color:#a8670a;text-transform:uppercase">Trilha do salão · ${esc(c.unidade)}</div>
+    <div class="t">Certificado</div><div>Certificamos que</div><div class="n">${esc(c.nome)}</div>
+    <p style="line-height:1.5">concluiu a <b>Trilha do salão</b> da Feitoria da Cerveja, com carga horária de <b>${c.horas} horas</b> e aproveitamento mínimo de 70% em cada módulo, somando <b>${c.pontos} de ${c.pontos_max} pontos</b>.</p>
+    <p class="sub" style="font-size:13px">${mods.map(m=>`Módulo ${m.ordem} · ${esc(m.nome)} (${m.horas} h)`).join(" · ")}</p>
+    <p style="margin:14px 0 0;font-size:13px">Mogi das Cruzes, ${dataBR(c.concluido_em)} · código ${esc(c.codigo)}</p>
+    <p style="margin:10px 0 0;font-weight:800;color:#a8670a;text-transform:uppercase">Olhe a mesa. Vá antes de chamarem.</p></div>
+   <button class="nao-imprimir" id="imprimir" style="margin-top:14px">Imprimir ou salvar em PDF</button>
+   <button class="discreto nao-imprimir" id="voltar-cert" style="margin-top:10px">Voltar</button></div>`;
+  document.getElementById("imprimir").onclick=()=>window.print();
+  document.getElementById("voltar-cert").onclick=voltarAprender;
 }
 
 async function voltar(){
