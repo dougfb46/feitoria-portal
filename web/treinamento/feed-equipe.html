@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>Equipe Feitoria · Feed da trilha</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=Source+Sans+3:wght@400;600;700&display=swap">
+<style>
+:root{--stage:#17241c;--amber:#e3a33b;--green:#7cc39b;--red:#ef8a78;--cream:#f2efe6;--muted:#a9b8ad;
+--display:"Big Shoulders Display","Arial Narrow",Impact,sans-serif;--body:"Source Sans 3","Segoe UI",system-ui,sans-serif}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:#000;color:var(--cream);font:17px/1.4 var(--body);overscroll-behavior:none}
+.feed{height:100dvh;overflow-y:scroll;scroll-snap-type:y mandatory;scrollbar-width:none}
+.feed::-webkit-scrollbar{display:none}
+.slide{height:100dvh;scroll-snap-align:start;scroll-snap-stop:always;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.frame{position:relative;height:100%;width:min(100vw,calc(100dvh*9/16));background:var(--stage)}
+video{width:100%;height:100%;object-fit:cover;display:block;background:var(--stage)}
+.top{position:absolute;left:0;right:0;bottom:4px;padding:22px 12px max(10px,env(safe-area-inset-bottom));display:flex;align-items:center;gap:8px;background:linear-gradient(transparent,rgba(0,0,0,.6) 45%);z-index:3;pointer-events:none}
+.top a,.top button{pointer-events:auto}
+.back{color:var(--cream);text-decoration:none;font-weight:700;font-size:.9rem;background:rgba(0,0,0,.35);border-radius:999px;padding:6px 11px}
+.chip{font-weight:700;font-size:.82rem;letter-spacing:.06em;text-transform:uppercase;color:var(--amber);background:rgba(0,0,0,.35);border-radius:999px;padding:6px 11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.count{margin-left:auto;font-weight:700;font-size:.85rem;background:rgba(0,0,0,.35);border-radius:999px;padding:6px 10px}
+.snd{border:0;background:rgba(0,0,0,.5);color:var(--cream);border-radius:999px;padding:6px 10px;font:700 .85rem var(--body);cursor:pointer}
+.prog{position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(255,255,255,.18);z-index:3}
+.prog i{display:block;height:100%;width:0;background:var(--amber)}
+.paused::after{content:"";position:absolute;left:50%;top:50%;width:84px;height:84px;margin:-42px;border-radius:50%;background:rgba(0,0,0,.45) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M8 5v14l11-7z' fill='%23f2efe6'/%3E%3C/svg%3E") center/46px no-repeat;z-index:2;pointer-events:none}
+.card{position:relative;height:100%;width:min(100vw,calc(100dvh*9/16));background:var(--stage);display:flex;flex-direction:column;justify-content:center;padding:70px 26px 60px;gap:16px}
+.card .k{font-weight:700;letter-spacing:.14em;text-transform:uppercase;font-size:.85rem;color:var(--amber)}
+.card h1,.card h2{font-family:var(--display);font-weight:800;text-transform:uppercase;line-height:.95;margin:0}
+.card h1{font-size:clamp(2.6rem,12vw,3.6rem)} .card h1 em,.card h2 em{font-style:normal;color:var(--amber)}
+.card h2{font-size:clamp(2rem,9vw,2.7rem)}
+.card p{margin:0;color:#d5dcd6}
+.logo{height:42px;width:auto;align-self:flex-start}
+.go{border:0;border-radius:14px;background:var(--amber);color:#1d1a12;font:800 1.5rem var(--display);text-transform:uppercase;letter-spacing:.04em;padding:16px 18px;cursor:pointer}
+.steps{display:grid;gap:8px;margin:4px 0}
+.steps div{display:flex;gap:10px;align-items:baseline;font-weight:600}
+.steps b{font-family:var(--display);font-size:1.4rem;color:var(--amber);min-width:1.4em}
+.q{font-weight:700;font-size:1.15rem;color:var(--cream)}
+.opts{display:grid;gap:10px}
+.opts button{border:2px solid #3a4c40;background:#1f2f25;color:var(--cream);border-radius:12px;padding:13px 14px;text-align:left;font:600 1rem var(--body);cursor:pointer}
+.opts button.ok{border-color:var(--green);background:#1d3b2a}
+.opts button.no{border-color:var(--red);background:#3b2220;opacity:.85}
+.opts.done button{pointer-events:none}
+.msg{display:none;border-left:5px solid var(--amber);padding:8px 12px;background:rgba(227,163,59,.1);border-radius:6px;font-weight:600}
+.opts.done + .msg{display:block}
+.hint{position:absolute;left:0;right:0;bottom:max(18px,env(safe-area-inset-bottom));text-align:center;color:var(--muted);font-weight:700;font-size:.9rem;letter-spacing:.06em;animation:up 1.6s ease-in-out infinite}
+@keyframes up{0%,100%{transform:translateY(0);opacity:.6}50%{transform:translateY(-8px);opacity:1}}
+.dots{display:flex;gap:6px}.dots span{width:26px;height:6px;border-radius:3px;background:#3a4c40}.dots span.on{background:var(--amber)}
+a.link{color:var(--green);font-weight:700}
+@media (prefers-reduced-motion:reduce){.hint{animation:none}.feed{scroll-behavior:auto}}
+.slide.h .frame{width:100vw;background:#000}.slide.h video{object-fit:contain}
+.rot{position:absolute;top:max(14px,env(safe-area-inset-top));left:50%;transform:translateX(-50%);z-index:3;background:rgba(0,0,0,.6);color:var(--cream);font-weight:700;font-size:.9rem;border-radius:999px;padding:7px 14px;white-space:nowrap}
+@media (orientation:landscape){.rot{display:none}}
+.mods{display:grid;gap:10px}
+.mods a{display:flex;justify-content:space-between;align-items:center;gap:10px;text-decoration:none;color:var(--cream);background:#1f2f25;border:2px solid #3a4c40;border-radius:12px;padding:12px 14px}
+.mods a b{font-family:var(--display);font-size:1.35rem;text-transform:uppercase;line-height:1}.mods a small{color:var(--muted);font-weight:700;white-space:nowrap}
+.phone{font-size:4rem;line-height:1;display:inline-block;animation:turn 2.4s ease-in-out infinite}
+@keyframes turn{0%,30%{transform:rotate(0)}60%,100%{transform:rotate(-90deg)}}
+@media (prefers-reduced-motion:reduce){.phone{animation:none}}
+</style>
+</head>
+<body>
+<main class="feed" id="feed"></main>
+<script>
+const EP={5:'como-ler-uma-cerveja',6:'torneiras-leves-e-de-trigo',7:'amargas-escuras-e-especiais',8:'as-ipas',9:'belgas-inglesas-trigo-e-lagers',10:'as-fortes-e-de-ocasiao',11:'copos-e-servico',12:'indicar-o-chope-certo',13:'a-praca',14:'a-chegada',15:'a-comanda-certa',16:'bebida-primeiro',17:'a-comida-da-casa',18:'do-pedido-a-proxima-rodada',19:'quando-demora',20:'quando-algo-da-errado',21:'nao-tem-tem-alternativa',22:'beber-com-responsabilidade',23:'a-hora-da-conta',24:'a-despedida'};
+const PARTE={1:'parte-1-o-jeito-da-casa',2:'parte-2-da-chegada-a-bebida',3:'parte-3-do-pedido-a-saideira'};
+const V=x=>typeof x==='string'?'videos/'+PARTE[x.slice(1)]:'videos/equipe-ep'+String(x).padStart(2,'0')+'-'+EP[x];
+const MODS=[
+ {id:'m1',nome:'O jeito da casa',horiz:true,etapas:[
+  {nome:'O jeito da casa',vids:['p1','p2','p3'],
+   q:'Um copo quebra no deck. O que vem primeiro?',op:['Avisar o gerente e continuar atendendo','Afastar as pessoas e sinalizar','Recolher os cacos com a mão'],ok:1,
+   msg:'Segurança vem primeiro. Depois cortesia, show e eficiência, nessa ordem.'}]},
+ {id:'m2',nome:'O chope',etapas:[
+  {nome:'Ler e servir as leves',vids:[5,6,7],
+   q:'Quem diz que não gosta de amargo deve começar por:',op:['IBU alto','IBU baixo','ABV alto'],ok:1,
+   msg:'ABV é o teor alcoólico, IBU é o amargor. Quanto maior o IBU, mais amarga.'},
+  {nome:'IPAs, belgas e fortes',vids:[8,9,10],
+   q:'Primeira vez no amargo. Por onde começar?',op:['Double IPA','Indonesian IPA','Belgian Pale Ale ou Session IPA'],ok:2,
+   msg:'Um degrau de cada vez. E com as fortes: avise o teor e ofereça água.'},
+  {nome:'Copo certo, chope certo',vids:[11,12],
+   q:'Convidado em dúvida, primeira vez na casa. O que oferecer?',op:['A Régua Degustação','Um martelo','Só a Pilsen'],ok:0,
+   msg:'A Régua é o carro-chefe. Lagers na tulipa ou caneca, ales no half ou pint, especiais na taça.'}]},
+ {id:'m3',nome:'A mesa',etapas:[
+  {nome:'Praça, chegada e comanda',vids:[13,14,15],
+   q:'Antes de tocar em "Fazer pedido", o que precisa estar marcado?',op:['O número da mesa','O cliente selecionado','A forma de pagamento'],ok:1,
+   msg:'Pessoas, nome, sobrenome, celular e cliente selecionado. Comanda certa em 20 segundos.'},
+  {nome:'Bebida, comida e próxima rodada',vids:[16,17,18],
+   q:'Copo a 1/3. O que você diz?',op:['"Vão querer mais alguma coisa?"','Nada: espero a mesa chamar','"Mais uma rodada de Pilsen?"'],ok:2,
+   msg:'Oferta pelo nome, sempre. Beliscar, dividir e fechar.'}]},
+ {id:'m4',nome:'Imprevistos e despedida',etapas:[
+  {nome:'Quando dá errado',vids:[19,20,21],
+   q:'Convidado reclama da porção fria. Primeiro passo:',op:['Ouvir até o fim e dizer "sinto muito, vou resolver agora"','Explicar que saiu quente','Oferecer uma cortesia'],ok:0,
+   msg:'Ouvir, reconhecer, chamar o responsável e voltar para conferir. Nunca "não tem" seco.'},
+  {nome:'Responsabilidade, conta e despedida',vids:[22,23,24],
+   q:'Ficou na dúvida sobre a idade do convidado. E aí?',op:['Serve se ele disser que é maior','Pergunta para os amigos da mesa','Chama o responsável, que confere o documento'],ok:2,
+   msg:'Na dúvida, não serve até confirmar. Conta conferida, baixa no caixa e despedida pelo nome.'}]}
+];
+const ALL=[];MODS.forEach(m=>m.etapas.forEach(e=>e.vids.forEach(v=>ALL.push(v))));const TOTAL=ALL.length;
+const feed=document.getElementById('feed');let html='',k=0;
+html+=`<section class="slide" id="inicio"><div class="card"><img class="logo" src="logo-feitoria-claro.webp" alt="Feitoria">
+<div class="k">Equipe · Trilha do salão</div><h1>4 módulos.<br><em>${TOTAL} vídeos.</em></h1>
+<div class="mods">${MODS.map((m,i)=>`<a href="#${m.id}"><span><small>Módulo ${i+1}</small><br><b>${m.nome}</b></span><small>${m.etapas.reduce((a,e)=>a+e.vids.length,0)} vídeos ›</small></a>`).join('')}</div>
+<p>Deslize para cima, como no TikTok, ou toque num módulo. No fim de cada etapa, uma pergunta rápida.</p>
+<button class="go" id="go">▶ Começar com som</button></div><div class="hint">deslize ↑</div></section>`;
+MODS.forEach((m,mi)=>{
+ const n=m.etapas.reduce((a,e)=>a+e.vids.length,0);
+ html+=`<section class="slide" id="${m.id}"><div class="card"><div class="k">Módulo ${mi+1}</div><h1>${m.nome}</h1><p>${n} vídeo${n>1?'s':''} em ${m.etapas.length} etapa${m.etapas.length>1?'s':''}.</p>
+ ${m.horiz?'<p style="text-align:center"><span class="phone" aria-hidden="true">📱</span></p><h2>Vire a tela <em>na horizontal</em></h2><p>Os vídeos deste módulo são horizontais. Gire o celular para ver em tela cheia e volte para a vertical no próximo módulo.</p>':''}
+ </div><div class="hint">deslize ↑</div></section>`;
+ m.etapas.forEach((e,i)=>{
+  e.vids.forEach(v=>{k++;const src=V(v);html+=`<section class="slide${m.horiz?' h':''}" data-v="${k}"><div class="frame"><video playsinline preload="none" poster="${src}.jpg" src="${src}.mp4"></video>
+  ${m.horiz?'<div class="rot">↻ Vire o celular</div>':''}<div class="top"><a class="back" href="#inicio" aria-label="Voltar ao início">←</a><span class="chip">M${mi+1} · ${e.nome}</span><span class="count">${k}/${TOTAL}</span><button class="snd" hidden>🔇 Som</button></div><div class="prog"><i></i></div></div></section>`;});
+  html+=`<section class="slide"><div class="card"><div class="dots">${m.etapas.map((_,j)=>`<span class="${j<=i?'on':''}"></span>`).join('')}</div><div class="k">Módulo ${mi+1} · fim da etapa ${i+1}</div><h2>Rapidinho:</h2>
+  <div class="q">${e.q}</div><div class="opts" data-ok="${e.ok}">${e.op.map((o,j)=>`<button data-i="${j}">${o}</button>`).join('')}</div>
+  <div class="msg">${e.msg}</div></div><div class="hint">↑</div></section>`;
+ });
+ html+=`<section class="slide"><div class="card"><div class="k">Módulo ${mi+1} concluído</div><h2>${m.nome}: <em>feito.</em></h2>
+ <p>Agora faça o teste do módulo na plataforma da equipe. Para o certificado, são 70% de acerto em cada módulo e a prática acompanhada no turno.</p>
+ ${mi<MODS.length-1?`<p>Próximo: <b>Módulo ${mi+2} · ${MODS[mi+1].nome}</b>.</p>`:''}</div><div class="hint">${mi<MODS.length-1?'próximo módulo ↑':'↑'}</div></section>`;
+});
+html+=`<section class="slide"><div class="card"><img class="logo" src="logo-feitoria-claro.webp" alt="Feitoria"><div class="k">Trilha completa</div>
+<h1>Olhe a mesa.<br><em>Vá antes de chamarem.</em></h1><p>Você viu os quatro módulos. Revise quando quiser na página de vídeos.</p>
+<a class="go" style="text-align:center;text-decoration:none" href="videos.html">Abrir a página de vídeos</a><p><a class="link" href="#inicio">Voltar ao início</a></p></div></section>`;
+feed.innerHTML=html;
+
+const vids=[...document.querySelectorAll('video')];let unlocked=false,cur=null;
+function slides(){return [...feed.querySelectorAll('.slide')];}
+function playV(v){
+ if(cur&&cur!==v){cur.pause();cur.currentTime=0;}cur=v;v.preload='auto';
+ const i=vids.indexOf(v);if(vids[i+1])vids[i+1].preload='auto';
+ v.muted=!unlocked;v.closest('.frame').classList.remove('paused');
+ v.play().catch(()=>{v.muted=true;v.play().catch(()=>v.closest('.frame').classList.add('paused'));}).then(()=>{v.closest('.frame').querySelector('.snd').hidden=!v.muted;});
+}
+const io=new IntersectionObserver(es=>es.forEach(e=>{const v=e.target.querySelector('video');
+ if(e.isIntersecting&&e.intersectionRatio>.6){if(v)playV(v);else if(cur){cur.pause();}}
+}),{root:feed,threshold:[.6]});
+slides().forEach(s=>io.observe(s));
+document.getElementById('go').addEventListener('click',()=>{
+ unlocked=true;const ps=vids.map(v=>{v.muted=false;return (v.play()||Promise.resolve()).then(()=>{v.pause();v.currentTime=0;}).catch(()=>{});});
+ Promise.race([Promise.allSettled(ps),new Promise(r=>setTimeout(r,1500))]).then(()=>{cur=null;(document.getElementById((location.hash||'#m1').slice(1))||slides()[1]).scrollIntoView({behavior:'smooth'});});
+});
+vids.forEach(v=>{
+ const fr=v.closest('.frame'),bar=fr.querySelector('.prog i'),snd=fr.querySelector('.snd');
+ v.addEventListener('timeupdate',()=>{bar.style.width=(v.currentTime/v.duration*100||0)+'%';});
+ v.addEventListener('ended',()=>{const s=v.closest('.slide').nextElementSibling;if(s)s.scrollIntoView({behavior:'smooth'});});
+ v.addEventListener('click',()=>{if(v.paused){v.play();fr.classList.remove('paused');}else{v.pause();fr.classList.add('paused');}});
+ snd.addEventListener('click',ev=>{ev.stopPropagation();unlocked=true;vids.forEach(x=>x.muted=false);snd.hidden=true;});
+});
+document.querySelectorAll('.opts').forEach(o=>o.addEventListener('click',ev=>{
+ const b=ev.target.closest('button');if(!b||o.classList.contains('done'))return;
+ const ok=+o.dataset.ok;o.classList.add('done');b.classList.add(+b.dataset.i===ok?'ok':'no');o.children[ok].classList.add('ok');
+}));
+document.addEventListener('keydown',ev=>{if(!['ArrowDown','ArrowUp',' '].includes(ev.key))return;
+ const s=slides(),i=s.findIndex(x=>Math.abs(x.getBoundingClientRect().top)<10);
+ if(ev.key===' '&&cur&&cur.closest('.slide')===s[i]){ev.preventDefault();cur.click();return;}
+ const j=ev.key==='ArrowUp'?i-1:i+1;if(s[j]){ev.preventDefault();s[j].scrollIntoView({behavior:'smooth'});}});
+
+if(location.hash&&location.hash!=='#inicio'){const t=document.getElementById(location.hash.slice(1));if(t)setTimeout(()=>t.scrollIntoView(),50);}
+document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',ev=>{const t=document.getElementById(a.getAttribute('href').slice(1));if(t){ev.preventDefault();t.scrollIntoView({behavior:'smooth'});history.replaceState(null,'',a.getAttribute('href'));}}));
+</script>
+</body>
+</html>
