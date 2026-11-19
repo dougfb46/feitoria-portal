@@ -217,7 +217,7 @@ const AREAS = [
     ["financeiro","Financeiro Takeat","Consulte os lançamentos importados da Takeat."],
     ["notas","Notas fiscais","Confira as notas recebidas e seus detalhes."],
     ["historico-financeiro","Histórico financeiro","Pesquise documentos e consulte as fontes do histórico."]]],
-  ["Configuração", [["acessos","Links e acessos","Encontre os endereços para a equipe e o totem."]]]
+  ["Configuração", [["acessos","Links e acessos","Encontre os endereços para a equipe e o totem."],["gestores","Acessos da gestão","Cadastre gerentes e troque a sua senha."]]]
 ];
 const areaAtual=()=>AREAS.flatMap(([,itens])=>itens).find(([id])=>id===aba)||AREAS[0][1][0];
 const solicitada=location.hash.slice(1);
@@ -322,6 +322,7 @@ const render = () => aba === "inicio" ? abaInicio() : aba === "acessos" ? abaAce
   : aba === "vencimentos" ? abaVencimentos()
   : aba === "freelas" ? abaFreelas()
   : aba === "trilha" ? abaTrilha()
+  : aba === "gestores" ? abaGestores()
   : aba === "hoje" ? abaHoje()
   : aba === "boletim" ? abaBoletim()
   : aba === "resultados" ? abaResultados()
@@ -404,6 +405,17 @@ function abaVencimentos(){
   conteudo().innerHTML = `<iframe title="Contas a pagar" src="${esc(url.href)}" style="width:100%;height:1400px;border:0;border-radius:12px"></iframe>`;
   const quadro = conteudo().querySelector("iframe");
   const ajustar = e => { if (!quadro.isConnected) return removeEventListener("message", ajustar); if (e.source === quadro.contentWindow && Number.isFinite(e.data?.vencAltura)) quadro.style.height = Math.max(700, Math.ceil(e.data.vencAltura) + 20) + "px"; };
+  addEventListener("message", ajustar);
+}
+
+// Acessos da gestão (19/11/2026): dono cadastra gerentes; cada um troca a própria senha.
+function abaGestores(){
+  const url = new URL(location.pathname.includes('/web/')?'acessos-gestao.html':'web/acessos-gestao.html',location.href);
+  url.searchParams.set('restaurant_id',unidade.id);
+  url.searchParams.set('v','20261119-acessos');
+  conteudo().innerHTML = `<iframe title="Acessos da gestão" src="${esc(url.href)}" style="width:100%;height:1100px;border:0;border-radius:12px"></iframe>`;
+  const quadro = conteudo().querySelector("iframe");
+  const ajustar = e => { if (!quadro.isConnected) return removeEventListener("message", ajustar); if (e.source === quadro.contentWindow && Number.isFinite(e.data?.acessosAltura)) quadro.style.height = Math.max(600, Math.ceil(e.data.acessosAltura) + 20) + "px"; };
   addEventListener("message", ajustar);
 }
 

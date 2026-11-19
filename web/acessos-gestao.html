@@ -1,0 +1,79 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Acessos da gestão · Feitoria</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<style>
+:root{--font:"DM Sans",-apple-system,"Segoe UI",Roboto,sans-serif;--page:#f7f8f5;--card:#fff;--soft:#f4f4f0;--line:#efeee9;--line-2:#e3e2dc;--ink:#1c1e1d;--ink-2:#3a3e3c;--muted:#7a7e7b;--sage:#5f7f69;--sage-soft:#e8eee9;--down:#c4483e;--down-bg:#fbe8e6;--amber:#9a6f17;--amber-bg:#f8efd9}
+*{box-sizing:border-box}body{margin:0;background:var(--page);color:var(--ink);font:15px/1.5 var(--font)}main{max-width:1200px;margin:auto;padding:20px 16px 40px}
+h1{font-size:28px;margin:0;letter-spacing:-.01em}h2{font-size:18px;margin:0 0 8px}.sub,small{color:var(--muted)}p{margin:6px 0}
+button{font:inherit;border:1px solid var(--line-2);border-radius:12px;padding:8px 14px;background:var(--card);color:var(--ink);cursor:pointer}button:hover{background:var(--soft)}button:disabled{opacity:.5;cursor:default}
+button.prim{background:var(--sage);border-color:var(--sage);color:#fff}
+.card{background:var(--card);border:1px solid var(--line-2);border-radius:22px;padding:20px;margin:14px 0}
+.erro{background:var(--down-bg);color:#7a2a23;border-radius:14px;padding:12px 16px}.ok{background:var(--sage-soft);color:#2f4a37;border-radius:14px;padding:10px 14px}
+.rolar{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:860px}th,td{text-align:left;padding:8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.03em}
+td.pessoa{font-weight:600;min-width:160px;position:sticky;left:0;background:var(--card)}td.pessoa small{display:block;font-weight:400}
+.tag{display:inline-block;font-size:12px;font-weight:600;border-radius:999px;padding:1px 8px;background:var(--soft);color:var(--ink-2);white-space:nowrap;margin:1px 0}
+.tag.ok{background:var(--sage-soft);color:#2f4a37;padding:1px 8px}.tag.conf{background:var(--amber-bg);color:var(--amber)}
+.cel button{margin-top:4px;padding:5px 10px;font-size:13px}
+.mods{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}.mods div{background:var(--soft);border-radius:14px;padding:10px 12px;font-size:14px}
+dialog{border:0;border-radius:22px;padding:22px;max-width:440px;width:calc(100% - 32px);box-shadow:0 20px 60px rgba(0,0,0,.18)}dialog::backdrop{background:rgba(20,22,21,.35)}
+label{display:block;font-size:13px;color:var(--muted);margin:10px 0 4px}input{font:inherit;width:100%;padding:9px 11px;border:1px solid var(--line-2);border-radius:12px}
+.acoes{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(max-width:700px){.grid2{grid-template-columns:1fr}}
+.senha{font:700 22px/1.2 ui-monospace,Menlo,monospace;letter-spacing:.06em;background:var(--soft);border-radius:12px;padding:10px 14px;display:inline-block;margin:6px 0}
+</style></head><body><main>
+<h1>Acessos da gestão</h1><p class="sub" id="unidade">Carregando…</p>
+<div id="msg" aria-live="polite"></div>
+<div class="card"><h2>Minha conta</h2><p id="eu" class="sub"></p>
+ <form id="fSenha"><div class="grid2"><div><label for="s1">Nova senha</label><input id="s1" type="password" autocomplete="new-password" minlength="10" required></div>
+ <div><label for="s2">Repita a nova senha</label><input id="s2" type="password" autocomplete="new-password" minlength="10" required></div></div>
+ <p class="sub">Mínimo de 10 caracteres. Quem recebeu senha provisória deve trocar aqui no primeiro acesso.</p>
+ <div class="acoes" style="justify-content:flex-start"><button class="prim" id="bSenha">Trocar minha senha</button></div></form></div>
+<div id="dono" hidden>
+ <div class="card"><h2>Novo gerente</h2><p class="sub">A conta é criada na hora, com uma senha provisória que aparece uma única vez. Passe a senha pessoalmente para a pessoa.</p>
+ <form id="fNovo"><div class="grid2"><div><label for="nNome">Nome completo</label><input id="nNome" maxlength="120" required></div>
+ <div><label for="nEmail">E-mail</label><input id="nEmail" type="email" maxlength="200" required autocomplete="off"></div></div>
+ <div class="acoes" style="justify-content:flex-start"><button class="prim" id="bNovo">Criar acesso de gerente</button></div></form>
+ <div id="novoRes"></div></div>
+ <div class="card"><h2>Quem acessa a gestão</h2><div class="rolar" id="lista"><p class="sub">Buscando…</p></div></div>
+</div>
+</main>
+<dialog id="dlg"><form method="dialog" id="fRet"><h2>Retirar acesso</h2><p class="sub" id="rQuem"></p>
+ <label for="rMot">Motivo</label><input id="rMot" maxlength="300" required>
+ <div class="acoes"><button value="cancel" formnovalidate>Cancelar</button><button type="submit" class="prim" id="rOk">Retirar</button></div></form></dialog>
+<script type="module">
+import {createClient} from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.0/+esm';
+const SB='https://kujelbcbrcmkitzyswbh.supabase.co',ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt1amVsYmNicmNta2l0enlzd2JoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg2NDg0MzAsImV4cCI6MjEwNDIyNDQzMH0.uDwckXtywDBZGU_i4J8S9BdO2fUtRwXCOaLJbSiWzdQ',sb=createClient(SB,ANON),unit=new URLSearchParams(location.search).get('restaurant_id');
+const el=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
+const quando=s=>s?new Date(s).toLocaleString('pt-BR',{timeZone:'America/Sao_Paulo',dateStyle:'short',timeStyle:'short'}):'nunca';
+const PAPEL={dono:'Dono',gerente:'Gerente',equipe:'Equipe'};
+async function call(fn,body){const {data,error}=await sb.auth.getSession();if(error||!data.session)throw Error('Entre novamente no portal de gestão.');const r=await fetch(SB+'/functions/v1/'+fn,{method:'POST',headers:{'Content-Type':'application/json','apikey':ANON,'Authorization':'Bearer '+data.session.access_token},body:JSON.stringify({restaurant_id:unit,...body})});const d=await r.json().catch(()=>({erro:'Resposta inválida do servidor.'}));if(!r.ok)throw Error(d.erro||d.error||'Não foi possível concluir agora.');return d;}
+let D=null,alvo=null;
+const msg=(t,ok)=>{el('msg').innerHTML=`<p class="${ok?'ok':'erro'}">${esc(t)}</p>`;};
+async function carregar(){
+ try{D=await call('gestao-acessos',{acao:'listar'});}catch(e){el('unidade').textContent='';msg(e.message);return;}
+ el('unidade').textContent=D.unidade;
+ el('eu').textContent=(D.eu.nome?D.eu.nome+' · ':'')+D.eu.email+' · '+(PAPEL[D.eu.papel]||D.eu.papel);
+ el('dono').hidden=!D.pode_gerenciar;
+ if(!D.pode_gerenciar)return;
+ el('lista').innerHTML=`<table style="min-width:640px"><thead><tr><th>Pessoa</th><th>Papel</th><th>Último acesso</th><th></th></tr></thead><tbody>${D.pessoas.map(p=>`<tr><td><b>${esc(p.nome||'—')}</b><br><small>${esc(p.email)}</small></td><td>${p.papeis.map(x=>`<span class="tag">${esc(PAPEL[x.papel]||x.papel)}${x.todas_unidades?' · todas as unidades':''}</span>`).join(' ')}</td><td>${quando(p.ultimo_acesso)}</td><td>${p.sou_eu?'<small>você</small>':p.papeis.some(x=>!x.todas_unidades)?`<button data-r="${esc(p.id)}">Retirar acesso</button>`:''}</td></tr>`).join('')}</tbody></table>`;
+ el('lista').querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{alvo=D.pessoas.find(p=>p.id===b.dataset.r);el('rQuem').textContent=(alvo.nome||'')+' · '+alvo.email;el('rMot').value='';el('dlg').showModal();});
+}
+el('fSenha').addEventListener('submit',async ev=>{ev.preventDefault();
+ const a=el('s1').value,b=el('s2').value;if(a!==b)return msg('As duas senhas não são iguais.');if(a.length<10)return msg('Use pelo menos 10 caracteres.');
+ el('bSenha').disabled=true;try{const {error}=await sb.auth.updateUser({password:a});if(error)throw error;el('s1').value=el('s2').value='';msg('Senha trocada.',true);}catch(e){msg('Não foi possível trocar a senha: '+(e.message||''));}finally{el('bSenha').disabled=false;}});
+el('fNovo').addEventListener('submit',async ev=>{ev.preventDefault();el('bNovo').disabled=true;el('novoRes').innerHTML='';
+ try{const r=await call('gestao-acessos',{acao:'criar',nome:el('nNome').value,email:el('nEmail').value,papel:'gerente'});
+  const link=new URL('gestao.html',new URL('.',location.href)).href;
+  el('novoRes').innerHTML=r.conta_nova?`<div class="ok" style="margin-top:12px"><b>Acesso criado para ${esc(r.nome)}.</b><br>E-mail: ${esc(r.email)}<br>Senha provisória (aparece só agora):<br><span class="senha" id="sp">${esc(r.senha_provisoria)}</span> <button type="button" id="cp">Copiar</button><br>Endereço da gestão: ${esc(link)}<br><small>Na primeira entrada, a pessoa troca a senha em Configurações › Acessos da gestão.</small></div>`
+   :`<div class="ok" style="margin-top:12px">${esc(r.email)} já tinha conta: o papel de gerente foi concedido. A senha continua a dela.</div>`;
+  const cp=document.getElementById('cp');if(cp)cp.onclick=()=>navigator.clipboard?.writeText(r.senha_provisoria);
+  el('nNome').value=el('nEmail').value='';await carregar();}
+ catch(e){msg(e.message);}finally{el('bNovo').disabled=false;}});
+el('fRet').addEventListener('submit',async ev=>{if(ev.submitter?.value==='cancel')return;ev.preventDefault();el('rOk').disabled=true;
+ try{await call('gestao-acessos',{acao:'retirar',user_id:alvo.id,motivo:el('rMot').value});el('dlg').close();msg('Acesso retirado.',true);await carregar();}
+ catch(e){el('dlg').close();msg(e.message);}finally{el('rOk').disabled=false;}});
+new ResizeObserver(()=>parent.postMessage({acessosAltura:document.documentElement.scrollHeight},'*')).observe(document.body);
+carregar();
+</script></body></html>
