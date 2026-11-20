@@ -1,0 +1,101 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Contagem de segunda · Feitoria</title><style>
+:root{--verde:#1f4d3a;--ink:#233b30;--suave:#657165;--borda:#dfe4da;--ok:#2e6b3f;--okbg:#e8f2e6}*{box-sizing:border-box}
+body{margin:0;background:#f5f3ec;color:var(--ink);font:16px/1.5 system-ui,sans-serif}main{max-width:760px;margin:auto;padding:16px 16px 90px}
+h1{font-size:24px;margin:0}h2{font-size:17px;margin:0}.sub,small{color:var(--suave)}
+.topo{position:sticky;top:0;z-index:2;background:#f5f3ec;padding:10px 0 8px;border-bottom:1px solid var(--borda)}
+.barra{height:10px;background:#e3e6dd;border-radius:6px;overflow:hidden;margin:6px 0}.barra i{display:block;height:100%;background:var(--verde);width:0}
+.linha{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.linha input,.linha select{flex:1;min-width:130px}
+input,select,button{font:inherit;padding:10px;border:1px solid #b8c8ba;border-radius:8px;color:var(--ink);background:#fff}button{cursor:pointer;min-height:44px}
+button.primary{background:var(--verde);color:#fff;border-color:var(--verde)}button:disabled{opacity:.5}
+details.grupo{background:#fff;border:1px solid var(--borda);border-radius:12px;margin:12px 0}details.grupo>summary{padding:14px;cursor:pointer;display:flex;justify-content:space-between;gap:8px;list-style:none}
+details.grupo>summary::-webkit-details-marker{display:none}.cont{font-size:14px;color:var(--suave);white-space:nowrap}
+.item{padding:12px 14px;border-top:1px solid var(--borda)}.item.feito{background:var(--okbg)}.nome{font-weight:600}
+.campo{display:flex;gap:6px;margin-top:8px;align-items:center}.campo input{flex:1;min-width:0;font-size:18px;text-align:right}.campo select{flex:0 0 auto;padding:10px 6px}.campo button{flex:0 0 auto}
+.estado{font-size:13px;margin-top:4px;min-height:1em}.estado.ok{color:var(--ok)}.erro{color:#922f24}
+.aviso{background:#fff4df;padding:12px;border-left:4px solid #c58d38;margin:12px 0;font-size:14px}
+.resumo{background:#fff;border:1px solid var(--borda);border-radius:12px;padding:14px;margin-top:16px}
+:focus-visible{outline:3px solid #c8871f;outline-offset:2px}
+</style></head><body><main>
+<div class="topo"><h1>Contagem de segunda</h1><p id="intro" class="sub" style="margin:2px 0">Conferindo acesso…</p>
+<div class="barra" aria-hidden="true"><i id="barra"></i></div><p id="progresso" class="sub" style="margin:0"></p>
+<div class="linha" style="margin-top:8px"><input id="busca" type="search" maxlength="100" placeholder="Buscar item" aria-label="Buscar item"><select id="filtro" aria-label="Mostrar"><option value="faltam">Faltam contar</option><option value="todos">Todos</option><option value="feitos">Já contados</option></select><button id="atualizar">Atualizar</button></div>
+<p id="status" role="status" aria-live="polite" class="sub" style="margin:6px 0 0"></p></div>
+<div class="aviso">Conte o que existe <strong>fisicamente</strong>, antes de abrir, sem olhar o sistema. Item que não tem, digite 0. Cada número é gravado na hora com seu nome e horário; para corrigir, digite de novo e toque em <em>Corrigir</em> — o registro anterior fica guardado.</div>
+<p><a href="guia-contagem.html">Como contar · guia da equipe →</a></p><div class="aviso">Esta tela registra a conferência física. O dono/gerente revisa as diferenças e ajusta a Takeat depois. Salvar aqui não altera o saldo da Takeat. Preparos já existentes entram como saldo inicial, sem lançar produção novamente.</div><div id="conteudo"></div><div id="resumo"></div>
+</main><script type="module">
+import {createClient} from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.0/+esm';
+const SB='https://kujelbcbrcmkitzyswbh.supabase.co',ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt1amVsYmNicmNta2l0enlzd2JoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg2NDg0MzAsImV4cCI6MjEwNDIyNDQzMH0.uDwckXtywDBZGU_i4J8S9BdO2fUtRwXCOaLJbSiWzdQ';
+const sb=createClient(SB,ANON),unit=new URLSearchParams(location.search).get('restaurant_id'),el=id=>document.getElementById(id);
+const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const ORDEM=['Insumos: Carnes','Insumos: Congelados','Insumos: Laticínios','Insumos: Hortifruti','Insumos: Produtos Vegetais','Preparos da cozinha','Insumos: Mercearia','Produtos para Revendas: Bebidas Alcoólicas','Produtos para Revendas: Bebidas Não Alcoólicas','Insumos: Embalagens','Insumos: Cozinha - Consumíveis','Insumos: Salão - Consumíveis','Material de Consumo: Limpeza e conservação','Despesas e Utilidades Prediais: Gás','Sem categoria'];
+const rotulo=c=>c.replace(/^(Insumos|Produtos para Revendas|Material de Consumo|Despesas e Utilidades Prediais): /,'');
+const brl=n=>n.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const num=s=>Number(s).toLocaleString('pt-BR',{maximumFractionDigits:3});
+// Dia operacional do PUB: fecha às 01:30 em São Paulo (o servidor grava o business_date oficial).
+function diaOperacional(){const p=Object.fromEntries(new Intl.DateTimeFormat('en-CA',{timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date(Date.now()-90*60e3)).map(x=>[x.type,x.value]));return p.year+'-'+p.month+'-'+p.day;}
+const HOJE=diaOperacional(),HOJE_BR=HOJE.split('-').reverse().join('/');
+const grande=u=>({G:'kg',ML:'L'})[String(u).toUpperCase()];
+let itens=[],abertos=new Set(),ativa=false;
+function aviso(t,e=false){el('status').textContent=t;el('status').className=e?'erro':'sub';}
+async function call(acao,p={}){
+ const {data,error}=await sb.auth.getSession();if(error||!data.session)throw Error('Entre novamente no portal de gestão.');
+ const r=await fetch(SB+'/functions/v1/gestao-estoque',{method:'POST',headers:{'Content-Type':'application/json',apikey:ANON,Authorization:'Bearer '+data.session.access_token},body:JSON.stringify({acao,restaurant_id:unit,...p})});
+ const d=await r.json().catch(()=>({}));if(!r.ok)throw Error(d.erro||'Não foi possível completar.');return d;
+}
+const feito=x=>x.contado_dia===HOJE&&x.quantidade_fisica!==null;
+// "2,5" em kg → "2500" em g. Só texto decimal; até 6 casas, como o servidor exige.
+function paraBase(txt,mult){
+ const t=String(txt).trim().replace(/\s/g,'').replace(',','.');if(!/^\d{1,7}(\.\d{1,6})?$/.test(t))return null;
+ const v=Number(t)*mult;if(!Number.isFinite(v)||v>1000000)return null;return v.toFixed(6).replace(/\.?0+$/,'')||'0';
+}
+function desenhar(){
+ const b=el('busca').value.trim().toLocaleLowerCase('pt-BR'),f=el('filtro').value;
+ const vis=itens.filter(x=>x.name.toLocaleLowerCase('pt-BR').includes(b)&&(f==='todos'||(f==='feitos'?feito(x):!feito(x))));
+ const grupos=new Map();for(const x of vis){const grupo=grupos.get(x.categoria)||[];grupo.push(x);grupos.set(x.categoria,grupo);}const cats=[...grupos.keys()].sort((a,c)=>(ORDEM.indexOf(a)+1||99)-(ORDEM.indexOf(c)+1||99));
+ el('conteudo').innerHTML=cats.length?cats.map(c=>{const todos=itens.filter(x=>x.categoria===c),n=todos.filter(feito).length;
+  return '<details class="grupo" data-cat="'+esc(c)+'"'+(abertos.has(c)||b?' open':'')+'><summary><h2>'+esc(rotulo(c))+'</h2><span class="cont">'+n+' de '+todos.length+'</span></summary>'+grupos.get(c).map(linha).join('')+'</details>';}).join(''):'<p class="sub">Nada neste filtro.'+(f==='faltam'?' Tudo contado! 🎉':'')+'</p>';
+ for(const d of document.querySelectorAll('details.grupo'))d.ontoggle=()=>d.open?abertos.add(d.dataset.cat):abertos.delete(d.dataset.cat);
+ for(const i of document.querySelectorAll('[data-item]'))ligar(i);
+ progresso();
+}
+function linha(x){
+ const g=grande(x.unit),ok=feito(x);
+ return '<div class="item'+(ok?' feito':'')+'" data-item="'+esc(x.catalog_id)+'"><div class="nome">'+esc(x.name)+'</div><small>'+esc(x.kind==='intermediary'?'Preparo':'Insumo')+' · unidade na Takeat: '+esc(x.unit)+'</small>'
+ +'<div class="campo"><input inputmode="decimal" autocomplete="off" aria-label="Quantidade de '+esc(x.name)+'" placeholder="0"'+(ativa?'':' disabled')+'>'
+ +(g?'<select aria-label="Unidade"><option value="1000">'+g+'</option><option value="1">'+esc(x.unit.toLowerCase())+'</option></select>':'<span class="sub">'+esc(x.unit)+'</span>')
+ +'<button class="primary"'+(ativa?'':' disabled')+'>'+(ok?'Corrigir':'Salvar')+'</button></div><div class="estado'+(ok?' ok':'')+'">'+(ok?'✓ Contado: '+esc(num(x.quantidade_fisica))+' '+esc(x.unit)+' às '+esc(new Date(x.contado_em).toLocaleTimeString('pt-BR',{timeZone:'America/Sao_Paulo',hour:'2-digit',minute:'2-digit'})):(x.contado_em?'Última contagem: '+esc(num(x.quantidade_fisica??0))+' '+esc(x.unit)+' em '+esc(new Date(x.contado_em).toLocaleDateString('pt-BR',{timeZone:'America/Sao_Paulo'})):''))+'</div></div>';
+}
+function ligar(box){
+ const x=itens.find(y=>y.catalog_id===box.dataset.item),inp=box.querySelector('input'),sel=box.querySelector('select'),btn=box.querySelector('button'),est=box.querySelector('.estado');
+ const previa=()=>{if(!sel||sel.value==='1'||!inp.value.trim()){return;}const v=paraBase(inp.value,1000);est.className='estado';est.textContent=v===null?'Número inválido':'= '+num(v)+' '+x.unit;};
+ inp.oninput=previa;if(sel)sel.onchange=previa;
+ inp.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();btn.click();}};
+ btn.onclick=async()=>{
+  const mult=sel?Number(sel.value):1,v=paraBase(inp.value,mult);
+  if(v===null){est.className='estado erro';est.textContent='Digite um número (use vírgula para decimais). Item que não tem: 0.';inp.focus();return;}
+  const corrigir=feito(x);btn.disabled=inp.disabled=true;est.className='estado';est.textContent='Gravando…';
+  try{
+   const r=await call('contagem',{catalog_id:x.catalog_id,quantidade:v,anterior:x.anterior,requisicao:crypto.randomUUID(),motivo:(corrigir?'Correção da contagem semanal de ':'Contagem semanal de segunda ')+HOJE_BR});
+   Object.assign(x,{anterior:r.id,quantidade_fisica:v,contado_em:new Date().toISOString(),contado_dia:HOJE});
+   inp.value='';box.classList.add('feito');btn.textContent='Corrigir';est.className='estado ok';est.textContent='✓ Gravado: '+num(v)+' '+x.unit+' agora';progresso();
+   const prox=[...document.querySelectorAll('.item:not(.feito) input')].find(i=>i.compareDocumentPosition(inp)&Node.DOCUMENT_POSITION_PRECEDING);prox?.focus();
+  }catch(e){est.className='estado erro';est.textContent=e.message.includes('Recarregue')?'Alguém mexeu neste item agora. Toque em Atualizar no topo e conte de novo.':e.message;}
+  finally{btn.disabled=inp.disabled=!ativa;}
+ };
+}
+function progresso(){
+ const n=itens.filter(feito).length,t=itens.length;el('barra').style.width=(t?100*n/t:0)+'%';
+ el('progresso').textContent=n+' de '+t+' itens contados hoje ('+HOJE_BR+')';
+ for(const d of document.querySelectorAll('details.grupo')){const c=d.dataset.cat,todos=itens.filter(x=>x.categoria===c);d.querySelector('.cont').textContent=todos.filter(feito).length+' de '+todos.length;}
+ const contados=itens.filter(feito),valor=contados.reduce((s,x)=>s+(x.preco_unitario?Number(x.quantidade_fisica)*Number(x.preco_unitario):0),0);
+ el('resumo').innerHTML=n?'<div class="resumo"><strong>Estoque contado hoje: '+esc(brl(valor))+'</strong><br><small>Valor pelo custo cadastrado na Takeat, só dos '+n+' itens já contados. É uma estimativa dos itens contados; itens ainda pendentes não entram no total.</small></div>':'';
+}
+async function carregar(){
+ aviso('Carregando itens…');const d=await call('painel');ativa=d.ativa;
+ itens=d.itens.map(x=>({...x,categoria:x.categoria??'Sem categoria'}));
+ el('intro').textContent=d.unidade+' · contagem de '+HOJE_BR+(ativa?'':' · unidade inativa, somente consulta');
+ desenhar();aviso(itens.length+' itens ativos na Takeat.');
+}
+el("busca").oninput=desenhar;el("filtro").onchange=desenhar;el("atualizar").onclick=()=>carregar().catch(e=>aviso(e.message,true));
+if(unit)carregar().catch(e=>aviso(e.message,true));else aviso('Abra a contagem pela gestão (Estoque).',true);
+</script></body></html>
