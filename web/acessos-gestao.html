@@ -74,6 +74,7 @@ el('fNovo').addEventListener('submit',async ev=>{ev.preventDefault();el('bNovo')
 el('fRet').addEventListener('submit',async ev=>{if(ev.submitter?.value==='cancel')return;ev.preventDefault();el('rOk').disabled=true;
  try{await call('gestao-acessos',{acao:'retirar',user_id:alvo.id,motivo:el('rMot').value});el('dlg').close();msg('Acesso retirado.',true);await carregar();}
  catch(e){el('dlg').close();msg(e.message);}finally{el('rOk').disabled=false;}});
-new ResizeObserver(()=>parent.postMessage({acessosAltura:document.documentElement.scrollHeight},'*')).observe(document.body);
+// Altura do conteúdo, não da janela (evita o quadro crescer sem parar).
+new ResizeObserver(()=>parent.postMessage({acessosAltura:Math.ceil(document.body.getBoundingClientRect().height)},location.origin)).observe(document.body);
 carregar();
 </script></body></html>

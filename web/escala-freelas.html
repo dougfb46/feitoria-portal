@@ -280,6 +280,7 @@ async function carregar(){
 el('ant').onclick=()=>{seg=soma(seg,-7);aviso('');carregar();};
 el('prox').onclick=()=>{seg=soma(seg,7);aviso('');carregar();};
 el('hoje').onclick=()=>{seg=segundaDe(hojeOperacional());aviso('');carregar();};
-new ResizeObserver(()=>parent.postMessage({escalaAltura:document.documentElement.scrollHeight},'*')).observe(document.body);
+// Altura do conteúdo, não da janela (evita o quadro crescer sem parar).
+new ResizeObserver(()=>parent.postMessage({escalaAltura:Math.ceil(document.body.getBoundingClientRect().height)},location.origin)).observe(document.body);
 carregar();
 </script></body></html>

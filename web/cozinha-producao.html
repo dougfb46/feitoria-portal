@@ -204,7 +204,7 @@
 
   if(parent===window){mensagem('Abra Registrar produção pelo Portal do Funcionário.',true);return;}
 
-  new ResizeObserver(()=>parent.postMessage({tipo:'feitoria-cozinha-altura',altura:document.documentElement.scrollHeight},appOrigin)).observe(document.body);
+  new ResizeObserver(()=>parent.postMessage({tipo:'feitoria-cozinha-altura',altura:Math.ceil(document.body.getBoundingClientRect().height)},appOrigin)).observe(document.body);
 
   document.addEventListener('input',()=>parent.postMessage({tipo:'feitoria-atividade'},appOrigin));
 

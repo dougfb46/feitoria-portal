@@ -79,6 +79,7 @@ async function carregar(){
  finally{el('atualizar').disabled=false;}
 }
 el('atualizar').onclick=carregar;
-new ResizeObserver(()=>parent.postMessage({hojeAltura:document.documentElement.scrollHeight},'*')).observe(document.body);
+// Altura do conteúdo, não da janela: medir a janela fazia o quadro crescer sem parar (tela tremendo).
+new ResizeObserver(()=>parent.postMessage({hojeAltura:Math.ceil(document.body.getBoundingClientRect().height)},location.origin)).observe(document.body);
 carregar();
 </script></body></html>
