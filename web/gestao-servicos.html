@@ -214,6 +214,7 @@ const AREAS = [
     ["vendas","Vendas e horários","Explore produtos, vendedores e horários de maior movimento."],
     ["resultados","Resultados e metas","Consulte DRE, custos, CMV, CMO e metas."],
     ["vencimentos","Contas a pagar","O que vence hoje e nos próximos 7 dias, e o que está atrasado sem baixa na Takeat."],
+    ["baixas","Conferir pagamentos","Marque o que já foi pago, com data e prova; o dono aprova e a baixa é feita na Takeat."],
     ["financeiro","Financeiro Takeat","Consulte os lançamentos importados da Takeat."],
     ["notas","Notas fiscais","Confira as notas recebidas e seus detalhes."],
     ["historico-financeiro","Histórico financeiro","Pesquise documentos e consulte as fontes do histórico."]]],
@@ -320,6 +321,7 @@ const render = () => aba === "inicio" ? abaInicio() : aba === "acessos" ? abaAce
   : aba === "compras" ? abaCompras()
   : aba === "semana" ? abaSemana()
   : aba === "vencimentos" ? abaVencimentos()
+  : aba === "baixas" ? abaBaixas()
   : aba === "freelas" ? abaFreelas()
   : aba === "trilha" ? abaTrilha()
   : aba === "gestores" ? abaGestores()
@@ -398,6 +400,16 @@ function abaHoje(){
   addEventListener("message", ajustar);
 }
 
+// Conferência de pagamentos (24/11/2026): gerente marca o que foi pago, dono aprova acima de R$ 500.
+function abaBaixas(){
+  const url = new URL(location.pathname.includes('/web/')?'baixas.html':'web/baixas.html',location.href);
+  url.searchParams.set('restaurant_id',unidade.id);
+  url.searchParams.set('v','20261124-baixas');
+  conteudo().innerHTML = `<iframe title="Conferir pagamentos" src="${esc(url.href)}" style="width:100%;height:1400px;border:0;border-radius:12px"></iframe>`;
+  const quadro = conteudo().querySelector("iframe");
+  const ajustar = e => { if (!quadro.isConnected) return removeEventListener("message", ajustar); if (e.source === quadro.contentWindow && Number.isFinite(e.data?.baixasAltura)) quadro.style.height = Math.max(700, Math.ceil(e.data.baixasAltura) + 20) + "px"; };
+  addEventListener("message", ajustar);
+}
 function abaVencimentos(){
   const url = new URL(location.pathname.includes('/web/')?'vencimentos.html':'web/vencimentos.html',location.href);
   url.searchParams.set('restaurant_id',unidade.id);
