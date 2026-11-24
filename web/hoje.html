@@ -79,6 +79,10 @@ async function carregar(){
  finally{el('atualizar').disabled=false;}
 }
 el('atualizar').onclick=carregar;
-new ResizeObserver(()=>parent.postMessage({hojeAltura:document.documentElement.scrollHeight},'*')).observe(document.body);
+const conteudoPrincipal = document.querySelector('main');
+new ResizeObserver(() => {
+  const altura = Math.ceil(conteudoPrincipal.getBoundingClientRect().height);
+  parent.postMessage({hojeAltura: altura}, location.origin);
+}).observe(conteudoPrincipal);
 carregar();
 </script></body></html>
