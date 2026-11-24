@@ -280,6 +280,10 @@ async function carregar(){
 el('ant').onclick=()=>{seg=soma(seg,-7);aviso('');carregar();};
 el('prox').onclick=()=>{seg=soma(seg,7);aviso('');carregar();};
 el('hoje').onclick=()=>{seg=segundaDe(hojeOperacional());aviso('');carregar();};
-new ResizeObserver(()=>parent.postMessage({escalaAltura:document.documentElement.scrollHeight},'*')).observe(document.body);
+const conteudoPrincipal = document.querySelector('main');
+new ResizeObserver(() => {
+  const altura = Math.ceil(conteudoPrincipal.getBoundingClientRect().height);
+  parent.postMessage({escalaAltura: altura}, location.origin);
+}).observe(conteudoPrincipal);
 carregar();
 </script></body></html>
