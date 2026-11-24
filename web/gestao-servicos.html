@@ -394,7 +394,7 @@ function abaHoje(){
   url.searchParams.set('v','20261108-hoje');
   conteudo().innerHTML = `<iframe title="Hoje" src="${esc(url.href)}" style="width:100%;height:1500px;border:0;border-radius:12px"></iframe>`;
   const quadro = conteudo().querySelector("iframe");
-  const ajustar = e => { if (!quadro.isConnected) return removeEventListener("message", ajustar); if (e.source === quadro.contentWindow && Number.isFinite(e.data?.hojeAltura)) quadro.style.height = Math.max(700, Math.ceil(e.data.hojeAltura) + 20) + "px"; };
+  const ajustar = e => { if (!quadro.isConnected) return removeEventListener("message", ajustar); if (e.source === quadro.contentWindow && Number.isFinite(e.data?.hojeAltura)) { const alvo = Math.max(700, Math.ceil(e.data.hojeAltura) + 20); if (Math.abs(quadro.offsetHeight - alvo) > 2) quadro.style.height = alvo + "px"; } };
   addEventListener("message", ajustar);
 }
 
@@ -415,7 +415,7 @@ function abaGestores(){
   url.searchParams.set('v','20261119-acessos');
   conteudo().innerHTML = `<iframe title="Acessos da gestão" src="${esc(url.href)}" style="width:100%;height:1100px;border:0;border-radius:12px"></iframe>`;
   const quadro = conteudo().querySelector("iframe");
-  const ajustar = e => { if (!quadro.isConnected) return removeEventListener("message", ajustar); if (e.source === quadro.contentWindow && Number.isFinite(e.data?.acessosAltura)) quadro.style.height = Math.max(600, Math.ceil(e.data.acessosAltura) + 20) + "px"; };
+  const ajustar = e => { if (!quadro.isConnected) return removeEventListener("message", ajustar); if (e.source === quadro.contentWindow && Number.isFinite(e.data?.acessosAltura)) { const alvo = Math.max(600, Math.ceil(e.data.acessosAltura) + 20); if (Math.abs(quadro.offsetHeight - alvo) > 2) quadro.style.height = alvo + "px"; } };
   addEventListener("message", ajustar);
 }
 
@@ -437,7 +437,7 @@ function abaFreelas(){
   url.searchParams.set('v','20261109-escala');
   conteudo().innerHTML = `<iframe title="Escala da semana" src="${esc(url.href)}" style="width:100%;height:1400px;border:0;border-radius:12px"></iframe>`;
   const quadro = conteudo().querySelector("iframe");
-  const ajustar = e => { if (!quadro.isConnected) return removeEventListener("message", ajustar); if (e.source === quadro.contentWindow && Number.isFinite(e.data?.escalaAltura)) quadro.style.height = Math.max(700, Math.ceil(e.data.escalaAltura) + 20) + "px"; };
+  const ajustar = e => { if (!quadro.isConnected) return removeEventListener("message", ajustar); if (e.source === quadro.contentWindow && Number.isFinite(e.data?.escalaAltura)) { const alvo = Math.max(700, Math.ceil(e.data.escalaAltura) + 20); if (Math.abs(quadro.offsetHeight - alvo) > 2) quadro.style.height = alvo + "px"; } };
   addEventListener("message", ajustar);
 }
 
