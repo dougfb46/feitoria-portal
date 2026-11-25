@@ -20,14 +20,14 @@ details summary{cursor:pointer;color:var(--green);font-size:13px}.scroll{overflo
 @media(max-width:820px){.cards{grid-template-columns:1fr 1fr}.campos{grid-template-columns:1fr 1fr}.conta{grid-template-columns:24px 1fr;}.conta .venc{grid-column:2}.conta .valor{grid-column:2;text-align:left}}
 @media(max-width:460px){.campos{grid-template-columns:1fr}.campos .largo{grid-column:auto}main{padding:8px}}
 </style></head><body><main>
-<h1>Conferir pagamentos</h1>
+<div class="linha fim"><h1>Conferir pagamentos</h1><a href="guia-pagamentos.html" target="_blank" rel="noopener" style="color:var(--green);font-weight:600">Como usar esta tela ↗</a></div>
 <p class="sub" id="intro">Conferindo seu acesso…</p>
 <section class="panel"><div class="linha fim"><div><strong>Contas a pagar em aberto na Takeat</strong><br><small id="atualizado">—</small></div><button id="atualizar" class="prim" disabled>Buscar contas na Takeat</button></div>
-<p class="sub" style="margin:8px 0 0">Como funciona: marque o que já foi pago, com a data, a conta e a prova. Até a alçada a conferência do gerente já vale; acima dela o dono aprova. A baixa é feita na Takeat com os dados aprovados. Na próxima busca, a conta sai daqui como baixada. Nada é apagado: conferência errada se corrige registrando outra, com motivo.</p>
+<p class="sub" style="margin:8px 0 0">Como funciona: marque o que já foi pago, com a data, a conta e a prova. Até R$ 500 por conta, a conferência do gerente já vale; acima disso o dono aprova. A baixa é feita na Takeat com os dados aprovados e, na busca seguinte, a conta sai daqui como baixada. Nada é apagado: conferência errada se corrige registrando outra, com motivo.</p>
 <p id="status" role="status" aria-live="polite"></p></section>
 <div class="cards" id="cards"></div>
 <section class="panel" id="filtros" hidden><div class="linha"><label style="flex:1 1 220px">Buscar<input id="busca" type="search" placeholder="Fornecedor, descrição, nº da nota" style="width:100%"></label>
-<label>Vencimento<select id="faixa"><option value="todas">Todos</option><option value="antigas">Vencidas há mais de 60 dias</option><option value="recentes">Vencidas nos últimos 60 dias</option><option value="avencer">A vencer</option><option value="zero">Valor zerado</option></select></label>
+<label>Vencimento<select id="faixa"><option value="todas">Todos</option><option value="antigas">Vencidas há mais de 60 dias</option><option value="recentes">Vencidas nos últimos 60 dias</option><option value="avencer">A vencer</option><option value="zero">Valor zerado</option><option value="duplicadas">Possíveis duplicadas</option></select></label>
 <label>Ordem<select id="ordem"><option value="fornecedor">Por fornecedor</option><option value="vencimento">Por vencimento</option><option value="valor">Maior valor primeiro</option></select></label></div>
 <p class="sub" id="ajuda-aba" style="margin:8px 0 0"></p></section>
 <div id="lista"></div>
@@ -47,8 +47,11 @@ const ABAS=[
  ['duvidas','Dúvidas e não pagas',['duvida','nao_pago','recusada'],'Quem conferiu não sabe, disse que não foi pago, ou o dono recusou. Investigue e registre de novo quando souber.'],
  ['baixadas','Baixadas',['baixada','enviada'],'Conferidas aqui e já baixadas na Takeat (últimos 45 dias). “Enviada” some da lista na próxima busca, quando a Takeat confirmar.']];
 const NOMES={a_conferir:'a conferir',valor_mudou:'valor mudou na Takeat: conferir de novo',aguardando_aprovacao:'aguardando o dono',aprovada:'aprovada',recusada:'recusada pelo dono',nao_pago:'não foi paga',duvida:'ninguém sabe ainda',baixada:'baixada na Takeat',enviada:'enviada à Takeat'};
-const RECUSAS={cash_flow_ofx_reconciled:'conciliada com extrato na Takeat',cash_flow_title_member:'faz parte de um título',cash_flow_update_conflict:'alterada ao mesmo tempo na Takeat',cash_flow_bank_account_not_found:'conta bancária inativa',forbidden:'chave sem permissão de escrita'};
-let D=null,aba='conferir',sel=new Set(),ocupado=false;
+const RECUSAS={cash_flow_ofx_reconciled:'conciliada com extrato na Takeat (resolver lá)',cash_flow_title_member:'faz parte de um título (dar baixa no título)',cash_flow_update_conflict:'alterada ao mesmo tempo na Takeat (enviar de novo)',cash_flow_bank_account_not_found:'conta bancária inativa na Takeat',cash_flow_payment_method_not_found:'forma de pagamento não existe na Takeat',cash_flow_not_found:'não existe mais na Takeat',cash_flow_bank_account_required:'faltou a conta bancária',invalid_cash_flow_settlement:'a Takeat não aceitou os dados',cash_flow_history_user_not_found:'loja sem usuário principal na Takeat',forbidden:'chave sem permissão de escrita'};
+// Recusas que não se resolvem reenviando: ficam fora do botão até alguém resolver na Takeat.
+const PERMANENTES=new Set(['cash_flow_ofx_reconciled','cash_flow_title_member','cash_flow_not_found']);
+let D=null,aba='conferir',sel=new Set(),ocupado=false,dup=new Set();
+const embutida=parent!==window;
 function status(t,erro=false){el('status').textContent=t;el('status').className=erro?'erro':'ok';}
 async function call(acao,b={}){const {data,error}=await sb.auth.getSession();if(error||!data.session)throw Error('Entre novamente na gestão.');
  const r=await fetch(SB+'/functions/v1/gestao-baixas',{method:'POST',headers:{'Content-Type':'application/json',apikey:ANON,Authorization:'Bearer '+data.session.access_token},body:JSON.stringify({acao,restaurant_id:unit,...b}),signal:AbortSignal.timeout(120000)});
@@ -58,7 +61,10 @@ function daAba(a){const s=ABAS.find(x=>x[0]===a)[2];return D.contas.filter(c=>s.
 function cards(){el('cards').innerHTML=ABAS.map(([id,nome])=>{const xs=daAba(id);return `<button class="card ${aba===id?'ativo':''}" data-aba="${id}"><small>${nome}</small><strong>${xs.length}</strong><small>${brl(xs.reduce((a,c)=>a+(c.centavos??0),0))}</small></button>`;}).join('');
  el('cards').querySelectorAll('[data-aba]').forEach(b=>b.onclick=()=>{aba=b.dataset.aba;sel.clear();render();});}
 function filtradas(){const q=el('busca').value.trim().toLowerCase(),f=el('faixa').value,hoje=D.hoje,h60=new Date(Date.parse(hoje+'T12:00Z')-60*864e5).toISOString().slice(0,10);
- return daAba(aba).filter(c=>(!q||[c.fornecedor,c.descricao,c.categoria,c.nf_numero].some(x=>String(x??'').toLowerCase().includes(q)))&&(f==='todas'||(f==='antigas'&&c.vencimento<h60)||(f==='recentes'&&c.vencimento>=h60&&c.vencimento<hoje)||(f==='avencer'&&c.vencimento>=hoje)||(f==='zero'&&!c.centavos)));}
+ return daAba(aba).filter(c=>(!q||[c.fornecedor,c.descricao,c.categoria,c.nf_numero].some(x=>String(x??'').toLowerCase().includes(q)))&&(f==='todas'||(f==='antigas'&&c.vencimento<h60)||(f==='recentes'&&c.vencimento>=h60&&c.vencimento<hoje)||(f==='avencer'&&c.vencimento>=hoje)||(f==='zero'&&!c.centavos)||(f==='duplicadas'&&dup.has(c.lancamento_id))));}
+// Mesmo fornecedor, mesmo valor e mesmo vencimento, ainda em aberto: pode ser a mesma conta lançada duas vezes.
+function marcarDuplicadas(){const g=new Map();for(const c of D.contas){if(!c.em_aberto||!c.centavos)continue;const k=[quem(c),c.centavos,c.vencimento].join('|');g.set(k,[...(g.get(k)??[]),c.lancamento_id]);}
+ dup=new Set([...g.values()].filter(ids=>ids.length>1).flat());}
 const quem=c=>c.fornecedor||(c.tipo==='title'?'Títulos agrupados':c.categoria?c.categoria.split(':')[0]:'Sem fornecedor');
 function linhaConta(c){const u=c.ultima;const tag=c.situacao==='valor_mudou'?'warn':['recusada','nao_pago'].includes(c.situacao)?'bad':c.situacao==='aguardando_aprovacao'?'warn':'';
  const info=[c.nf_numero?'NF '+esc(c.nf_numero):'',c.tipo==='title'?'título':'',c.itens?c.itens+' itens':'',c.categoria?esc(c.categoria):'',c.conta_bancaria?'conta prevista: '+esc(c.conta_bancaria):'',c.forma_pagamento?esc(c.forma_pagamento):''].filter(Boolean).join(' · ');
@@ -66,17 +72,17 @@ function linhaConta(c){const u=c.ultima;const tag=c.situacao==='valor_mudou'?'wa
  const hist=c.historico?.length>1?`<details><summary>Histórico (${c.historico.length})</summary>${c.historico.map(h=>`<small>${quando(h.criado_em)} · ${esc(h.autor)} · ${esc(h.tipo==='conferencia'?(h.decisao==='pago'?'conferiu: pago':h.decisao==='nao_pago'?'conferiu: não pago':'conferiu: não sabe'):h.tipo==='aprovacao'?'aprovou':'recusou')} — “${esc(h.motivo)}”</small><br>`).join('')}</details>`:'';
  const marcavel=['conferir','aprovar','duvidas'].includes(aba)&&!(aba==='aprovar'&&D.papel!=='dono');
  return `<div class="conta">${marcavel?`<input type="checkbox" data-sel="${c.lancamento_id}" ${sel.has(c.lancamento_id)?'checked':''} aria-label="Selecionar conta">`:'<span></span>'}<div class="venc"><strong>${dia(c.vencimento)}</strong><br><small>vencimento</small></div>
- <div>${esc(c.descricao||quem(c))}<span class="badge ${tag}">${esc(NOMES[c.situacao]??c.situacao)}</span><br><small>${info}</small>${conf}${c.nf_chave?` <button class="discreto" data-nota="${c.lancamento_id}" style="padding:2px 8px;font-size:12px">Ver nota e parcelas</button><div id="nota-${c.lancamento_id}"></div>`:''}${hist}</div>
+ <div>${esc(c.descricao||quem(c))}<span class="badge ${tag}">${esc(NOMES[c.situacao]??c.situacao)}</span>${dup.has(c.lancamento_id)?'<span class="badge warn" title="Mesmo fornecedor, valor e vencimento de outra conta em aberto">possível duplicada</span>':''}<br><small>${info}</small>${conf}${c.nf_chave?` <button class="discreto" data-nota="${c.lancamento_id}" style="padding:2px 8px;font-size:12px">Ver nota e parcelas</button><div id="nota-${c.lancamento_id}"></div>`:''}${hist}</div>
  <div class="valor"><strong>${brl(c.centavos)}</strong>${c.centavos===0?'<br><small>valor zerado</small>':''}</div></div>`;}
 function lista(){const xs=filtradas();if(!xs.length){el('lista').innerHTML=`<p class="panel sub">Nada aqui com estes filtros.</p>`;return;}
  const ord=el('ordem').value;
- if(aba==='prontas'){const total=brl(xs.reduce((a,c)=>a+(c.centavos??0),0));
+ if(aba==='prontas'){const envia=xs.filter(c=>!(c.execucao?.resultado==='recusada'&&PERMANENTES.has(c.execucao.codigo))),fora=xs.length-envia.length,total=brl(envia.reduce((a,c)=>a+(c.centavos??0),0));
   const exec=D.papel!=='dono'?`<p class="sub" style="margin:8px 0 0">O envio da baixa para a Takeat é feito pelo dono.</p>`
-   :D.execucao_ligada?`<div class="linha" style="margin-top:10px"><button class="prim" id="executar">Executar baixa na Takeat · ${xs.length} conta(s) · ${total}</button></div><p class="sub" style="margin:6px 0 0">Envia as contas desta lista (com os filtros acima), de ${D.lote_max} em ${D.lote_max}. Cada lote entra inteiro ou nada. Fica registrado quem enviou e o que a Takeat respondeu.</p>`
+   :D.execucao_ligada?`<div class="linha" style="margin-top:10px"><button class="prim" id="executar" ${envia.length?'':'disabled'}>Executar baixa na Takeat · ${envia.length} conta(s) · ${total}</button></div><p class="sub" style="margin:6px 0 0">Envia as contas desta lista (com os filtros acima), de ${D.lote_max} em ${D.lote_max}. Se a Takeat recusar uma conta, as outras seguem. Fica registrado quem enviou e o que a Takeat respondeu.${fora?` ${fora} conta(s) recusada(s) pela Takeat ficam de fora até serem resolvidas lá.`:''}</p>`
    :`<div class="linha" style="margin-top:10px"><button class="prim" id="executar" disabled title="Desligado">Executar baixa na Takeat</button></div><p class="aviso">Botão desligado: a Takeat ainda não liberou a permissão de escrita no financeiro. Até lá, dê baixa no painel da Takeat com os dados abaixo.</p>`;
   el('lista').innerHTML=`<section class="panel"><div class="linha fim"><h2>Dar baixa na Takeat com estes dados</h2><button id="copiar">Copiar lista</button></div>${exec}<div class="scroll"><table><thead><tr><th>Fornecedor / descrição</th><th>Vencimento</th><th class="num">Valor</th><th>Pago em</th><th>Conta</th><th>Forma</th><th>ID Takeat</th></tr></thead><tbody>${xs.map(c=>`<tr><td>${esc(quem(c))}<br><small>${esc(c.descricao??'')}${c.nf_numero?' · NF '+esc(c.nf_numero):''}</small>${c.execucao?.resultado==='recusada'?`<br><small class="erro">Takeat recusou em ${quando(c.execucao.criado_em)}: ${esc(RECUSAS[c.execucao.codigo]??c.execucao.codigo)}</small>`:''}</td><td>${dia(c.vencimento)}</td><td class="num">${brl(c.centavos)}</td><td>${dia(c.ultima?.pago_em)}</td><td>${esc(contaNome(c.ultima?.conta_bancaria_id))}</td><td>${esc(formaNome(c.ultima?.forma_pagamento_id))}</td><td>${c.lancamento_id}</td></tr>`).join('')}</tbody></table></div></section>`;
   el('copiar').onclick=async()=>{const t=xs.map(c=>[quem(c),c.descricao??'',c.nf_numero?'NF '+c.nf_numero:'',dia(c.vencimento),brl(c.centavos),'pago '+dia(c.ultima?.pago_em),contaNome(c.ultima?.conta_bancaria_id),formaNome(c.ultima?.forma_pagamento_id),'ID '+c.lancamento_id].filter(Boolean).join(' | ')).join('\n');try{await navigator.clipboard.writeText(t);status('Lista copiada.');}catch{status('Não consegui copiar. Selecione a tabela e copie.',true);}};
-  if(D.execucao_ligada&&D.papel==='dono')el('executar').onclick=()=>executar(xs);
+  if(D.execucao_ligada&&D.papel==='dono'&&envia.length)el('executar').onclick=()=>executar(envia);
   return altura();}
  if(ord!=='fornecedor'){const s=[...xs].sort((a,b)=>ord==='valor'?(b.centavos??0)-(a.centavos??0):String(a.vencimento).localeCompare(String(b.vencimento)));el('lista').innerHTML=`<div class="grupo panel" style="padding:0">${s.map(linhaConta).join('')}</div>`;}
  else{const g=new Map();for(const c of xs){const k=quem(c);g.set(k,[...(g.get(k)??[]),c]);}
@@ -92,44 +98,64 @@ async function verNota(id,b){const box=el('nota-'+id);if(box.innerHTML){box.inne
   ${n.formas_pagamento.length?`<br><strong>Forma de pagamento na nota</strong>${n.formas_pagamento.map(f=>`<br><small>${esc(f.descricao||({'01':'Dinheiro','02':'Cheque','03':'Cartão de crédito','04':'Cartão de débito','05':'Crédito loja','15':'Boleto','16':'Depósito','17':'Pix','18':'Transferência','90':'Sem pagamento na nota (a prazo)','99':'Outros'})[String(f.forma).padStart(2,'0')]||'código '+f.forma)} · R$ ${esc(String(f.valor??'').replace('.',','))}</small>`).join('')}`:''}
   ${n.itens.length?`<details><summary>${n.itens.length} item(ns)</summary>${n.itens.map(i=>`<small>${esc(i.descricao)} · ${esc(i.quantidade)} ${esc(i.unidade)} · R$ ${esc(i.valor)}</small><br>`).join('')}</details>`:''}</div>`;}
  catch(e){box.innerHTML=`<small class="erro">${esc(e.message)}</small>`;}finally{b.disabled=false;altura();}}
-function barra(){const b=el('barra');const xs=D.contas.filter(c=>sel.has(c.lancamento_id));if(!xs.length){b.hidden=true;return altura();}b.hidden=false;
+// A lista pode ser redesenhada no meio do preenchimento (busca automática): o que já foi digitado fica.
+const CAMPOS=['c-quando','c-data','c-conta','c-forma','c-prova','c-motivo','d-motivo'];
+function guardarCampos(){const v={};for(const id of CAMPOS){const x=el(id);if(x)v[id]=x.value;}const r=document.querySelector('#barra [name=dec]:checked');if(r)v.dec=r.value;return v;}
+function reporCampos(v){for(const id of CAMPOS){const x=el(id);if(!x||v[id]===undefined)continue;if(x.tagName==='SELECT'&&![...x.options].some(o=>o.value===v[id]&&!o.disabled))continue;x.value=v[id];}
+ const r=v.dec&&document.querySelector(`#barra [name=dec][value="${v.dec}"]`);if(r){r.checked=true;r.dispatchEvent(new Event('change'));}el('c-quando')?.dispatchEvent(new Event('change'));}
+const espere=()=>status('Aguarde: ainda estou terminando a operação anterior.',true);
+function barra(){const b=el('barra');const xs=D.contas.filter(c=>sel.has(c.lancamento_id));if(!xs.length){b.hidden=true;return altura();}const antes=b.hidden?{}:guardarCampos();b.hidden=false;
  const total=brl(xs.reduce((a,c)=>a+(c.centavos??0),0)),acima=xs.filter(c=>(c.centavos??0)>D.alcada_centavos).length;
  if(aba==='aprovar'){b.innerHTML=`<div class="linha fim"><strong>${xs.length} selecionada(s) · ${total}</strong><button id="limpar">Limpar seleção</button></div><label style="margin-top:8px">Motivo da decisão<textarea id="d-motivo" placeholder="Ex.: conferi o extrato da Stone"></textarea></label><div class="linha" style="margin-top:8px"><button class="prim" id="aprovar">Aprovar</button><button class="perigo" id="recusar">Recusar</button></div>`;
   el('aprovar').onclick=()=>decidir(true);el('recusar').onclick=()=>decidir(false);}
- else{const opc=(xs2,f)=>xs2.map(x=>`<option value="${x.id}">${esc(f(x))}</option>`).join('');
+ else{const opc=(xs2,f)=>xs2.map(x=>`<option value="${x.id}">${esc(f(x))}</option>`).join(''),futuras=xs.some(c=>!c.vencimento||c.vencimento>D.hoje);
   b.innerHTML=`<div class="linha fim"><strong>${xs.length} selecionada(s) · ${total}</strong><button id="limpar">Limpar seleção</button></div>
   <div class="decisao" style="margin:10px 0"><label><input type="radio" name="dec" value="pago" checked> Foi pago</label><label><input type="radio" name="dec" value="nao_pago"> Não foi pago</label><label><input type="radio" name="dec" value="nao_sei"> Não sei</label></div>
-  <div class="campos" id="campos-pago"><label>Pago em<input type="date" id="c-data" max="${D.hoje}"></label><label>Saiu da conta<select id="c-conta"><option value="">Escolha…</option>${(D.atualizacao?.contas??[]).map(x=>`<option value="${x.id}"${x.id===D.conta_padrao_id?' selected':''}>${esc(x.nome+(x.banco?' · '+x.banco:''))}</option>`).join('')}</select></label><label>Forma<select id="c-forma"><option value="">Não informar</option>${opc(D.atualizacao?.formas??[],x=>x.nome)}</select></label><label>Prova<input id="c-prova" placeholder="Ex.: extrato Stone de 05/11"></label></div>
+  <div class="campos" id="campos-pago"><label>Data do pagamento<select id="c-quando"><option value="data">Uma data para todas</option><option value="vencimento"${futuras?' disabled':''}>No vencimento de cada conta${futuras?' (há conta a vencer)':''}</option></select></label><label id="c-data-l">Pago em<input type="date" id="c-data" max="${D.hoje}"></label><label>Saiu da conta<select id="c-conta"><option value="">Escolha…</option>${(D.atualizacao?.contas??[]).map(x=>`<option value="${x.id}"${x.id===D.conta_padrao_id?' selected':''}>${esc(x.nome+(x.banco?' · '+x.banco:''))}</option>`).join('')}</select></label><label>Forma<select id="c-forma"><option value="">Não informar</option>${opc(D.atualizacao?.formas??[],x=>x.nome)}</select></label><label class="largo">Prova<input id="c-prova" placeholder="Ex.: extrato Stone de 05/11/2026" style="width:100%"></label></div>
+  <p class="sub" id="c-quando-ajuda" hidden style="margin:6px 0 0">Cada conta fica paga na data do próprio vencimento. Use só quando o extrato mostrar o pagamento nesses dias; se alguma foi paga em outro dia, registre essa separada.</p>
   <label style="margin-top:8px">Motivo / de onde veio a informação<textarea id="c-motivo" placeholder="Ex.: fornecedor confirmou por WhatsApp que está tudo quitado até setembro"></textarea></label>
   ${acima&&D.papel!=='dono'?`<p class="aviso">${acima} conta(s) acima de ${brl(D.alcada_centavos)} vão esperar a aprovação do dono.</p>`:''}
   <div class="linha" style="margin-top:8px"><button class="prim" id="registrar">Registrar conferência</button></div>`;
-  b.querySelectorAll('[name=dec]').forEach(r=>r.onchange=()=>{el('campos-pago').hidden=b.querySelector('[name=dec]:checked').value!=='pago';altura();});
+  b.querySelectorAll('[name=dec]').forEach(r=>r.onchange=()=>{const pago=b.querySelector('[name=dec]:checked').value==='pago';el('campos-pago').hidden=!pago;el('c-quando-ajuda').hidden=!pago||el('c-quando').value!=='vencimento';altura();});
+  el('c-quando').onchange=()=>{const v=el('c-quando').value==='vencimento';el('c-data-l').hidden=v;el('c-quando-ajuda').hidden=!v;};
   el('registrar').onclick=conferir;}
+ reporCampos(antes);
  el('limpar').onclick=()=>{sel.clear();render();};altura();}
-async function conferir(){if(ocupado)return;const dec=el('barra').querySelector('[name=dec]:checked').value;const body={lancamentos:[...sel],decisao:dec,motivo:el('c-motivo').value,requisicao:crypto.randomUUID()};
- if(dec==='pago')Object.assign(body,{pago_em:el('c-data').value,conta_bancaria_id:Number(el('c-conta').value)||null,forma_pagamento_id:Number(el('c-forma').value)||null,prova:el('c-prova').value});
+async function conferir(){if(ocupado)return espere();const dec=el('barra').querySelector('[name=dec]:checked').value;const body={lancamentos:[...sel],decisao:dec,motivo:el('c-motivo').value,requisicao:crypto.randomUUID()};
+ if(dec==='pago')Object.assign(body,{pago_em:el('c-quando').value==='vencimento'?'vencimento':el('c-data').value,conta_bancaria_id:Number(el('c-conta').value)||null,forma_pagamento_id:Number(el('c-forma').value)||null,prova:el('c-prova').value});
  else body.prova=el('c-prova').value||null;
  ocupado=true;el('registrar').disabled=true;try{const r=await call('conferir',body);status(r.registradas+' conferência(s) registrada(s).');sel.clear();await carregar();}catch(e){status(e.message,true);}finally{ocupado=false;const b=el('registrar');if(b)b.disabled=false;}}
-async function executar(xs){if(ocupado)return;const total=brl(xs.reduce((a,c)=>a+(c.centavos??0),0));
+async function executar(xs){if(ocupado)return espere();const total=brl(xs.reduce((a,c)=>a+(c.centavos??0),0));
  if(!confirm(`Dar baixa na Takeat em ${xs.length} conta(s), total ${total}?\n\nCada conta sai como paga na data e na conta conferidas. Isso altera o saldo da conta bancária na Takeat.`))return;
- ocupado=true;const b=el('executar');b.disabled=true;let feitas=0;
+ ocupado=true;const b=el('executar');b.disabled=true;let feitas=0,recusadas=0,semResposta=0;const motivos=new Set();
  try{for(let i=0;i<xs.length;i+=D.lote_max){const lote=xs.slice(i,i+D.lote_max).map(c=>c.lancamento_id);status(`Enviando ${i+1} a ${i+lote.length} de ${xs.length}…`);
-   const r=await call('executar',{lancamentos:lote,requisicao:crypto.randomUUID()});feitas+=r.baixadas;}
-  status(`Pronto: ${feitas} conta(s) baixada(s) na Takeat. Clique em “Buscar contas na Takeat” para confirmar.`);}
+   const r=await call('executar',{lancamentos:lote,requisicao:crypto.randomUUID()});feitas+=r.baixadas;recusadas+=r.recusadas??0;semResposta+=r.sem_resposta??0;(r.motivos??[]).forEach(m=>motivos.add(m));
+   if(r.sem_resposta)break;}
+  const extra=[recusadas?`${recusadas} recusada(s) pela Takeat (${[...motivos].join('; ')})`:'',semResposta?`${semResposta} sem resposta da Takeat: busque a lista e envie de novo`:''].filter(Boolean).join('. ');
+  status(`Pronto: ${feitas} conta(s) baixada(s) na Takeat.${extra?' '+extra+'.':''} Clique em “Buscar contas na Takeat” para confirmar.`,Boolean(recusadas||semResposta));}
  catch(e){status((feitas?feitas+' baixada(s) antes do erro. ':'')+e.message,true);}
  finally{ocupado=false;await carregar().catch(()=>{});}}
-async function decidir(aprovar){if(ocupado)return;ocupado=true;try{const r=await call('decidir',{lancamentos:[...sel],aprovar,motivo:el('d-motivo').value,requisicao:crypto.randomUUID()});status(r.registradas+(aprovar?' aprovada(s).':' recusada(s).'));sel.clear();await carregar();}catch(e){status(e.message,true);}finally{ocupado=false;}}
+async function decidir(aprovar){if(ocupado)return espere();ocupado=true;try{const r=await call('decidir',{lancamentos:[...sel],aprovar,motivo:el('d-motivo').value,requisicao:crypto.randomUUID()});status(r.registradas+(aprovar?' aprovada(s).':' recusada(s).'));sel.clear();await carregar();}catch(e){status(e.message,true);}finally{ocupado=false;}}
 function notas(){const ns=D.notas_sem_confirmacao;const s=el('notas');s.hidden=!ns.length;if(!ns.length)return;
- s.innerHTML=`<details><summary><strong>${ns.length} nota(s) fiscal(is) dos últimos 92 dias sem confirmação (manifesto)</strong></summary><p class="sub">A API da Takeat não faz o manifesto. Confirme estas notas na Takeat (Notas fiscais › Manifestar). Confirmar a nota ajuda a casar a conta a pagar com o que chegou.</p><div class="scroll"><table><thead><tr><th>Emissão</th><th>Fornecedor</th><th>Nº</th><th class="num">Total</th><th>Situação</th></tr></thead><tbody>${ns.map(n=>`<tr><td>${quando(n.emitida_em)}</td><td>${esc(n.fornecedor)}</td><td>${esc(n.numero)}</td><td class="num">${brl(n.total_centavos)}</td><td>${esc(n.manifestacao==='ciencia'?'só ciência':'sem manifestação')}</td></tr>`).join('')}</tbody></table></div></details>`;}
+ s.innerHTML=`<details><summary><strong>${ns.length} nota(s) fiscal(is) dos últimos 92 dias sem confirmação (manifesto)</strong></summary><p class="sub">A API da Takeat não faz o manifesto. Confirme estas notas na própria Takeat, na área de notas fiscais recebidas. Confirmar a nota ajuda a casar a conta a pagar com o que chegou.</p><div class="scroll"><table><thead><tr><th>Emissão</th><th>Fornecedor</th><th>Nº</th><th class="num">Total</th><th>Situação</th></tr></thead><tbody>${ns.map(n=>`<tr><td>${quando(n.emitida_em)}</td><td>${esc(n.fornecedor)}</td><td>${esc(n.numero)}</td><td class="num">${brl(n.total_centavos)}</td><td>${esc(n.manifestacao==='ciencia'?'só ciência':'sem manifestação')}</td></tr>`).join('')}</tbody></table></div></details>`;}
 function render(){cards();el('ajuda-aba').textContent=ABAS.find(x=>x[0]===aba)[3];lista();barra();notas();altura();}
-function altura(){requestAnimationFrame(()=>parent!==window&&parent.postMessage({baixasAltura:document.documentElement.scrollHeight},'*'));}
-async function carregar(){D=await call('painel');const a=D.atualizacao;
+/* Dentro da gestão, a tela fica com a altura da janela e rola por dentro: assim a barra de
+   conferência (que gruda no rodapé) aparece perto das contas marcadas, mesmo numa lista longa. */
+function altura(){if(!embutida)return;requestAnimationFrame(()=>{let h=900;try{h=Math.max(560,Math.round(top.innerHeight-110));}catch{}parent.postMessage({baixasAltura:h},'*');});}
+if(embutida){try{top.addEventListener('resize',altura);}catch{}}
+const VELHA_MS=6*3600e3;
+async function carregar(){D=await call('painel');marcarDuplicadas();const a=D.atualizacao;
  el('intro').textContent=`${D.unidade} · você entra como ${D.papel}. Alçada do gerente: ${brl(D.alcada_centavos)} por conta.`;
  el('atualizado').textContent=a?`Última busca na Takeat: ${quando(a.criado_em)} · ${a.abertos} em aberto${a.sairam?` · ${a.sairam} saíram desde a busca anterior`:''}`:'A lista ainda não foi buscada na Takeat.';
- const velho=!a||Date.now()-Date.parse(a.criado_em)>6*3600e3;if(velho&&a)status('A última busca tem mais de 6 horas. Busque de novo antes de conferir.',true);
  el('filtros').hidden=false;render();}
-el('atualizar').onclick=async()=>{if(ocupado)return;ocupado=true;el('atualizar').disabled=true;status('Buscando as contas em aberto na Takeat (leva uns 20 segundos)…');
- try{const r=await call('atualizar');status(`Pronto: ${r.abertos} conta(s) em aberto${r.sairam?`, ${r.sairam} saíram (baixadas ou excluídas na Takeat)`:''}.`);await carregar();}catch(e){status(e.message,true);}finally{ocupado=false;el('atualizar').disabled=false;}};
+async function buscar(auto){if(ocupado)return;ocupado=true;el('atualizar').disabled=true;
+ status(auto?'A lista tinha mais de 6 horas: buscando as contas em aberto na Takeat (uns 20 segundos). Pode ir olhando enquanto isso.':'Buscando as contas em aberto na Takeat (leva uns 20 segundos)…');
+ try{const r=await call('atualizar');status(`Lista atualizada: ${r.abertos} conta(s) em aberto${r.sairam?`, ${r.sairam} saíram (baixadas ou excluídas na Takeat)`:''}.`);await carregar();}
+ catch(e){if(auto&&/menos de 2 minutos/.test(e.message)){status('');await carregar().catch(()=>{});}else status(e.message,true);}
+ finally{ocupado=false;el('atualizar').disabled=false;}}
+el('atualizar').onclick=()=>buscar(false);
 for(const id of ['busca','faixa','ordem'])el(id).addEventListener(id==='busca'?'input':'change',()=>{lista();});
-(async()=>{try{if(!unit||!/^[0-9a-f-]{36}$/i.test(unit))throw Error('Abra esta tela pela gestão.');await carregar();el('atualizar').disabled=false;}catch(e){el('intro').textContent=e.message;el('intro').className='erro';}})();
+(async()=>{try{if(!unit||!/^[0-9a-f-]{36}$/i.test(unit))throw Error('Abra esta tela pela gestão.');await carregar();el('atualizar').disabled=false;
+ const a=D.atualizacao;if(!a||Date.now()-Date.parse(a.criado_em)>VELHA_MS)buscar(true);}
+ catch(e){el('intro').textContent=e.message;el('intro').className='erro';}})();
 </script></body></html>
